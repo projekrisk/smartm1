@@ -184,6 +184,8 @@ class PengaturanSekolah extends Page implements HasForms
                         DB::table('surat_panggilan')->truncate();
                         DB::table('riwayat_kelas_siswa')->truncate();
                         DB::table('siswa')->truncate();
+                        DB::table('tahun_ajaran')->truncate();
+                        DB::table('testimoni')->truncate();
                         
                         // PERBAIKAN: Menghapus tabel lama dan mengganti dengan tabel jadwal
                         DB::table('jadwal_pelajaran')->truncate(); 
