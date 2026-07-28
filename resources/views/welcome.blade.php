@@ -6,15 +6,61 @@
         }
     } catch (\Exception $e) {}
     
-    $namaSekolah = $pengaturan->nama_sekolah ?? 'SMART-M1 SMAN 1 Malingping';
+    $namaSekolah = $pengaturan->nama_sekolah ?? 'SMAN 1 Malingping';
+    $appTitle = "SmartM1 " . $namaSekolah . " | Aplikasi Digitalisasi Sistem Administrasi & Akademik Siswa";
+    $metaDescription = "SmartM1 " . $namaSekolah . " adalah platform terpadu digitalisasi sistem administrasi dan akademik siswa. Akses nilai, e-rapor, absensi harian, dan portofolio prestasi sekolah secara real-time.";
+    
+    // Tentukan URL gambar thumbnail media sosial
+    $ogImageUrl = asset('images/og-image.jpg');
+    if ($pengaturan && $pengaturan->logo_sekolah) {
+        $ogImageUrl = url('/uploads/' . $pengaturan->logo_sekolah);
+    }
 @endphp
 
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    <!-- META DASAR -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SmartM1 | {{ $namaSekolah }}</title>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <!-- SEO UTAMA -->
+    <title>{{ $appTitle }}</title>
+    <meta name="title" content="{{ $appTitle }}">
+    <meta name="description" content="{{ $metaDescription }}">
+    <meta name="keywords" content="SmartM1, SMAN 1 Malingping, SmartM1 SMAN 1 Malingping, aplikasi digitalisasi sekolah, sistem administrasi sekolah, akademik siswa, e-rapor, absensi siswa, portal siswa Malingping">
+    <meta name="author" content="{{ $namaSekolah }}">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ url()->current() }}">
+
+    <!-- FAVICON (LOGO DI TAB BROWSER) -->
+    @if($pengaturan && $pengaturan->logo_sekolah)
+        <link rel="icon" href="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}" type="image/x-icon"/>
+        <link rel="apple-touch-icon" href="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}">
+    @else
+        <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon"/>
+    @endif
+
+    <!-- OPEN GRAPH (WHATSAPP, FACEBOOK, LINKEDIN, TELEGRAM) -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:title" content="{{ $appTitle }}">
+    <meta property="og:description" content="{{ $metaDescription }}">
+    <meta property="og:image" content="{{ $ogImageUrl }}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="SmartM1 {{ $namaSekolah }}">
+    <meta property="og:locale" content="id_ID">
+
+    <!-- TWITTER / X CARDS -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ url()->current() }}">
+    <meta name="twitter:title" content="{{ $appTitle }}">
+    <meta name="twitter:description" content="{{ $metaDescription }}">
+    <meta name="twitter:image" content="{{ $ogImageUrl }}">
+
+    <!-- TAILWIND CSS & FONTS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
@@ -46,6 +92,7 @@
         }
     </script>
     <style>
+        /* Mengunci Layar 100% Tanpa Scroll */
         html, body { 
             margin: 0; padding: 0; height: 100%; height: 100dvh; 
             overflow: hidden; background-color: #f8fafc; color: #0f172a; 
@@ -68,19 +115,20 @@
 </head>
 <body class="antialiased flex flex-col relative w-full bg-slate-50 selection:bg-edu-500 selection:text-white">
 
+    <!-- Elemen Latar Belakang Blur (Blobs) -->
     <div class="fixed top-[-10%] left-[-10%] w-[40rem] h-[40rem] bg-blue-600/10 rounded-full blur-[100px] animate-blob pointer-events-none z-0"></div>
     <div class="fixed bottom-[-10%] right-[-10%] w-[40rem] h-[40rem] bg-emerald-600/10 rounded-full blur-[100px] animate-blob pointer-events-none z-0" style="animation-delay: 2s;"></div>
 
     <nav class="w-full px-6 py-4 md:px-8 md:py-6 flex justify-between items-center shrink-0 z-40 relative">
         <div class="flex items-center gap-3 group cursor-pointer">
             @if($pengaturan && $pengaturan->logo_sekolah)
-                <img src="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}" alt="Logo" class="w-10 h-10 md:w-12 md:h-12 object-contain drop-shadow-sm group-hover:scale-105 transition-transform duration-300">
+                <img src="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}" alt="Logo {{ $namaSekolah }}" class="w-10 h-10 md:w-12 md:h-12 object-contain drop-shadow-sm group-hover:scale-105 transition-transform duration-300">
             @else
                 <div class="w-10 h-10 md:w-12 md:h-12 bg-slate-900 rounded-xl flex items-center justify-center shadow-md text-white font-bold text-xl group-hover:scale-105 transition-transform duration-300">M1</div>
             @endif
             <div class="flex flex-col">
-                <span class="font-extrabold text-lg md:text-xl text-slate-900 leading-none tracking-tight">SmartM1</span>
-                <span class="text-[10px] md:text-xs text-slate-500 font-bold tracking-widest mt-0.5 uppercase">{{ $namaSekolah }}</span>
+                <span class="font-extrabold text-lg md:text-xl text-slate-900 leading-none tracking-tight">SmartM1 {{ $namaSekolah }}</span>
+                <span class="text-[10px] md:text-xs text-slate-500 font-bold tracking-widest mt-0.5 uppercase">Portal Digitalisasi Administrasi & Akademik</span>
             </div>
         </div>
 
@@ -90,24 +138,27 @@
         </button>
     </nav>
 
+    <!-- MAIN CONTENT: BENTO GRID LAYOUT -->
     <main class="flex-1 w-full max-w-[1400px] mx-auto px-4 md:px-8 pb-4 md:pb-8 flex flex-col justify-center h-full relative z-10">
         
+        <!-- Grid Container -->
         <div class="grid grid-cols-1 md:grid-cols-12 md:grid-rows-2 gap-4 md:gap-6 h-full max-h-[700px]">
             
+            <!-- KOTAK 1: KOTAK UTAMA (HERO) -->
             <div class="md:col-span-8 md:row-span-2 bg-white/70 backdrop-blur-xl rounded-[2rem] p-8 md:p-12 border border-slate-200/60 shadow-xl shadow-slate-200/20 flex flex-col justify-center relative overflow-hidden group hover:-translate-y-1 hover:shadow-2xl hover:shadow-slate-300/40 transition-all duration-500">
                 <div class="relative z-10">
                     <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-100/80 border border-slate-200/80 mb-6 backdrop-blur-sm">
                         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span class="text-[10px] font-extrabold tracking-widest text-slate-600 uppercase">SMARTM1</span>
+                        <span class="text-[10px] font-extrabold tracking-widest text-slate-600 uppercase">Sistem Aktif • SmartM1 Portal</span>
                     </div>
 
                     <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 mb-6 leading-[1.1]">
-                        Portal Layanan Akademik,<br>
-                        <span class="text-edu-600">Berbasis Digital.</span>
+                        Digitalisasi Sistem Administrasi,<br>
+                        <span class="text-edu-600">& Akademik Siswa.</span>
                     </h1>
 
                     <p class="text-base md:text-xl text-slate-600 max-w-xl mb-10 leading-relaxed font-medium">
-                        Platform manajemen administrasi, akademik, dan pelayanan kesiswaan secara terintegrasi, transparan, dan akuntabel.
+                        Platform terpadu SmartM1 {{ $namaSekolah }} untuk mendukung kegiatan akademik, validasi absensi, e-rapor, dan pengolahan data siswa secara <span class="text-slate-900 font-bold border-b-2 border-edu-200">real-time</span>.
                     </p>
 
                     <div class="flex flex-col sm:flex-row gap-3">
@@ -122,6 +173,7 @@
                 </div>
             </div>
 
+            <!-- KOTAK 2: INFO KEAMANAN -->
             <div class="hidden md:flex md:col-span-4 md:row-span-1 bg-slate-900/95 backdrop-blur-xl text-white rounded-[2rem] p-8 flex-col justify-between border border-slate-700 shadow-xl overflow-hidden relative group hover:-translate-y-1 hover:shadow-2xl hover:shadow-blue-900/20 transition-all duration-500 cursor-default">
                 <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-110 group-hover:-rotate-6 transition-transform duration-700">
                     <svg class="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -132,11 +184,12 @@
                     </div>
                     <h3 class="text-xl font-bold mb-2 text-white">Infrastruktur Aman</h3>
                     <p class="text-base text-slate-300 leading-relaxed font-medium">
-                        Data privasi dijamin dengan enkripsi mutakhir dan pemisahan hak akses otoritas.
+                        Data privasi institusi {{ $namaSekolah }} dijamin dengan enkripsi mutakhir dan pemisahan hak akses otoritas yang tegas.
                     </p>
                 </div>
             </div>
 
+            <!-- KOTAK 3: INFO AKADEMIK -->
             <div class="hidden md:flex md:col-span-4 md:row-span-1 bg-edu-50/80 backdrop-blur-xl rounded-[2rem] p-8 flex-col justify-between border border-edu-100 shadow-lg group hover:-translate-y-1 hover:shadow-2xl hover:shadow-edu-500/10 transition-all duration-500 cursor-default">
                 <div>
                     <div class="w-12 h-12 rounded-xl bg-white shadow-sm flex items-center justify-center mb-5 text-edu-600 border border-edu-100 group-hover:bg-edu-600 group-hover:text-white transition-colors duration-300">
@@ -144,7 +197,7 @@
                     </div>
                     <h3 class="text-xl font-bold text-slate-900 mb-2">Basis Data Terpadu</h3>
                     <p class="text-base text-slate-600 leading-relaxed font-medium">
-                        Integrasi absensi harian & pelajaran, jurnal guru, nilai rapor, catatan kasus, dan manajemen mengajar secara digital.
+                        Integrasi nilai rapor, catatan kasus, dan absensi harian dalam satu komando digital SmartM1 yang cerdas.
                     </p>
                 </div>
             </div>
@@ -153,9 +206,10 @@
     </main>
 
     <footer class="relative z-10 w-full text-center py-4 text-[10px] md:text-xs text-slate-500 font-semibold shrink-0 bg-white/30 backdrop-blur-md border-t border-slate-200/50">
-        &copy; {{ date('Y') }} {{ $namaSekolah }}. Sistem Manajemen Terpadu.
+        &copy; {{ date('Y') }} SmartM1 {{ $namaSekolah }}. Sistem Digitalisasi Administrasi & Akademik Siswa.
     </footer>
 
+    <!-- LOGIN MODAL -->
     <div id="loginModal" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeLoginModal()"></div>
         
@@ -172,7 +226,7 @@
                             <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
                         </div>
                         <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Otorisasi Gerbang</h2>
-                        <p class="text-sm text-slate-500 mt-2 font-medium">Pilih peran Anda untuk masuk ke dalam sistem.</p>
+                        <p class="text-sm text-slate-500 mt-2 font-medium">Pilih peran Anda untuk masuk ke sistem SmartM1.</p>
                     </div>
                 </div>
                 
@@ -197,7 +251,7 @@
                             </div>
                             <div class="text-left">
                                 <h3 class="text-base font-bold text-slate-900">Portal Siswa</h3>
-                                <p class="text-xs text-slate-500 font-medium">Akses Nilai & E-Rapor</p>
+                                <p class="text-xs text-slate-500 font-medium">Akses Nilai, Absensi & E-Rapor</p>
                             </div>
                         </div>
                         <svg class="w-5 h-5 text-slate-300 group-hover:text-edu-600 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
@@ -207,11 +261,12 @@
         </div>
     </div>
 
+    <!-- FEATURES MODAL -->
     <div id="featuresModal" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeFeaturesModal()"></div>
         <div class="modal-content relative w-full max-w-sm bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden border border-slate-100">
             <div class="flex justify-between items-center p-6 border-b border-slate-100 bg-slate-50/80">
-                <h2 class="text-lg font-extrabold text-slate-900">Informasi Sistem</h2>
+                <h2 class="text-lg font-extrabold text-slate-900">Informasi Sistem SmartM1</h2>
                 <button onclick="closeFeaturesModal()" class="p-1.5 text-slate-400 hover:text-slate-900 hover:bg-slate-200 rounded-full transition-colors hover:rotate-90 duration-300">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
@@ -220,16 +275,16 @@
                 <div>
                     <div class="flex items-center gap-3 mb-2">
                         <div class="w-10 h-10 rounded-xl bg-edu-50 text-edu-600 flex items-center justify-center border border-edu-100"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg></div>
-                        <h3 class="text-base font-bold text-slate-900">Data Terpusat</h3>
+                        <h3 class="text-base font-bold text-slate-900">Data Terpusat & Akurat</h3>
                     </div>
-                    <p class="text-sm text-slate-600 pl-13 font-medium">Satu sumber kebenaran untuk nilai, absensi, dan profil siswa.</p>
+                    <p class="text-sm text-slate-600 pl-13 font-medium">Single source of truth untuk nilai rapor, absensi, jurnal guru, dan data portofolio siswa.</p>
                 </div>
                 <div>
                     <div class="flex items-center gap-3 mb-2">
                         <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg></div>
                         <h3 class="text-base font-bold text-slate-900">Infrastruktur Aman</h3>
                     </div>
-                    <p class="text-sm text-slate-600 pl-13 font-medium">Data privasi dijamin dengan enkripsi mutakhir dan pemisahan hak akses.</p>
+                    <p class="text-sm text-slate-600 pl-13 font-medium">Data privasi dijamin dengan enkripsi mutakhir dan pemisahan hak akses antara Admin, Guru, dan Siswa.</p>
                 </div>
             </div>
         </div>
