@@ -18,8 +18,8 @@ use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Navigation\NavigationGroup;
-use Filament\Navigation\MenuItem; // <-- Wajib ditambahkan
-use App\Filament\Pages\ProfilPegawai; // <-- Wajib ditambahkan
+use Filament\Navigation\MenuItem;
+use App\Filament\Pages\ProfilPegawai;
 use App\Filament\Pages\Auth\CustomAdminLogin;
 
 class AdminPanelProvider extends PanelProvider
@@ -29,7 +29,6 @@ class AdminPanelProvider extends PanelProvider
         $namaSekolah = 'SmartM1';
         $faviconUrl = null;
 
-        // Mengambil data pengaturan sekolah secara aman
         try {
             if (\Illuminate\Support\Facades\Schema::hasTable('pengaturan')) {
                 $pengaturan = \App\Models\Pengaturan::first();
@@ -39,7 +38,6 @@ class AdminPanelProvider extends PanelProvider
                 }
             }
         } catch (\Exception $e) {
-            // Abaikan jika tabel belum siap (saat migrasi awal)
         }
 
         return $panel
@@ -50,7 +48,6 @@ class AdminPanelProvider extends PanelProvider
             ->brandName('SmartM1')
             ->favicon($faviconUrl)
             
-            // FUNGSI BARU: Menyematkan halaman kustom ke Menu Dropdown Pengguna (Kanan Atas)
             ->userMenuItems([
                 MenuItem::make()
                     ->label('Profil Saya')
@@ -58,7 +55,6 @@ class AdminPanelProvider extends PanelProvider
                     ->icon('heroicon-o-user-circle'),
             ])
             
-            // Sidebar utama bisa diciutkan menjadi ikon saja di Desktop
             ->sidebarCollapsibleOnDesktop()
             
             ->colors([
@@ -76,12 +72,10 @@ class AdminPanelProvider extends PanelProvider
                 \App\Filament\Widgets\AdminAbsensiHariIniWidget::class,
                 \App\Filament\Widgets\AdminPeringatanAbsensiWidget::class,
             ])
-            // MENYUNTIKKAN KODE PWA KE DALAM PANEL ADMIN (Agar Guru juga bisa Install)
             ->renderHook(
                 \Filament\View\PanelsRenderHook::HEAD_END,
                 fn (): string => \Illuminate\Support\Facades\Blade::render('@include("pwa-head")')
             )
-            // PENGATURAN KELOMPOK MENU: Terbuka secara default, tapi bisa diciutkan (collapsible)
             ->navigationGroups([
                 NavigationGroup::make()
                     ->label('Manajemen Kelas')

@@ -9,10 +9,8 @@
     @endphp
 
     <style>
-        /* 1. Mencegah Scroll pada Body Asli Filament */
         body { overflow: hidden !important; }
         
-        /* 2. OVERLAY LAYAR PENUH: Mengubur seluruh desain Filament */
         #login-overlay {
             position: fixed; inset: 0; z-index: 99999;
             background-color: #e2e8f0;
@@ -20,7 +18,6 @@
         }
         .dark #login-overlay { background-color: #020617; }
 
-        /* 3. KONTAINER APLIKASI (SAMA PERSIS DENGAN DASBOR) */
         .android-app-container {
             width: 100%; max-width: 414px; height: 100vh; height: 100dvh;
             background-color: #f8fafc;
@@ -33,7 +30,6 @@
         .android-content { flex: 1; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; }
         .android-content::-webkit-scrollbar { display: none; }
 
-        /* 4. MENGUBAH FORM FILAMENT AGAR TERLIHAT SEPERTI APLIKASI */
         .android-app-container .fi-fo-field-wrp label span { color: #1e293b !important; font-weight: 800 !important; font-size: 11px !important; text-transform: uppercase; letter-spacing: 0.5px; }
         .dark .android-app-container .fi-fo-field-wrp label span { color: #94a3b8 !important; }
         
@@ -49,10 +45,8 @@
 
     <div id="login-overlay">
         <div class="android-app-container">
-            <!-- Menambahkan background dasar putih/gelap dan flex-col -->
             <div class="android-content bg-white dark:bg-gray-800" style="display: flex; flex-direction: column;">
                 
-                <!-- HEADER AREA (Latar Biru Penuh) -->
                 <div style="background: linear-gradient(135deg, #2563eb, #3730a3); flex: 1; display: flex; flex-direction: column; align-items: center;text-align: center; justify-content: center; padding: 40px 24px 80px 24px; color: white; position: relative; z-index: 10; min-height: 45vh;">
                     
                     <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 24px;">
@@ -80,10 +74,8 @@
                     </div>
                 </div>
 
-                <!-- BOTTOM SHEET AREA (Lengkung di atas saja, menempel ke bawah) -->
                 <div class="bg-white dark:bg-gray-800" style="border-radius: 2.5rem 2.5rem 0 0; padding: 32px 32px 48px 32px; margin-top: -40px; position: relative; z-index: 20; box-shadow: 0 -15px 40px rgba(0,0,0,0.15); display: flex; flex-direction: column;">
                     
-                    <!-- Garis Indikator Swipe (Detail UI Bottom Sheet) -->
                     <div style="width: 48px; height: 6px; border-radius: 999px; background-color: #cbd5e1; margin: 0 auto 32px auto;" class="dark:bg-gray-700"></div>
 
                     <form wire:submit="authenticate" style="display: flex; flex-direction: column; gap: 24px;">

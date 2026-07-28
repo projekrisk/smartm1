@@ -37,7 +37,6 @@
 
     <div class="android-app-container theme-bg">
         
-        <!-- HEADER -->
         <div style="flex-shrink: 0; background: linear-gradient(135deg, #2563eb, #3730a3); padding: 40px 24px 60px 24px; color: white; position: relative; z-index: 10;">
             <a href="/siswa" style="position: absolute; top: 32px; left: 20px; background-color: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); transition: transform 0.2s;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">
                 <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
@@ -52,12 +51,10 @@
             </div>
         </div>
 
-        <!-- DAFTAR JADWAL (ACCORDION DENGAN CARD DESAIN BARU) -->
         <div class="android-content theme-bg" 
              style="border-top-left-radius: 2.5rem; border-top-right-radius: 2.5rem; margin-top: -30px; padding: 32px 20px 40px 20px; position: relative; z-index: 20; box-shadow: 0 -10px 25px rgba(0,0,0,0.1);">
             
             @if($jadwalGrouped->isEmpty())
-                <!-- TAMPILAN KOSONG -->
                 <div style="text-align: center; padding: 40px 20px;">
                     <div style="width: 64px; height: 64px; border-radius: 20px; background-color: rgba(37,99,235,0.1); color: #2563eb; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;" class="dark:bg-slate-800">
                         <x-filament::icon icon="heroicon-o-calendar-days" style="width: 32px; height: 32px;" />
@@ -72,13 +69,10 @@
                     $hariIni = $hariIndo[date('N')];
                 @endphp
 
-                <!-- STATE ALPINE.JS TUNGGAL: Hanya 1 hari yang bisa terbuka (default: hari ini) -->
                 <div x-data="{ activeDay: '{{ $hariIni }}' }" style="display: flex; flex-direction: column; gap: 16px;">
                     @foreach($jadwalGrouped as $hari => $jadwals)
                         
-                        <!-- BLOK PER HARI (ACCORDION ITEM) -->
                         <div>
-                            <!-- Tombol Judul Hari (Klik untuk Buka/Tutup) -->
                             <button @click="activeDay = activeDay === '{{ $hari }}' ? null : '{{ $hari }}'" 
                                     style="width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-radius: 16px; border: none; cursor: pointer; transition: background-color 0.2s;"
                                     class="dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 theme-card-collapse">
@@ -92,28 +86,22 @@
                                     @endif
                                 </div>
                                 
-                                <!-- Ikon Panah Putar Berdasarkan State -->
                                 <div class="text-gray-400" :class="{'rotate-180': activeDay === '{{ $hari }}', 'transition-transform duration-200': true}">
                                     <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
                                 </div>
                             </button>
 
-                            <!-- Area Konten Tersembunyi (Animasi Buka/Tutup) -->
                             <div x-show="activeDay === '{{ $hari }}'" x-collapse x-cloak>
-                                <!-- Kartu Pembungkus List Pelajaran (Desain Baru) -->
                                 <div class="theme-card" style="border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; margin-top: 12px;">
                                     
                                     @foreach($jadwals as $index => $item)
-                                        <!-- Baris per Jam Pelajaran -->
                                         <div style="display: flex; align-items: stretch; padding: 14px 16px; {{ !$loop->last ? : '' }}" class="{{ !$loop->last ? 'dark:border-slate-700/50' : '' }} theme-card-border">
                                             
-                                            <!-- Kolom Jam (Kiri) -->
                                             <div style="width: 60px; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; padding-right: 12px; border-right: 2px solid {{ $hari === $hariIni ? '#3b82f6' : '#e2e8f0' }}; margin-right: 12px;" class="{{ $hari !== $hariIni ? 'dark:border-slate-700' : '' }}">
                                                 <span style="font-size: 13px; font-weight: 800;" class="theme-text">{{ date('H:i', strtotime($item->jam_mulai)) }}</span>
                                                 <span style="font-size: 13px; font-weight: 600; color: #94a3b8; margin-top: 2px;">{{ date('H:i', strtotime($item->jam_selesai)) }}</span>
                                             </div>
 
-                                            <!-- Kolom Keterangan Pelajaran (Kanan) -->
                                             <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
                                                 <span style="font-size: 14px; font-weight: 700; line-height: 1.3;" class="theme-text">{{ $item->mataPelajaran->nama_pelajaran ?? '-' }}</span>
                                                 
@@ -135,7 +123,6 @@
                     @endforeach
                 </div>
                 
-                <!-- Spasi kosong di bawah -->
                 <div style="height: 30px;"></div>
             @endif
         </div>

@@ -51,7 +51,6 @@
 
     <div class="android-app-container theme-bg">
         
-        <!-- HEADER -->
         <div style="flex-shrink: 0; background: linear-gradient(135deg, #2563eb, #3730a3); padding: 40px 24px 60px 24px; color: white; position: relative; z-index: 10;">
             <a href="/siswa" style="position: absolute; top: 32px; left: 20px; background-color: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); transition: transform 0.2s;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">
                 <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
@@ -65,20 +64,15 @@
             </div>
         </div>
 
-        <!-- KONTEN MELENGKUNG -->
         <div class="android-content theme-bg" style="border-top-left-radius: 2.5rem; border-top-right-radius: 2.5rem; margin-top: -30px; padding: 32px 20px 24px 20px; position: relative; z-index: 20; box-shadow: 0 -10px 25px rgba(0,0,0,0.1);">
             
-            <!-- WIDGET STATISTIK -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px;">
-                <!-- Card Semester -->
                 <div class="theme-card" style="border-radius: 24px; padding: 20px 16px; text-align: center; display: flex; flex-direction: column; justify-content: center;">
                     <p class="theme-text-muted" style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Semester Aktif</p>
                     <h2 class="theme-text" style="font-size: 2rem; font-weight: 900; margin: 6px 0; line-height: 1;">{{ $absenSemester }}</h2>
                     <p class="theme-text-muted" style="font-size: 9px; font-weight: 700;">Hari Tdk Hadir</p>
                 </div>
-                <!-- Card Bulan Ini -->
                 <div class="theme-card" style="border-radius: 24px; padding: 20px 16px; text-align: center; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden;">
-                    <!-- Dekorasi Merah Halus -->
                     <div style="position: absolute; top: -10px; right: -10px; width: 40px; height: 40px; background: rgba(239, 68, 68, 0.1); border-radius: 50%; filter: blur(10px);"></div>
                     
                     <p class="theme-text-muted" style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Bulan Ini</p>
@@ -87,31 +81,26 @@
                 </div>
             </div>
 
-            <!-- JUDUL DAFTAR -->
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding: 0 4px;">
                 <h3 class="theme-text" style="font-size: 14px; font-weight: 900; m-0">Riwayat Bulan Ini</h3>
                 <span class="theme-text-muted" style="font-size: 10px; font-weight: 700; text-transform: uppercase;">{{ $listAbsen->count() }} Catatan</span>
             </div>
 
-            <!-- DAFTAR KETIDAKHADIRAN -->
             <div style="display: flex; flex-direction: column; gap: 12px;">
                 @forelse($listAbsen as $absen)
                     <div class="theme-card" style="border-radius: 20px; padding: 16px; display: flex; align-items: center; justify-content: space-between;">
                         
                         <div style="display: flex; align-items: center; gap: 14px; overflow: hidden; flex: 1;">
-                            <!-- Ikon Kalender Mini -->
                             <div style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 12px; background-color: rgba(100, 116, 139, 0.1); display: flex; align-items: center; justify-content: center;" class="text-slate-500 dark:bg-slate-800 dark:text-slate-400">
                                 <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                             </div>
                             
-                            <!-- Info Tanggal & Keterangan -->
                             <div style="display: flex; flex-direction: column; min-width: 0;">
                                 <span class="theme-text" style="font-weight: 800; font-size: 13px;">{{ \Carbon\Carbon::parse($absen->rekapKehadiran->tanggal)->isoFormat('dddd, D MMMM Y') }}</span>
                                 <span class="theme-text-muted" style="font-size: 11px; font-weight: 600; margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $absen->keterangan ?? 'Tanpa Keterangan Tambahan' }}</span>
                             </div>
                         </div>
 
-                        <!-- Lencana Status (Sakit/Izin/Alpa) -->
                         <div style="flex-shrink: 0; margin-left: 12px;">
                             <div class="badge-status @if($absen->status == 'Sakit') badge-sakit @elseif($absen->status == 'Izin') badge-izin @else badge-alpa @endif">
                                 {{ $absen->status }}
@@ -119,7 +108,6 @@
                         </div>
                     </div>
                 @empty
-                    <!-- Tampilan Kosong (Jika selalu hadir) -->
                     <div class="theme-card" style="border-radius: 20px; padding: 32px 16px; text-align: center; border: 2px dashed #e2e8f0;" class="dark:border-slate-700">
                         <div style="width: 56px; height: 56px; border-radius: 50%; background-color: #d1fae5; color: #10b981; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;" class="dark:bg-emerald-900/30 dark:text-emerald-400">
                             <svg style="width: 28px; height: 28px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>

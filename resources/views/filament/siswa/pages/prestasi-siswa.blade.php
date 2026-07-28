@@ -29,16 +29,12 @@
             .android-app-container .fi-input-wrp:focus-within { border-color: #2563eb !important; box-shadow: 0 0 0 1px #2563eb !important; }
             .dark .android-app-container .fi-input-wrp:focus-within { border-color: #3b82f6 !important; box-shadow: 0 0 0 1px #3b82f6 !important; }
             
-            /* CSS UNTUK BARIS KIRI-KANAN PADA KARTU PRESTASI */
             .data-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 6px 0; border-bottom: 1px dashed rgba(0,0,0,0.05); }
             .dark .data-row { border-bottom: 1px dashed rgba(255,255,255,0.05); }
             .data-row:last-child { border-bottom: none; }
             .data-label { font-size: 11px; font-weight: 600; width: 40%; flex-shrink: 0; }
             .data-val { font-size: 11px; font-weight: 800; text-align: right; width: 60%; line-height: 1.4; word-break: break-word; }
 
-            /* ======================================================== */
-            /* TRIK SAKTI CSS: MEMAKSA FORM FILAMENT MENJADI 1 KOLOM */
-            /* ======================================================== */
             .android-app-container form .grid, 
             .android-app-container form .grid-cols-2,
             .android-app-container form .sm\:grid-cols-2,
@@ -177,7 +173,6 @@
             </div>
 
         @else
-            <!-- FORMULIR PENGAJUAN (DIJAMIN 1 KOLOM KE BAWAH) -->
             <div class="android-content theme-bg" style="border-top-left-radius: 2.5rem; border-top-right-radius: 2.5rem; margin-top: -30px; padding: 24px 20px 40px 20px; position: relative; z-index: 20; box-shadow: 0 -10px 25px rgba(0,0,0,0.1);">
                 <form wire:submit="kirimPengajuan" style="display: flex; flex-direction: column; gap: 16px;">
                     {{ $this->form }}

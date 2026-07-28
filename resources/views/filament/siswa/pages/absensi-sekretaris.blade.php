@@ -77,7 +77,6 @@
         
         <form wire:submit="simpan" style="display: flex; flex-direction: column; height: 100%; width: 100%; position: relative; overflow: hidden;">
             
-            <!-- HEADER (Terkunci/Sticky di Atas) -->
             <div style="flex-shrink: 0; background: linear-gradient(135deg, #2563eb, #3730a3); padding: 40px 24px 60px 24px; color: white; position: relative; z-index: 10;">
                 <a href="/siswa" style="position: absolute; top: 32px; left: 20px; background-color: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); transition: transform 0.2s;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">
                     <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
@@ -104,7 +103,6 @@
                     <p style="font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Pilih siswa yang tidak hadir</p>
                 </div>
 
-                <!-- DAFTAR SISWA -->
                 <div style="display: flex; flex-direction: column; gap: 12px;">
                     @foreach($absensi as $index => $item)
                         <div wire:key="siswa-row-{{ $item['siswa_id'] }}" x-data="{ localStatus: '{{ $item['status'] }}' }">
@@ -134,22 +132,17 @@
                                 </div>
                             </div>
 
-                            <!-- ========================================== -->
-                            <!-- 3. MODAL BOTTOM SHEET (Muncul Dari Bawah)  -->
-                            <!-- ========================================== -->
                             <div x-show="activeModal === {{ $index }}" x-cloak 
                                  style="position: fixed; top: 0; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 414px; z-index: 999999; background-color: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px);"
                                  x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
                                  x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
                                 
-                                <!-- Diberi position: absolute, bottom: 0, left: 0, right: 0 agar MENEMPEL KUAT DI BAWAH menutupi tombol simpan -->
                                 <div @click.away="activeModal = null" 
                                      class="theme-card" 
                                      style="position: absolute; bottom: 0; left: 0; right: 0; width: 100%; border-radius: 2.5rem 2.5rem 0 0; padding: 24px 24px 40px 24px; box-shadow: 0 -15px 40px rgba(0,0,0,0.3);"
                                      x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="translate-y-full" x-transition:enter-end="translate-y-0"
                                      x-transition:leave="transition ease-in duration-200 transform" x-transition:leave-start="translate-y-0" x-transition:leave-end="translate-y-full">
                                      
-                                     <!-- Indikator Swipe Down (Garis abu-abu di atas) -->
                                      <div style="width: 48px; height: 6px; border-radius: 999px; background-color: #cbd5e1; margin: 0 auto 24px auto;" class="dark:bg-slate-600"></div>
 
                                      <div style="text-align: center; margin-bottom: 24px;">
@@ -194,14 +187,11 @@
                                     </button>
                                 </div>
                             </div>
-                        </div> <!-- Akhir wrapper wire:key -->
+                        </div>
                     @endforeach
                 </div>
             </div>
 
-            <!-- ========================================== -->
-            <!-- 4. FOOTER (Terkunci/Sticky di Bawah Layar) -->
-            <!-- ========================================== -->
             @if(!$isLocked)
                 <div style="flex-shrink: 0; padding: 16px 20px 24px 20px; position: relative; z-index: 30;" class="dark:bg-slate-900 dark:border-slate-800">
                     <button type="submit" wire:loading.attr="disabled" style="width: 100%; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; border-radius: 16px; padding: 16px; font-weight: 900; font-size: 14px; border: none; box-shadow: 0 8px 25px rgba(37,99,235,0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.1s;" onmousedown="this.style.transform='scale(0.96)'" onmouseup="this.style.transform='scale(1)'" onmouseleave="this.style.transform='scale(1)'">
@@ -211,7 +201,6 @@
                         </div>
                         
                         <div wire:loading.flex wire:target="simpan" style="align-items: center; justify-content: center; gap: 8px; width: 100%;" x-cloak>
-                            <svg style="animation: spin 1s linear infinite; height: 20px; width: 20px; color: white;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle style="opacity: 0.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path style="opacity: 0.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                             MENYIMPAN DATA...
                         </div>
                     </button>

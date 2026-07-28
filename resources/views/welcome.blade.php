@@ -141,17 +141,17 @@
                     </div>
 
                     <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 mb-6 leading-[1.1]">
-                        Digitalisasi Sistem Administrasi,<br>
-                        <span class="text-edu-600">& Akademik Siswa.</span>
+                        Digitalisasi Administrasi,<br>
+                        <span class="text-edu-600">Akademik, & Layanan Sekolah.</span>
                     </h1>
 
                     <p class="text-base md:text-xl text-slate-600 max-w-xl mb-10 leading-relaxed font-medium">
-                        Platform terpadu SmartM1 {{ $namaSekolah }} untuk mendukung kegiatan akademik, validasi absensi, e-rapor, dan pengolahan data siswa secara <span class="text-slate-900 font-bold border-b-2 border-edu-200">real-time</span>.
+                        SmartM1 merupakan platform digital terintegrasi yang mendukung pengelolaan administrasi, layanan akademik, absensi, e-Rapor, serta data peserta didik secara <span class="text-slate-900 font-bold border-b-2 border-edu-200">aman, efisien, dan real-time.</span>.
                     </p>
 
                     <div class="flex flex-col sm:flex-row gap-3">
                         <button onclick="openLoginModal()" class="group px-8 py-4 bg-slate-900 text-white font-bold rounded-xl shadow-lg shadow-slate-900/20 hover:bg-edu-600 hover:shadow-edu-600/30 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 text-sm md:text-base">
-                            Otorisasi
+                            Masuk ke SmartM1
                             <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                         </button>
                         <button onclick="openFeaturesModal()" class="md:hidden px-8 py-4 bg-white/80 backdrop-blur-md text-slate-700 border border-slate-200 font-bold rounded-xl hover:bg-slate-50 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center text-sm">
@@ -171,7 +171,7 @@
                     </div>
                     <h3 class="text-xl font-bold mb-2 text-white">Infrastruktur Aman</h3>
                     <p class="text-base text-slate-300 leading-relaxed font-medium">
-                        Data privasi institusi {{ $namaSekolah }} dijamin dengan enkripsi mutakhir dan pemisahan hak akses otoritas yang tegas.
+                        Seluruh data sekolah dikelola dengan standar keamanan yang tinggi melalui sistem enkripsi, kontrol akses, dan perlindungan data yang andal.
                     </p>
                 </div>
             </div>
@@ -183,7 +183,7 @@
                     </div>
                     <h3 class="text-xl font-bold text-slate-900 mb-2">Basis Data Terpadu</h3>
                     <p class="text-base text-slate-600 leading-relaxed font-medium">
-                        Integrasi nilai rapor, catatan kasus, dan absensi harian dalam satu komando digital SmartM1 yang cerdas.
+                        Seluruh informasi akademik, administrasi, absensi, dan layanan siswa terintegrasi dalam satu platform untuk pengelolaan yang lebih cepat dan akurat.
                     </p>
                 </div>
             </div>

@@ -12,7 +12,6 @@
             }
             .dark body, .dark .fi-layout, .dark .fi-simple-layout, .dark .fi-simple-main { background-color: #020617 !important; }
 
-            /* 2. KONTAINER APLIKASI MOBILE */
             .android-app-container {
                 width: 100%; max-width: 414px; margin: 0 auto; 
                 height: 100vh; height: 100dvh;
@@ -216,7 +215,6 @@
             </div>
             
             @php
-                // Hitung notifikasi pesan yang belum dibaca siswa
                 $unreadPesan = 0;
                 if(isset($siswa)) {
                     $unreadPesan = \App\Models\PesanBantuan::where('siswa_id', $siswa->id)->where('is_read_siswa', false)->count();

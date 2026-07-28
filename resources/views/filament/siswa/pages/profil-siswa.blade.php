@@ -47,7 +47,6 @@
 
     <div class="android-app-container theme-bg">
         
-        <!-- HEADER TERBARU -->
         <div style="flex-shrink: 0; background: linear-gradient(135deg, #2563eb, #3730a3); padding: 35px 24px 60px 24px; color: white; position: relative; z-index: 10;">
             <a href="/siswa" style="position: absolute; top: 32px; left: 20px; background-color: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); transition: transform 0.2s;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">
                 <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
@@ -62,10 +61,8 @@
             </div>
         </div>
 
-        <!-- KONTEN SCROLL -->
         <div class="android-content theme-bg" style="border-top-left-radius: 2.5rem; border-top-right-radius: 2.5rem; margin-top: -35px; padding: 24px 20px 40px 20px; position: relative; z-index: 20; box-shadow: 0 -10px 25px rgba(0,0,0,0.1);">
             
-        <!-- KARTU UBAH FOTO PROFIL -->
             <div class="theme-card" style="border-radius: 20px; padding: 20px; margin-bottom: 16px; text-align: center;">
                 <h3 class="theme-text" style="font-size: 13px; font-weight: 900; margin: 0 0 16px 0; display: flex; align-items: center; justify-content: center; gap: 8px;" class="dark:border-slate-700">
                     Ganti Foto Profil
@@ -82,7 +79,6 @@
                 </form>
             </div>
 
-            <!-- TOMBOL UBAH PASSWORD (Tampil Menonjol) -->
             <a href="/siswa/ubah-password" style="text-decoration: none; display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #f59e0b, #ea580c); padding: 14px 20px; border-radius: 20px; color: white; box-shadow: 0 8px 20px rgba(15, 23, 42, 0.2); margin-bottom: 24px; transition: transform 0.2s;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
                 <div style="display: flex; align-items: center; gap: 14px;">
                     <div style="background-color: rgba(255,255,255,0.1); padding: 8px; border-radius: 12px; backdrop-filter: blur(4px);">
@@ -98,7 +94,6 @@
                 </div>
             </a>
 
-            <!-- KARTU DATA PRIBADI -->
             <div class="theme-card" style="border-radius: 20px; padding: 20px; margin-bottom: 16px;">
                 <h3 class="theme-text" style="font-size: 13px; font-weight: 900; margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px;" class="dark:border-slate-700">
                     <x-filament::icon icon="heroicon-s-identification" style="width: 18px; height: 18px; color: #2563eb;" />
@@ -137,7 +132,6 @@
                 </div>
             </div>
 
-            <!-- KARTU KONTAK & ALAMAT -->
             <div class="theme-card" style="border-radius: 20px; padding: 20px; margin-bottom: 16px;">
                 <h3 class="theme-text" style="font-size: 13px; font-weight: 900; margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px;" class="dark:border-slate-700">
                     <x-filament::icon icon="heroicon-s-map-pin" style="width: 18px; height: 18px; color: #10b981;" />
@@ -164,7 +158,6 @@
                 </div>
             </div>
 
-            <!-- KARTU ORANG TUA -->
             <div class="theme-card" style="border-radius: 20px; padding: 20px; margin-bottom: 16px;">
                 <h3 class="theme-text" style="font-size: 13px; font-weight: 900; margin: 0 0 8px 0; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px;" class="dark:border-slate-700">
                     <x-filament::icon icon="heroicon-s-users" style="width: 18px; height: 18px; color: #f59e0b;" />
@@ -199,7 +192,6 @@
                 </div>
             </div>
 
-            <!-- PUSAT BANTUAN (PESAN) -->
             <a href="/siswa/pesan" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; text-align: center; background-color: rgba(245, 158, 11, 0.1); border: 1px dashed #f59e0b; padding: 20px; border-radius: 20px; margin-top: 32px; transition: transform 0.2s;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
                 <div style="background-color: #f59e0b; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);">
                     <x-filament::icon icon="heroicon-s-chat-bubble-left-ellipsis" style="width: 20px; height: 20px;" />
