@@ -26,11 +26,11 @@ class DashboardStats extends BaseWidget
                     ->descriptionIcon('heroicon-m-briefcase')
                     ->icon('heroicon-o-users')->color('primary'),
                 Stat::make('Total Siswa', Siswa::count())
-                    ->description('Siswa yang terdaftar di sekolah')
+                    ->description('Terdaftar di sekolah')
                     ->descriptionIcon('heroicon-m-academic-cap')
                     ->icon('heroicon-o-academic-cap')->color('success'),
-                Stat::make('Kelas Aktif', Siswa::distinct('kelas_id')->count('kelas_id'))
-                    ->description('Kelas yang memiliki siswa')
+                Stat::make('Total Kelas', Siswa::distinct('kelas_id')->count('kelas_id'))
+                    ->description('Kelas aktif')
                     ->descriptionIcon('heroicon-m-building-office-2')
                     ->icon('heroicon-o-building-library')
                     ->color('info'),
