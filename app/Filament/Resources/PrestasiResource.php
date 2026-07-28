@@ -22,7 +22,8 @@ class PrestasiResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-trophy';
     protected static ?string $navigationLabel = 'Prestasi Siswa';
     protected static ?string $pluralModelLabel = 'Daftar Prestasi Siswa';
-    protected static ?int $navigationSort = 12;
+    protected static ?string $navigationGroup = 'Kesiswaan';    
+    protected static ?int $navigationSort = 2;
 
     public static function getNavigationBadge(): ?string
     {

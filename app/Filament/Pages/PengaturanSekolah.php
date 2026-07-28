@@ -21,7 +21,8 @@ class PengaturanSekolah extends Page implements HasForms
     protected static ?string $navigationLabel = 'Pengaturan';
     protected static ?string $title = 'Pengaturan';    
     protected static string $view = 'filament.pages.pengaturan-sekolah';
-    protected static ?int $navigationSort = 17;
+    protected static ?string $navigationGroup = 'Sistem';
+    protected static ?int $navigationSort = 1;
 
     public ?array $data = [];
 

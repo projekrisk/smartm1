@@ -17,8 +17,9 @@ class TingkatResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-numbered-list';
     protected static ?string $navigationLabel = 'Tingkat';
     protected static ?string $pluralModelLabel = 'Tingkat';
+    protected static ?string $navigationGroup = 'Data Master';    
     protected static ?string $modelLabel = 'Tingkat';
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 2;
 
     public static function canViewAny(): bool
     {

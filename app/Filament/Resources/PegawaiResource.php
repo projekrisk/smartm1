@@ -21,8 +21,9 @@ class PegawaiResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-briefcase';
     protected static ?string $navigationLabel = 'Data Pegawai';
     protected static ?string $pluralModelLabel = 'Data Pegawai';
+    protected static ?string $navigationGroup = 'Data Master';    
     protected static ?string $modelLabel = 'Pegawai';
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 5;
 
     public static function canViewAny(): bool
     {

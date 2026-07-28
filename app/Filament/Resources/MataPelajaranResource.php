@@ -17,8 +17,9 @@ class MataPelajaranResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-book-open';    
     protected static ?string $navigationLabel = 'Mata Pelajaran';
     protected static ?string $pluralModelLabel = 'Mata Pelajaran';
+    protected static ?string $navigationGroup = 'Data Master';    
     protected static ?string $modelLabel = 'Mata Pelajaran';
-    protected static ?int $navigationSort = 6;
+    protected static ?int $navigationSort = 4;
 
     public static function canViewAny(): bool
     {

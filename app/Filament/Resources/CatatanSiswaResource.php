@@ -28,7 +28,8 @@ class CatatanSiswaResource extends Resource
     protected static ?string $navigationLabel = 'Catatan / Kasus';
     protected static ?string $pluralModelLabel = 'Catatan Siswa';
     protected static ?string $modelLabel = 'Catatan';
-    protected static ?int $navigationSort = 13;
+    protected static ?string $navigationGroup = 'Kesiswaan';    
+    protected static ?int $navigationSort = 3;
 
     public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
     {
