@@ -49,10 +49,10 @@ return [
 
         'publik_upload' => [
             'driver' => 'local',
-            'root' => public_path('uploads'), // Langsung simpan di folder public/uploads
+            // Gunakan base_path('uploads') agar memaksa masuk ke public_html/uploads
+            'root' => base_path('uploads'),
             'url' => env('APP_URL').'/uploads',
             'visibility' => 'public',
-            'throw' => false,
         ],
 
         's3' => [

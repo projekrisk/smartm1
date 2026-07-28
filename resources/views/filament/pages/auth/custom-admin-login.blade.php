@@ -8,13 +8,11 @@
         } catch (\Exception $e) {}
     @endphp
 
-    <!-- Menyuntikkan Tailwind -->
     <div wire:ignore>
         <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-            /* Membersihkan layout bawaan Filament */
             body { overflow: hidden !important; background-color: #ffffff !important; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
             .fi-topbar, .fi-sidebar, .fi-simple-header, .fi-logo, .fi-simple-footer { display: none !important; }
             .fi-layout, .fi-simple-layout, .fi-main, .fi-simple-main, .fi-page { 
@@ -22,7 +20,6 @@
                 background-color: transparent !important; box-shadow: none !important; border: none !important;
             }
 
-            /* Memperhalus tampilan form Filament */
             #split-login .fi-fo-field-wrp label span { color: #334155 !important; font-weight: 700 !important; font-size: 13px !important; }
             #split-login .fi-fo-field-wrp p { color: #64748b !important; font-size: 11px !important; }
             #split-login .fi-fo-field-wrp-error-message { color: #ef4444 !important; font-size: 12px !important; }
@@ -49,7 +46,6 @@
                 font-weight: 500 !important;
             }
             
-            /* MEMPERBAIKI CHECKBOX "INGAT SAYA" YANG MENGHILANG */
             #split-login input[type="checkbox"],
             #split-login .fi-checkbox-input { 
                 appearance: auto !important;
@@ -72,12 +68,8 @@
         </style>
     </div>
 
-    <!-- WRAPPER UTAMA: SPLIT SCREEN (Layar Terbelah) -->
     <div id="split-login" class="fixed inset-0 z-[99999] bg-white flex w-full h-full">
 
-        <!-- ========================================== -->
-        <!-- TOAST NOTIFIKASI ERROR (MUNCUL JIKA GAGAL) -->
-        <!-- ========================================== -->
         @if($errors->any())
             <div x-data="{ show: true }"
                  x-show="show"
@@ -104,9 +96,7 @@
             </div>
         @endif
 
-        <!-- SISI KIRI: BRANDING & VISUAL (Hanya muncul di Layar Besar/Desktop) -->
         <div class="hidden lg:flex lg:w-[45%] bg-slate-900 relative flex-col justify-between p-12 overflow-hidden border-r border-slate-800">
-            <!-- Ornamen Estetika Background Kiri -->
             <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-600/20 rounded-full blur-[100px]"></div>
             <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-emerald-600/20 rounded-full blur-[100px]"></div>
             
@@ -138,10 +128,8 @@
             </div>
         </div>
 
-        <!-- SISI KANAN: AREA FORM LOGIN (Lebar Penuh di Mobile, 55% di Desktop) -->
         <div class="w-full lg:w-[55%] flex flex-col justify-center px-6 md:px-16 lg:px-24 bg-white relative">
             
-            <!-- Tombol Kembali Mobile (Hanya terlihat jika logo/sisi kiri tersembunyi) -->
             <a href="{{ url('/') }}" class="lg:hidden absolute top-6 left-6 inline-flex items-center gap-2 text-slate-400 hover:text-slate-900 transition-colors text-sm font-bold bg-slate-50 px-4 py-2 rounded-full border border-slate-200">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
                 Utama
@@ -153,12 +141,10 @@
                     <p class="text-slate-500 mt-2 font-medium">Masukkan informasi akun staf Anda.</p>
                 </div>
 
-                <!-- Pemasangan Form Bawaan Filament -->
                 <x-filament-panels::form wire:submit="authenticate" class="space-y-5">
                     
                     {{ $this->form }}
 
-                    <!-- Tombol Submit Gelap Mewah -->
                     <div class="pt-4">
                         <button type="submit" wire:loading.attr="disabled" class="w-full flex justify-center py-3.5 px-4 border border-transparent text-sm font-bold rounded-xl text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-900 shadow-lg shadow-slate-900/20 hover:shadow-slate-900/30 hover:-translate-y-0.5 transition-all">
                             

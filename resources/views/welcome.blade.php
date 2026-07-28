@@ -20,12 +20,10 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <!-- META DASAR -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     
-    <!-- SEO UTAMA -->
     <title>{{ $appTitle }}</title>
     <meta name="title" content="{{ $appTitle }}">
     <meta name="description" content="{{ $metaDescription }}">
@@ -34,7 +32,6 @@
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ url()->current() }}">
 
-    <!-- FAVICON (LOGO DI TAB BROWSER) -->
     @if($pengaturan && $pengaturan->logo_sekolah)
         <link rel="icon" href="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}" type="image/x-icon"/>
         <link rel="apple-touch-icon" href="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}">
@@ -42,7 +39,6 @@
         <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon"/>
     @endif
 
-    <!-- OPEN GRAPH (WHATSAPP, FACEBOOK, LINKEDIN, TELEGRAM) -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:title" content="{{ $appTitle }}">
@@ -53,14 +49,12 @@
     <meta property="og:site_name" content="SmartM1 {{ $namaSekolah }}">
     <meta property="og:locale" content="id_ID">
 
-    <!-- TWITTER / X CARDS -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="{{ url()->current() }}">
     <meta name="twitter:title" content="{{ $appTitle }}">
     <meta name="twitter:description" content="{{ $metaDescription }}">
     <meta name="twitter:image" content="{{ $ogImageUrl }}">
 
-    <!-- TAILWIND CSS & FONTS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
@@ -92,13 +86,11 @@
         }
     </script>
     <style>
-        /* Mengunci Layar 100% Tanpa Scroll */
         html, body { 
             margin: 0; padding: 0; height: 100%; height: 100dvh; 
             overflow: hidden; background-color: #f8fafc; color: #0f172a; 
         }
 
-        /* Modal Transitions */
         .modal-overlay {
             opacity: 0; visibility: hidden; transition: all 0.3s ease;
         }
@@ -115,7 +107,6 @@
 </head>
 <body class="antialiased flex flex-col relative w-full bg-slate-50 selection:bg-edu-500 selection:text-white">
 
-    <!-- Elemen Latar Belakang Blur (Blobs) -->
     <div class="fixed top-[-10%] left-[-10%] w-[40rem] h-[40rem] bg-blue-600/10 rounded-full blur-[100px] animate-blob pointer-events-none z-0"></div>
     <div class="fixed bottom-[-10%] right-[-10%] w-[40rem] h-[40rem] bg-emerald-600/10 rounded-full blur-[100px] animate-blob pointer-events-none z-0" style="animation-delay: 2s;"></div>
 
@@ -127,8 +118,8 @@
                 <div class="w-10 h-10 md:w-12 md:h-12 bg-slate-900 rounded-xl flex items-center justify-center shadow-md text-white font-bold text-xl group-hover:scale-105 transition-transform duration-300">M1</div>
             @endif
             <div class="flex flex-col">
-                <span class="font-extrabold text-lg md:text-xl text-slate-900 leading-none tracking-tight">SmartM1 {{ $namaSekolah }}</span>
-                <span class="text-[10px] md:text-xs text-slate-500 font-bold tracking-widest mt-0.5 uppercase">Portal Digitalisasi Administrasi & Akademik</span>
+                <span class="font-extrabold text-lg md:text-xl text-slate-900 leading-none tracking-tight">SMARTM1</span>
+                <span class="text-[10px] md:text-xs text-slate-500 font-bold tracking-widest mt-0.5 uppercase">{{ $namaSekolah }}</span>
             </div>
         </div>
 
@@ -138,13 +129,10 @@
         </button>
     </nav>
 
-    <!-- MAIN CONTENT: BENTO GRID LAYOUT -->
     <main class="flex-1 w-full max-w-[1400px] mx-auto px-4 md:px-8 pb-4 md:pb-8 flex flex-col justify-center h-full relative z-10">
         
-        <!-- Grid Container -->
         <div class="grid grid-cols-1 md:grid-cols-12 md:grid-rows-2 gap-4 md:gap-6 h-full max-h-[700px]">
             
-            <!-- KOTAK 1: KOTAK UTAMA (HERO) -->
             <div class="md:col-span-8 md:row-span-2 bg-white/70 backdrop-blur-xl rounded-[2rem] p-8 md:p-12 border border-slate-200/60 shadow-xl shadow-slate-200/20 flex flex-col justify-center relative overflow-hidden group hover:-translate-y-1 hover:shadow-2xl hover:shadow-slate-300/40 transition-all duration-500">
                 <div class="relative z-10">
                     <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-100/80 border border-slate-200/80 mb-6 backdrop-blur-sm">
@@ -163,7 +151,7 @@
 
                     <div class="flex flex-col sm:flex-row gap-3">
                         <button onclick="openLoginModal()" class="group px-8 py-4 bg-slate-900 text-white font-bold rounded-xl shadow-lg shadow-slate-900/20 hover:bg-edu-600 hover:shadow-edu-600/30 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 text-sm md:text-base">
-                            Otorisasi Masuk
+                            Otorisasi
                             <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                         </button>
                         <button onclick="openFeaturesModal()" class="md:hidden px-8 py-4 bg-white/80 backdrop-blur-md text-slate-700 border border-slate-200 font-bold rounded-xl hover:bg-slate-50 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center text-sm">
@@ -173,7 +161,6 @@
                 </div>
             </div>
 
-            <!-- KOTAK 2: INFO KEAMANAN -->
             <div class="hidden md:flex md:col-span-4 md:row-span-1 bg-slate-900/95 backdrop-blur-xl text-white rounded-[2rem] p-8 flex-col justify-between border border-slate-700 shadow-xl overflow-hidden relative group hover:-translate-y-1 hover:shadow-2xl hover:shadow-blue-900/20 transition-all duration-500 cursor-default">
                 <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-110 group-hover:-rotate-6 transition-transform duration-700">
                     <svg class="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -189,7 +176,6 @@
                 </div>
             </div>
 
-            <!-- KOTAK 3: INFO AKADEMIK -->
             <div class="hidden md:flex md:col-span-4 md:row-span-1 bg-edu-50/80 backdrop-blur-xl rounded-[2rem] p-8 flex-col justify-between border border-edu-100 shadow-lg group hover:-translate-y-1 hover:shadow-2xl hover:shadow-edu-500/10 transition-all duration-500 cursor-default">
                 <div>
                     <div class="w-12 h-12 rounded-xl bg-white shadow-sm flex items-center justify-center mb-5 text-edu-600 border border-edu-100 group-hover:bg-edu-600 group-hover:text-white transition-colors duration-300">
@@ -206,10 +192,9 @@
     </main>
 
     <footer class="relative z-10 w-full text-center py-4 text-[10px] md:text-xs text-slate-500 font-semibold shrink-0 bg-white/30 backdrop-blur-md border-t border-slate-200/50">
-        &copy; {{ date('Y') }} SmartM1 {{ $namaSekolah }}. Sistem Digitalisasi Administrasi & Akademik Siswa.
+        &copy; {{ date('Y') }} SmartM1 {{ $namaSekolah }}.
     </footer>
 
-    <!-- LOGIN MODAL -->
     <div id="loginModal" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeLoginModal()"></div>
         
@@ -225,7 +210,7 @@
                         <div class="w-16 h-16 bg-slate-900 rounded-2xl flex items-center justify-center mx-auto mb-5 text-white shadow-lg">
                             <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
                         </div>
-                        <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Otorisasi Gerbang</h2>
+                        <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Otorisasi</h2>
                         <p class="text-sm text-slate-500 mt-2 font-medium">Pilih peran Anda untuk masuk ke sistem SmartM1.</p>
                     </div>
                 </div>
@@ -261,7 +246,6 @@
         </div>
     </div>
 
-    <!-- FEATURES MODAL -->
     <div id="featuresModal" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeFeaturesModal()"></div>
         <div class="modal-content relative w-full max-w-sm bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden border border-slate-100">

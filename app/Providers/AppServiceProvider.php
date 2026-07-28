@@ -12,7 +12,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Memaksa Laravel agar menggunakan folder utama sebagai folder public
+        $this->app->usePublicPath(base_path());
     }
 
     /**
