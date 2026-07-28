@@ -13,7 +13,6 @@ class TestimoniResource extends Resource
 {
     protected static ?string $model = Testimoni::class;
 
-    protected static ?string $navigationGroup = 'Sistem';
     protected static ?string $navigationIcon = 'heroicon-o-star';
     protected static ?string $navigationLabel = 'Ulasan & Rating';
     protected static ?string $pluralModelLabel = 'Ulasan Siswa';

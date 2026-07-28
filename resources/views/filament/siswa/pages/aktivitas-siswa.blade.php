@@ -7,8 +7,8 @@
 
         .android-app-container {
             width: 100%; max-width: 414px; margin: 0 auto;
-            height: 100vh; height: 100dvh;
             position: fixed; top: 0; bottom: 0; left: 0; right: 0;
+            height: 100% !important; 
             box-shadow: 0 0 40px rgba(0,0,0,0.15); overflow: hidden;
             font-family: 'Inter', system-ui, sans-serif;
         }

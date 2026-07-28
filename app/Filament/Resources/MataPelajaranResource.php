@@ -13,7 +13,6 @@ use Filament\Tables\Table;
 class MataPelajaranResource extends Resource
 {
     protected static ?string $model = MataPelajaran::class;
-    protected static ?string $navigationGroup = 'Akademik';
     protected static ?string $slug = 'mata-pelajaran';
     protected static ?string $navigationIcon = 'heroicon-o-book-open';    
     protected static ?string $navigationLabel = 'Mata Pelajaran';

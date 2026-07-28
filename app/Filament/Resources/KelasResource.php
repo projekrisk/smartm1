@@ -13,7 +13,6 @@ use Filament\Tables\Table;
 class KelasResource extends Resource
 {
     protected static ?string $model = Kelas::class;
-    protected static ?string $navigationGroup = 'Manajemen Kelas';
     protected static ?string $slug = 'kelas';
     protected static ?string $navigationIcon = 'heroicon-o-folder-open';    
     protected static ?string $navigationLabel = 'Kelas';

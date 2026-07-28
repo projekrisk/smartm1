@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Auth;
 class JurnalGuruResource extends Resource
 {
     protected static ?string $model = JurnalGuru::class;
-    protected static ?string $navigationGroup = 'Akademik';
     protected static ?string $slug = 'jurnal-mengajar';
     protected static ?string $navigationIcon = 'heroicon-o-bookmark-square';
     protected static ?string $navigationLabel = 'Jurnal & Absensi';

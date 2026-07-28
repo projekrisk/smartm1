@@ -22,7 +22,7 @@ class DashboardStats extends BaseWidget
         if ($peran === 'admin') {
             $stats = [
                 Stat::make('Total Pegawai', Pegawai::count())
-                    ->description('Seluruh tenaga pendidik & kependidikan')
+                    ->description('Pendidik & Kependidikan')
                     ->descriptionIcon('heroicon-m-briefcase')
                     ->icon('heroicon-o-users')->color('primary'),
                 Stat::make('Total Siswa', Siswa::count())
@@ -39,15 +39,15 @@ class DashboardStats extends BaseWidget
         elseif ($peran === 'staf') {
             $stats = [
                 Stat::make('Total Siswa', Siswa::count())
-                    ->description('Siswa yang terdaftar di sekolah')
+                    ->description('Terdaftar di sekolah')
                     ->descriptionIcon('heroicon-m-academic-cap')
                     ->icon('heroicon-o-academic-cap')->color('success'),
                 Stat::make('Surat Panggilan Dibuat', \App\Models\SuratPanggilan::where('status', 'Dibuat')->count())
                     ->description('Surat baru belum diselesaikan')
                     ->descriptionIcon('heroicon-m-envelope')
                     ->icon('heroicon-o-envelope-open')->color('danger'),
-                Stat::make('Kelas Aktif', Siswa::distinct('kelas_id')->count('kelas_id'))
-                    ->description('Kelas yang memiliki siswa')
+                Stat::make('Total Kelas', Siswa::distinct('kelas_id')->count('kelas_id'))
+                    ->description('Kelas aktif')
                     ->descriptionIcon('heroicon-m-building-office-2')
                     ->icon('heroicon-o-building-library')
                     ->color('info'),
@@ -56,7 +56,6 @@ class DashboardStats extends BaseWidget
         elseif ($peran === 'guru') {
             $userId = Auth::id();
             
-            // FUNGSI BARU: Menghitung total mapel unik dari Jadwal Pelajaran (Single Source of Truth)
             $totalMapel = \App\Models\JadwalPelajaran::where('guru_id', $userId)->distinct('mata_pelajaran_id')->count('mata_pelajaran_id');
             $jurnalHariIni = JurnalGuru::where('guru_id', $userId)->whereDate('tanggal', today())->count();
 

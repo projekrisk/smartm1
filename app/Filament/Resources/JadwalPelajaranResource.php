@@ -19,7 +19,6 @@ use Illuminate\Database\Eloquent\Builder;
 class JadwalPelajaranResource extends Resource
 {
     protected static ?string $model = JadwalPelajaran::class;
-    protected static ?string $navigationGroup = 'Akademik';
     protected static ?string $slug = 'jadwal-mengajar';
     protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
     protected static ?string $navigationLabel = 'Jadwal Mengajar';

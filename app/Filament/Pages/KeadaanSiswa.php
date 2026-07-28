@@ -23,9 +23,8 @@ class KeadaanSiswa extends Page implements HasForms
 
     protected static ?string $navigationIcon = 'heroicon-o-chart-pie';
     protected static ?string $navigationGroup = 'Kesiswaan';
-    protected static ?string $navigationLabel = 'Keadaan Siswa';
     protected static ?string $title = 'Laporan Keadaan Siswa';
-    protected static ?int $navigationSort = 16;
+    protected static ?int $navigationSort = 15;
 
     protected static string $view = 'filament.pages.keadaan-siswa';
 

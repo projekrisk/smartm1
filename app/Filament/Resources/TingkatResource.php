@@ -13,7 +13,6 @@ use Filament\Tables\Table;
 class TingkatResource extends Resource
 {
     protected static ?string $model = Tingkat::class;
-    protected static ?string $navigationGroup = 'Manajemen Kelas';
     protected static ?string $slug = 'tingkat';
     protected static ?string $navigationIcon = 'heroicon-o-numbered-list';
     protected static ?string $navigationLabel = 'Tingkat';

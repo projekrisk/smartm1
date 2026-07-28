@@ -38,7 +38,6 @@ class KehadiranHarianResource extends Resource
         return in_array(auth()->user()->peran, ['admin', 'staf']);
     }
 
-    protected static ?string $navigationGroup = 'Kehadiran Siswa';
     protected static ?string $slug = 'kehadiran-harian';
     protected static ?string $navigationIcon = 'heroicon-o-document-check';  
     protected static ?string $navigationLabel = 'Absensi Harian';

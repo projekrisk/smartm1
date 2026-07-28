@@ -16,8 +16,8 @@
         <style>
             .fi-topbar, .fi-sidebar, .fi-header, .fi-simple-header, .fi-logo, .fi-simple-footer { display: none !important; }
             html, body, .fi-layout, .fi-simple-layout, .fi-main, .fi-simple-main, .fi-page, section { 
-                padding: 0 !important; margin: 0 !important; gap: 0 !important;
-                height: 100vh !important; height: 100dvh !important; 
+                position: fixed; top: 0; bottom: 0; left: 0; right: 0;
+                height: 100% !important; 
                 max-width: 100% !important; width: 100% !important; 
                 overflow: hidden !important; 
                 background-color: #e2e8f0 !important; box-shadow: none !important; border: none !important;
