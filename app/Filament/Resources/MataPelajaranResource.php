@@ -15,16 +15,12 @@ class MataPelajaranResource extends Resource
     protected static ?string $model = MataPelajaran::class;
     protected static ?string $navigationGroup = 'Akademik';
     protected static ?string $slug = 'mata-pelajaran';
-    
-    // 1. TAMBAHKAN IKON MENU DI SINI
-    protected static ?string $navigationIcon = 'heroicon-o-book-open';
-    
+    protected static ?string $navigationIcon = 'heroicon-o-book-open';    
     protected static ?string $navigationLabel = 'Mata Pelajaran';
     protected static ?string $pluralModelLabel = 'Mata Pelajaran';
     protected static ?string $modelLabel = 'Mata Pelajaran';
+    protected static ?int $navigationSort = 6;
 
-
-    // 2. TAMBAHKAN FUNGSI INI AGAR HANYA ADMIN YANG BISA MELIHAT & MENGAKSES MENU INI
     public static function canViewAny(): bool
     {
         return auth()->user()->peran === 'admin';

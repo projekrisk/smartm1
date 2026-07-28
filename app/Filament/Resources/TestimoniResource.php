@@ -17,8 +17,9 @@ class TestimoniResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-star';
     protected static ?string $navigationLabel = 'Ulasan & Rating';
     protected static ?string $pluralModelLabel = 'Ulasan Siswa';
+    protected static ?int $navigationSort = 19;
 
-    public static function canCreate(): bool { return false; } // Admin tidak bisa buat ulasan
+    public static function canCreate(): bool { return false; }
     public static function canViewAny(): bool { return Auth::user()->peran === 'admin'; }
 
     public static function table(Table $table): Table
@@ -30,7 +31,7 @@ class TestimoniResource extends Resource
                 Tables\Columns\TextColumn::make('siswa.kelas.nama_kelas')->label('Kelas')->badge(),
                 Tables\Columns\TextColumn::make('rating')
                     ->label('Penilaian')
-                    ->formatStateUsing(fn ($state) => str_repeat('⭐', $state)) // Menampilkan bintang
+                    ->formatStateUsing(fn ($state) => str_repeat('⭐', $state))
                     ->sortable(),
                 Tables\Columns\TextColumn::make('pesan')->label('Ulasan/Testimoni')->wrap(),
             ])

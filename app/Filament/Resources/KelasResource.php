@@ -13,18 +13,13 @@ use Filament\Tables\Table;
 class KelasResource extends Resource
 {
     protected static ?string $model = Kelas::class;
-
-    // Hapus baris $cluster, ganti dengan $navigationGroup
     protected static ?string $navigationGroup = 'Manajemen Kelas';
-
-    // Menghilangkan "s" pada URL
     protected static ?string $slug = 'kelas';
-
-    // Mengubah ikon untuk sub-menu
     protected static ?string $navigationIcon = 'heroicon-o-folder-open';    
     protected static ?string $navigationLabel = 'Kelas';
     protected static ?string $pluralModelLabel = 'Kelas';
     protected static ?string $modelLabel = 'Kelas';
+    protected static ?int $navigationSort = 5;
 
     public static function canViewAny(): bool
     {
@@ -37,12 +32,11 @@ class KelasResource extends Resource
             ->schema([
                 Forms\Components\Section::make('Informasi Kelas')
                     ->schema([
-                        // Menggunakan relasi ke tabel Tingkat
                         Forms\Components\Select::make('tingkat_id')
                             ->label('Tingkat Kelas')
                             ->relationship('tingkat', 'nama_tingkat')
                             ->required()
-                            ->native(false) // Membuat tampilan dropdown lebih modern
+                            ->native(false)
                             ->searchable()
                             ->preload(),
                         Forms\Components\TextInput::make('nama_kelas')
@@ -52,12 +46,11 @@ class KelasResource extends Resource
                             ->maxLength(255),
                         Forms\Components\Select::make('wali_kelas_id')
                             ->label('Wali Kelas')
-                            // Mengambil data user yang perannya adalah guru
                             ->relationship('waliKelas', 'name', fn ($query) => $query->where('peran', 'guru'))
                             ->searchable()
                             ->preload()
                             ->nullable(),
-                    ])->columns(1), // Menjadikan form 1 kolom berurutan ke bawah
+                    ])->columns(1),
             ]);
     }
 
@@ -67,7 +60,7 @@ class KelasResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('tingkat.nama_tingkat')
                     ->label('Tingkat')
-                    ->badge() // Membuat tampilan tingkat seperti label/badge
+                    ->badge()
                     ->color('primary')
                     ->sortable()
                     ->searchable(),

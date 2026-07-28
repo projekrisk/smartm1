@@ -24,9 +24,8 @@ class JadwalPelajaranResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
     protected static ?string $navigationLabel = 'Jadwal Mengajar';
     protected static ?string $pluralModelLabel = 'Jadwal Mengajar';
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 7;
 
-    // MENCEGAH GURU MENAMBAH/MENGEDIT/MENGHAPUS JADWAL (Hanya Admin & Staf TU)
     public static function canCreate(): bool 
     { 
         return in_array(Auth::user()->peran, ['admin', 'staf']); 
@@ -42,12 +41,10 @@ class JadwalPelajaranResource extends Resource
         return in_array(Auth::user()->peran, ['admin', 'staf']); 
     }
 
-    // FUNGSI AJAIB: Membatasi data yang tampil berdasarkan siapa yang login
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();
         
-        // Jika yang login adalah guru, filter hanya jadwal miliknya
         if (Auth::user()->peran === 'guru') {
             $query->where('guru_id', Auth::id());
         }
@@ -61,7 +58,6 @@ class JadwalPelajaranResource extends Resource
             ->schema([
                 Forms\Components\Section::make('Informasi Penugasan Utama')
                     ->schema([
-                        // FUNGSI BARU: Menarik otomatis ID Tahun Ajaran yang berstatus Aktif
                         Forms\Components\Hidden::make('tahun_ajaran_id')
                             ->default(fn () => \App\Models\TahunAjaran::where('is_active', true)->first()?->id),
 
@@ -81,7 +77,6 @@ class JadwalPelajaranResource extends Resource
                 Forms\Components\Section::make('Rincian Kelas & Waktu')
                     ->schema([
                         
-                        // FORM KHUSUS "CREATE" (MODE BORONGAN / REPEATER)
                         Forms\Components\Repeater::make('sesi_mengajar')
                             ->label('Jadwal Mengajar')
                             ->visible(fn (string $operation) => $operation === 'create')
@@ -97,7 +92,6 @@ class JadwalPelajaranResource extends Resource
                                 Forms\Components\TimePicker::make('jam_selesai')->required(),
                             ])->columns(4)->defaultItems(1),
 
-                        // FORM KHUSUS "EDIT" (MODE TUNGGAL)
                         Forms\Components\Grid::make(4)
                             ->visible(fn (string $operation) => $operation === 'edit')
                             ->schema([
@@ -152,7 +146,7 @@ class JadwalPelajaranResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->defaultGroup('guru.name') // Dikelompokkan per Guru agar rapi
+            ->defaultGroup('guru.name')
             ->columns([
                 Tables\Columns\TextColumn::make('mataPelajaran.nama_pelajaran')->label('Mapel')->weight('bold'),
                 Tables\Columns\TextColumn::make('kelas.nama_kelas')->label('Kelas')->badge()->color('success'),
@@ -167,7 +161,6 @@ class JadwalPelajaranResource extends Resource
                     ->relationship('guru', 'name', fn ($query) => $query->where('peran', 'guru')->orderBy('name', 'asc'))
                     ->searchable()
                     ->preload()
-                    // Sembunyikan filter guru jika yang login adalah guru, karena ia hanya melihat datanya sendiri
                     ->hidden(fn () => Auth::user()->peran === 'guru'),
                 
                 Tables\Filters\SelectFilter::make('kelas_id')
@@ -178,8 +171,6 @@ class JadwalPelajaranResource extends Resource
             ], layout: \Filament\Tables\Enums\FiltersLayout::AboveContent) // Filter tampil lega di atas tabel
             ->filtersFormColumns(2)
             ->actions([
-                // Karena kita sudah membatasi canEdit & canDelete di awal file, 
-                // Guru hanya akan melihat tombol View ini saja, sementara Admin melihat ketiganya.
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),

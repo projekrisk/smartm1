@@ -13,18 +13,13 @@ use Filament\Tables\Table;
 class TingkatResource extends Resource
 {
     protected static ?string $model = Tingkat::class;
-
-    // Hapus baris $cluster, ganti dengan $navigationGroup
     protected static ?string $navigationGroup = 'Manajemen Kelas';
-
-    // Menghilangkan "s" pada URL
     protected static ?string $slug = 'tingkat';
-
-    // Mengubah ikon untuk sub-menu
     protected static ?string $navigationIcon = 'heroicon-o-numbered-list';
     protected static ?string $navigationLabel = 'Tingkat';
     protected static ?string $pluralModelLabel = 'Tingkat';
     protected static ?string $modelLabel = 'Tingkat';
+    protected static ?int $navigationSort = 4;
 
     public static function canViewAny(): bool
     {
@@ -39,7 +34,7 @@ class TingkatResource extends Resource
                     ->label('Nama Tingkat')
                     ->placeholder('Contoh: 10, 11, atau 12')
                     ->required()
-                    ->numeric() // Membatasi input hanya menerima angka
+                    ->numeric()
                     ->unique(ignoreRecord: true)
                     ->maxLength(255),
             ]);

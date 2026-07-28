@@ -23,12 +23,12 @@ class CatatanSiswaResource extends Resource
 {
     protected static ?string $model = CatatanSiswa::class;
 
-    protected static ?string $navigationGroup = 'Kesiswaan';
     protected static ?string $slug = 'catatan-siswa';
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-check';
     protected static ?string $navigationLabel = 'Catatan / Kasus';
     protected static ?string $pluralModelLabel = 'Catatan Siswa';
     protected static ?string $modelLabel = 'Catatan';
+    protected static ?int $navigationSort = 13;
 
     public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
     {
@@ -40,18 +40,13 @@ class CatatanSiswaResource extends Resource
         return Auth::user()->peran === 'admin' || $record->guru_id === Auth::id();
     }
 
-    // =====================================================================
-    // 1. LOGIKA NOTIFIKASI BADGE CERDAS
-    // =====================================================================
     public static function getNavigationBadge(): ?string
     {
         $user = Auth::user();
         if ($user->peran === 'guru') {
-            // Cek apakah guru ini adalah wali kelas
             $kelasBinaanId = Kelas::where('wali_kelas_id', $user->id)->value('id');
             
             if ($kelasBinaanId) {
-                // Hitung catatan untuk siswa binaannya yang BELUM DIBACA (is_read = false)
                 $count = static::getModel()::whereHas('siswa', function ($q) use ($kelasBinaanId) {
                     $q->where('kelas_id', $kelasBinaanId);
                 })
@@ -68,7 +63,6 @@ class CatatanSiswaResource extends Resource
     {
         $user = Auth::user();
         if ($user->peran === 'guru') {
-            // Cek apakah dia punya tugas (Wali kelas yang anaknya belum ditindak)
             $kelasBinaanId = Kelas::where('wali_kelas_id', $user->id)->value('id');
             if ($kelasBinaanId) {
                 $tugas = static::getModel()::whereHas('siswa', function ($q) use ($kelasBinaanId) {
@@ -78,7 +72,6 @@ class CatatanSiswaResource extends Resource
                 if ($tugas > 0) return 'danger'; // Merah = Ada Tugas!
             }
         }
-        // Jika tidak ada merah, berarti itu notifikasi "Laporanmu sudah selesai" (Sukses)
         return 'success'; 
     }
 
@@ -114,7 +107,6 @@ class CatatanSiswaResource extends Resource
                                     return Kelas::pluck('nama_kelas', 'id');
                                 }
                                 
-                                // PERBAIKAN: Menggunakan struktur tabel Jadwal Pelajaran (Single Source of Truth)
                                 $kelasBinaanIds = Kelas::where('wali_kelas_id', $user->id)->pluck('id')->toArray();
                                 $kelasAjarIds = JadwalPelajaran::where('guru_id', $user->id)->pluck('kelas_id')->toArray();
                                 
@@ -222,7 +214,6 @@ class CatatanSiswaResource extends Resource
                             ->columnSpanFull(),
                     ]),
                 
-                // TABEL INFOLIST BARU UNTUK MENAMPILKAN RIWAYAT TINDAK LANJUT
                 Infolists\Components\Section::make('Riwayat Tindak Lanjut & Resolusi')
                     ->schema([
                         Infolists\Components\TextEntry::make('status_tindak_lanjut')
@@ -270,7 +261,6 @@ class CatatanSiswaResource extends Resource
                     default => 'gray',
                 }),
                 
-            // TAMBAHKAN INDIKATOR STATUS BACA DI SINI
             Tables\Columns\IconColumn::make('is_read')
                 ->label('Status Baca')
                 ->boolean()
@@ -287,7 +277,6 @@ class CatatanSiswaResource extends Resource
                 Tables\Columns\TextColumn::make('pencatat.name')
                     ->label('Oleh')
                     ->sortable(),
-                // KOLOM STATUS BARU DI TABEL
                 Tables\Columns\TextColumn::make('status_tindak_lanjut')
                     ->label('Status')
                     ->badge()
@@ -314,12 +303,10 @@ class CatatanSiswaResource extends Resource
                     ]),
             ])
             ->actions([
-                // TOMBOL AKSI CEPAT TINDAK LANJUT (LANGSUNG DARI TABEL)
                 Tables\Actions\Action::make('tindak_lanjut')
                     ->label('Tindak Lanjut')
                     ->icon('heroicon-o-check-badge')
                     ->color('success')
-                    // Hanya muncul jika statusnya "Belum" DAN user tersebut adalah Admin/Wali Kelasnya
                     ->visible(fn ($record) => 
                         $record->status_tindak_lanjut === 'Belum' && 
                         (Auth::user()->peran === 'admin' || $record->siswa->kelas->wali_kelas_id === Auth::id())
@@ -345,7 +332,6 @@ class CatatanSiswaResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    // PERBAIKAN: FITUR HAPUS MASSAL SEKARANG HANYA UNTUK ADMIN SAJA
                     Tables\Actions\DeleteBulkAction::make()
                         ->visible(fn () => Auth::user()->peran === 'admin'),
                 ]),

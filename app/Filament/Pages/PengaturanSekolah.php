@@ -18,15 +18,13 @@ class PengaturanSekolah extends Page implements HasForms
     use InteractsWithForms;
 
     protected static ?string $navigationIcon = 'heroicon-o-cog-8-tooth';
-    protected static ?string $navigationGroup = 'Sistem';
-    protected static ?string $navigationLabel = 'Pengaturan Sekolah';
-    protected static ?string $title = 'Pengaturan Sistem & Sekolah';
-    
+    protected static ?string $navigationLabel = 'Pengaturan';
+    protected static ?string $title = 'Pengaturan';    
     protected static string $view = 'filament.pages.pengaturan-sekolah';
+    protected static ?int $navigationSort = 17;
 
     public ?array $data = [];
 
-    // HANYA ADMIN YANG BOLEH MEMBUKA MENU INI
     public static function canAccess(): bool
     {
         return Auth::user()->peran === 'admin';
@@ -34,7 +32,6 @@ class PengaturanSekolah extends Page implements HasForms
 
     public function mount(): void
     {
-        // Ambil baris pertama pengaturan, jika kosong (baru install), buat 1 data kosong
         $pengaturan = Pengaturan::first() ?? Pengaturan::create();
         $this->form->fill($pengaturan->toArray());
     }
@@ -45,7 +42,6 @@ class PengaturanSekolah extends Page implements HasForms
             ->schema([
                 Forms\Components\Tabs::make('Pengaturan')
                     ->tabs([
-                        // TAB 1: IDENTITAS
                         Forms\Components\Tabs\Tab::make('Identitas Sekolah')
                             ->icon('heroicon-o-building-library')
                             ->schema([
@@ -61,7 +57,6 @@ class PengaturanSekolah extends Page implements HasForms
                                 ]),
                             ]),
                             
-                        // TAB 2: LOGO 
                         Forms\Components\Tabs\Tab::make('Logo & Media')
                             ->icon('heroicon-o-photo')
                             ->schema([
@@ -81,7 +76,6 @@ class PengaturanSekolah extends Page implements HasForms
                                 ]),
                             ]),
                             
-                        // TAB 3: LOKASI
                         Forms\Components\Tabs\Tab::make('Lokasi Peta')
                             ->icon('heroicon-o-map-pin')
                             ->schema([
@@ -95,7 +89,6 @@ class PengaturanSekolah extends Page implements HasForms
                                 ]),
                             ]),
                             
-                        // TAB 4: KEAMANAN & FILTER KATA
                         Forms\Components\Tabs\Tab::make('Keamanan & Filter')
                             ->icon('heroicon-o-shield-check')
                             ->schema([
@@ -124,7 +117,6 @@ class PengaturanSekolah extends Page implements HasForms
             ->send();
     }
 
-    // MEMBUAT TOMBOL RESET DI POJOK KANAN ATAS
     protected function getHeaderActions(): array
     {
         return [
@@ -156,14 +148,12 @@ class PengaturanSekolah extends Page implements HasForms
                 ->action(function (array $data) {
                     if ($data['konfirmasi'] !== 'RESET') return;
 
-                    // Matikan sementara pengecekan Foreign Key agar tidak error saat dikosongkan
                     DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
                     if ($data['tipe_reset'] === 'transaksi') {
-                        // Reset level 1 (Data Transaksi Sehari-hari)
                         DB::table('buku_nilai')->truncate();
                         DB::table('penilaian')->truncate();
-                        DB::table('nilai_rapor')->truncate(); // Hapus nilai rapor
+                        DB::table('nilai_rapor')->truncate();
                         DB::table('kehadiran_harian')->truncate();
                         DB::table('rekap_kehadiran')->truncate();
                         DB::table('kehadiran_pelajaran')->truncate();
@@ -172,7 +162,6 @@ class PengaturanSekolah extends Page implements HasForms
                         DB::table('surat_panggilan')->truncate();
                         
                     } elseif ($data['tipe_reset'] === 'total') {
-                        // Reset level 2 (Kuras Habis Semua Data Pokok)
                         DB::table('buku_nilai')->truncate();
                         DB::table('penilaian')->truncate();
                         DB::table('nilai_rapor')->truncate();
@@ -187,20 +176,17 @@ class PengaturanSekolah extends Page implements HasForms
                         DB::table('tahun_ajaran')->truncate();
                         DB::table('testimoni')->truncate();
                         
-                        // PERBAIKAN: Menghapus tabel lama dan mengganti dengan tabel jadwal
                         DB::table('jadwal_pelajaran')->truncate(); 
                         
                         DB::table('mata_pelajaran')->truncate();
                         DB::table('kelas')->truncate();
                         
-                        // Hapus akun login (Kecuali Admin Utama!)
                         DB::table('users')->where('peran', '!=', 'admin')->delete();
                         DB::table('pegawai')->truncate();
                         DB::table('pengumuman')->truncate();
                         DB::table('pesan_bantuan')->truncate();
                     }
 
-                    // Nyalakan kembali pengecekan Foreign Key
                     DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
                     Notification::make()

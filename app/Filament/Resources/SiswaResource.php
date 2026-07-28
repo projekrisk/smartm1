@@ -30,13 +30,8 @@ class SiswaResource extends Resource
     protected static ?string $navigationLabel = 'Data Siswa';
     protected static ?string $pluralModelLabel = 'Data Siswa';
     protected static ?string $modelLabel = 'Siswa';
-    protected static ?string $navigationGroup = 'Kesiswaan';
-    protected static ?int $navigationSort = 1;
-    
-    // =====================================================================
-    // FITUR GLOBAL SEARCH (PENCARIAN HEADER ADMIN PANEL)
-    // =====================================================================
-    
+    protected static ?int $navigationSort = 2;
+
     public static function getGloballySearchableAttributes(): array
     {
         return ['nama_lengkap', 'nis', 'nisn', 'kelas.nama_kelas'];
@@ -76,15 +71,10 @@ class SiswaResource extends Resource
         return static::getUrl('view', ['record' => $record]);
     }
 
-    // WAJIB PUBLIC AGAR TIDAK ERROR
     public static function getGlobalSearchEloquentQuery(): Builder
     {
         return parent::getGlobalSearchEloquentQuery()->with(['kelas']);
     }
-
-    // =====================================================================
-    // MANAJEMEN HAK AKSES (ROLE-BASED ACCESS CONTROL)
-    // =====================================================================
     
     public static function canViewAny(): bool
     {
@@ -111,9 +101,6 @@ class SiswaResource extends Resource
         return Auth::user()->peran === 'admin';
     }
 
-    // =====================================================================
-    // ISOLASI DATA WALI KELAS
-    // =====================================================================
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();
@@ -129,10 +116,6 @@ class SiswaResource extends Resource
 
         return $query;
     }
-
-    // =====================================================================
-    // FORMULIR INPUT / EDIT DATA
-    // =====================================================================
     
     public static function form(Form $form): Form
     {
@@ -194,7 +177,6 @@ class SiswaResource extends Resource
                                 ]),
                             ]),
 
-                        // TAB 2: ALAMAT
                         Forms\Components\Tabs\Tab::make('Alamat & Lokasi')
                             ->icon('heroicon-o-map-pin')
                             ->schema([
@@ -223,7 +205,6 @@ class SiswaResource extends Resource
                                 ]),
                             ]),
 
-                        // TAB 3: ORANG TUA
                         Forms\Components\Tabs\Tab::make('Data Orang Tua')
                             ->icon('heroicon-o-users')
                             ->schema([
@@ -253,7 +234,6 @@ class SiswaResource extends Resource
                                     Forms\Components\Select::make('kelas_id')
                                         ->label('Kelas Saat Ini')
                                         ->relationship('kelas', 'nama_kelas')
-                                        // Kelas hanya wajib diisi jika status siswa Aktif/Mutasi Masuk
                                         ->required(fn (\Filament\Forms\Get $get) => in_array($get('status_siswa'), ['Aktif', 'Mutasi Masuk']))
                                         ->searchable()
                                         ->preload()
@@ -330,10 +310,6 @@ class SiswaResource extends Resource
                     ->columnSpanFull() 
             ]);
     }
-
-    // =====================================================================
-    // INFOLIST (TAMPILAN VIEW PAGE) - DILENGKAPI PROTEKSI TANGGAL 100%
-    // =====================================================================
     
     public static function infolist(Infolist $infolist): Infolist
     {
@@ -342,7 +318,6 @@ class SiswaResource extends Resource
                 Infolists\Components\Section::make('Profil Siswa')
                     ->schema([
                         Infolists\Components\Split::make([
-                            // SISI KIRI: Foto
                             Infolists\Components\Grid::make(1)->schema([
                                 Infolists\Components\ImageEntry::make('foto')
                                     ->hiddenLabel()
@@ -352,7 +327,6 @@ class SiswaResource extends Resource
                                     ->size(150),
                             ])->grow(false),
 
-                            // SISI KANAN: Data Utama Singkat
                             Infolists\Components\Grid::make(2)->schema([
                                 Infolists\Components\TextEntry::make('nama_lengkap')
                                     ->label('Nama Lengkap')
@@ -385,7 +359,6 @@ class SiswaResource extends Resource
                         ])->from('md'),
                     ]),
 
-                // TABEL TAB UNTUK DATA LENGKAP
                 Infolists\Components\Tabs::make('Data Detail Siswa')
                     ->tabs([
                         Infolists\Components\Tabs\Tab::make('Data Pribadi')
@@ -569,10 +542,6 @@ class SiswaResource extends Resource
                     ->columnSpanFull(),
             ]);
     }
-
-    // =====================================================================
-    // KONFIGURASI TABEL SISWA UTAMA
-    // =====================================================================
     
     public static function table(Table $table): Table
     {
@@ -920,7 +889,6 @@ class SiswaResource extends Resource
                             $tahunAktif = \App\Models\TahunAjaran::where('is_active', true)->first();
 
                             foreach ($records as $record) {
-                                // 1. Simpan riwayat kelas lamanya sebelum dihapus
                                 if ($record->kelas_id && $tahunAktif) {
                                     \App\Models\RiwayatKelasSiswa::create([
                                         'siswa_id' => $record->id,
@@ -930,10 +898,8 @@ class SiswaResource extends Resource
                                     ]);
                                 }
 
-                                // 2. Kosongkan kelas siswa (Lepas Kelas)
                                 $updateData = ['kelas_id' => null];
                                 
-                                // 3. Jika ditandai lulus, ubah statusnya sekalian
                                 if ($data['jadikan_lulus']) {
                                     $updateData['status_siswa'] = 'Lulus';
                                     $updateData['tanggal_status'] = $data['tanggal_lulus'];
@@ -957,9 +923,6 @@ class SiswaResource extends Resource
             ]);
     }
 
-    // =====================================================================
-    // RELASI TAB (RIWAYAT KELAS, CATATAN, DAN ABSENSI HARIAN)
-    // =====================================================================
     public static function getRelations(): array
     {
         return [

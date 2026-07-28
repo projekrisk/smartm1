@@ -72,7 +72,7 @@ class PantauPengumpulan extends Page implements HasForms
         // Hanya Admin / Staf yang boleh men-download rekap CSV
         if (in_array(Auth::user()->peran, ['admin', 'staf'])) {
             $actions[] = Action::make('download_rekap')
-                ->label('Download File Nilai (CSV Matrix)')
+                ->label('Download')
                 ->icon('heroicon-o-arrow-down-tray')
                 ->color('success')
                 ->action(function () {

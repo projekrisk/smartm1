@@ -18,12 +18,11 @@ class PrestasiResource extends Resource
 {
     protected static ?string $model = Prestasi::class;
 
-    protected static ?string $navigationGroup = 'Kesiswaan';
     protected static ?string $slug = 'prestasi-siswa';
     protected static ?string $navigationIcon = 'heroicon-o-trophy';
     protected static ?string $navigationLabel = 'Prestasi Siswa';
     protected static ?string $pluralModelLabel = 'Daftar Prestasi Siswa';
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 12;
 
     public static function getNavigationBadge(): ?string
     {
@@ -136,7 +135,7 @@ class PrestasiResource extends Resource
     {
         return [
             'index' => Pages\ListPrestasis::route('/'),
-            'edit' => Pages\EditPrestasi::route('/{record}/edit'), // RUTE KE HALAMAN EDIT YANG BARU DIBUAT
+            'edit' => Pages\EditPrestasi::route('/{record}/edit'),
         ];
     }
 }

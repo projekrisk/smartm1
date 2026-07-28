@@ -17,7 +17,7 @@ class ListBukuNilais extends ListRecords
 
         if (in_array(Auth::user()->peran, ['admin', 'staf'])) {
             $actions[] = Actions\Action::make('pantau_ujian')
-                ->label('Pantau Pengumpulan (UTS/UAS)')
+                ->label('Nilai UTS/UAS')
                 ->icon('heroicon-o-eye')
                 ->color('warning')
                 ->url(fn (): string => BukuNilaiResource::getUrl('pantau'));

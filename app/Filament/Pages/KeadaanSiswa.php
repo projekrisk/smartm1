@@ -25,7 +25,7 @@ class KeadaanSiswa extends Page implements HasForms
     protected static ?string $navigationGroup = 'Kesiswaan';
     protected static ?string $navigationLabel = 'Keadaan Siswa';
     protected static ?string $title = 'Laporan Keadaan Siswa';
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 16;
 
     protected static string $view = 'filament.pages.keadaan-siswa';
 
@@ -164,7 +164,6 @@ class KeadaanSiswa extends Page implements HasForms
             $kelasMatrix['lalu_L'] = max(0, $kelasMatrix['sekarang_L'] - $kelasMatrix['masuk_L'] + $kelasMatrix['keluar_L']);
             $kelasMatrix['lalu_P'] = max(0, $kelasMatrix['sekarang_P'] - $kelasMatrix['masuk_P'] + $kelasMatrix['keluar_P']);
 
-            // FUNGSI BARU: Cegah kelas kosong masuk ke layar dashboard
             if (array_sum($kelasMatrix) > 0) {
                 $reportData[$tingkat][$namaKelas] = $kelasMatrix;
 
@@ -181,7 +180,6 @@ class KeadaanSiswa extends Page implements HasForms
             }
         }
 
-        // FUNGSI BARU: Bersihkan kelompok tingkat jika kosong
         foreach ($reportData as $tingkat => $kelasData) {
             if (empty($kelasData)) {
                 unset($reportData[$tingkat]);
@@ -204,7 +202,6 @@ class KeadaanSiswa extends Page implements HasForms
             ];
         }
 
-        // --- MUTASI DATA ---
         $mutasiMasukQuery = Siswa::with('kelas')
             ->where(function($q) use ($startOfMonth, $endOfMonth) {
                 $q->whereBetween('tanggal_masuk', [$startOfMonth, $endOfMonth])
@@ -234,7 +231,6 @@ class KeadaanSiswa extends Page implements HasForms
             'Total' => $mutasiKeluarPrint->count(),
         ];
 
-        // --- DATA KELULUSAN & ALUMNI ---
         $lulusQuery = Siswa::with('kelas')->where('status_siswa', 'Lulus');
 
         if (!empty($this->searchLulusan)) {

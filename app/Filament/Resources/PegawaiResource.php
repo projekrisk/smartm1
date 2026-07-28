@@ -22,21 +22,17 @@ class PegawaiResource extends Resource
     protected static ?string $navigationLabel = 'Data Pegawai';
     protected static ?string $pluralModelLabel = 'Data Pegawai';
     protected static ?string $modelLabel = 'Pegawai';
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 3;
 
-    // 1. IZINKAN GURU & STAF UNTUK MELIHAT MENU DATA PEGAWAI
-    // 1. IZINKAN GURU, STAF, & ADMIN UNTUK MELIHAT MENU DATA PEGAWAI
     public static function canViewAny(): bool
     {
         return in_array(auth()->user()->peran, ['admin', 'staf', 'guru']);
     }
 
-    // 2. JIKA GURU ATAU STAF, HANYA TAMPILKAN DATANYA SENDIRI DI TABEL
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {
         $query = parent::getEloquentQuery();
         
-        // Guru dan Staf hanya melihat datanya sendiri, Admin melihat semua
         if (in_array(auth()->user()->peran, ['guru', 'staf'])) {
             $query->where('user_id', auth()->id());
         }
@@ -44,19 +40,16 @@ class PegawaiResource extends Resource
         return $query;
     }
 
-    // 3. HANYA ADMIN YANG BISA MEMBUAT DATA PEGAWAI BARU
     public static function canCreate(): bool
     {
         return auth()->user()->peran === 'admin';
     }
 
-    // 4. HANYA ADMIN YANG BISA MENGEDIT DATA POKOK
     public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
     {
         return auth()->user()->peran === 'admin';
     }
 
-    // 5. HANYA ADMIN YANG BISA MENGHAPUS PEGAWAI
     public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
     {
         return auth()->user()->peran === 'admin';
@@ -68,7 +61,6 @@ class PegawaiResource extends Resource
             ->schema([
                 Forms\Components\Tabs::make('Data Pegawai')
                     ->tabs([
-                        // TAB 1: IDENTITAS PRIBADI
                         Forms\Components\Tabs\Tab::make('Identitas Pribadi')
                             ->icon('heroicon-o-user')
                             ->schema([
@@ -104,7 +96,6 @@ class PegawaiResource extends Resource
                                 ]),
                             ]),
 
-                        // TAB 2: DATA KEPEGAWAIAN
                         Forms\Components\Tabs\Tab::make('Data Kepegawaian')
                             ->icon('heroicon-o-briefcase')
                             ->schema([
@@ -150,7 +141,6 @@ class PegawaiResource extends Resource
                                 ]),
                             ]),
 
-                        // TAB 3: RIWAYAT TMT & MASA KERJA
                         Forms\Components\Tabs\Tab::make('Riwayat Pengangkatan')
                             ->icon('heroicon-o-calendar-days')
                             ->schema([
@@ -173,7 +163,6 @@ class PegawaiResource extends Resource
                                     ->columnSpanFull(),
                             ]),
 
-                        // TAB 4: PENDIDIKAN
                         Forms\Components\Tabs\Tab::make('Pendidikan Terakhir')
                             ->icon('heroicon-o-academic-cap')
                             ->schema([
@@ -215,7 +204,6 @@ class PegawaiResource extends Resource
                                     Infolists\Components\TextEntry::make('nik')->label('NIK (Nomor Kependudukan)'),
                                     Infolists\Components\TextEntry::make('jenis_kelamin')->label('Jenis Kelamin'),
                                     Infolists\Components\TextEntry::make('tempat_lahir')->label('Tempat Lahir')->default('-'),
-                                    // FUNGSI AJAIB: Mencegah error jika tanggal di database berisi strip (-)
                                     Infolists\Components\TextEntry::make('tanggal_lahir')
                                         ->label('Tanggal Lahir')
                                         ->getStateUsing(fn ($record) => $record->tanggal_lahir && strtotime($record->tanggal_lahir) ? \Carbon\Carbon::parse($record->tanggal_lahir)->isoFormat('D MMMM Y') : '-'),
@@ -286,7 +274,7 @@ class PegawaiResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->recordAction('view') // KLIK BARIS AKAN MEMBUKA HALAMAN VIEW, BUKAN EDIT
+            ->recordAction('view')
             ->columns([
                 Tables\Columns\TextColumn::make('nama')
                     ->label('Nama Pegawai')

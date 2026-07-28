@@ -18,25 +18,21 @@ class KehadiranHarianResource extends Resource
 {
     protected static ?string $model = RekapKehadiran::class;
 
-    // 1. IZINKAN GURU UNTUK MASUK KE MENU INI
     public static function canViewAny(): bool
     {
         return in_array(auth()->user()->peran, ['admin', 'staf', 'guru']);
     }
 
-    // 2. KUNCI AKSES! GURU TIDAK BOLEH MENAMBAH
     public static function canCreate(): bool
     {
         return in_array(auth()->user()->peran, ['admin', 'staf']);
     }
 
-    // 3. KUNCI AKSES! GURU TIDAK BOLEH MENGEDIT (HANYA BISA LIHAT)
     public static function canEdit(Model $record): bool
     {
         return in_array(auth()->user()->peran, ['admin', 'staf']);
     }
 
-    // 4. KUNCI AKSES! GURU TIDAK BOLEH MENGHAPUS
     public static function canDelete(Model $record): bool
     {
         return in_array(auth()->user()->peran, ['admin', 'staf']);
@@ -47,8 +43,7 @@ class KehadiranHarianResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-document-check';  
     protected static ?string $navigationLabel = 'Absensi Harian';
     protected static ?string $pluralModelLabel = 'Rekap Absensi Harian';
-    protected static ?string $modelLabel = 'Absensi Harian';
-    protected static ?int $navigationSort = 5;
+    protected static ?int $navigationSort = 9;
 
     public static function form(Form $form): Form
     {
@@ -163,10 +158,8 @@ class KehadiranHarianResource extends Resource
                     }),
             ])
             ->actions([
-                // JIKA GURU, AKAN MUNCUL TOMBOL VIEW INI
                 Tables\Actions\ViewAction::make()->label('Lihat Detail'),
                 
-                // JIKA ADMIN, AKAN MUNCUL TOMBOL EDIT INI
                 Tables\Actions\EditAction::make()->label('Buka Daftar Hadir'),
             ])
             ->bulkActions([
@@ -188,7 +181,7 @@ class KehadiranHarianResource extends Resource
         return [
             'index' => Pages\ListKehadiranHarians::route('/'),
             'create' => Pages\CreateKehadiranHarian::route('/create'),
-            'view' => Pages\ViewKehadiranHarian::route('/{record}'), // Menambah route view
+            'view' => Pages\ViewKehadiranHarian::route('/{record}'),
             'edit' => Pages\EditKehadiranHarian::route('/{record}/edit'),
         ];
     }

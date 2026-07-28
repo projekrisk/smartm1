@@ -14,16 +14,12 @@ use Illuminate\Support\Facades\Auth;
 class SuratPanggilanResource extends Resource
 {
     protected static ?string $model = SuratPanggilan::class;
-
-    // Hapus baris $cluster, ganti dengan $navigationGroup
-    protected static ?string $navigationGroup = 'Kesiswaan';
-
-    // URL dan Label Menu (Bahasa Indonesia)
     protected static ?string $navigationIcon = 'heroicon-o-document-duplicate';    
     protected static ?string $slug = 'surat-panggilan';
     protected static ?string $navigationLabel = 'Surat Panggilan';
     protected static ?string $pluralModelLabel = 'Surat Panggilan';
     protected static ?string $modelLabel = 'Surat Panggilan';
+    protected static ?int $navigationSort = 14;
 
     public static function canViewAny(): bool
     {
@@ -53,7 +49,6 @@ class SuratPanggilanResource extends Resource
                             ->default(now())
                             ->required(),
                             
-                        // Otomatis terisi oleh ID Staf TU/Guru yang sedang login
                         Forms\Components\Hidden::make('dibuat_oleh')
                             ->default(fn () => Auth::id()),
                     ])->columns(2),

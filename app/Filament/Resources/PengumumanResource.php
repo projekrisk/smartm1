@@ -14,14 +14,11 @@ use Illuminate\Support\Facades\Auth;
 class PengumumanResource extends Resource
 {
     protected static ?string $model = Pengumuman::class;
-    
-    // Mengelompokkan menu ke dalam grup Sistem
     protected static ?string $navigationIcon = 'heroicon-o-megaphone';
     protected static ?string $navigationLabel = 'Pengumuman';
     protected static ?string $slug = 'pengumuman';
-    protected static ?int $navigationSort = 9;
+    protected static ?int $navigationSort = 16;
     
-    // Hanya Admin yang bisa melihat menu input ini
     public static function canViewAny(): bool
     {
         return Auth::user()->peran === 'admin';

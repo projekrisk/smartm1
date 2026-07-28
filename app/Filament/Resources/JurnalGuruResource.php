@@ -22,6 +22,7 @@ class JurnalGuruResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-bookmark-square';
     protected static ?string $navigationLabel = 'Jurnal & Absensi';
     protected static ?string $pluralModelLabel = 'Jurnal Mengajar & Absensi';
+    protected static ?int $navigationSort = 8;
 
     public static function canViewAny(): bool 
     { 
@@ -36,13 +37,11 @@ class JurnalGuruResource extends Resource
             $query->where('guru_id', Auth::id());
         }
         
-        // FUNGSI AJAIB: Menyembunyikan data jurnal dari Tahun Ajaran yang sudah lewat/tidak aktif
         $taAktifId = TahunAjaran::where('is_active', true)->value('id');
         if ($taAktifId) {
             $query->where('tahun_ajaran_id', $taAktifId);
         }
         
-        // Hitung statistik siswa yang absen (Sakit/Izin/Alpa)
         $query->withCount([
             'kehadiranPelajaran as siswa_absen_count' => function (Builder $q) {
                 $q->where('status', '!=', 'Hadir');
@@ -79,7 +78,6 @@ class JurnalGuruResource extends Resource
                             ->columnSpanFull()
                             ->visible(fn () => in_array(Auth::user()->peran, ['admin', 'staf'])),
 
-                        // TAHAP 1: PILIH KELAS
                         Forms\Components\Select::make('kelas_id')
                             ->label('1. Pilih Kelas')
                             ->options(function (callable $get) {
@@ -101,7 +99,6 @@ class JurnalGuruResource extends Resource
                             })
                             ->required(),
 
-                        // TAHAP 2: PILIH MAPEL
                         Forms\Components\Select::make('mata_pelajaran_id')
                             ->label('2. Pilih Mata Pelajaran')
                             ->options(function (callable $get) {
@@ -125,7 +122,6 @@ class JurnalGuruResource extends Resource
                             })
                             ->required(),
 
-                        // TAHAP 3: PILIH WAKTU
                         Forms\Components\Select::make('waktu_jadwal')
                             ->label('3. Pilih Waktu Jadwal')
                             ->placeholder('Pilih hari dan jam...')

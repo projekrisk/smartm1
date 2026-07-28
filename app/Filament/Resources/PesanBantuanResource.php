@@ -14,12 +14,11 @@ use Filament\Infolists\Infolist;
 class PesanBantuanResource extends Resource
 {
     protected static ?string $model = PesanBantuan::class;
-    protected static ?string $navigationGroup = 'Sistem';
     protected static ?string $slug = 'pesan-bantuan';
     protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left-ellipsis';
     protected static ?string $navigationLabel = 'Pesan & Bantuan';
+    protected static ?int $navigationSort = 18;
 
-    // Badge Notifikasi Dinamis (Menghitung tiket yang belum dibaca)
     public static function getNavigationBadge(): ?string
     {
         $count = static::getModel()::where('is_read_admin', false)->count();
@@ -27,7 +26,6 @@ class PesanBantuanResource extends Resource
     }
     public static function getNavigationBadgeColor(): ?string { return 'danger'; }
 
-    // Memuat desain Chat Room Kustom
     public static function infolist(Infolist $infolist): Infolist
     {
         return $infolist->schema([
@@ -41,7 +39,7 @@ class PesanBantuanResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->recordAction('view') // Baris diklik -> Masuk ke ruang obrolan
+            ->recordAction('view')
             ->columns([
                 Tables\Columns\TextColumn::make('updated_at')->label('Aktivitas Terakhir')->dateTime('d M Y, H:i')->sortable(),
                 Tables\Columns\TextColumn::make('siswa.nama_lengkap')->label('Siswa Pengirim')->weight('bold')->searchable(),
@@ -61,7 +59,6 @@ class PesanBantuanResource extends Resource
     {
         return [
             'index' => Pages\ListPesanBantuans::route('/'),
-            // Kita mengubah halaman edit menjadi halaman view khusus obrolan
             'view' => Pages\ViewPesanBantuan::route('/{record}'),
         ];
     }
