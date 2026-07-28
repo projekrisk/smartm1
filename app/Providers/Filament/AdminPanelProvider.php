@@ -26,13 +26,15 @@ class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
+        $namaSekolah = 'SmartM1';
         $faviconUrl = null;
 
-        // Mengambil data pengaturan sekolah secara aman (hanya untuk logo/favicon)
+        // Mengambil data pengaturan sekolah secara aman
         try {
             if (\Illuminate\Support\Facades\Schema::hasTable('pengaturan')) {
                 $pengaturan = \App\Models\Pengaturan::first();
                 if ($pengaturan) {
+                    $namaSekolah = $pengaturan->nama_sekolah ?? $namaSekolah;
                     $faviconUrl = $pengaturan->logo_sekolah ? url('/uploads/' . $pengaturan->logo_sekolah) : null;
                 }
             }
@@ -44,8 +46,8 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
-            ->brandName('SmartM1') // <-- KINI MENJADI STATIS
+            ->login(CustomAdminLogin::class)
+            ->brandName('SmartM1')
             ->favicon($faviconUrl)
             
             // FUNGSI BARU: Menyematkan halaman kustom ke Menu Dropdown Pengguna (Kanan Atas)
