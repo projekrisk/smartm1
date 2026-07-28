@@ -17,8 +17,7 @@ class PesanBantuanResource extends Resource
     protected static ?string $slug = 'pesan-bantuan';
     protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left-ellipsis';
     protected static ?string $navigationLabel = 'Pesan & Bantuan';
-    protected static ?string $navigationGroup = 'Sistem';
-    protected static ?int $navigationSort = 18;
+    protected static ?int $navigationSort = 2;
 
     public static function getNavigationBadge(): ?string
     {
