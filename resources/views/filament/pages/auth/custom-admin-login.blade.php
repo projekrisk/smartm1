@@ -33,7 +33,7 @@
             }
             
             #split-login .fi-input-wrp:focus-within {
-                border-color: #0f172a !important; /* Warna hitam elegan saat di-klik */
+                border-color: #0f172a !important;
                 background-color: #ffffff !important;
                 box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.05) !important;
             }

@@ -7,10 +7,9 @@
     } catch (\Exception $e) {}
     
     $namaSekolah = $pengaturan->nama_sekolah ?? 'SMAN 1 Malingping';
-    $appTitle = "SmartM1 " . $namaSekolah . " | Aplikasi Digitalisasi Sistem Administrasi & Akademik Siswa";
+    $appTitle = "SmartM1 - " . $namaSekolah . " | Aplikasi Digitalisasi Sistem Administrasi & Akademik Siswa";
     $metaDescription = "SmartM1 " . $namaSekolah . " adalah platform terpadu digitalisasi sistem administrasi dan akademik siswa. Akses nilai, e-rapor, absensi harian, dan portofolio prestasi sekolah secara real-time.";
     
-    // Tentukan URL gambar thumbnail media sosial
     $ogImageUrl = asset('images/og-image.jpg');
     if ($pengaturan && $pengaturan->logo_sekolah) {
         $ogImageUrl = url('/uploads/' . $pengaturan->logo_sekolah);
