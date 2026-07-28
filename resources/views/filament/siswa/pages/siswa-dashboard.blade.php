@@ -14,8 +14,10 @@
 
             .android-app-container {
                 width: 100%; max-width: 414px; margin: 0 auto; 
-                height: 100vh; height: 100dvh;
-                position: relative; display: flex; flex-direction: column;
+                position: fixed; top: 0; bottom: 0; left: 0; right: 0;
+                height: 100% !important; 
+                max-width: 100% !important; width: 100% !important; overflow: hidden !important;
+                display: flex; flex-direction: column;
                 box-shadow: 0 0 40px rgba(0,0,0,0.15); overflow: hidden; 
                 font-family: 'Inter', system-ui, sans-serif; transition: background-color 0.3s ease;
             }
@@ -41,7 +43,8 @@
             .dark .theme-nav-item { color: #64748b; }
             .dark .theme-nav-item:hover { color: #f8fafc; }
 
-            .android-content { flex: 1; overflow-y: auto; overflow-x: hidden; padding-bottom: 100px; scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; }
+            /* scroll */
+            .android-content { flex: 1; overflow-y: auto; overflow-x: hidden; padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px)); scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; }
             .android-content::-webkit-scrollbar { display: none; }
 
             .icon-sun { display: none; }
@@ -57,7 +60,7 @@
                 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
                     <p style="font-size: 11px; font-weight: 800; letter-spacing: 1px; margin: 0; color: #bfdbfe; text-transform: uppercase;">
-                        Sekolah ESER
+                        SmartM1- SMAN 1 Malingping
                     </p>
                     
                     <button x-data="{
@@ -197,7 +200,7 @@
             
         </div>
 
-        <div class="theme-nav" style="position: absolute; bottom: 0; width: 100%; height: 80px; border-top-left-radius: 24px; border-top-right-radius: 24px; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); z-index: 50; display: flex; justify-content: space-around; align-items: center; padding: 0 8px 8px 8px; backdrop-filter: blur(10px);">
+        <div class="theme-nav" style="position: absolute; bottom: 0; width: 100%; height: calc(80px + env(safe-area-inset-bottom, 0px)); border-top-left-radius: 24px; border-top-right-radius: 24px; box-shadow: 0 -4px 20px rgba(0,0,0,0.05); z-index: 50; display: flex; justify-content: space-around; align-items: center; padding: 0 8px calc(8px + env(safe-area-inset-bottom, 0px)) 8px; backdrop-filter: blur(10px);">
             <a href="/siswa" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; width: 100%; color: #2563eb;">
                 <x-filament::icon icon="heroicon-s-home" style="width: 24px; height: 24px; margin-bottom: 4px;" />
                 <span style="font-size: 10px; font-weight: bold;">Beranda</span>

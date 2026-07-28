@@ -146,7 +146,7 @@
                     </h1>
 
                     <p class="text-base md:text-xl text-slate-600 max-w-xl mb-10 leading-relaxed font-medium">
-                        SmartM1 merupakan platform digital terintegrasi yang mendukung pengelolaan administrasi, layanan akademik, absensi, e-Rapor, serta data peserta didik secara <span class="text-slate-900 font-bold border-b-2 border-edu-200">aman, efisien, dan real-time.</span>.
+                        Platform digital terintegrasi yang mendukung pengelolaan administrasi, layanan akademik, absensi, e-Rapor, serta data peserta didik secara <span class="text-slate-900 font-bold border-b-2 border-edu-200">aman, efisien, dan real-time.</span>.
                     </p>
 
                     <div class="flex flex-col sm:flex-row gap-3">

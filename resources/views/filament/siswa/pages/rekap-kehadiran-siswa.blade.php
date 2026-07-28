@@ -25,7 +25,7 @@
             .dark body, .dark .fi-layout, .dark .fi-simple-layout, .dark .fi-simple-main { background-color: #020617 !important; }
             .android-app-container {
                 width: 100%; max-width: 414px; margin: 0 auto; height: 100vh; height: 100dvh;
-                position: relative; display: flex; flex-direction: column;
+                position: fixed; top: 0; bottom: 0; left: 0; right: 0;
                 box-shadow: 0 0 40px rgba(0,0,0,0.15); overflow: hidden; font-family: 'Inter', system-ui, sans-serif;
             }
             .theme-bg { background-color: #f8fafc; }

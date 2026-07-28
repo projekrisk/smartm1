@@ -21,6 +21,7 @@
         .android-app-container {
             width: 100%; max-width: 414px; height: 100vh; height: 100dvh;
             background-color: #f8fafc;
+            position: fixed; top: 0; bottom: 0; left: 0; right: 0;
             display: flex; flex-direction: column; position: relative;
             box-shadow: 0 0 40px rgba(0,0,0,0.15); overflow: hidden;
             font-family: 'Inter', system-ui, sans-serif;
