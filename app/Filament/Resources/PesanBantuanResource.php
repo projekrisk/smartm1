@@ -19,6 +19,11 @@ class PesanBantuanResource extends Resource
     protected static ?string $navigationLabel = 'Pesan & Bantuan';
     protected static ?int $navigationSort = 2;
 
+    public static function canAccess(): bool
+    {
+        return Auth::user()->peran === 'admin';
+    }
+    
     public static function getNavigationBadge(): ?string
     {
         $count = static::getModel()::where('is_read_admin', false)->count();
