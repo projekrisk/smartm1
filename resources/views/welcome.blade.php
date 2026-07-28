@@ -137,12 +137,12 @@
                 <div class="relative z-10">
                     <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-100/80 border border-slate-200/80 mb-6 backdrop-blur-sm">
                         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span class="text-[10px] font-extrabold tracking-widest text-slate-600 uppercase">Sistem Aktif • SmartM1 Portal</span>
+                        <span class="text-[10px] font-extrabold tracking-widest text-slate-600 uppercase">Sistem Aktif</span>
                     </div>
 
                     <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 mb-6 leading-[1.1]">
-                        Digitalisasi Administrasi,<br>
-                        <span class="text-edu-600">Akademik, & Layanan Sekolah.</span>
+                        Portal,<br>
+                        <span class="text-edu-600">SMARTM1.</span>
                     </h1>
 
                     <p class="text-base md:text-xl text-slate-600 max-w-xl mb-10 leading-relaxed font-medium">
