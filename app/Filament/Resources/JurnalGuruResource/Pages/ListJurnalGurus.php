@@ -13,16 +13,13 @@ class ListJurnalGurus extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            // TOMBOL BARU: CETAK REKAPITULASI JURNAL
             Actions\Action::make('cetak_rekap')
-                ->label('Cetak Rekap Jurnal')
+                ->label('Rekap Jurnal')
                 ->icon('heroicon-o-printer')
                 ->color('warning')
                 ->form(function () {
-                    // Jika Guru, langsung eksekusi tanpa form
                     if (\Illuminate\Support\Facades\Auth::user()->peran === 'guru') return [];
                     
-                    // Jika Admin/Staf, munculkan pilihan guru
                     return [
                         \Filament\Forms\Components\Select::make('guru_id')
                             ->label('Pilih Guru')

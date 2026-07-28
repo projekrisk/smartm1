@@ -81,8 +81,8 @@ class PrestasiResource extends Resource
                             ->label('Bukti Sertifikat / Foto / Piagam')
                             ->disk('publik_upload')->directory('prestasi')
                             ->image()->openable()->downloadable()
-                            ->columnSpanFull(), // File upload tetap dibiarkan memanjang
-                    ])->columns(2), // KEMBALIKAN KE 2 KOLOM UNTUK PANEL ADMIN
+                            ->columnSpanFull(),
+                    ])->columns(2),
 
                 Forms\Components\Section::make('Verifikasi & Validasi')
                     ->schema([
@@ -127,7 +127,6 @@ class PrestasiResource extends Resource
                 Tables\Filters\SelectFilter::make('status')->options(['Menunggu'=>'Menunggu', 'Disetujui'=>'Disetujui', 'Ditolak'=>'Ditolak']),
             ])
             ->actions([
-                // MENGEMBALIKAN KE FUNGSI EDIT PENUH
                 Tables\Actions\EditAction::make()->label('Cek & Validasi'),
                 Tables\Actions\DeleteAction::make(),
             ]);

@@ -323,7 +323,7 @@ class PegawaiResource extends Resource
             ])
             ->headerActions([
                 Tables\Actions\Action::make('unduh_template')
-                    ->label('Unduh Template')
+                    ->label('Template')
                     ->color('info')
                     ->icon('heroicon-o-document-arrow-down')
                     ->visible(fn () => auth()->user()->peran === 'admin') 
@@ -337,7 +337,7 @@ class PegawaiResource extends Resource
                     }),
 
                 Tables\Actions\Action::make('impor_csv')
-                    ->label('Impor Excel (CSV)')
+                    ->label('Impor')
                     ->color('success')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->visible(fn () => auth()->user()->peran === 'admin') 
@@ -420,7 +420,7 @@ class PegawaiResource extends Resource
 
                 Tables\Actions\ExportAction::make()
                     ->exporter(\App\Filament\Exports\PegawaiExporter::class)
-                    ->label('Ekspor Data')
+                    ->label('Ekspor')
                     ->color('warning')
                     ->icon('heroicon-o-arrow-up-tray')
                     ->visible(fn () => auth()->user()->peran === 'admin') 

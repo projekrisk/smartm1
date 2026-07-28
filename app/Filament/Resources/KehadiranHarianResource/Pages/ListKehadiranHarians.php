@@ -38,9 +38,8 @@ class ListKehadiranHarians extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            // TOMBOL BARU: REKAP SISWA TIDAK HADIR HARI TERTENTU (SELURUH KELAS)
             Actions\Action::make('rekap_absen_harian')
-                ->label('Rekap Tidak Hadir')
+                ->label('Tidak Hadir')
                 ->icon('heroicon-o-document-magnifying-glass')
                 ->color('warning')
                 ->form([
@@ -54,9 +53,8 @@ class ListKehadiranHarians extends ListRecords
                     $livewire->js("window.open('{$url}', '_blank');");
                 }),
 
-            // TOMBOL LAMA: CETAK LAPORAN RENTANG WAKTU
             Actions\Action::make('cetak_laporan')
-                ->label('Cetak Laporan Absensi')
+                ->label('Laporan')
                 ->icon('heroicon-o-printer')
                 ->color('success')
                 ->form([

@@ -61,6 +61,10 @@ class JadwalPelajaranResource extends Resource
             ->schema([
                 Forms\Components\Section::make('Informasi Penugasan Utama')
                     ->schema([
+                        // FUNGSI BARU: Menarik otomatis ID Tahun Ajaran yang berstatus Aktif
+                        Forms\Components\Hidden::make('tahun_ajaran_id')
+                            ->default(fn () => \App\Models\TahunAjaran::where('is_active', true)->first()?->id),
+
                         Forms\Components\Select::make('guru_id')
                             ->label('Guru Pengajar')
                             ->relationship('guru', 'name', fn ($query) => $query->where('peran', 'guru'))

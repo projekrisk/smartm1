@@ -12,7 +12,6 @@ class ListPrestasis extends ListRecords
 {
     protected static string $resource = PrestasiResource::class;
 
-    // FUNGSI BARU: Tab Filter Siswa Aktif vs Alumni
     public function getTabs(): array
     {
         return [
@@ -39,9 +38,8 @@ class ListPrestasis extends ListRecords
     protected function getHeaderActions(): array 
     { 
         return [ 
-            // FUNGSI BARU: Tombol Cetak Laporan
             Actions\Action::make('cetak_prestasi')
-                ->label('Cetak Daftar Prestasi')
+                ->label('Rekap Prestasi')
                 ->icon('heroicon-o-printer')
                 ->color('success')
                 ->url(fn (): string => url('/cetak/prestasi'))

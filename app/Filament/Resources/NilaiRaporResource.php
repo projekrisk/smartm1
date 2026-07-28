@@ -16,8 +16,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Filament\Notifications\Notification;
 use Illuminate\Database\Eloquent\Builder;
-
-// Tambahan untuk fitur View Infolist
 use Filament\Infolists\Infolist;
 use Filament\Infolists\Components as InfolistComponents;
 
@@ -107,7 +105,6 @@ class NilaiRaporResource extends Resource
                 InfolistComponents\Section::make('Rekapitulasi Daftar Nilai Per Semester')
                     ->description('Berikut adalah seluruh riwayat nilai rapor siswa ini. Klik pada baris semester untuk melihat atau menyembunyikan detail nilainya.')
                     ->schema([
-                        // Memanggil View khusus agar lebar tabel dan fungsi klik bisa berjalan sempurna
                         InfolistComponents\ViewEntry::make('riwayat_nilai')
                             ->hiddenLabel()
                             ->columnSpanFull()
@@ -169,12 +166,12 @@ class NilaiRaporResource extends Resource
             ->headerActions([
                 Tables\Actions\ExportAction::make()
                     ->exporter(NilaiRaporExporter::class)
-                    ->label('Ekspor Excel')
+                    ->label('Ekspor')
                     ->color('warning')
                     ->icon('heroicon-o-arrow-up-tray'),
 
                 Tables\Actions\Action::make('impor_matriks')
-                    ->label('Impor Nilai (CSV)')
+                    ->label('Impor')
                     ->color('success')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->form([

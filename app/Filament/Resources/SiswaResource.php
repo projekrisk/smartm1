@@ -246,7 +246,6 @@ class SiswaResource extends Resource
                                 ]),
                             ]),
 
-                        // TAB 4: AKADEMIK, STATUS & FOTO
                         Forms\Components\Tabs\Tab::make('Akademik & Status')
                             ->icon('heroicon-o-academic-cap')
                             ->schema([
@@ -629,7 +628,7 @@ class SiswaResource extends Resource
             ])
             ->headerActions([
                 Tables\Actions\Action::make('unduh_template')
-                    ->label('Unduh Template')
+                    ->label('Template')
                     ->color('info')
                     ->icon('heroicon-o-document-arrow-down')
                     ->visible(fn () => Auth::user()->peran === 'admin')
@@ -643,7 +642,7 @@ class SiswaResource extends Resource
                     }),
 
                 Tables\Actions\Action::make('impor_csv')
-                    ->label('Impor Excel (CSV)')
+                    ->label('Impor')
                     ->color('success')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->visible(fn () => Auth::user()->peran === 'admin')
@@ -781,7 +780,7 @@ class SiswaResource extends Resource
                     ->modalSubmitActionLabel('Mulai Impor'),
 
                 Tables\Actions\Action::make('impor_foto_zip')
-                    ->label('Impor Foto (ZIP)')
+                    ->label('Foto')
                     ->color('info')
                     ->icon('heroicon-o-photo')
                     ->visible(fn () => Auth::user()->peran === 'admin')
@@ -858,7 +857,7 @@ class SiswaResource extends Resource
 
                 Tables\Actions\ExportAction::make()
                     ->exporter(\App\Filament\Exports\SiswaExporter::class)
-                    ->label('Ekspor Data')
+                    ->label('Ekspor')
                     ->color('warning')
                     ->icon('heroicon-o-arrow-up-tray')
                     ->visible(fn () => Auth::user()->peran === 'admin')
@@ -895,7 +894,6 @@ class SiswaResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     
-                    // TOMBOL BULK ACTION BARU: LEPAS KELAS & LULUSKAN
                     Tables\Actions\BulkAction::make('lepas_kelas')
                         ->label('Lepas Kelas (Kenaikan/Lulus)')
                         ->icon('heroicon-o-arrow-up-on-square')

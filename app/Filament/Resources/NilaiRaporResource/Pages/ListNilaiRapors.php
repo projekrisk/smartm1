@@ -17,9 +17,8 @@ class ListNilaiRapors extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            // TOMBOL DOWNLOAD LEGER (TETAP DIPERTAHANKAN)
             Actions\Action::make('download_leger')
-                ->label('Unduh Leger Nilai')
+                ->label('Unduh Leger')
                 ->icon('heroicon-o-table-cells')
                 ->color('success')
                 ->form([
@@ -42,7 +41,6 @@ class ListNilaiRapors extends ListRecords
         ];
     }
 
-    // FUNGSI BARU: MEMBUAT TAB PEMISAH SISWA AKTIF DAN ALUMNI
     public function getTabs(): array
     {
         return [

@@ -167,6 +167,12 @@ class BukuNilaiResource extends Resource
                 Tables\Columns\TextColumn::make('materi')->label('Materi / Topik')->limit(20)->searchable(),
                 Tables\Columns\TextColumn::make('buku_nilai_count')->label('Siswa Dinilai')->badge()->color('primary')->formatStateUsing(fn ($state) => $state . ' Orang'),
             ])
+            ->filters([
+                Tables\Filters\SelectFilter::make('tahun_ajaran_id')
+                    ->label('Filter Tahun Ajaran')
+                    ->options(fn () => \App\Models\TahunAjaran::orderBy('id', 'desc')->get()->mapWithKeys(fn ($ta) => [$ta->id => $ta->nama_tahun . ' (' . $ta->semester . ')']))
+                    ->default(fn () => \App\Models\TahunAjaran::where('is_active', true)->first()?->id),
+            ])
             ->actions([ 
                 Tables\Actions\EditAction::make()->label('Ubah Nilai'),
                 
