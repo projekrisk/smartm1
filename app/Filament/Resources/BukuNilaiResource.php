@@ -23,7 +23,7 @@ class BukuNilaiResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-book-open';
     protected static ?string $navigationLabel = 'Buku Nilai';
     protected static ?string $navigationGroup = 'Akademik';    
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 9;
 
     public static function canViewAny(): bool { return in_array(auth()->user()->peran, ['admin', 'guru']); }
 

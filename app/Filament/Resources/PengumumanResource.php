@@ -18,7 +18,7 @@ class PengumumanResource extends Resource
     protected static ?string $navigationLabel = 'Pengumuman';
     protected static ?string $navigationGroup = 'Informasi';
     protected static ?string $slug = 'pengumuman';
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 16;
     
     public static function canViewAny(): bool
     {

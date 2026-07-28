@@ -40,9 +40,10 @@ class KehadiranHarianResource extends Resource
 
     protected static ?string $slug = 'kehadiran-harian';
     protected static ?string $navigationIcon = 'heroicon-o-document-check';  
-    protected static ?string $navigationLabel = 'Absensi Harian';
     protected static ?string $pluralModelLabel = 'Rekap Absensi Harian';
-    protected static ?int $navigationSort = 9;
+    protected static ?string $navigationGroup = 'Kesiswaan';    
+    protected static ?string $navigationLabel = 'Absensi Harian';
+    protected static ?int $navigationSort = 11;
 
     public static function form(Form $form): Form
     {

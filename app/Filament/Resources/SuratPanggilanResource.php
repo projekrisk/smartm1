@@ -20,7 +20,7 @@ class SuratPanggilanResource extends Resource
     protected static ?string $pluralModelLabel = 'Surat Panggilan';
     protected static ?string $navigationGroup = 'Kesiswaan';    
     protected static ?string $modelLabel = 'Surat Panggilan';
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 14;
 
     public static function canViewAny(): bool
     {

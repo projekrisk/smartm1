@@ -22,7 +22,7 @@ class JurnalGuruResource extends Resource
     protected static ?string $navigationLabel = 'Jurnal & Absensi';
     protected static ?string $pluralModelLabel = 'Jurnal Mengajar & Absensi';
     protected static ?string $navigationGroup = 'Akademik';    
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 8;
 
     public static function canViewAny(): bool 
     { 

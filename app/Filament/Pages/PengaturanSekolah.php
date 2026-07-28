@@ -22,7 +22,7 @@ class PengaturanSekolah extends Page implements HasForms
     protected static ?string $title = 'Pengaturan';    
     protected static string $view = 'filament.pages.pengaturan-sekolah';
     protected static ?string $navigationGroup = 'Sistem';
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 17;
 
     public ?array $data = [];
 

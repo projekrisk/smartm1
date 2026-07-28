@@ -24,7 +24,7 @@ class JadwalPelajaranResource extends Resource
     protected static ?string $navigationLabel = 'Jadwal Mengajar';
     protected static ?string $pluralModelLabel = 'Jadwal Mengajar';
     protected static ?string $navigationGroup = 'Akademik';    
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 7;
 
     public static function canCreate(): bool 
     { 
