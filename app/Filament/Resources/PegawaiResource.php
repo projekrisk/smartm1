@@ -35,7 +35,7 @@ class PegawaiResource extends Resource
     {
         $query = parent::getEloquentQuery();
         
-        if (auth()->user()->peran === 'guru') {
+        if (auth()->user()->peran !== 'admin') {
             $query->where('user_id', auth()->id());
         }
         

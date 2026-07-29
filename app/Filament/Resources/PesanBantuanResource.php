@@ -19,10 +19,7 @@ class PesanBantuanResource extends Resource
     protected static ?string $navigationLabel = 'Pesan & Bantuan';
     protected static ?int $navigationSort = 2;
 
-    public static function canViewAny(): bool
-    {
-        return in_array(auth()->user()->peran, ['admin', 'staf']);
-    }
+    public static function canViewAny(): bool { return Auth::user()->peran === 'admin'; }
     
     public static function getNavigationBadge(): ?string
     {
