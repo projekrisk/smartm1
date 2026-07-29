@@ -29,12 +29,24 @@ class SiswaPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
+        $faviconUrl = null;
+
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('pengaturan')) {
+                $pengaturan = \App\Models\Pengaturan::first();
+                if ($pengaturan && $pengaturan->logo_sekolah) {
+                    $faviconUrl = url('/uploads/' . $pengaturan->logo_sekolah);
+                }
+            }
+        } catch (\Exception $e) {
+        }
+
         return $panel
             ->id('siswa')
             ->path('siswa')
+            ->favicon($faviconUrl)
             ->login(SiswaLogin::class)
             ->colors(['primary' => Color::Blue])
-            ->favicon(url('/uploads/' . \App\Models\Pengaturan::first()?->logo_sekolah))
             ->topNavigation()
             ->brandName('Portal Siswa')
             ->discoverResources(in: app_path('Filament/Siswa/Resources'), for: 'App\\Filament\\Siswa\\Resources')
