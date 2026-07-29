@@ -21,7 +21,10 @@ class TingkatResource extends Resource
     protected static ?string $modelLabel = 'Tingkat';
     protected static ?int $navigationSort = 2;
 
-    public static function canViewAny(): bool { return Auth::user()->peran === 'admin'; }
+    public static function canViewAny(): bool
+    {
+        return in_array(auth()->user()->peran, ['admin']);
+    }
 
     public static function form(Form $form): Form
     {

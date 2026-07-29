@@ -18,8 +18,11 @@ class TestimoniResource extends Resource
     protected static ?string $pluralModelLabel = 'Ulasan Siswa';
     protected static ?int $navigationSort = 2;
 
+    public static function canViewAny(): bool
+    {
+        return in_array(auth()->user()->peran, ['admin']);
+    }
     public static function canCreate(): bool { return false; }
-    public static function canViewAny(): bool { return Auth::user()->peran === 'admin'; }
 
     public static function table(Table $table): Table
     {
