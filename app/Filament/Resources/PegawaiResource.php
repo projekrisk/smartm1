@@ -17,13 +17,13 @@ class PegawaiResource extends Resource
 {
     protected static ?string $model = Pegawai::class;
     
+    protected static ?string $navigationGroup = 'Data Master';
     protected static ?string $slug = 'pegawai';
     protected static ?string $navigationIcon = 'heroicon-o-briefcase';
     protected static ?string $navigationLabel = 'Data Pegawai';
     protected static ?string $pluralModelLabel = 'Data Pegawai';
-    protected static ?string $navigationGroup = 'Data Master';    
     protected static ?string $modelLabel = 'Pegawai';
-    protected static ?int $navigationSort = 5;
+    protected static ?int $navigationSort = 4;
 
     public static function canViewAny(): bool
     {
@@ -34,7 +34,7 @@ class PegawaiResource extends Resource
     {
         $query = parent::getEloquentQuery();
         
-        if (in_array(auth()->user()->peran, ['guru', 'staf'])) {
+        if (auth()->user()->peran === 'guru') {
             $query->where('user_id', auth()->id());
         }
         
@@ -43,12 +43,12 @@ class PegawaiResource extends Resource
 
     public static function canCreate(): bool
     {
-        return auth()->user()->peran === 'admin';
+        return in_array(auth()->user()->peran, ['admin', 'staf']);
     }
 
     public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
     {
-        return auth()->user()->peran === 'admin';
+        return in_array(auth()->user()->peran, ['admin', 'staf']);
     }
 
     public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
@@ -75,6 +75,14 @@ class PegawaiResource extends Resource
                                         ->required()
                                         ->numeric()
                                         ->unique(ignoreRecord: true),
+                                    Forms\Components\TextInput::make('no_kk')
+                                        ->label('Nomor Kartu Keluarga (KK)')
+                                        ->numeric()
+                                        ->maxLength(20),
+                                    Forms\Components\TextInput::make('npwp')
+                                        ->label('NPWP')
+                                        ->numeric()
+                                        ->maxLength(30),
                                     Forms\Components\Select::make('jenis_kelamin')
                                         ->label('Jenis Kelamin')
                                         ->options([
@@ -88,7 +96,7 @@ class PegawaiResource extends Resource
                                         ->label('Tanggal Lahir'),
                                     Forms\Components\TextInput::make('telepon')
                                         ->label('Nomor Telepon / WhatsApp')
-                                        ->tel(),
+                                        ->numeric(),
                                     Forms\Components\TextInput::make('email')
                                         ->label('Email Aktif (Untuk Login)')
                                         ->email()
@@ -101,13 +109,21 @@ class PegawaiResource extends Resource
                             ->icon('heroicon-o-briefcase')
                             ->schema([
                                 Forms\Components\Grid::make(2)->schema([
+                                    Forms\Components\Select::make('jenis_ptk')
+                                        ->label('Jenis PTK')
+                                        ->options([
+                                            'Kepala Sekolah' => 'Kepala Sekolah',
+                                            'Guru' => 'Guru',
+                                            'Tenaga Kependidikan' => 'Tenaga Kependidikan',
+                                        ])
+                                        ->required(),
                                     Forms\Components\Select::make('status_kepegawaian')
                                         ->label('Status Kepegawaian')
                                         ->options([
-                                            'Guru' => 'Guru',
-                                            'Staf' => 'Staf / Tata Usaha',
-                                            'Keamanan' => 'Keamanan / Satpam',
-                                            'Lainnya' => 'Lainnya',
+                                            'PNS' => 'PNS',
+                                            'PPPK' => 'PPPK',
+                                            'GTY/PTY' => 'GTY/PTY',
+                                            'Honorer' => 'Honorer',
                                         ])
                                         ->required(),
                                     Forms\Components\TextInput::make('tugas_utama')
@@ -115,7 +131,7 @@ class PegawaiResource extends Resource
                                         ->placeholder('Contoh: Guru Matematika / Pembantu Pelaksana')
                                         ->required(),
                                     Forms\Components\TextInput::make('nip')
-                                        ->label('NIP (Kosongkan jika honorer)'),
+                                        ->label('NIP (Kosongkan jika honorer/GTY)'),
                                     Forms\Components\TextInput::make('nuptk')
                                         ->label('NUPTK'),
                                     Forms\Components\TextInput::make('pangkat_golongan')
@@ -203,6 +219,8 @@ class PegawaiResource extends Resource
                                 Infolists\Components\Grid::make(2)->schema([
                                     Infolists\Components\TextEntry::make('nama')->label('Nama Lengkap')->weight('bold')->size(Infolists\Components\TextEntry\TextEntrySize::Large)->columnSpanFull(),
                                     Infolists\Components\TextEntry::make('nik')->label('NIK (Nomor Kependudukan)'),
+                                    Infolists\Components\TextEntry::make('no_kk')->label('Nomor KK')->default('-'),
+                                    Infolists\Components\TextEntry::make('npwp')->label('NPWP')->default('-'),
                                     Infolists\Components\TextEntry::make('jenis_kelamin')->label('Jenis Kelamin'),
                                     Infolists\Components\TextEntry::make('tempat_lahir')->label('Tempat Lahir')->default('-'),
                                     Infolists\Components\TextEntry::make('tanggal_lahir')
@@ -216,13 +234,17 @@ class PegawaiResource extends Resource
                             ->icon('heroicon-o-briefcase')
                             ->schema([
                                 Infolists\Components\Grid::make(2)->schema([
+                                    Infolists\Components\TextEntry::make('jenis_ptk')
+                                        ->label('Jenis PTK')
+                                        ->weight('bold'),
                                     Infolists\Components\TextEntry::make('status_kepegawaian')
                                         ->label('Status Kepegawaian')
                                         ->badge()
                                         ->color(fn (string $state): string => match ($state) {
-                                            'Guru' => 'success',
-                                            'Staf' => 'info',
-                                            'Keamanan' => 'warning',
+                                            'PNS' => 'success',
+                                            'PPPK' => 'info',
+                                            'GTY/PTY' => 'primary',
+                                            'Honorer' => 'warning',
                                             default => 'gray',
                                         }),
                                     Infolists\Components\TextEntry::make('tugas_utama')->label('Tugas Utama'),
@@ -231,7 +253,7 @@ class PegawaiResource extends Resource
                                     Infolists\Components\TextEntry::make('pangkat_golongan')->label('Pangkat / Gol. Ruang')->default('-'),
                                     Infolists\Components\TextEntry::make('jabatan')->label('Jabatan')->default('-'),
                                     Infolists\Components\TextEntry::make('status_tugas_saat_ini')
-                                        ->label('Status Tugas Saat Ini (Termasuk Wali Kelas)')
+                                        ->label('Status Tugas Saat Ini (Termasuk Wali Kelas & Tambahan)')
                                         ->getStateUsing(function ($record) {
                                             $tugas = $record->daftar_tugas_tambahan;
                                             return empty($tugas) ? 'Tidak ada tugas tambahan.' : implode(', ', (array) $tugas);
@@ -282,18 +304,22 @@ class PegawaiResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
+                Tables\Columns\TextColumn::make('jenis_ptk')
+                    ->label('Jenis PTK')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('status_kepegawaian')
                     ->label('Status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'Guru' => 'success',
-                        'Staf' => 'info',
-                        'Keamanan' => 'warning',
+                        'PNS' => 'success',
+                        'PPPK' => 'info',
+                        'GTY/PTY' => 'primary',
+                        'Honorer' => 'warning',
                         default => 'gray',
                     }),
                 Tables\Columns\TextColumn::make('tugas_utama')
                     ->label('Tugas Utama')
-                    ->limit(30)
+                    ->limit(20)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('masa_kerja_keseluruhan')
                     ->label('Masa Kerja')
@@ -302,22 +328,30 @@ class PegawaiResource extends Resource
                     ->getStateUsing(fn ($record) => intval($record->masa_kerja_keseluruhan) . ' Tahun'),
             ])
             ->filters([
+                Tables\Filters\SelectFilter::make('jenis_ptk')
+                    ->label('Filter Jenis PTK')
+                    ->options([
+                        'Kepala Sekolah' => 'Kepala Sekolah',
+                        'Guru' => 'Guru',
+                        'Tenaga Kependidikan' => 'Tenaga Kependidikan',
+                    ]),
                 Tables\Filters\SelectFilter::make('status_kepegawaian')
                     ->label('Filter Status')
                     ->options([
-                        'Guru' => 'Guru',
-                        'Staf' => 'Staf / Tata Usaha',
-                        'Keamanan' => 'Keamanan / Satpam',
+                        'PNS' => 'PNS',
+                        'PPPK' => 'PPPK',
+                        'GTY/PTY' => 'GTY/PTY',
+                        'Honorer' => 'Honorer',
                     ]),
             ])
             ->headerActions([
                 Tables\Actions\Action::make('unduh_template')
-                    ->label('Template')
+                    ->label('Unduh Template')
                     ->color('info')
                     ->icon('heroicon-o-document-arrow-down')
-                    ->visible(fn () => auth()->user()->peran === 'admin') 
+                    ->visible(fn () => in_array(auth()->user()->peran, ['admin', 'staf'])) 
                     ->action(function () {
-                        $headers = ['nama', 'nik', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'telepon', 'email', 'status_kepegawaian', 'tugas_utama', 'nip', 'nuptk', 'pangkat_golongan', 'jabatan', 'tmt_cpns_honorer', 'tmt_pns_pppk', 'tmt_golongan_terakhir', 'pendidikan_ijazah', 'pendidikan_tahun', 'pendidikan_jurusan'];
+                        $headers = ['nama', 'nik', 'no_kk', 'npwp', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'telepon', 'email', 'jenis_ptk', 'status_kepegawaian', 'tugas_utama', 'nip', 'nuptk', 'pangkat_golongan', 'jabatan', 'tmt_cpns_honorer', 'tmt_pns_pppk', 'tmt_golongan_terakhir', 'pendidikan_ijazah', 'pendidikan_tahun', 'pendidikan_jurusan'];
                         $csvData = implode(',', $headers) . "\n";
                         
                         return response()->streamDownload(function () use ($csvData) {
@@ -326,10 +360,10 @@ class PegawaiResource extends Resource
                     }),
 
                 Tables\Actions\Action::make('impor_csv')
-                    ->label('Impor')
+                    ->label('Impor Excel (CSV)')
                     ->color('success')
                     ->icon('heroicon-o-arrow-down-tray')
-                    ->visible(fn () => auth()->user()->peran === 'admin') 
+                    ->visible(fn () => in_array(auth()->user()->peran, ['admin', 'staf'])) 
                     ->form([
                         Forms\Components\FileUpload::make('file')
                             ->label('Upload File CSV')
@@ -373,12 +407,15 @@ class PegawaiResource extends Resource
                                     ['nik' => $nik],
                                     [
                                         'nama' => $rowData['nama'] ?? null,
+                                        'no_kk' => $rowData['no_kk'] ?? null,
+                                        'npwp' => $rowData['npwp'] ?? null,
                                         'jenis_kelamin' => $jkFix,
                                         'tempat_lahir' => $rowData['tempat_lahir'] ?? null,
                                         'tanggal_lahir' => empty($rowData['tanggal_lahir']) ? null : date('Y-m-d', strtotime($rowData['tanggal_lahir'])),
                                         'telepon' => $rowData['telepon'] ?? null,
                                         'email' => $rowData['email'] ?? null,
-                                        'status_kepegawaian' => $rowData['status_kepegawaian'] ?? 'Guru',
+                                        'jenis_ptk' => $rowData['jenis_ptk'] ?? 'Guru',
+                                        'status_kepegawaian' => $rowData['status_kepegawaian'] ?? 'PNS',
                                         'tugas_utama' => $rowData['tugas_utama'] ?? 'Guru',
                                         'nip' => $rowData['nip'] ?? null,
                                         'nuptk' => $rowData['nuptk'] ?? null,
@@ -409,10 +446,10 @@ class PegawaiResource extends Resource
 
                 Tables\Actions\ExportAction::make()
                     ->exporter(\App\Filament\Exports\PegawaiExporter::class)
-                    ->label('Ekspor')
+                    ->label('Ekspor Data')
                     ->color('warning')
                     ->icon('heroicon-o-arrow-up-tray')
-                    ->visible(fn () => auth()->user()->peran === 'admin') 
+                    ->visible(fn () => in_array(auth()->user()->peran, ['admin', 'staf'])) 
                     ->columnMapping(false),
             ])
             ->actions([

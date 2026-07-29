@@ -20,17 +20,14 @@ class Pegawai extends Model
         'tmt_golongan_terakhir' => 'date',
     ];
 
-    // LOGIKA OTOMATIS SAAT DISIMPAN
     protected static function booted()
     {
         static::created(function ($pegawai) {
-            // Tentukan peran (role) Filament berdasarkan Status Kepegawaian
             $peran = 'staf';
-            if ($pegawai->status_kepegawaian === 'Guru') {
+            if ($pegawai->jenis_ptk === 'Guru' || $pegawai->jenis_ptk === 'Kepala Sekolah') {
                 $peran = 'guru';
             }
 
-            // Buat Akun User Otomatis (Password default: NIK)
             $user = User::create([
                 'name' => $pegawai->nama,
                 'email' => $pegawai->email,
@@ -40,7 +37,6 @@ class Pegawai extends Model
             $pegawai->updateQuietly(['user_id' => $user->id]);
         });
 
-        // Sinkronisasi pembaruan nama/email ke tabel Users jika diedit
         static::updated(function ($pegawai) {
             if ($pegawai->user) {
                 $pegawai->user->updateQuietly([
@@ -56,14 +52,12 @@ class Pegawai extends Model
         return $this->belongsTo(User::class);
     }
 
-    // MENGHITUNG MASA KERJA GOLONGAN (Tahun)
     public function getMasaKerjaGolonganAttribute()
     {
         if (!$this->tmt_golongan_terakhir) return 0;
         return Carbon::parse($this->tmt_golongan_terakhir)->diffInYears(now());
     }
 
-    // MENGHITUNG MASA KERJA KESELURUHAN (Tahun)
     public function getMasaKerjaKeseluruhanAttribute()
     {
         $tmt = $this->tmt_cpns_honorer ?? $this->tmt_pns_pppk;
@@ -71,12 +65,10 @@ class Pegawai extends Model
         return Carbon::parse($tmt)->diffInYears(now());
     }
 
-    // MENGGABUNGKAN TUGAS TAMBAHAN + WALI KELAS OTOMATIS
     public function getDaftarTugasTambahanAttribute()
     {
-        $tugas = $this->tugas_tambahan ?? []; // Ambil dari JSON
+        $tugas = $this->tugas_tambahan ?? [];
         
-        // Cek apakah dia wali kelas di pengaturan Kelas
         if ($this->user_id) {
             $daftarKelas = Kelas::where('wali_kelas_id', $this->user_id)->pluck('nama_kelas');
             foreach($daftarKelas as $kelas) {
