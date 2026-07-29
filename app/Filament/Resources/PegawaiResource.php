@@ -533,7 +533,8 @@ class PegawaiResource extends Resource
                     ->label('Ekspor Semua')
                     ->color('primary')
                     ->icon('heroicon-o-arrow-up-tray')
-                    ->visible(fn () => in_array(auth()->user()->peran, ['admin', 'staf'])),
+                    ->visible(fn () => in_array(auth()->user()->peran, ['admin', 'staf']))
+                    ->columnMapping(false), // MATIKAN DIALOG PILIHAN KOLOM (LANGSUNG DOWNLOAD)
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
