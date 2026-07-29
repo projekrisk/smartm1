@@ -18,7 +18,7 @@ class PegawaiResource extends Resource
 {
     protected static ?string $model = Pegawai::class;
     
-    protected static ?string $navigationGroup = 'Master Data';
+    protected static ?string $navigationGroup = 'Data Master';
     protected static ?string $slug = 'pegawai';
     protected static ?string $navigationIcon = 'heroicon-o-briefcase';
     protected static ?string $navigationLabel = 'Data Pegawai';
@@ -530,7 +530,7 @@ class PegawaiResource extends Resource
 
                 Tables\Actions\ExportAction::make()
                     ->exporter(\App\Filament\Exports\PegawaiExporter::class)
-                    ->label('Ekspor Semua')
+                    ->label('Ekspor')
                     ->color('primary')
                     ->icon('heroicon-o-arrow-up-tray')
                     ->visible(fn () => in_array(auth()->user()->peran, ['admin', 'staf']))
