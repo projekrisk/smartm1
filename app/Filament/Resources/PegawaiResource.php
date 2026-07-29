@@ -12,6 +12,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use App\Filament\Resources\PegawaiResource\RelationManagers; 
+use Illuminate\Database\Eloquent\Builder;
 
 class PegawaiResource extends Resource
 {
@@ -30,7 +31,7 @@ class PegawaiResource extends Resource
         return in_array(auth()->user()->peran, ['admin', 'staf', 'guru']);
     }
 
-    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();
         
@@ -66,6 +67,16 @@ class PegawaiResource extends Resource
                             ->icon('heroicon-o-user')
                             ->schema([
                                 Forms\Components\Grid::make(2)->schema([
+                                    Forms\Components\FileUpload::make('foto')
+                                        ->label('Foto Pegawai (Formal)')
+                                        ->disk('publik_upload')
+                                        ->directory('foto-pegawai')
+                                        ->image()
+                                        ->avatar()
+                                        ->maxSize(2048)
+                                        ->columnSpanFull()
+                                        ->extraAttributes(['class' => 'flex justify-center']),
+                                        
                                     Forms\Components\TextInput::make('nama')
                                         ->label('Nama Lengkap (Beserta Gelar)')
                                         ->required()
@@ -102,6 +113,31 @@ class PegawaiResource extends Resource
                                         ->email()
                                         ->required()
                                         ->unique(ignoreRecord: true),
+                                ]),
+                            ]),
+                            
+                        Forms\Components\Tabs\Tab::make('Alamat & Finansial')
+                            ->icon('heroicon-o-map-pin')
+                            ->schema([
+                                Forms\Components\Grid::make(2)->schema([
+                                    Forms\Components\TextInput::make('no_rekening')
+                                        ->label('Nomor Rekening (Gaji/Sertifikasi)')
+                                        ->numeric(),
+                                    Forms\Components\TextInput::make('nama_bank')
+                                        ->label('Nama Bank (Cth: BJB, BNI, BRI)'),
+                                    Forms\Components\Textarea::make('alamat')
+                                        ->label('Alamat Lengkap / Jalan')
+                                        ->columnSpanFull(),
+                                    Forms\Components\Grid::make(4)->schema([
+                                        Forms\Components\TextInput::make('rt')->label('RT')->numeric(),
+                                        Forms\Components\TextInput::make('rw')->label('RW')->numeric(),
+                                    ])->columnSpanFull(),
+                                    Forms\Components\TextInput::make('kelurahan')
+                                        ->label('Desa / Kelurahan'),
+                                    Forms\Components\TextInput::make('kecamatan')
+                                        ->label('Kecamatan'),
+                                    Forms\Components\TextInput::make('kabupaten')
+                                        ->label('Kabupaten / Kota'),
                                 ]),
                             ]),
 
@@ -217,6 +253,10 @@ class PegawaiResource extends Resource
                             ->icon('heroicon-o-user')
                             ->schema([
                                 Infolists\Components\Grid::make(2)->schema([
+                                    Infolists\Components\ImageEntry::make('foto')
+                                        ->label('Foto Profil')
+                                        ->circular()
+                                        ->columnSpanFull(),
                                     Infolists\Components\TextEntry::make('nama')->label('Nama Lengkap')->weight('bold')->size(Infolists\Components\TextEntry\TextEntrySize::Large)->columnSpanFull(),
                                     Infolists\Components\TextEntry::make('nik')->label('NIK (Nomor Kependudukan)'),
                                     Infolists\Components\TextEntry::make('no_kk')->label('Nomor KK')->default('-'),
@@ -229,6 +269,14 @@ class PegawaiResource extends Resource
                                     Infolists\Components\TextEntry::make('telepon')->label('Nomor Telepon')->default('-'),
                                     Infolists\Components\TextEntry::make('email')->label('Email Aktif')->default('-'),
                                 ]),
+                                Infolists\Components\Grid::make(2)->schema([
+                                    Infolists\Components\TextEntry::make('no_rekening')->label('Nomor Rekening')->default('-'),
+                                    Infolists\Components\TextEntry::make('nama_bank')->label('Bank')->default('-'),
+                                    Infolists\Components\TextEntry::make('alamat')
+                                        ->label('Alamat Lengkap')
+                                        ->getStateUsing(fn ($record) => $record->alamat ? $record->alamat . ' RT ' . ($record->rt ?? '-') . '/RW ' . ($record->rw ?? '-') . ', ' . ($record->kelurahan ?? '-') . ', Kec. ' . ($record->kecamatan ?? '-') . ', ' . ($record->kabupaten ?? '-') : '-')
+                                        ->columnSpanFull(),
+                                ])->extraAttributes(['class' => 'mt-4 border-t pt-4']),
                             ]),
                         Infolists\Components\Tabs\Tab::make('Kepegawaian')
                             ->icon('heroicon-o-briefcase')
@@ -306,21 +354,9 @@ class PegawaiResource extends Resource
                     ->weight('bold'),
                 Tables\Columns\TextColumn::make('jenis_ptk')
                     ->label('Jenis PTK')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('status_kepegawaian')
-                    ->label('Status')
+                    ->searchable()
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'PNS' => 'success',
-                        'PPPK' => 'info',
-                        'GTY/PTY' => 'primary',
-                        'Honorer' => 'warning',
-                        default => 'gray',
-                    }),
-                Tables\Columns\TextColumn::make('tugas_utama')
-                    ->label('Tugas Utama')
-                    ->limit(20)
-                    ->searchable(),
+                    ->color('info'),
                 Tables\Columns\TextColumn::make('masa_kerja_keseluruhan')
                     ->label('Masa Kerja')
                     ->badge()
@@ -345,13 +381,47 @@ class PegawaiResource extends Resource
                     ]),
             ])
             ->headerActions([
+                Tables\Actions\Action::make('cetak_rekap')
+                    ->label('Cetak Rekap (CSV)')
+                    ->icon('heroicon-o-document-text')
+                    ->color('success')
+                    ->visible(fn () => in_array(auth()->user()->peran, ['admin', 'staf']))
+                    ->action(function () {
+                        $pegawais = Pegawai::orderBy('nama', 'asc')->get();
+                        
+                        $headers = ['Nama Lengkap', 'NIP', 'Jenis PTK', 'Status Kepegawaian'];
+                        
+                        $callback = function() use ($pegawais, $headers) {
+                            $file = fopen('php://output', 'w');
+                            fputcsv($file, $headers);
+                            
+                            foreach ($pegawais as $pegawai) {
+                                fputcsv($file, [
+                                    $pegawai->nama,
+                                    $pegawai->nip ?? '-',
+                                    $pegawai->jenis_ptk ?? '-',
+                                    $pegawai->status_kepegawaian ?? '-',
+                                ]);
+                            }
+                            fclose($file);
+                        };
+
+                        return response()->stream($callback, 200, [
+                            "Content-type"        => "text/csv",
+                            "Content-Disposition" => "attachment; filename=rekap_pegawai_" . date('Y-m-d') . ".csv",
+                            "Pragma"              => "no-cache",
+                            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+                            "Expires"             => "0"
+                        ]);
+                    }),
+
                 Tables\Actions\Action::make('unduh_template')
                     ->label('Unduh Template')
                     ->color('info')
                     ->icon('heroicon-o-document-arrow-down')
                     ->visible(fn () => in_array(auth()->user()->peran, ['admin', 'staf'])) 
                     ->action(function () {
-                        $headers = ['nama', 'nik', 'no_kk', 'npwp', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'telepon', 'email', 'jenis_ptk', 'status_kepegawaian', 'tugas_utama', 'nip', 'nuptk', 'pangkat_golongan', 'jabatan', 'tmt_cpns_honorer', 'tmt_pns_pppk', 'tmt_golongan_terakhir', 'pendidikan_ijazah', 'pendidikan_tahun', 'pendidikan_jurusan'];
+                        $headers = ['nama', 'nik', 'no_kk', 'npwp', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'telepon', 'email', 'jenis_ptk', 'status_kepegawaian', 'tugas_utama', 'nip', 'nuptk', 'pangkat_golongan', 'jabatan', 'tmt_cpns_honorer', 'tmt_pns_pppk', 'tmt_golongan_terakhir', 'pendidikan_ijazah', 'pendidikan_tahun', 'pendidikan_jurusan', 'no_rekening', 'nama_bank', 'alamat', 'rt', 'rw', 'kelurahan', 'kecamatan', 'kabupaten'];
                         $csvData = implode(',', $headers) . "\n";
                         
                         return response()->streamDownload(function () use ($csvData) {
@@ -361,7 +431,7 @@ class PegawaiResource extends Resource
 
                 Tables\Actions\Action::make('impor_csv')
                     ->label('Impor Excel (CSV)')
-                    ->color('success')
+                    ->color('warning')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->visible(fn () => in_array(auth()->user()->peran, ['admin', 'staf'])) 
                     ->form([
@@ -427,6 +497,15 @@ class PegawaiResource extends Resource
                                         'pendidikan_ijazah' => $rowData['pendidikan_ijazah'] ?? null,
                                         'pendidikan_tahun' => $rowData['pendidikan_tahun'] ?? null,
                                         'pendidikan_jurusan' => $rowData['pendidikan_jurusan'] ?? null,
+                                        // Update Impor Alamat
+                                        'no_rekening' => $rowData['no_rekening'] ?? null,
+                                        'nama_bank' => $rowData['nama_bank'] ?? null,
+                                        'alamat' => $rowData['alamat'] ?? null,
+                                        'rt' => $rowData['rt'] ?? null,
+                                        'rw' => $rowData['rw'] ?? null,
+                                        'kelurahan' => $rowData['kelurahan'] ?? null,
+                                        'kecamatan' => $rowData['kecamatan'] ?? null,
+                                        'kabupaten' => $rowData['kabupaten'] ?? null,
                                     ]
                                 );
                                 $berhasil++;
@@ -443,14 +522,6 @@ class PegawaiResource extends Resource
                     })
                     ->modalHeading('Impor Data Pegawai (CSV)')
                     ->modalSubmitActionLabel('Mulai Impor'),
-
-                Tables\Actions\ExportAction::make()
-                    ->exporter(\App\Filament\Exports\PegawaiExporter::class)
-                    ->label('Ekspor Data')
-                    ->color('warning')
-                    ->icon('heroicon-o-arrow-up-tray')
-                    ->visible(fn () => in_array(auth()->user()->peran, ['admin', 'staf'])) 
-                    ->columnMapping(false),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
