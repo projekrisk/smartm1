@@ -162,29 +162,32 @@ class PengaturanSekolah extends Page implements HasForms
                         DB::table('surat_panggilan')->truncate();
                         
                     } elseif ($data['tipe_reset'] === 'total') {
+                        DB::table('berkas_pegawai')->truncate();
                         DB::table('buku_nilai')->truncate();
-                        DB::table('penilaian')->truncate();
-                        DB::table('nilai_rapor')->truncate();
-                        DB::table('kehadiran_harian')->truncate();
-                        DB::table('rekap_kehadiran')->truncate();
-                        DB::table('kehadiran_pelajaran')->truncate();
-                        DB::table('jurnal_guru')->truncate();
                         DB::table('catatan_siswa')->truncate();
-                        DB::table('surat_panggilan')->truncate();
+                        DB::table('dokumen')->truncate();
+                        DB::table('exports')->truncate();
+                        DB::table('jadwal_pelajaran')->truncate();
+                        DB::table('jurnal_guru')->truncate();
+                        DB::table('kehadiran_harian')->truncate();
+                        DB::table('kehadiran_pelajaran')->truncate();
+                        DB::table('kelas')->truncate();
+                        DB::table('mata_pelajaran')->truncate();
+                        DB::table('nilai_rapor')->truncate();
+                        DB::table('pegawai')->truncate();
+                        DB::table('pengumuman')->truncate();                       
+                        DB::table('penilaian')->truncate();
+                        DB::table('pesan_bantuan')->truncate();
+                        DB::table('pesan_bantuan_detail')->truncate();
+                        DB::table('prestasi')->truncate();
+                        DB::table('rekap_kehadiran')->truncate();
                         DB::table('riwayat_kelas_siswa')->truncate();
                         DB::table('siswa')->truncate();
+                        DB::table('surat_panggilan')->truncate();
                         DB::table('tahun_ajaran')->truncate();
-                        DB::table('testimoni')->truncate();
-                        
-                        DB::table('jadwal_pelajaran')->truncate(); 
-                        
-                        DB::table('mata_pelajaran')->truncate();
-                        DB::table('kelas')->truncate();
-                        
+                        DB::table('testimoni')->truncate();                        
+                        DB::table('tingkat')->truncate();
                         DB::table('users')->where('peran', '!=', 'admin')->delete();
-                        DB::table('pegawai')->truncate();
-                        DB::table('pengumuman')->truncate();
-                        DB::table('pesan_bantuan')->truncate();
                     }
 
                     DB::statement('SET FOREIGN_KEY_CHECKS=1;');

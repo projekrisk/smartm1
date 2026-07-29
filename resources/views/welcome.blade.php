@@ -214,7 +214,7 @@
                     </div>
                 </div>
                 
-                <div class="p-5 space-y-3 bg-slate-50/50">
+                <div class="p-5 pb-10 space-y-3 bg-slate-50/50">
                     <a href="{{ url('/admin/login') }}" class="flex items-center justify-between p-4 bg-white border border-slate-200 hover:border-slate-900 hover:shadow-md rounded-2xl transition-all duration-300 group">
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center group-hover:bg-slate-900 group-hover:text-white transition-colors duration-300">
