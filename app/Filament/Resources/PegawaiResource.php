@@ -63,7 +63,7 @@ class PegawaiResource extends Resource
             ->schema([
                 Forms\Components\Tabs::make('Data Pegawai')
                     ->tabs([
-                        Forms\Components\Tabs\Tab::make('Identitas Pribadi')
+                        Forms\Components\Tabs\Tab::make('Identitas')
                             ->icon('heroicon-o-user')
                             ->schema([
                                 Forms\Components\Grid::make(2)->schema([
@@ -116,7 +116,7 @@ class PegawaiResource extends Resource
                                 ]),
                             ]),
                             
-                        Forms\Components\Tabs\Tab::make('Alamat & Finansial')
+                        Forms\Components\Tabs\Tab::make('Alamat')
                             ->icon('heroicon-o-map-pin')
                             ->schema([
                                 Forms\Components\Grid::make(2)->schema([
@@ -128,20 +128,23 @@ class PegawaiResource extends Resource
                                     Forms\Components\Textarea::make('alamat')
                                         ->label('Alamat Lengkap / Jalan')
                                         ->columnSpanFull(),
-                                    Forms\Components\Grid::make(4)->schema([
+                                        
+                                    Forms\Components\Grid::make(3)->schema([
                                         Forms\Components\TextInput::make('rt')->label('RT')->numeric(),
                                         Forms\Components\TextInput::make('rw')->label('RW')->numeric(),
+                                        Forms\Components\TextInput::make('kelurahan')->label('Desa / Kelurahan'),
                                     ])->columnSpanFull(),
-                                    Forms\Components\TextInput::make('kelurahan')
-                                        ->label('Desa / Kelurahan'),
-                                    Forms\Components\TextInput::make('kecamatan')
-                                        ->label('Kecamatan'),
-                                    Forms\Components\TextInput::make('kabupaten')
-                                        ->label('Kabupaten / Kota'),
+                                    
+                                    Forms\Components\Grid::make(2)->schema([
+                                        Forms\Components\TextInput::make('kecamatan')
+                                            ->label('Kecamatan'),
+                                        Forms\Components\TextInput::make('kabupaten')
+                                            ->label('Kabupaten / Kota'),
+                                    ])->columnSpanFull(),
                                 ]),
                             ]),
 
-                        Forms\Components\Tabs\Tab::make('Data Kepegawaian')
+                        Forms\Components\Tabs\Tab::make('Kepegawaian')
                             ->icon('heroicon-o-briefcase')
                             ->schema([
                                 Forms\Components\Grid::make(2)->schema([
@@ -194,7 +197,7 @@ class PegawaiResource extends Resource
                                 ]),
                             ]),
 
-                        Forms\Components\Tabs\Tab::make('Riwayat Pengangkatan')
+                        Forms\Components\Tabs\Tab::make('Pengangkatan')
                             ->icon('heroicon-o-calendar-days')
                             ->schema([
                                 Forms\Components\Grid::make(2)->schema([
@@ -216,7 +219,7 @@ class PegawaiResource extends Resource
                                     ->columnSpanFull(),
                             ]),
 
-                        Forms\Components\Tabs\Tab::make('Pendidikan Terakhir')
+                        Forms\Components\Tabs\Tab::make('Pendidikan')
                             ->icon('heroicon-o-academic-cap')
                             ->schema([
                                 Forms\Components\Grid::make(2)->schema([

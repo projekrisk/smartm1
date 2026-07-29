@@ -78,7 +78,7 @@ class BerkasRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
-                    ->label('Upload Berkas Baru')
+                    ->label('Upload Berkas')
                     ->icon('heroicon-o-arrow-up-tray'),
             ])
             ->actions([
