@@ -70,7 +70,7 @@ class CatatanSiswaResource extends Resource
                     $q->where('kelas_id', $kelasBinaanId);
                 })->where('status_tindak_lanjut', 'Belum')->count();
                 
-                if ($tugas > 0) return 'danger'; // Merah = Ada Tugas!
+                if ($tugas > 0) return 'danger';
             }
         }
         return 'success'; 
@@ -81,7 +81,7 @@ class CatatanSiswaResource extends Resource
         $query = parent::getEloquentQuery();
         $user = Auth::user();
 
-        if ($user->peran === 'guru') {
+        if ($user->peran !== 'admin') {
             $query->where(function ($q) use ($user) {
                 $q->where('guru_id', $user->id)
                   ->orWhereHas('siswa.kelas', function ($subQ) use ($user) {

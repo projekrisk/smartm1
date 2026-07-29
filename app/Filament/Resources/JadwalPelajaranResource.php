@@ -26,19 +26,19 @@ class JadwalPelajaranResource extends Resource
     protected static ?string $navigationGroup = 'Akademik';    
     protected static ?int $navigationSort = 7;
 
-    public static function canCreate(): bool 
-    { 
-        return in_array(Auth::user()->peran, ['admin', 'staf']); 
+    public static function canCreate(): bool
+    {
+        return auth()->user()->peran === 'admin';
     }
-    
-    public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool 
-    { 
-        return in_array(Auth::user()->peran, ['admin', 'staf']); 
+
+    public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return auth()->user()->peran === 'admin';
     }
-    
-    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool 
-    { 
-        return in_array(Auth::user()->peran, ['admin', 'staf']); 
+
+    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return auth()->user()->peran === 'admin';
     }
 
     public static function getEloquentQuery(): Builder
