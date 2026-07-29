@@ -18,7 +18,7 @@ class PegawaiResource extends Resource
 {
     protected static ?string $model = Pegawai::class;
     
-    protected static ?string $navigationGroup = 'Data Master';
+    protected static ?string $navigationGroup = 'Master Data';
     protected static ?string $slug = 'pegawai';
     protected static ?string $navigationIcon = 'heroicon-o-briefcase';
     protected static ?string $navigationLabel = 'Data Pegawai';
@@ -258,7 +258,10 @@ class PegawaiResource extends Resource
                                 Infolists\Components\Grid::make(2)->schema([
                                     Infolists\Components\ImageEntry::make('foto')
                                         ->label('Foto Profil')
+                                        ->disk('publik_upload')
                                         ->circular()
+                                        ->width(120)
+                                        ->height(120)
                                         ->columnSpanFull(),
                                     Infolists\Components\TextEntry::make('nama')->label('Nama Lengkap')->weight('bold')->size(Infolists\Components\TextEntry\TextEntrySize::Large)->columnSpanFull(),
                                     Infolists\Components\TextEntry::make('nik')->label('NIK (Nomor Kependudukan)'),
@@ -385,7 +388,7 @@ class PegawaiResource extends Resource
             ])
             ->headerActions([
                 Tables\Actions\Action::make('cetak_rekap')
-                    ->label('Cetak Rekap (CSV)')
+                    ->label('Rekap')
                     ->icon('heroicon-o-document-text')
                     ->color('success')
                     ->visible(fn () => in_array(auth()->user()->peran, ['admin', 'staf']))
@@ -401,7 +404,7 @@ class PegawaiResource extends Resource
                             foreach ($pegawais as $pegawai) {
                                 fputcsv($file, [
                                     $pegawai->nama,
-                                    $pegawai->nip ?? '-',
+                                    $pegawai->nip ? '="' . $pegawai->nip . '"' : '-',
                                     $pegawai->jenis_ptk ?? '-',
                                     $pegawai->status_kepegawaian ?? '-',
                                 ]);
@@ -419,7 +422,7 @@ class PegawaiResource extends Resource
                     }),
 
                 Tables\Actions\Action::make('unduh_template')
-                    ->label('Unduh Template')
+                    ->label('Template')
                     ->color('info')
                     ->icon('heroicon-o-document-arrow-down')
                     ->visible(fn () => in_array(auth()->user()->peran, ['admin', 'staf'])) 
@@ -433,7 +436,7 @@ class PegawaiResource extends Resource
                     }),
 
                 Tables\Actions\Action::make('impor_csv')
-                    ->label('Impor Excel (CSV)')
+                    ->label('Impor')
                     ->color('warning')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->visible(fn () => in_array(auth()->user()->peran, ['admin', 'staf'])) 
@@ -500,7 +503,6 @@ class PegawaiResource extends Resource
                                         'pendidikan_ijazah' => $rowData['pendidikan_ijazah'] ?? null,
                                         'pendidikan_tahun' => $rowData['pendidikan_tahun'] ?? null,
                                         'pendidikan_jurusan' => $rowData['pendidikan_jurusan'] ?? null,
-                                        // Update Impor Alamat
                                         'no_rekening' => $rowData['no_rekening'] ?? null,
                                         'nama_bank' => $rowData['nama_bank'] ?? null,
                                         'alamat' => $rowData['alamat'] ?? null,
@@ -525,6 +527,13 @@ class PegawaiResource extends Resource
                     })
                     ->modalHeading('Impor Data Pegawai (CSV)')
                     ->modalSubmitActionLabel('Mulai Impor'),
+
+                Tables\Actions\ExportAction::make()
+                    ->exporter(\App\Filament\Exports\PegawaiExporter::class)
+                    ->label('Ekspor Semua')
+                    ->color('primary')
+                    ->icon('heroicon-o-arrow-up-tray')
+                    ->visible(fn () => in_array(auth()->user()->peran, ['admin', 'staf'])),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
