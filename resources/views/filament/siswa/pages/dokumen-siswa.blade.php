@@ -62,7 +62,7 @@
                         </div>
 
                         <!-- Tombol Buka/Unduh -->
-                        <div style="margin-top: 16px; padding-top: 16px; border-top: 1px dashed rgba(0,0,0,0.1);" class="dark:border-white/10">
+                        <div style="margin-top: 16px; border-top: 1px dashed rgba(0,0,0,0.1);" class="dark:border-white/10">
                             <a href="{{ $dokumen->jenis_sumber === 'File' ? url('/uploads/' . $dokumen->file_path) : $dokumen->url_link }}" target="_blank" style="display: flex; align-items: center; justify-content: center; width: 100%; padding: 12px; background-color: #06b6d4; color: white; border-radius: 12px; font-size: 12px; font-weight: 900; text-decoration: none; transition: transform 0.1s; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);" class="active:scale-[0.98]">
                                 {{ $dokumen->jenis_sumber === 'File' ? 'UNDUH DOKUMEN' : 'BUKA TAUTAN' }}
                             </a>

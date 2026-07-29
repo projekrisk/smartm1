@@ -16,21 +16,16 @@ use Filament\Forms\Get;
 class DokumenResource extends Resource
 {
     protected static ?string $model = Dokumen::class;
-    
-    // Gabung dengan grup Sistem bersama Pengumuman
-    protected static ?string $navigationGroup = 'Sistem';
     protected static ?string $slug = 'dokumen-arsip';
     protected static ?string $navigationIcon = 'heroicon-o-folder-open';
-    protected static ?string $navigationLabel = 'E-Dokumen & Arsip';
+    protected static ?string $navigationLabel = 'Dokumen & Arsip';
+    protected static ?int $navigationSort = 4;
     protected static ?string $pluralModelLabel = 'Pusat Dokumen';
-
-    // Guru dan Staf boleh melihat dokumen, tapi hanya Admin yang bisa kelola
     public static function canViewAny(): bool { return true; }
     public static function canCreate(): bool { return Auth::user()->peran === 'admin'; }
     public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool { return Auth::user()->peran === 'admin'; }
     public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool { return Auth::user()->peran === 'admin'; }
 
-    // Membatasi dokumen yang terlihat sesuai audiens
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();
@@ -69,7 +64,7 @@ class DokumenResource extends Resource
                                 'Link' => 'Tautan / Link Eksternal (Google Drive, dll)',
                             ])
                             ->default('File')
-                            ->live() // Memicu reaktif agar form di bawahnya berubah
+                            ->live()
                             ->required(),
                             
                         // MUNCUL JIKA PILIH FILE
@@ -79,12 +74,11 @@ class DokumenResource extends Resource
                             ->directory('dokumen_publik')
                             ->openable()
                             ->downloadable()
-                            ->maxSize(5120) // Maks 5 MB
+                            ->maxSize(5120)
                             ->visible(fn (Get $get) => $get('jenis_sumber') === 'File')
                             ->required(fn (Get $get) => $get('jenis_sumber') === 'File')
                             ->columnSpanFull(),
                             
-                        // MUNCUL JIKA PILIH LINK
                         Forms\Components\TextInput::make('url_link')
                             ->label('Tautan / URL')
                             ->url()

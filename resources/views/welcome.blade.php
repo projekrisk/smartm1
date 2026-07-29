@@ -86,8 +86,8 @@
     </script>
     <style>
         html, body { 
-            margin: 0; padding: 0; height: 100%; height: 100dvh; 
-            overflow: hidden; background-color: #f8fafc; color: #0f172a; 
+            margin: 0; padding: 0; min-height: 100%; min-height: 100dvh; 
+            overflow-x: hidden; overflow-y: auto; background-color: #f8fafc; color: #0f172a; 
         }
 
         .modal-overlay {
@@ -124,64 +124,64 @@
 
         <button onclick="openFeaturesModal()" class="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/80 backdrop-blur-md border border-slate-200 text-sm font-bold text-slate-600 hover:text-slate-900 hover:border-slate-300 hover:shadow-sm transition-all hover:-translate-y-0.5">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-            <span>Informasi Sistem</span>
+            <span>Informasi</span>
         </button>
     </nav>
 
-    <main class="flex-1 w-full max-w-[1400px] mx-auto px-4 md:px-8 pb-4 md:pb-8 flex flex-col justify-center h-full relative z-10">
+    <main class="flex-1 w-full max-w-[1400px] mx-auto px-4 md:px-8 py-4 md:py-8 flex flex-col justify-center relative z-10">
         
-        <div class="grid grid-cols-1 md:grid-cols-12 md:grid-rows-2 gap-4 md:gap-6 h-full max-h-[700px]">
+        <div class="grid grid-cols-1 md:grid-cols-12 md:grid-rows-2 gap-4 md:gap-6 h-full min-h-[500px] lg:max-h-[700px]">
             
-            <div class="md:col-span-8 md:row-span-2 bg-white/70 backdrop-blur-xl rounded-[2rem] p-8 md:p-12 border border-slate-200/60 shadow-xl shadow-slate-200/20 flex flex-col justify-center relative overflow-hidden group hover:-translate-y-1 hover:shadow-2xl hover:shadow-slate-300/40 transition-all duration-500">
+            <div class="md:col-span-8 md:row-span-2 bg-white/70 backdrop-blur-xl rounded-[2rem] p-6 md:p-8 lg:p-12 border border-slate-200/60 shadow-xl shadow-slate-200/20 flex flex-col justify-center relative overflow-hidden group hover:-translate-y-1 hover:shadow-2xl hover:shadow-slate-300/40 transition-all duration-500">
                 <div class="relative z-10">
-                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-100/80 border border-slate-200/80 mb-6 backdrop-blur-sm">
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-100/80 border border-slate-200/80 mb-4 lg:mb-6 backdrop-blur-sm">
                         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span class="text-[10px] font-extrabold tracking-widest text-slate-600 uppercase">Sistem Aktif</span>
+                        <span class="text-[10px] font-extrabold tracking-widest text-slate-600 uppercase">Sistem Aktif • SmartM1 Portal</span>
                     </div>
 
-                    <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 mb-6 leading-[1.1]">
-                        Portal,<br>
-                        <span class="text-edu-600">SMARTM1.</span>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight text-slate-900 mb-4 lg:mb-6 leading-[1.1]">
+                        Portal<br>
+                        <span class="text-edu-600">SMARTM1</span>
                     </h1>
 
-                    <p class="text-base md:text-xl text-slate-600 max-w-xl mb-10 leading-relaxed font-medium">
+                    <p class="text-sm md:text-base lg:text-lg xl:text-xl text-slate-600 max-w-xl mb-6 lg:mb-10 leading-relaxed font-medium">
                         Platform digital terintegrasi yang mendukung pengelolaan administrasi, layanan akademik, absensi, e-Rapor, serta data peserta didik secara <span class="text-slate-900 font-bold border-b-2 border-edu-200">aman, efisien, dan real-time.</span>.
                     </p>
 
                     <div class="flex flex-col sm:flex-row gap-3">
-                        <button onclick="openLoginModal()" class="group px-8 py-4 bg-slate-900 text-white font-bold rounded-xl shadow-lg shadow-slate-900/20 hover:bg-edu-600 hover:shadow-edu-600/30 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 text-sm md:text-base">
+                        <button onclick="openLoginModal()" class="group px-6 py-3 lg:px-8 lg:py-4 bg-slate-900 text-white font-bold rounded-xl shadow-lg shadow-slate-900/20 hover:bg-edu-600 hover:shadow-edu-600/30 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 text-sm md:text-base">
                             Masuk ke SmartM1
                             <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                         </button>
-                        <button onclick="openFeaturesModal()" class="md:hidden px-8 py-4 bg-white/80 backdrop-blur-md text-slate-700 border border-slate-200 font-bold rounded-xl hover:bg-slate-50 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center text-sm">
+                        <button onclick="openFeaturesModal()" class="md:hidden px-6 py-3 lg:px-8 lg:py-4 bg-white/80 backdrop-blur-md text-slate-700 border border-slate-200 font-bold rounded-xl hover:bg-slate-50 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center text-sm">
                             Pelajari Fitur
                         </button>
                     </div>
                 </div>
             </div>
 
-            <div class="hidden md:flex md:col-span-4 md:row-span-1 bg-slate-900/95 backdrop-blur-xl text-white rounded-[2rem] p-8 flex-col justify-between border border-slate-700 shadow-xl overflow-hidden relative group hover:-translate-y-1 hover:shadow-2xl hover:shadow-blue-900/20 transition-all duration-500 cursor-default">
+            <div class="hidden md:flex md:col-span-4 md:row-span-1 bg-slate-900/95 backdrop-blur-xl text-white rounded-[2rem] p-6 lg:p-8 flex-col justify-between border border-slate-700 shadow-xl overflow-hidden relative group hover:-translate-y-1 hover:shadow-2xl hover:shadow-blue-900/20 transition-all duration-500 cursor-default">
                 <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:scale-110 group-hover:-rotate-6 transition-transform duration-700">
                     <svg class="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 </div>
                 <div class="relative z-10">
-                    <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-5 backdrop-blur-sm border border-white/5 group-hover:bg-white/20 transition-colors">
-                        <svg class="w-6 h-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                    <div class="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-white/10 flex items-center justify-center mb-3 lg:mb-5 backdrop-blur-sm border border-white/5 group-hover:bg-white/20 transition-colors">
+                        <svg class="w-5 h-5 lg:w-6 lg:h-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
                     </div>
-                    <h3 class="text-xl font-bold mb-2 text-white">Infrastruktur Aman</h3>
-                    <p class="text-base text-slate-300 leading-relaxed font-medium">
+                    <h3 class="text-lg lg:text-xl font-bold mb-1 lg:mb-2 text-white">Infrastruktur Aman</h3>
+                    <p class="text-sm lg:text-base text-slate-300 leading-relaxed font-medium">
                         Seluruh data sekolah dikelola dengan standar keamanan yang tinggi melalui sistem enkripsi, kontrol akses, dan perlindungan data yang andal.
                     </p>
                 </div>
             </div>
 
-            <div class="hidden md:flex md:col-span-4 md:row-span-1 bg-edu-50/80 backdrop-blur-xl rounded-[2rem] p-8 flex-col justify-between border border-edu-100 shadow-lg group hover:-translate-y-1 hover:shadow-2xl hover:shadow-edu-500/10 transition-all duration-500 cursor-default">
+            <div class="hidden md:flex md:col-span-4 md:row-span-1 bg-edu-50/80 backdrop-blur-xl rounded-[2rem] p-6 lg:p-8 flex-col justify-between border border-edu-100 shadow-lg group hover:-translate-y-1 hover:shadow-2xl hover:shadow-edu-500/10 transition-all duration-500 cursor-default">
                 <div>
-                    <div class="w-12 h-12 rounded-xl bg-white shadow-sm flex items-center justify-center mb-5 text-edu-600 border border-edu-100 group-hover:bg-edu-600 group-hover:text-white transition-colors duration-300">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+                    <div class="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-white shadow-sm flex items-center justify-center mb-3 lg:mb-5 text-edu-600 border border-edu-100 group-hover:bg-edu-600 group-hover:text-white transition-colors duration-300">
+                        <svg class="w-5 h-5 lg:w-6 lg:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-900 mb-2">Basis Data Terpadu</h3>
-                    <p class="text-base text-slate-600 leading-relaxed font-medium">
+                    <h3 class="text-lg lg:text-xl font-bold text-slate-900 mb-1 lg:mb-2">Basis Data Terpadu</h3>
+                    <p class="text-sm lg:text-base text-slate-600 leading-relaxed font-medium">
                         Seluruh informasi akademik, administrasi, absensi, dan layanan siswa terintegrasi dalam satu platform untuk pengelolaan yang lebih cepat dan akurat.
                     </p>
                 </div>
