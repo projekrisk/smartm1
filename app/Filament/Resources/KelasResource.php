@@ -26,6 +26,21 @@ class KelasResource extends Resource
         return in_array(auth()->user()->peran, ['admin', 'staf']);
     }
 
+    public static function canCreate(): bool
+    {
+        return auth()->user()->peran === 'admin';
+    }
+
+    public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return auth()->user()->peran === 'admin';
+    }
+
+    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return auth()->user()->peran === 'admin';
+    }
+
     public static function form(Form $form): Form
     {
         return $form

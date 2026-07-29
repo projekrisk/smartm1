@@ -44,12 +44,12 @@ class PegawaiResource extends Resource
 
     public static function canCreate(): bool
     {
-        return in_array(auth()->user()->peran, ['admin', 'staf']);
+        return auth()->user()->peran === 'admin';
     }
 
     public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
     {
-        return in_array(auth()->user()->peran, ['admin', 'staf']);
+        return auth()->user()->peran === 'admin';
     }
 
     public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
@@ -391,7 +391,7 @@ class PegawaiResource extends Resource
                     ->label('Rekap')
                     ->icon('heroicon-o-document-text')
                     ->color('success')
-                    ->visible(fn () => in_array(auth()->user()->peran, ['admin', 'staf']))
+                    ->visible(fn () => auth()->user()->peran === 'admin')
                     ->action(function () {
                         $pegawais = Pegawai::orderBy('nama', 'asc')->get();
                         
@@ -425,7 +425,7 @@ class PegawaiResource extends Resource
                     ->label('Template')
                     ->color('info')
                     ->icon('heroicon-o-document-arrow-down')
-                    ->visible(fn () => in_array(auth()->user()->peran, ['admin', 'staf'])) 
+                    ->visible(fn () => auth()->user()->peran === 'admin') 
                     ->action(function () {
                         $headers = ['nama', 'nik', 'no_kk', 'npwp', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'telepon', 'email', 'jenis_ptk', 'status_kepegawaian', 'tugas_utama', 'nip', 'nuptk', 'pangkat_golongan', 'jabatan', 'tmt_cpns_honorer', 'tmt_pns_pppk', 'tmt_golongan_terakhir', 'pendidikan_ijazah', 'pendidikan_tahun', 'pendidikan_jurusan', 'no_rekening', 'nama_bank', 'alamat', 'rt', 'rw', 'kelurahan', 'kecamatan', 'kabupaten'];
                         $csvData = implode(',', $headers) . "\n";
@@ -439,7 +439,7 @@ class PegawaiResource extends Resource
                     ->label('Impor')
                     ->color('warning')
                     ->icon('heroicon-o-arrow-down-tray')
-                    ->visible(fn () => in_array(auth()->user()->peran, ['admin', 'staf'])) 
+                    ->visible(fn () => auth()->user()->peran === 'admin') 
                     ->form([
                         Forms\Components\FileUpload::make('file')
                             ->label('Upload File CSV')
@@ -533,8 +533,8 @@ class PegawaiResource extends Resource
                     ->label('Ekspor')
                     ->color('primary')
                     ->icon('heroicon-o-arrow-up-tray')
-                    ->visible(fn () => in_array(auth()->user()->peran, ['admin', 'staf']))
-                    ->columnMapping(false), // MATIKAN DIALOG PILIHAN KOLOM (LANGSUNG DOWNLOAD)
+                    ->visible(fn () => auth()->user()->peran === 'admin')
+                    ->columnMapping(false),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

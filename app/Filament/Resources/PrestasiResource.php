@@ -31,8 +31,21 @@ class PrestasiResource extends Resource
         return $count > 0 ? (string) $count : null;
     }
     public static function getNavigationBadgeColor(): ?string { return 'danger'; }
+    
+    public static function canCreate(): bool
+    {
+        return auth()->user()->peran === 'admin';
+    }
 
-    public static function canViewAny(): bool { return in_array(Auth::user()->peran, ['admin', 'staf']); }
+    public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return auth()->user()->peran === 'admin';
+    }
+
+    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return auth()->user()->peran === 'admin';
+    }
 
     public static function form(Form $form): Form
     {
