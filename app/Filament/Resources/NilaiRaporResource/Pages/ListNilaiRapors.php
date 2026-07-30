@@ -5,10 +5,8 @@ namespace App\Filament\Resources\NilaiRaporResource\Pages;
 use App\Filament\Resources\NilaiRaporResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
-use Filament\Resources\Components\Tab;
-use Illuminate\Database\Eloquent\Builder;
-use Filament\Forms\Components\Select;
-use App\Models\Kelas;
+use Illuminate\Support\Facades\Auth;
+use App\Models\NilaiRapor;
 
 class ListNilaiRapors extends ListRecords
 {
@@ -17,46 +15,60 @@ class ListNilaiRapors extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\Action::make('download_leger')
-                ->label('Unduh Leger')
-                ->icon('heroicon-o-table-cells')
-                ->color('success')
-                ->form([
-                    Select::make('kelas_id')
-                        ->label('Pilih Kelas untuk Leger')
-                        ->options(function () {
-                            $kelas = Kelas::pluck('nama_kelas', 'id')->toArray();
-                            return ['all' => 'Semua Kelas (Seluruh Sekolah)'] + $kelas;
-                        })
-                        ->default('all')
-                        ->required()
-                        ->searchable()
-                ])
-                ->action(function (array $data, \Livewire\Component $livewire) {
-                    $url = route('export.leger.rapor', ['kelas_id' => $data['kelas_id']]);
-                    $livewire->js("window.open('{$url}', '_self');"); 
+            Actions\Action::make('ekspor_cepat_rapor')
+                ->label('Ekspor')
+                ->color('warning')
+                ->icon('heroicon-o-arrow-up-tray')
+                ->visible(fn () => in_array(Auth::user()->peran ?? 'admin', ['admin', 'staf', 'guru']))
+                ->action(function () {
+                    set_time_limit(0);
+                    
+                    $headers = [
+                        'NIS', 
+                        'NISN', 
+                        'Nama Siswa', 
+                        'Kelas', 
+                        'Mata Pelajaran', 
+                        'Semester', 
+                        'Nilai Pengetahuan', 
+                        'Nilai Keterampilan'
+                    ];
+                    
+                    $callback = function () use ($headers) {
+                        $file = fopen('php://output', 'w');
+                        fputcsv($file, $headers);
+
+                        NilaiRapor::with(['siswa', 'kelas', 'mataPelajaran'])
+                            ->chunk(1000, function ($nilais) use ($file) {
+                                foreach ($nilais as $nilai) {
+                                    fputcsv($file, [
+                                        isset($nilai->siswa->nis) ? "'" . $nilai->siswa->nis : '',
+                                        isset($nilai->siswa->nisn) ? "'" . $nilai->siswa->nisn : '',
+                                        
+                                        $nilai->siswa->nama_lengkap ?? '',
+                                        $nilai->kelas->nama_kelas ?? '',
+                                        $nilai->mataPelajaran->nama_matpel ?? ($nilai->mataPelajaran->nama ?? ''),
+                                        
+                                        $nilai->semester ?? '',
+                                        $nilai->nilai_pengetahuan ?? ($nilai->nilai ?? ''),
+                                        $nilai->nilai_keterampilan ?? '',
+                                    ]);
+                                }
+                            });
+                        
+                        fclose($file);
+                    };
+
+                    $fileName = 'Ekspor_Nilai_Rapor_' . date('Y-m-d_H-i') . '.csv';
+
+                    return response()->stream($callback, 200, [
+                        'Content-Type' => 'text/csv',
+                        'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+                    ]);
                 }),
 
-            Actions\CreateAction::make()->label('Input Nilai Rapor'),
-        ];
-    }
-
-    public function getTabs(): array
-    {
-        return [
-            'Siswa Aktif' => Tab::make('Siswa Aktif')
-                ->modifyQueryUsing(fn (Builder $query) => $query->whereHas('siswa', function ($q) {
-                    $q->whereIn('status_siswa', ['Aktif', 'Mutasi Masuk'])->orWhereNull('status_siswa');
-                }))
-                ->badgeColor('success'),
-                
-            'Alumni' => Tab::make('Alumni')
-                ->modifyQueryUsing(fn (Builder $query) => $query->whereHas('siswa', function ($q) {
-                    $q->where('status_siswa', 'Lulus');
-                }))
-                ->badgeColor('info'),
-                
-            'Semua Data' => Tab::make('Semua Data'),
+            Actions\CreateAction::make()
+                ->label('Tambah Nilai Rapor'),
         ];
     }
 }
