@@ -163,6 +163,7 @@ class PengaturanSekolah extends Page implements HasForms
                         DB::table('testimoni')->truncate();                        
                         DB::table('siswa')->truncate();
                         DB::table('riwayat_kelas_siswa')->truncate();
+                        DB::table('pengumuman')->truncate();                       
 
                         
                     } elseif ($data['tipe_reset'] === 'total') {
@@ -179,7 +180,6 @@ class PengaturanSekolah extends Page implements HasForms
                         DB::table('mata_pelajaran')->truncate();
                         DB::table('nilai_rapor')->truncate();
                         DB::table('pegawai')->truncate();
-                        DB::table('pengumuman')->truncate();                       
                         DB::table('penilaian')->truncate();
                         DB::table('pesan_bantuan')->truncate();
                         DB::table('pesan_bantuan_detail')->truncate();
