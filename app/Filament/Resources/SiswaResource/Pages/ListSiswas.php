@@ -23,7 +23,7 @@ class ListSiswas extends ListRecords
                 ->icon('heroicon-o-document-arrow-down')
                 ->visible(fn () => in_array(Auth::user()->peran, ['admin', 'staf']))
                 ->action(function () {
-                    $headers = ['nis', 'nisn', 'nama_lengkap', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'nik', 'no_kk', 'agama', 'telepon', 'email', 'alamat', 'rt', 'rw', 'kelurahan', 'kecamatan', 'kabupaten', 'lintang', 'bujur', 'nama_ayah', 'telepon_ayah', 'nama_ibu', 'telepon_ibu', 'nama_wali', 'telepon_wali', 'sekolah_asal', 'kelas_id'];
+                    $headers = ['nis', 'nisn', 'nama_lengkap', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'nik', 'no_kk', 'agama', 'telepon', 'email', 'alamat', 'rt', 'rw', 'kelurahan', 'kecamatan', 'kabupaten', 'lintang', 'bujur', 'nama_ayah', 'telepon_ayah', 'nama_ibu', 'telepon_ibu', 'nama_wali', 'telepon_wali', 'sekolah_asal', 'jalur_masuk', 'tanggal_masuk', 'kelas_id'];
                     $csvData = implode(',', $headers) . "\n";
                     
                     return response()->streamDownload(function () use ($csvData) {
@@ -111,6 +111,8 @@ class ListSiswas extends ListRecords
                                     'nama_wali' => $rowData['nama_wali'] ?? null,
                                     'telepon_wali' => $rowData['telepon_wali'] ?? null,
                                     'sekolah_asal' => $rowData['sekolah_asal'] ?? null,
+                                    'jalur_masuk' => $rowData['jalur_masuk'] ?? 'Siswa Baru',
+                                    'tanggal_masuk' => empty($rowData['tanggal_masuk']) ? null : date('Y-m-d', strtotime($rowData['tanggal_masuk'])),
                                     'kelas_id' => $kelasId,
                                 ]
                             );

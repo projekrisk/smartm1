@@ -40,8 +40,10 @@ class SiswaExporter extends Exporter
             ExportColumn::make('telepon_ibu')->label('Telepon Ibu'),
             ExportColumn::make('nama_wali')->label('Nama Wali'),
             ExportColumn::make('telepon_wali')->label('Telepon Wali'),
-            ExportColumn::make('kelas.nama_kelas')->label('Kelas'),
             ExportColumn::make('sekolah_asal')->label('Sekolah Asal'),
+            ExportColumn::make('jalur_masuk')->label('Jalur Masuk'),
+            ExportColumn::make('tanggal_masuk')->label('Tanggal Masuk'),            
+            ExportColumn::make('kelas.nama_kelas')->label('Kelas'),
         ];
     }
 
