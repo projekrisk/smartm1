@@ -63,6 +63,7 @@ class ListSiswas extends ListRecords
                     $berhasil = 0; 
                     $gagal = 0; 
                     $nisnTerbaca = [];
+                    $nisTerbaca = [];
                     
                     \Illuminate\Support\Facades\DB::beginTransaction();
 
@@ -72,8 +73,20 @@ class ListSiswas extends ListRecords
                             $rowData = array_combine($headers, $row);
                             
                             $nisn = trim($rowData['nisn'] ?? '');
-                            if (empty($nisn) || in_array($nisn, $nisnTerbaca)) { $gagal++; continue; }
-                            $nisnTerbaca[] = $nisn;
+                            $nis = trim($rowData['nis'] ?? '');
+                            
+                            if (empty($nisn) && empty($nis)) { $gagal++; continue; }
+
+                            $duplikatNisn = !empty($nisn) && in_array($nisn, $nisnTerbaca);
+                            $duplikatNis = !empty($nis) && in_array($nis, $nisTerbaca);
+                            
+                            if ($duplikatNisn || $duplikatNis) { 
+                                $gagal++; 
+                                continue; 
+                            }
+                            
+                            if (!empty($nisn)) $nisnTerbaca[] = $nisn;
+                            if (!empty($nis)) $nisTerbaca[] = $nis;
                             
                             $inputKelas = trim($rowData['nama_kelas'] ?? ($rowData['kelas_id'] ?? ''));
                             if (empty($inputKelas)) { $gagal++; continue; }
@@ -97,39 +110,49 @@ class ListSiswas extends ListRecords
                             if (in_array($jkRaw, ['l', 'laki-laki', 'laki laki', 'laki'])) $jkFix = 'Laki-laki';
                             elseif (in_array($jkRaw, ['p', 'perempuan', 'wanita'])) $jkFix = 'Perempuan';
 
-                            \App\Models\Siswa::updateOrCreate(
-                                ['nisn' => $nisn],
-                                [
-                                    'nis' => $rowData['nis'] ?? null,
-                                    'nama_lengkap' => $rowData['nama_lengkap'] ?? null,
-                                    'jenis_kelamin' => $jkFix,
-                                    'tempat_lahir' => $rowData['tempat_lahir'] ?? null,
-                                    'tanggal_lahir' => empty($rowData['tanggal_lahir']) ? null : date('Y-m-d', strtotime($rowData['tanggal_lahir'])),
-                                    'nik' => $rowData['nik'] ?? null,
-                                    'no_kk' => $rowData['no_kk'] ?? null,
-                                    'agama' => $rowData['agama'] ?? null,
-                                    'telepon' => $rowData['telepon'] ?? null,
-                                    'email' => $rowData['email'] ?? null,
-                                    'alamat' => $rowData['alamat'] ?? null,
-                                    'rt' => $rowData['rt'] ?? null,
-                                    'rw' => $rowData['rw'] ?? null,
-                                    'kelurahan' => $rowData['kelurahan'] ?? null,
-                                    'kecamatan' => $rowData['kecamatan'] ?? null,
-                                    'kabupaten' => $rowData['kabupaten'] ?? null,
-                                    'lintang' => $rowData['lintang'] ?? null,
-                                    'bujur' => $rowData['bujur'] ?? null,
-                                    'nama_ayah' => $rowData['nama_ayah'] ?? null,
-                                    'telepon_ayah' => $rowData['telepon_ayah'] ?? null,
-                                    'nama_ibu' => $rowData['nama_ibu'] ?? null,
-                                    'telepon_ibu' => $rowData['telepon_ibu'] ?? null,
-                                    'nama_wali' => $rowData['nama_wali'] ?? null,
-                                    'telepon_wali' => $rowData['telepon_wali'] ?? null,
-                                    'sekolah_asal' => $rowData['sekolah_asal'] ?? null,
-                                    'jalur_masuk' => $rowData['jalur_masuk'] ?? 'Siswa Baru',
-                                    'tanggal_masuk' => empty($rowData['tanggal_masuk']) ? null : date('Y-m-d', strtotime($rowData['tanggal_masuk'])),
-                                    'kelas_id' => $kelasId,
-                                ]
-                            );
+                            $dataSimpan = [
+                                'nis' => $nis ?: null,
+                                'nisn' => $nisn ?: null,
+                                'nama_lengkap' => $rowData['nama_lengkap'] ?? null,
+                                'jenis_kelamin' => $jkFix,
+                                'tempat_lahir' => $rowData['tempat_lahir'] ?? null,
+                                'tanggal_lahir' => empty($rowData['tanggal_lahir']) ? null : date('Y-m-d', strtotime($rowData['tanggal_lahir'])),
+                                'nik' => $rowData['nik'] ?? null,
+                                'no_kk' => $rowData['no_kk'] ?? null,
+                                'agama' => $rowData['agama'] ?? null,
+                                'telepon' => $rowData['telepon'] ?? null,
+                                'email' => $rowData['email'] ?? null,
+                                'alamat' => $rowData['alamat'] ?? null,
+                                'rt' => $rowData['rt'] ?? null,
+                                'rw' => $rowData['rw'] ?? null,
+                                'kelurahan' => $rowData['kelurahan'] ?? null,
+                                'kecamatan' => $rowData['kecamatan'] ?? null,
+                                'kabupaten' => $rowData['kabupaten'] ?? null,
+                                'lintang' => $rowData['lintang'] ?? null,
+                                'bujur' => $rowData['bujur'] ?? null,
+                                'nama_ayah' => $rowData['nama_ayah'] ?? null,
+                                'telepon_ayah' => $rowData['telepon_ayah'] ?? null,
+                                'nama_ibu' => $rowData['nama_ibu'] ?? null,
+                                'telepon_ibu' => $rowData['telepon_ibu'] ?? null,
+                                'nama_wali' => $rowData['nama_wali'] ?? null,
+                                'telepon_wali' => $rowData['telepon_wali'] ?? null,
+                                'sekolah_asal' => $rowData['sekolah_asal'] ?? null,
+                                'jalur_masuk' => $rowData['jalur_masuk'] ?? 'Siswa Baru',
+                                'tanggal_masuk' => empty($rowData['tanggal_masuk']) ? null : date('Y-m-d', strtotime($rowData['tanggal_masuk'])),
+                                'kelas_id' => $kelasId,
+                            ];
+
+                            $siswaAda = \App\Models\Siswa::where(function($query) use ($nis, $nisn) {
+                                if (!empty($nisn)) $query->where('nisn', $nisn);
+                                if (!empty($nis)) $query->orWhere('nis', $nis);
+                            })->first();
+
+                            if ($siswaAda) {
+                                $siswaAda->update($dataSimpan);
+                            } else {
+                                \App\Models\Siswa::create($dataSimpan);
+                            }
+                            
                             $berhasil++;
                         }
                         
