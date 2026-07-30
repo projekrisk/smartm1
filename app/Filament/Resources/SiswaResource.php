@@ -538,7 +538,6 @@ class SiswaResource extends Resource
                                         ->visible(fn ($record) => !in_array($record->status_siswa, ['Aktif', null])),
                                 ]),
                             ]),
-                            ]),
                     ])
                     ->columnSpanFull(),
             ]);

@@ -80,20 +80,4 @@ class SiswaImporter extends Importer
 
         return $body;
     }
-
-    public static function getChunkSize(): int
-    {
-        return 50; 
-    }
-
-    public static function getCompletedNotificationBody(Import $import): string
-    {
-        $body = 'Proses impor data siswa telah selesai dan ' . number_format($import->successful_rows) . ' baris berhasil diproses (Dibuat/Diperbarui).';
-
-        if ($failedRowsCount = $import->getFailedRowsCount()) {
-            $body .= ' Namun, ' . number_format($failedRowsCount) . ' baris ditolak (Karena tidak ada ID kelas atau data ganda).';
-        }
-
-        return $body;
-    }
 }
