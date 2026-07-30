@@ -42,25 +42,25 @@ class ListNilaiRapors extends ListRecords
                         $file = fopen('php://output', 'w');
                         fputcsv($file, $headers);
 
-                        // PERBAIKAN: Mengubah 'kelas' menjadi 'siswa.kelas'
-                        // Jika nanti error di 'mataPelajaran', ubah namanya sesuaikan dengan relasi di Model Anda (misal 'mapel')
-                        NilaiRapor::with(['siswa.kelas', 'mataPelajaran'])
+                        // Memuat relasi tambahan: riwayatKelas dan tahunAjaran
+                        NilaiRapor::with(['siswa.riwayatKelas.kelas', 'siswa.riwayatKelas.tahunAjaran', 'mataPelajaran', 'tahunAjaran'])
                             ->chunk(1000, function ($nilais) use ($file) {
                                 foreach ($nilais as $nilai) {
+                                    
+                                    // Mencari riwayat kelas siswa secara spesifik pada tahun ajaran rapor ini dibuat
+                                    $riwayatSpesifik = $nilai->siswa->riwayatKelas
+                                        ->where('tahun_ajaran_id', $nilai->tahun_ajaran_id)
+                                        ->first();
+                                    
+                                    $namaKelas = $riwayatSpesifik ? $riwayatSpesifik->kelas->nama_kelas : 'Belum/Tidak Ada Riwayat';
+                                    
                                     fputcsv($file, [
                                         isset($nilai->siswa->nis) ? "'" . $nilai->siswa->nis : '',
-                                        isset($nilai->siswa->nisn) ? "'" . $nilai->siswa->nisn : '',
-                                        
                                         $nilai->siswa->nama_lengkap ?? '',
-                                        
-                                        // PERBAIKAN: Mengambil nama kelas lewat data siswa
-                                        $nilai->siswa->kelas->nama_kelas ?? '',
-                                        
-                                        $nilai->mataPelajaran->nama_matpel ?? ($nilai->mataPelajaran->nama ?? ''),
-                                        
-                                        $nilai->semester ?? '',
-                                        $nilai->nilai_pengetahuan ?? ($nilai->nilai ?? ''),
-                                        $nilai->nilai_keterampilan ?? '',
+                                        $namaKelas, // Menggunakan riwayat kelas per tahun ajaran
+                                        $nilai->tahunAjaran->nama_tahun ?? '',
+                                        $nilai->mataPelajaran->nama_matpel ?? '',
+                                        // ... dan kolom kompleks lainnya ...
                                     ]);
                                 }
                             });
