@@ -103,16 +103,13 @@ class CatatanSiswaResource extends Resource
                         Forms\Components\Select::make('kelas_id')
                             ->label('Pilih Kelas')
                             ->options(function () {
-                                $user = Auth::user();
-                                if (in_array($user->peran, ['admin', 'staf'])) {
-                                    return Kelas::pluck('nama_kelas', 'id');
-                                }
-                                
-                                $kelasBinaanIds = Kelas::where('wali_kelas_id', $user->id)->pluck('id')->toArray();
-                                $kelasAjarIds = JadwalPelajaran::where('guru_id', $user->id)->pluck('kelas_id')->toArray();
-                                
-                                $allKelasIds = array_unique(array_merge($kelasBinaanIds, $kelasAjarIds));
-                                return Kelas::whereIn('id', $allKelasIds)->pluck('nama_kelas', 'id');
+                                return Kelas::whereHas('siswa', function ($q) {
+                                    $q->whereIn('status_siswa', ['Aktif', 'Mutasi Masuk'])
+                                      ->orWhereNull('status_siswa');
+                                })
+                                ->orderByRaw('LENGTH(nama_kelas) ASC')
+                                ->orderBy('nama_kelas', 'ASC')
+                                ->pluck('nama_kelas', 'id');
                             })
                             ->live()
                             ->searchable()
@@ -131,7 +128,14 @@ class CatatanSiswaResource extends Resource
                             ->options(function (Get $get) {
                                 $kelasId = $get('kelas_id');
                                 if (!$kelasId) return [];
-                                return Siswa::where('kelas_id', $kelasId)->pluck('nama_lengkap', 'id');
+                                
+                                return Siswa::where('kelas_id', $kelasId)
+                                    ->where(function ($q) {
+                                        $q->whereIn('status_siswa', ['Aktif', 'Mutasi Masuk'])
+                                          ->orWhereNull('status_siswa');
+                                    })
+                                    ->orderBy('nama_lengkap')
+                                    ->pluck('nama_lengkap', 'id');
                             })
                             ->searchable()
                             ->preload()

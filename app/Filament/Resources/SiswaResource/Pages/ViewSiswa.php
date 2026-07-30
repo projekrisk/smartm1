@@ -15,7 +15,6 @@ class ViewSiswa extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            // TOMBOL CETAK BIODATA (Hanya untuk Admin & Staf)
             Actions\Action::make('cetak_biodata')
                 ->label('Cetak')
                 ->icon('heroicon-o-printer')
@@ -24,7 +23,6 @@ class ViewSiswa extends ViewRecord
                 ->url(fn (Siswa $record): string => route('cetak.biodata', $record->id))
                 ->openUrlInNewTab(),
             
-            // TOMBOL CETAK RIWAYAT & CATATAN (Hanya untuk Admin & Staf)
             Actions\Action::make('cetak_riwayat_catatan')
                 ->label('Riwayat')
                 ->icon('heroicon-o-document-text')

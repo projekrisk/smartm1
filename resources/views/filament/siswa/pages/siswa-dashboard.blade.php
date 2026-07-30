@@ -140,6 +140,13 @@
                             <span class="theme-text" style="font-size: 11px; font-weight: bold;">Prestasi</span>
                         </a>
 
+                        <a href="/siswa/catatan" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.1s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
+                            <div style="width: 46px; height: 46px; border-radius: 14px; background-color: rgba(99, 102, 241, 0.1); color: #6366f1; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+                                <x-filament::icon icon="heroicon-s-clipboard-document-check" style="width: 22px; height: 22px;" />
+                            </div>
+                            <span class="theme-text" style="font-size: 11px; font-weight: bold;">Catatan</span>
+                        </a>
+
                         <a href="/siswa/dokumen" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.1s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
                             <div style="width: 46px; height: 46px; border-radius: 14px; background-color: rgba(6, 182, 212, 0.1); color: #06b6d4; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
                                 <x-filament::icon icon="heroicon-s-folder-arrow-down" style="width: 22px; height: 22px;" />
