@@ -160,6 +160,8 @@ class PengaturanSekolah extends Page implements HasForms
                         DB::table('jurnal_guru')->truncate();
                         DB::table('catatan_siswa')->truncate();
                         DB::table('surat_panggilan')->truncate();
+                        DB::table('testimoni')->truncate();                        
+                        DB::table('siswa')->truncate();
                         
                     } elseif ($data['tipe_reset'] === 'total') {
                         DB::table('berkas_pegawai')->truncate();
@@ -185,7 +187,6 @@ class PengaturanSekolah extends Page implements HasForms
                         DB::table('siswa')->truncate();
                         DB::table('surat_panggilan')->truncate();
                         DB::table('tahun_ajaran')->truncate();
-                        DB::table('testimoni')->truncate();                        
                         DB::table('tingkat')->truncate();
                         DB::table('users')->where('peran', '!=', 'admin')->delete();
                     }
