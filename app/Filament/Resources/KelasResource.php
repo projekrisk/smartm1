@@ -61,10 +61,9 @@ class KelasResource extends Resource
                             ->maxLength(255),
                         Forms\Components\Select::make('wali_kelas_id')
                             ->label('Wali Kelas')
-                            ->relationship('waliKelas', 'name', fn ($query) => $query->where('peran', 'guru'))
+                            ->relationship('waliKelas', 'name')
                             ->searchable()
-                            ->preload()
-                            ->nullable(),
+                            ->preload(),
                     ])->columns(1),
             ]);
     }

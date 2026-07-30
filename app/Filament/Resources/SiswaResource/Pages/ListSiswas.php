@@ -32,7 +32,7 @@ class ListSiswas extends ListRecords
                 }),
 
             Actions\Action::make('impor_csv')
-                ->label('Impor Cepat')
+                ->label('Impor')
                 ->color('success')
                 ->icon('heroicon-o-arrow-down-tray')
                 ->visible(fn () => in_array(Auth::user()->peran, ['admin', 'staf']))
@@ -133,7 +133,7 @@ class ListSiswas extends ListRecords
                 ->modalSubmitActionLabel('Mulai Impor Sekarang'),
 
             Actions\Action::make('impor_foto')
-                ->label('Impor Foto (ZIP)')
+                ->label('Foto')
                 ->color('info')
                 ->icon('heroicon-o-photo')
                 ->visible(fn () => in_array(Auth::user()->peran, ['admin', 'staf']))
@@ -207,7 +207,7 @@ class ListSiswas extends ListRecords
 
             Actions\ExportAction::make()
                 ->exporter(\App\Filament\Exports\SiswaExporter::class)
-                ->label('Ekspor Data')
+                ->label('Ekspor')
                 ->color('warning')
                 ->icon('heroicon-o-arrow-up-tray')
                 ->visible(fn () => in_array(Auth::user()->peran, ['admin', 'staf'])),
