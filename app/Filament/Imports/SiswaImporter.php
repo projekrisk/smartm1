@@ -12,7 +12,6 @@ class SiswaImporter extends Importer
 {
     protected static ?string $model = Siswa::class;
 
-    // Menyimpan NISN sementara untuk mendeteksi data ganda dalam satu file Excel
     protected static array $nisnTerbaca = [];
 
     public static function getColumns(): array
@@ -45,7 +44,6 @@ class SiswaImporter extends Importer
             ImportColumn::make('nama_wali')->label('Nama Wali'),
             ImportColumn::make('telepon_wali')->label('Telepon Wali'),
             
-            // Wajib ada data kelas! Jika Excel-nya kosong, Filament akan otomatis menolak baris ini
             ImportColumn::make('kelas_id')
                 ->label('ID Kelas')
                 ->requiredMapping()
@@ -61,19 +59,31 @@ class SiswaImporter extends Importer
         $nisn = $this->data['nisn'] ?? null;
 
         if ($nisn) {
-            // Logika menolak data jika dalam file impor yang sama terdapat NISN ganda
             if (in_array($nisn, self::$nisnTerbaca)) {
                 throw new \Exception('Data ditolak: NISN ' . $nisn . ' terdeteksi ganda di dalam file ini.');
             }
             self::$nisnTerbaca[] = $nisn;
         }
 
-        // firstOrNew akan mengecek apakah NISN tersebut sudah ada di database:
-        // Jika ADA -> sistem akan menimpanya dengan data dari excel (Update)
-        // Jika BELUM ADA -> sistem akan membuat data siswa baru
         return Siswa::firstOrNew([
             'nisn' => $nisn,
         ]);
+    }   
+
+    public static function getCompletedNotificationBody(Import $import): string
+    {
+        $body = 'Proses impor data siswa telah selesai dan ' . number_format($import->successful_rows) . ' baris berhasil diproses (Dibuat/Diperbarui).';
+
+        if ($failedRowsCount = $import->getFailedRowsCount()) {
+            $body .= ' Namun, ' . number_format($failedRowsCount) . ' baris ditolak (Karena tidak ada ID kelas atau data ganda).';
+        }
+
+        return $body;
+    }
+
+    public static function getChunkSize(): int
+    {
+        return 50; 
     }
 
     public static function getCompletedNotificationBody(Import $import): string
