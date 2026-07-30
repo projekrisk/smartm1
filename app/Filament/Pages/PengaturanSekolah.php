@@ -162,6 +162,8 @@ class PengaturanSekolah extends Page implements HasForms
                         DB::table('surat_panggilan')->truncate();
                         DB::table('testimoni')->truncate();                        
                         DB::table('siswa')->truncate();
+                        DB::table('riwayat_kelas_siswa')->truncate();
+
                         
                     } elseif ($data['tipe_reset'] === 'total') {
                         DB::table('berkas_pegawai')->truncate();
