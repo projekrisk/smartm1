@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Hash;
 use Filament\Models\Contracts\HasAvatar;
 
 class Siswa extends Model implements HasAvatar
@@ -19,19 +18,9 @@ class Siswa extends Model implements HasAvatar
     {
         return $this->foto ? url('/uploads/' . $this->foto) : null;
     }
-    
     protected static function booted()
     {
         static::created(function ($siswa) {
-            $user = User::create([
-                'name' => $siswa->nama_lengkap,
-                'email' => $siswa->nisn ? $siswa->nisn . '@siswa.com' : $siswa->nis . '@siswa.com',
-                'password' => Hash::make($siswa->nis),
-                'peran' => 'siswa',
-            ]);
-            
-            $siswa->updateQuietly(['user_id' => $user->id]);
-
             if ($siswa->kelas_id) {
                 if (self::$tahunAktifCache === null) {
                     self::$tahunAktifCache = TahunAjaran::where('is_active', true)->first();
@@ -81,7 +70,7 @@ class Siswa extends Model implements HasAvatar
 
     public function kelas(): BelongsTo
     {
-        return $this->belongsTo(Kelas::class);
+        return $this->belongsTo(Kelas::class, 'kelas_id');
     }
 
     public function riwayatKelas(): HasMany
