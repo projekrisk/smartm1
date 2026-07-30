@@ -100,8 +100,10 @@ class ListNilaiRapors extends ListRecords
 
                             echo '<tr>';
                             echo '<td style="text-align: center;">'.$no++.'</td>';
-                            echo '<td style="text-align: center;">="'.($siswa->nis ?? '').'"</td>';
-                            echo '<td style="text-align: center;">="'.($siswa->nisn ?? '').'"</td>';
+                            
+                            echo '<td style="text-align: center; mso-number-format:\'\@\';">'.($siswa->nis ?? '').'</td>';
+                            echo '<td style="text-align: center; mso-number-format:\'\@\';">'.($siswa->nisn ?? '').'</td>';
+                            
                             echo '<td>'.$siswa->nama_lengkap.'</td>';
                             echo '<td style="text-align: center;">'.$namaKelas.'</td>';
 
