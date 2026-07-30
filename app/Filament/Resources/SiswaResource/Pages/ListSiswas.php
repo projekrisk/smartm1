@@ -70,10 +70,16 @@ class ListSiswas extends ListRecords
                     try {
                         while (($row = fgetcsv($file)) !== false) {
                             if (count($headers) !== count($row)) { $gagal++; continue; }
-                            $rowData = array_combine($headers, $row);
+                            $rawRowData = array_combine($headers, $row);
                             
-                            $nisn = trim($rowData['nisn'] ?? '');
-                            $nis = trim($rowData['nis'] ?? '');
+                            $rowData = [];
+                            foreach ($rawRowData as $key => $value) {
+                                $cleanVal = trim((string) $value);
+                                $rowData[$key] = ($cleanVal === '' || $cleanVal === '-' || strtolower($cleanVal) === 'null' || strtolower($cleanVal) === 'n/a') ? null : $cleanVal;
+                            }
+                            
+                            $nisn = $rowData['nisn'];
+                            $nis = $rowData['nis'];
                             
                             if (empty($nisn) && empty($nis)) { $gagal++; continue; }
 
@@ -88,7 +94,7 @@ class ListSiswas extends ListRecords
                             if (!empty($nisn)) $nisnTerbaca[] = $nisn;
                             if (!empty($nis)) $nisTerbaca[] = $nis;
                             
-                            $inputKelas = trim($rowData['nama_kelas'] ?? ($rowData['kelas_id'] ?? ''));
+                            $inputKelas = $rowData['nama_kelas'] ?? ($rowData['kelas_id'] ?? null);
                             if (empty($inputKelas)) { $gagal++; continue; }
 
                             $kelasId = null;
@@ -105,40 +111,40 @@ class ListSiswas extends ListRecords
                                 $kelasId = $kelasBaru->id;
                             }
 
-                            $jkRaw = strtolower(trim($rowData['jenis_kelamin'] ?? ''));
+                            $jkRaw = strtolower($rowData['jenis_kelamin'] ?? '');
                             $jkFix = null;
                             if (in_array($jkRaw, ['l', 'laki-laki', 'laki laki', 'laki'])) $jkFix = 'Laki-laki';
                             elseif (in_array($jkRaw, ['p', 'perempuan', 'wanita'])) $jkFix = 'Perempuan';
 
                             $dataSimpan = [
-                                'nis' => trim($nis) ?: null,
-                                'nisn' => trim($nisn) ?: null,
-                                'nama_lengkap' => trim($rowData['nama_lengkap'] ?? '') ?: null,
+                                'nis' => $nis,
+                                'nisn' => $nisn,
+                                'nama_lengkap' => $rowData['nama_lengkap'],
                                 'jenis_kelamin' => $jkFix,
-                                'tempat_lahir' => trim($rowData['tempat_lahir'] ?? '') ?: null,
-                                'tanggal_lahir' => empty(trim($rowData['tanggal_lahir'] ?? '')) ? null : date('Y-m-d', strtotime($rowData['tanggal_lahir'])),
-                                'nik' => trim($rowData['nik'] ?? '') ?: null,
-                                'no_kk' => trim($rowData['no_kk'] ?? '') ?: null,
-                                'agama' => trim($rowData['agama'] ?? '') ?: null,
-                                'telepon' => trim($rowData['telepon'] ?? '') ?: null,
-                                'email' => trim($rowData['email'] ?? '') ?: null,
-                                'alamat' => trim($rowData['alamat'] ?? '') ?: null,
-                                'rt' => trim($rowData['rt'] ?? '') ?: null,
-                                'rw' => trim($rowData['rw'] ?? '') ?: null,
-                                'kelurahan' => trim($rowData['kelurahan'] ?? '') ?: null,
-                                'kecamatan' => trim($rowData['kecamatan'] ?? '') ?: null,
-                                'kabupaten' => trim($rowData['kabupaten'] ?? '') ?: null,
-                                'lintang' => trim($rowData['lintang'] ?? '') ?: null,
-                                'bujur' => trim($rowData['bujur'] ?? '') ?: null,
-                                'nama_ayah' => trim($rowData['nama_ayah'] ?? '') ?: null,
-                                'telepon_ayah' => trim($rowData['telepon_ayah'] ?? '') ?: null,
-                                'nama_ibu' => trim($rowData['nama_ibu'] ?? '') ?: null,
-                                'telepon_ibu' => trim($rowData['telepon_ibu'] ?? '') ?: null,
-                                'nama_wali' => trim($rowData['nama_wali'] ?? '') ?: null,
-                                'telepon_wali' => trim($rowData['telepon_wali'] ?? '') ?: null,
-                                'sekolah_asal' => trim($rowData['sekolah_asal'] ?? '') ?: null,
-                                'jalur_masuk' => trim($rowData['jalur_masuk'] ?? '') ?: 'Siswa Baru',
-                                'tanggal_masuk' => empty(trim($rowData['tanggal_masuk'] ?? '')) ? null : date('Y-m-d', strtotime($rowData['tanggal_masuk'])),
+                                'tempat_lahir' => $rowData['tempat_lahir'],
+                                'tanggal_lahir' => empty($rowData['tanggal_lahir']) ? null : date('Y-m-d', strtotime($rowData['tanggal_lahir'])),
+                                'nik' => $rowData['nik'],
+                                'no_kk' => $rowData['no_kk'],
+                                'agama' => $rowData['agama'],
+                                'telepon' => $rowData['telepon'],
+                                'email' => $rowData['email'],
+                                'alamat' => $rowData['alamat'],
+                                'rt' => $rowData['rt'],
+                                'rw' => $rowData['rw'],
+                                'kelurahan' => $rowData['kelurahan'],
+                                'kecamatan' => $rowData['kecamatan'],
+                                'kabupaten' => $rowData['kabupaten'],
+                                'lintang' => $rowData['lintang'],
+                                'bujur' => $rowData['bujur'],
+                                'nama_ayah' => $rowData['nama_ayah'],
+                                'telepon_ayah' => $rowData['telepon_ayah'],
+                                'nama_ibu' => $rowData['nama_ibu'],
+                                'telepon_ibu' => $rowData['telepon_ibu'],
+                                'nama_wali' => $rowData['nama_wali'],
+                                'telepon_wali' => $rowData['telepon_wali'],
+                                'sekolah_asal' => $rowData['sekolah_asal'],
+                                'jalur_masuk' => $rowData['jalur_masuk'] ?? 'Siswa Baru',
+                                'tanggal_masuk' => empty($rowData['tanggal_masuk']) ? null : date('Y-m-d', strtotime($rowData['tanggal_masuk'])),
                                 'kelas_id' => $kelasId,
                             ];
 
