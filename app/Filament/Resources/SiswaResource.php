@@ -521,7 +521,7 @@ class SiswaResource extends Resource
                                         ->label('Tanggal Masuk')
                                         ->formatStateUsing(function ($state) {
                                             if (empty($state) || $state === '-') return '-';
-                                            try { return \Carbon\Carbon::parse($state)->isoFormat('d M Y'); } catch (\Exception $e) { return '-'; }
+                                            try { return \Carbon\Carbon::parse($state)->isoFormat('D MMMM Y'); } catch (\Exception $e) { return '-'; }
                                         })
                                         ->default('-'),
                                     
@@ -529,7 +529,7 @@ class SiswaResource extends Resource
                                         ->label('Tanggal Perubahan Status')
                                         ->formatStateUsing(function ($state) {
                                             if (empty($state) || $state === '-') return '-';
-                                            try { return \Carbon\Carbon::parse($tgl)->isoFormat('D MMMM Y'); } catch (\Exception $e) { return '-'; }
+                                            try { return \Carbon\Carbon::parse($state)->isoFormat('D MMMM Y'); } catch (\Exception $e) { return '-'; }
                                         })
                                         ->visible(fn ($record) => !in_array($record->status_siswa, ['Aktif', null])),
                                     Infolists\Components\TextEntry::make('keterangan_status')
@@ -537,6 +537,7 @@ class SiswaResource extends Resource
                                         ->columnSpan(2)
                                         ->visible(fn ($record) => !in_array($record->status_siswa, ['Aktif', null])),
                                 ]),
+                            ]),
                             ]),
                     ])
                     ->columnSpanFull(),
