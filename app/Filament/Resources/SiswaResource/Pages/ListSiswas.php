@@ -250,13 +250,72 @@ class ListSiswas extends ListRecords
                 ->modalHeading('Impor Foto Siswa (ZIP)')
                 ->modalSubmitActionLabel('Mulai Ekstrak Foto'),
 
-            Actions\ExportAction::make()
-                ->exporter(\App\Filament\Exports\SiswaExporter::class)
-                ->label('Ekspor')
+            Actions\Action::make('ekspor_cepat')
+                ->label('Ekspor Data')
                 ->color('warning')
                 ->icon('heroicon-o-arrow-up-tray')
-                ->visible(fn () => in_array(Auth::user()->peran, ['admin', 'staf'])),
+                ->visible(fn () => in_array(Auth::user()->peran, ['admin', 'staf']))
+                ->action(function () {
+                    // Mencegah Timeout saat mengunduh banyak data
+                    set_time_limit(0);
+                    
+                    // Kolom Header Excel
+                    $headers = ['nis', 'nisn', 'nama_lengkap', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'nik', 'no_kk', 'agama', 'telepon', 'email', 'alamat', 'rt', 'rw', 'kelurahan', 'kecamatan', 'kabupaten', 'lintang', 'bujur', 'nama_ayah', 'telepon_ayah', 'nama_ibu', 'telepon_ibu', 'nama_wali', 'telepon_wali', 'sekolah_asal', 'jalur_masuk', 'tanggal_masuk', 'nama_kelas'];
+                    
+                    $callback = function () use ($headers) {
+                        $file = fopen('php://output', 'w');
+                        // Tulis baris header
+                        fputcsv($file, $headers);
 
+                        // Ambil semua data siswa beserta nama kelasnya
+                        $siswas = \App\Models\Siswa::with('kelas')->orderBy('kelas_id')->orderBy('nama_lengkap')->get();
+
+                        foreach ($siswas as $siswa) {
+                            fputcsv($file, [
+                                $siswa->nis,
+                                $siswa->nisn,
+                                $siswa->nama_lengkap,
+                                $siswa->jenis_kelamin,
+                                $siswa->tempat_lahir,
+                                $siswa->tanggal_lahir,
+                                $siswa->nik,
+                                $siswa->no_kk,
+                                $siswa->agama,
+                                $siswa->telepon,
+                                $siswa->email,
+                                $siswa->alamat,
+                                $siswa->rt,
+                                $siswa->rw,
+                                $siswa->kelurahan,
+                                $siswa->kecamatan,
+                                $siswa->kabupaten,
+                                $siswa->lintang,
+                                $siswa->bujur,
+                                $siswa->nama_ayah,
+                                $siswa->telepon_ayah,
+                                $siswa->nama_ibu,
+                                $siswa->telepon_ibu,
+                                $siswa->nama_wali,
+                                $siswa->telepon_wali,
+                                $siswa->sekolah_asal,
+                                $siswa->jalur_masuk,
+                                $siswa->tanggal_masuk,
+                                $siswa->kelas->nama_kelas ?? '', // Langsung konversi relasi menjadi teks
+                            ]);
+                        }
+                        fclose($file);
+                    };
+
+                    // Format nama file berdasarkan tanggal saat ini
+                    $fileName = 'Ekspor_Siswa_' . date('Y-m-d_H-i') . '.csv';
+
+                    return response()->stream($callback, 200, [
+                        'Content-Type' => 'text/csv',
+                        'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+                    ]);
+                }),
+
+            // TOMBOL TAMBAH MANUAL
             Actions\CreateAction::make()->label('Siswa Baru'),
         ];
     }
