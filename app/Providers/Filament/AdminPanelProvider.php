@@ -26,7 +26,7 @@ class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
-        $namaSekolah = 'SmartM1';
+        $namaSekolah = 'Smart-M1';
         $faviconUrl = null;
 
         try {
@@ -45,7 +45,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login(CustomAdminLogin::class)
-            ->brandName('SmartM1')
+            ->brandName('Smart-M1')
             ->favicon($faviconUrl)
             
             ->userMenuItems([

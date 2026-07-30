@@ -60,7 +60,7 @@
                 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
                     <p style="font-size: 11px; font-weight: 800; letter-spacing: 1px; margin: 0; color: #bfdbfe; text-transform: uppercase;">
-                        SmartM1- SMAN 1 Malingping
+                        Smart-M1 SMAN 1 Malingping
                     </p>
                     
                     <button x-data="{

@@ -7,8 +7,8 @@
     } catch (\Exception $e) {}
     
     $namaSekolah = $pengaturan->nama_sekolah ?? 'SMAN 1 Malingping';
-    $appTitle = "SmartM1 - " . $namaSekolah . " | Aplikasi Digitalisasi Sistem Administrasi & Akademik Siswa";
-    $metaDescription = "SmartM1 " . $namaSekolah . " adalah platform terpadu digitalisasi sistem administrasi dan akademik siswa. Akses nilai, e-rapor, absensi harian, dan portofolio prestasi sekolah secara real-time.";
+    $appTitle = "Smart-M1 - " . $namaSekolah . " | Aplikasi Digitalisasi Sistem Administrasi & Akademik Siswa";
+    $metaDescription = "Smart-M1 " . $namaSekolah . " adalah platform terpadu digitalisasi sistem administrasi dan akademik siswa. Akses nilai, e-rapor, absensi harian, dan portofolio prestasi sekolah secara real-time.";
     
     $ogImageUrl = asset('images/og-image.jpg');
     if ($pengaturan && $pengaturan->logo_sekolah) {
@@ -26,7 +26,7 @@
     <title>{{ $appTitle }}</title>
     <meta name="title" content="{{ $appTitle }}">
     <meta name="description" content="{{ $metaDescription }}">
-    <meta name="keywords" content="SmartM1, SMAN 1 Malingping, SmartM1 SMAN 1 Malingping, aplikasi digitalisasi sekolah, sistem administrasi sekolah, akademik siswa, e-rapor, absensi siswa, portal siswa Malingping">
+    <meta name="keywords" content="Smart-M1, SMAN 1 Malingping, SmartM1 SMAN 1 Malingping, aplikasi digitalisasi sekolah, sistem administrasi sekolah, akademik siswa, e-rapor, absensi siswa, portal siswa Malingping">
     <meta name="author" content="{{ $namaSekolah }}">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ url()->current() }}">
@@ -45,7 +45,7 @@
     <meta property="og:image" content="{{ $ogImageUrl }}">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:site_name" content="SmartM1 {{ $namaSekolah }}">
+    <meta property="og:site_name" content="Smart-M1 {{ $namaSekolah }}">
     <meta property="og:locale" content="id_ID">
 
     <meta name="twitter:card" content="summary_large_image">
@@ -117,7 +117,7 @@
                 <div class="w-10 h-10 md:w-12 md:h-12 bg-slate-900 rounded-xl flex items-center justify-center shadow-md text-white font-bold text-xl group-hover:scale-105 transition-transform duration-300">M1</div>
             @endif
             <div class="flex flex-col">
-                <span class="font-extrabold text-lg md:text-xl text-slate-900 leading-none tracking-tight">SMARTM1</span>
+                <span class="font-extrabold text-lg md:text-xl text-slate-900 leading-none tracking-tight">SMART-M1</span>
                 <span class="text-[10px] md:text-xs text-slate-500 font-bold tracking-widest mt-0.5 uppercase">{{ $namaSekolah }}</span>
             </div>
         </div>
@@ -136,21 +136,21 @@
                 <div class="relative z-10">
                     <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-slate-100/80 border border-slate-200/80 mb-4 lg:mb-6 backdrop-blur-sm">
                         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span class="text-[10px] font-extrabold tracking-widest text-slate-600 uppercase">Sistem Aktif • SmartM1 Portal</span>
+                        <span class="text-[10px] font-extrabold tracking-widest text-slate-600 uppercase">Sistem Aktif</span>
                     </div>
 
                     <h1 class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight text-slate-900 mb-4 lg:mb-6 leading-[1.1]">
                         Portal<br>
-                        <span class="text-edu-600">SMARTM1</span>
+                        <span class="text-edu-600">SMART-M1</span>
                     </h1>
 
-                    <p class="text-sm md:text-base lg:text-lg xl:text-xl text-slate-600 max-w-xl mb-6 lg:mb-10 leading-relaxed font-medium">
+                    <p class="md:text-base lg:text-lg xl:text-xl text-slate-600 max-w-xl mb-6 lg:mb-10 leading-relaxed font-medium">
                         Platform digital terintegrasi yang mendukung pengelolaan administrasi, layanan akademik, absensi, e-Rapor, serta data peserta didik secara <span class="text-slate-900 font-bold border-b-2 border-edu-200">aman, efisien, dan real-time.</span>.
                     </p>
 
                     <div class="flex flex-col sm:flex-row gap-3">
                         <button onclick="openLoginModal()" class="group px-6 py-3 lg:px-8 lg:py-4 bg-slate-900 text-white font-bold rounded-xl shadow-lg shadow-slate-900/20 hover:bg-edu-600 hover:shadow-edu-600/30 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center gap-3 text-sm md:text-base">
-                            Masuk ke SmartM1
+                            Masuk ke Smart-M1
                             <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                         </button>
                         <button onclick="openFeaturesModal()" class="md:hidden px-6 py-3 lg:px-8 lg:py-4 bg-white/80 backdrop-blur-md text-slate-700 border border-slate-200 font-bold rounded-xl hover:bg-slate-50 hover:-translate-y-1 transition-all duration-300 flex items-center justify-center text-sm">
@@ -191,7 +191,7 @@
     </main>
 
     <footer class="relative z-10 w-full text-center py-4 text-[10px] md:text-xs text-slate-500 font-semibold shrink-0 bg-white/30 backdrop-blur-md border-t border-slate-200/50">
-        &copy; {{ date('Y') }} SmartM1 {{ $namaSekolah }}.
+        &copy; {{ date('Y') }} Smart-M1 {{ $namaSekolah }}.
     </footer>
 
     <div id="loginModal" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -210,7 +210,7 @@
                             <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
                         </div>
                         <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Otorisasi</h2>
-                        <p class="text-sm text-slate-500 mt-2 font-medium">Pilih peran Anda untuk masuk ke sistem SmartM1.</p>
+                        <p class="text-sm text-slate-500 mt-2 font-medium">Pilih peran Anda untuk masuk ke sistem Smart-M1.</p>
                     </div>
                 </div>
                 
@@ -249,7 +249,7 @@
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeFeaturesModal()"></div>
         <div class="modal-content relative w-full max-w-sm bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden border border-slate-100">
             <div class="flex justify-between items-center p-6 border-b border-slate-100 bg-slate-50/80">
-                <h2 class="text-lg font-extrabold text-slate-900">Informasi Sistem SmartM1</h2>
+                <h2 class="text-lg font-extrabold text-slate-900">Informasi Sistem Smart-M1</h2>
                 <button onclick="closeFeaturesModal()" class="p-1.5 text-slate-400 hover:text-slate-900 hover:bg-slate-200 rounded-full transition-colors hover:rotate-90 duration-300">
                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>

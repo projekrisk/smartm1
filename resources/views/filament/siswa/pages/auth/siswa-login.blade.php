@@ -52,7 +52,7 @@
                     
                     <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 24px;">
                         <p style="font-size: 11px; font-weight: 800; letter-spacing: 1px; margin: 0; color: #bfdbfe; text-transform: uppercase;">
-                            SMARTM1<br>
+                            SMART-M1<br>
                             {{ $pengaturan->nama_sekolah ?? 'SMAN 1 MALINGPING' }}
                         </p>
                     </div>
