@@ -11,6 +11,11 @@ class Kelas extends Model
     protected $table = 'kelas';
     protected $guarded = [];
 
+    public function tingkat()
+    {
+        return $this->belongsTo(Tingkat::class, 'tingkat_id');
+    }
+
     public function waliKelas(): BelongsTo
     {
         return $this->belongsTo(User::class, 'wali_kelas_id');
