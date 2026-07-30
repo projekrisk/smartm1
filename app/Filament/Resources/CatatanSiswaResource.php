@@ -275,11 +275,7 @@ class CatatanSiswaResource extends Resource
                 ->falseColor('danger')
                 ->tooltip(fn ($state) => $state ? 'Sudah dibaca oleh Wali Kelas' : 'Belum dibaca (Baru)'),
 
-            Tables\Columns\TextColumn::make('judul_catatan')
-                    ->label('Perihal')
-                    ->limit(20)
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('pencatat.name')
+            Tables\Columns\TextColumn::make('pencatat.name')
                     ->label('Oleh')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status_tindak_lanjut')

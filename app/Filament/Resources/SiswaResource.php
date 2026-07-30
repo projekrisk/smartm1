@@ -590,7 +590,10 @@ class SiswaResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('kelas_id')
                     ->label('Filter Kelas')
-                    ->relationship('kelas', 'nama_kelas'),
+                    ->relationship('kelas', 'nama_kelas')
+                    ->searchable()
+                    ->preload()
+                    ->visible(fn () => in_array(Auth::user()->peran, ['admin', 'staf'])),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(), 
