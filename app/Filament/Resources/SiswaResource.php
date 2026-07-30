@@ -596,32 +596,71 @@ class SiswaResource extends Resource
                     ->visible(fn () => in_array(Auth::user()->peran, ['admin', 'staf'])),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(), 
-                Tables\Actions\EditAction::make()->hidden(fn () => Auth::user()->peran === 'guru'),
-                
-                Tables\Actions\Action::make('aktifkan_kembali')
-                    ->label('Aktifkan Kembali')
-                    ->icon('heroicon-o-arrow-path')
-                    ->color('warning')
-                    ->requiresConfirmation()
-                    ->visible(fn () => in_array(Auth::user()->peran, ['admin', 'staf']))
-                    ->modalHeading('Aktifkan Kembali Siswa')
-                    ->modalDescription('Apakah Anda yakin ingin mengubah status siswa ini kembali menjadi Aktif? Data tanggal keluar/lulus dan keterangannya akan dihapus.')
-                    ->modalSubmitActionLabel('Ya, Aktifkan')
-                    ->hidden(fn (\App\Models\Siswa $record): bool => in_array($record->status_siswa, ['Aktif', 'Mutasi Masuk', null]))
-                    ->action(function (\App\Models\Siswa $record): void {
-                        $record->update([
-                            'status_siswa' => 'Aktif',
-                            'tanggal_status' => null,
-                            'keterangan_status' => null,
-                        ]);
+                Tables\Actions\ActionGroup::make([
+                    
+                    Tables\Actions\ViewAction::make()
+                        ->label('Lihat Detail'), 
+                        
+                    Tables\Actions\EditAction::make()
+                        ->label('Edit Data')
+                        ->hidden(fn () => Auth::user()->peran === 'guru'),
+                        
+                    Tables\Actions\Action::make('reset_password')
+                        ->label('Reset Password')
+                        ->icon('heroicon-o-key')
+                        ->color('danger')
+                        ->requiresConfirmation()
+                        ->visible(fn () => in_array(Auth::user()->peran, ['admin', 'staf']))
+                        ->modalHeading('Reset Password Siswa')
+                        ->modalDescription(fn (\App\Models\Siswa $record) => "Apakah Anda yakin ingin mereset password {$record->nama_lengkap} menjadi NIS-nya ({$record->nis})?")
+                        ->modalSubmitActionLabel('Ya, Reset Password')
+                        ->action(function (\App\Models\Siswa $record) {
+                            if ($record->user) {
+                                $record->user->update([
+                                    'password' => \Illuminate\Support\Facades\Hash::make($record->nis)
+                                ]);
+                                
+                                \Filament\Notifications\Notification::make()
+                                    ->title('Berhasil!')
+                                    ->body("Password berhasil direset menjadi NIS: {$record->nis}")
+                                    ->success()
+                                    ->send();
+                            } else {
+                                \Filament\Notifications\Notification::make()
+                                    ->title('Tidak Diperlukan')
+                                    ->body('Siswa ini belum memiliki akun. Akun dan password (NIS) akan otomatis terbuat saat siswa tersebut login pertama kali.')
+                                    ->warning()
+                                    ->send();
+                            }
+                        }),
+                        
+                    Tables\Actions\Action::make('aktifkan_kembali')
+                        ->label('Aktifkan Kembali')
+                        ->icon('heroicon-o-arrow-path')
+                        ->color('warning')
+                        ->requiresConfirmation()
+                        ->visible(fn () => in_array(Auth::user()->peran, ['admin', 'staf']))
+                        ->modalHeading('Aktifkan Kembali Siswa')
+                        ->modalDescription('Apakah Anda yakin ingin mengubah status siswa ini kembali menjadi Aktif? Data tanggal keluar/lulus dan keterangannya akan dihapus.')
+                        ->modalSubmitActionLabel('Ya, Aktifkan')
+                        ->hidden(fn (\App\Models\Siswa $record): bool => in_array($record->status_siswa, ['Aktif', 'Mutasi Masuk', null]))
+                        ->action(function (\App\Models\Siswa $record): void {
+                            $record->update([
+                                'status_siswa' => 'Aktif',
+                                'tanggal_status' => null,
+                                'keterangan_status' => null,
+                            ]);
 
-                        \Filament\Notifications\Notification::make()
-                            ->title('Status Berhasil Diubah')
-                            ->body("Siswa {$record->nama_lengkap} sekarang kembali Aktif.")
-                            ->success()
-                            ->send();
-                    }),
+                            \Filament\Notifications\Notification::make()
+                                ->title('Status Berhasil Diubah')
+                                ->body("Siswa {$record->nama_lengkap} sekarang kembali Aktif.")
+                                ->success()
+                                ->send();
+                        }),
+
+                ])
+                ->tooltip('Pilihan Aksi')
+                ->icon('heroicon-m-ellipsis-vertical'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
