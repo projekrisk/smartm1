@@ -23,7 +23,7 @@ class ListSiswas extends ListRecords
                 ->icon('heroicon-o-document-arrow-down')
                 ->visible(fn () => in_array(Auth::user()->peran, ['admin', 'staf']))
                 ->action(function () {
-                    $headers = ['nis', 'nisn', 'nama_lengkap', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'nik', 'no_kk', 'agama', 'telepon', 'email', 'alamat', 'rt', 'rw', 'kelurahan', 'kecamatan', 'kabupaten', 'lintang', 'bujur', 'nama_ayah', 'telepon_ayah', 'nama_ibu', 'telepon_ibu', 'nama_wali', 'telepon_wali', 'sekolah_asal', 'jalur_masuk', 'tanggal_masuk', 'kelas_id'];
+                    $headers = ['nis', 'nisn', 'nama_lengkap', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'nik', 'no_kk', 'agama', 'telepon', 'email', 'alamat', 'rt', 'rw', 'kelurahan', 'kecamatan', 'kabupaten', 'lintang', 'bujur', 'nama_ayah', 'telepon_ayah', 'nama_ibu', 'telepon_ibu', 'nama_wali', 'telepon_wali', 'sekolah_asal', 'jalur_masuk', 'tanggal_masuk', 'nama_kelas'];
                     $csvData = implode(',', $headers) . "\n";
                     
                     return response()->streamDownload(function () use ($csvData) {
@@ -75,8 +75,22 @@ class ListSiswas extends ListRecords
                             if (empty($nisn) || in_array($nisn, $nisnTerbaca)) { $gagal++; continue; }
                             $nisnTerbaca[] = $nisn;
                             
-                            $kelasId = trim($rowData['kelas_id'] ?? '');
-                            if (empty($kelasId)) { $gagal++; continue; }
+                            $inputKelas = trim($rowData['nama_kelas'] ?? ($rowData['kelas_id'] ?? ''));
+                            if (empty($inputKelas)) { $gagal++; continue; }
+
+                            $kelasId = null;
+                            
+                            if (is_numeric($inputKelas)) {
+                                $cekKelas = \App\Models\Kelas::find($inputKelas);
+                                if ($cekKelas) {
+                                    $kelasId = $cekKelas->id;
+                                }
+                            }
+
+                            if (!$kelasId) {
+                                $kelasBaru = \App\Models\Kelas::firstOrCreate(['nama_kelas' => $inputKelas]);
+                                $kelasId = $kelasBaru->id;
+                            }
 
                             $jkRaw = strtolower(trim($rowData['jenis_kelamin'] ?? ''));
                             $jkFix = null;
