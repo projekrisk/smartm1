@@ -124,8 +124,7 @@ class SiswaResource extends Resource
             ->schema([
                 Forms\Components\Tabs::make('Data Siswa')
                     ->tabs([
-                        // TAB 1: DATA PRIBADI
-                        Forms\Components\Tabs\Tab::make('Data Pribadi')
+                        Forms\Components\Tabs\Tab::make('Identitas')
                             ->icon('heroicon-o-user')
                             ->schema([
                                 Forms\Components\Grid::make(2)->schema([
@@ -178,7 +177,7 @@ class SiswaResource extends Resource
                                 ]),
                             ]),
 
-                        Forms\Components\Tabs\Tab::make('Alamat & Lokasi')
+                        Forms\Components\Tabs\Tab::make('Alamat')
                             ->icon('heroicon-o-map-pin')
                             ->schema([
                                 Forms\Components\Textarea::make('alamat')
@@ -206,7 +205,7 @@ class SiswaResource extends Resource
                                 ]),
                             ]),
 
-                        Forms\Components\Tabs\Tab::make('Data Orang Tua')
+                        Forms\Components\Tabs\Tab::make('Orang Tua')
                             ->icon('heroicon-o-users')
                             ->schema([
                                 Forms\Components\Grid::make(2)->schema([
@@ -228,7 +227,7 @@ class SiswaResource extends Resource
                                 ]),
                             ]),
 
-                        Forms\Components\Tabs\Tab::make('Akademik & Status')
+                        Forms\Components\Tabs\Tab::make('Akademik')
                             ->icon('heroicon-o-academic-cap')
                             ->schema([
                                 Forms\Components\Grid::make(2)->schema([
@@ -362,7 +361,7 @@ class SiswaResource extends Resource
 
                 Infolists\Components\Tabs::make('Data Detail Siswa')
                     ->tabs([
-                        Infolists\Components\Tabs\Tab::make('Data Pribadi')
+                        Infolists\Components\Tabs\Tab::make('Identitas')
                             ->icon('heroicon-o-user')
                             ->schema([
                                 Infolists\Components\Grid::make(3)->schema([
@@ -405,7 +404,7 @@ class SiswaResource extends Resource
                                 ]),
                             ]),
 
-                        Infolists\Components\Tabs\Tab::make('Alamat & Lokasi')
+                        Infolists\Components\Tabs\Tab::make('Alamat')
                             ->icon('heroicon-o-map-pin')
                             ->schema([
                                 Infolists\Components\TextEntry::make('alamat')
@@ -473,7 +472,7 @@ class SiswaResource extends Resource
                                 ]),
                             ]),
 
-                        Infolists\Components\Tabs\Tab::make('Data Orang Tua')
+                        Infolists\Components\Tabs\Tab::make('Orang Tua')
                             ->icon('heroicon-o-users')
                             ->visible(fn () => in_array(Auth::user()->peran, ['admin', 'staf']))
                             ->schema([
@@ -508,7 +507,7 @@ class SiswaResource extends Resource
                                 ]),
                             ]),
 
-                        Infolists\Components\Tabs\Tab::make('Akademik & Histori')
+                        Infolists\Components\Tabs\Tab::make('Akademik')
                             ->icon('heroicon-o-academic-cap')
                             ->schema([
                                 Infolists\Components\Grid::make(3)->schema([
@@ -530,7 +529,7 @@ class SiswaResource extends Resource
                                         ->label('Tanggal Perubahan Status')
                                         ->formatStateUsing(function ($state) {
                                             if (empty($state) || $state === '-') return '-';
-                                            try { return \Carbon\Carbon::parse($state)->isoFormat('d M Y'); } catch (\Exception $e) { return '-'; }
+                                            try { return \Carbon\Carbon::parse($tgl)->isoFormat('D MMMM Y'); } catch (\Exception $e) { return '-'; }
                                         })
                                         ->visible(fn ($record) => !in_array($record->status_siswa, ['Aktif', null])),
                                     Infolists\Components\TextEntry::make('keterangan_status')
