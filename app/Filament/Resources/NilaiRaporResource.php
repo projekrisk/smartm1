@@ -11,7 +11,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use App\Filament\Exports\NilaiRaporExporter;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Filament\Notifications\Notification;
@@ -165,12 +164,129 @@ class NilaiRaporResource extends Resource
                     }),
             ])
             ->headerActions([
-                Tables\Actions\ExportAction::make()
-                    ->exporter(NilaiRaporExporter::class)
-                    ->label('Ekspor')
-                    ->color('warning')
-                    ->icon('heroicon-o-arrow-up-tray'),
+                // ======================================================================================
+                // PERBAIKAN: EKSPOR LEGER RAPOR (EXCEL HTML STREAMING)
+                // ======================================================================================
+                Tables\Actions\Action::make('ekspor_leger_cepat')
+                    ->label('Download Leger Rapor')
+                    ->color('success')
+                    ->icon('heroicon-o-table-cells')
+                    ->action(function () {
+                        set_time_limit(0);
+                        ini_set('memory_limit', '-1');
 
+                        return response()->streamDownload(function () {
+                            // Ambil Master Data berdasar Tahun & Semester
+                            $daftarTahun = \App\Models\TahunAjaran::select('nama_tahun')->distinct()->orderBy('nama_tahun')->pluck('nama_tahun');
+                            $semuaTA = \App\Models\TahunAjaran::all();
+                            $mapels = MataPelajaran::orderBy('id')->get();
+                            
+                            $siswas = Siswa::with(['kelas', 'riwayatKelas.kelas'])
+                                ->orderBy('kelas_id')
+                                ->orderBy('nama_lengkap')
+                                ->get();
+
+                            // Tarik seluruh nilai akhir siswa dari database ke memory
+                            $semuaNilai = NilaiRapor::select('siswa_id', 'tahun_ajaran_id', 'mata_pelajaran_id', 'nilai_akhir')
+                                ->get()
+                                ->groupBy('siswa_id');
+
+                            echo '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
+                            echo '<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>';
+                            echo '<body>';
+                            echo '<table border="1" style="border-collapse: collapse; font-family: Calibri, sans-serif; font-size: 11pt;">';
+                            
+                            // BARIS 1: HEADER UTAMA
+                            echo '<tr style="background-color: #e2efda; font-weight: bold; text-align: center;">';
+                            echo '<th rowspan="3" style="vertical-align: middle;">No</th>';
+                            echo '<th rowspan="3" style="vertical-align: middle;">NIS</th>';
+                            echo '<th rowspan="3" style="vertical-align: middle;">NISN</th>';
+                            echo '<th rowspan="3" style="vertical-align: middle; width: 250px;">Nama Lengkap</th>';
+                            echo '<th rowspan="3" style="vertical-align: middle;">Kelas Saat Ini</th>';
+                            echo '<th colspan="'.$daftarTahun->count().'">Riwayat Kelas (Sesuai Tahun Ajaran)</th>';
+                            
+                            foreach($mapels as $mapel) {
+                                $namaMapel = $mapel->nama_pelajaran ?? 'MAPEL';
+                                echo '<th colspan="'.($daftarTahun->count() * 2).'">'.strtoupper($namaMapel).'</th>';
+                            }
+                            echo '</tr>';
+
+                            // BARIS 2: TAHUN AJARAN
+                            echo '<tr style="background-color: #e2efda; font-weight: bold; text-align: center;">';
+                            foreach($daftarTahun as $tahun) {
+                                echo '<th rowspan="2" style="vertical-align: middle;">TA. '.$tahun.'</th>';
+                            }
+                            foreach($mapels as $mapel) {
+                                foreach($daftarTahun as $tahun) {
+                                    echo '<th colspan="2">'.$tahun.'</th>';
+                                }
+                            }
+                            echo '</tr>';
+
+                            // BARIS 3: SEMESTER
+                            echo '<tr style="background-color: #e2efda; font-weight: bold; text-align: center;">';
+                            foreach($mapels as $mapel) {
+                                foreach($daftarTahun as $tahun) {
+                                    echo '<th>Smt Ganjil</th><th>Smt Genap</th>';
+                                }
+                            }
+                            echo '</tr>';
+
+                            $currentKelas = null;
+                            $no = 1;
+
+                            // PENGISIAN DATA SISWA
+                            foreach($siswas as $siswa) {
+                                $namaKelas = $siswa->kelas ? $siswa->kelas->nama_kelas : 'Belum Ada Kelas';
+                                
+                                if ($currentKelas !== $namaKelas) {
+                                    $currentKelas = $namaKelas;
+                                    $no = 1; 
+                                    $totalCols = 5 + $daftarTahun->count() + ($mapels->count() * $daftarTahun->count() * 2);
+                                    echo '<tr style="background-color: #d9e1f2; font-weight: bold;">';
+                                    echo '<td colspan="'.$totalCols.'">KELOMPOK KELAS: '.$currentKelas.'</td>';
+                                    echo '</tr>';
+                                }
+
+                                echo '<tr>';
+                                echo '<td style="text-align: center;">'.$no++.'</td>';
+                                echo '<td style="text-align: center;">="'.($siswa->nis ?? '').'"</td>';
+                                echo '<td style="text-align: center;">="'.($siswa->nisn ?? '').'"</td>';
+                                echo '<td>'.$siswa->nama_lengkap.'</td>';
+                                echo '<td style="text-align: center;">'.$namaKelas.'</td>';
+
+                                foreach($daftarTahun as $tahun) {
+                                    $taIds = $semuaTA->where('nama_tahun', $tahun)->pluck('id')->toArray();
+                                    $riwayat = $siswa->riwayatKelas->whereIn('tahun_ajaran_id', $taIds)->first();
+                                    echo '<td style="text-align: center;">'.($riwayat && $riwayat->kelas ? $riwayat->kelas->nama_kelas : '-').'</td>';
+                                }
+
+                                $nilaiSiswa = $semuaNilai->get($siswa->id, collect());
+                                
+                                foreach($mapels as $mapel) {
+                                    foreach($daftarTahun as $tahun) {
+                                        $taGanjil = $semuaTA->where('nama_tahun', $tahun)->where('semester', 'Ganjil')->first();
+                                        $taGenap = $semuaTA->where('nama_tahun', $tahun)->where('semester', 'Genap')->first();
+
+                                        $nGanjil = $taGanjil ? $nilaiSiswa->where('mata_pelajaran_id', $mapel->id)->where('tahun_ajaran_id', $taGanjil->id)->first() : null;
+                                        $nGenap = $taGenap ? $nilaiSiswa->where('mata_pelajaran_id', $mapel->id)->where('tahun_ajaran_id', $taGenap->id)->first() : null;
+                                        
+                                        echo '<td style="text-align: center;">'.($nGanjil ? $nGanjil->nilai_akhir : '').'</td>';
+                                        echo '<td style="text-align: center;">'.($nGenap ? $nGenap->nilai_akhir : '').'</td>';
+                                    }
+                                }
+                                echo '</tr>';
+                            }
+
+                            echo '</table></body></html>';
+                        }, 'Leger_Rapor_' . date('Y-m-d_H-i') . '.xls', [
+                            'Content-Type' => 'application/vnd.ms-excel',
+                        ]);
+                    }),
+
+                // ======================================================================================
+                // TOMBOL IMPOR ANDA TETAP UTUH & TIDAK ADA YANG DIHAPUS
+                // ======================================================================================
                 Tables\Actions\Action::make('impor_matriks')
                     ->label('Impor')
                     ->color('success')

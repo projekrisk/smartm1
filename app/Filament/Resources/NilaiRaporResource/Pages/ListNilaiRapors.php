@@ -15,16 +15,12 @@ class ListNilaiRapors extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            // ==============================================================================
-            // 1. TOMBOL EKSPOR DIRECT NILAI RAPOR (SUPER CEPAT & BEBAS TIMEOUT)
-            // ==============================================================================
             Actions\Action::make('ekspor_cepat_rapor')
-                ->label('Ekspor Data')
+                ->label('Ekspor')
                 ->color('warning')
                 ->icon('heroicon-o-arrow-up-tray')
                 ->visible(fn () => in_array(Auth::user()->peran ?? 'admin', ['admin', 'staf', 'guru']))
                 ->action(function () {
-                    // Mencegah Timeout saat mengunduh puluhan ribu data
                     set_time_limit(0);
                     
                     $headers = [
@@ -42,25 +38,20 @@ class ListNilaiRapors extends ListRecords
                         $file = fopen('php://output', 'w');
                         fputcsv($file, $headers);
 
-                        // Memuat relasi tambahan: riwayatKelas dan tahunAjaran
-                        NilaiRapor::with(['siswa.riwayatKelas.kelas', 'siswa.riwayatKelas.tahunAjaran', 'mataPelajaran', 'tahunAjaran'])
+                        NilaiRapor::with(['siswa', 'kelas', 'mataPelajaran'])
                             ->chunk(1000, function ($nilais) use ($file) {
                                 foreach ($nilais as $nilai) {
-                                    
-                                    // Mencari riwayat kelas siswa secara spesifik pada tahun ajaran rapor ini dibuat
-                                    $riwayatSpesifik = $nilai->siswa->riwayatKelas
-                                        ->where('tahun_ajaran_id', $nilai->tahun_ajaran_id)
-                                        ->first();
-                                    
-                                    $namaKelas = $riwayatSpesifik ? $riwayatSpesifik->kelas->nama_kelas : 'Belum/Tidak Ada Riwayat';
-                                    
                                     fputcsv($file, [
                                         isset($nilai->siswa->nis) ? "'" . $nilai->siswa->nis : '',
+                                        isset($nilai->siswa->nisn) ? "'" . $nilai->siswa->nisn : '',
+                                        
                                         $nilai->siswa->nama_lengkap ?? '',
-                                        $namaKelas, // Menggunakan riwayat kelas per tahun ajaran
-                                        $nilai->tahunAjaran->nama_tahun ?? '',
-                                        $nilai->mataPelajaran->nama_matpel ?? '',
-                                        // ... dan kolom kompleks lainnya ...
+                                        $nilai->kelas->nama_kelas ?? '',
+                                        $nilai->mataPelajaran->nama_matpel ?? ($nilai->mataPelajaran->nama ?? ''),
+                                        
+                                        $nilai->semester ?? '',
+                                        $nilai->nilai_pengetahuan ?? ($nilai->nilai ?? ''),
+                                        $nilai->nilai_keterampilan ?? '',
                                     ]);
                                 }
                             });
@@ -76,9 +67,6 @@ class ListNilaiRapors extends ListRecords
                     ]);
                 }),
 
-            // ==============================================================================
-            // 2. TOMBOL TAMBAH DATA (Bawaan Filament)
-            // ==============================================================================
             Actions\CreateAction::make()
                 ->label('Tambah Nilai Rapor'),
         ];
