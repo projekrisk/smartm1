@@ -17,7 +17,7 @@ class KelasResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-folder-open';    
     protected static ?string $navigationLabel = 'Kelas';
     protected static ?string $pluralModelLabel = 'Kelas';
-    protected static ?string $navigationGroup = 'Data Master';    
+    protected static ?string $navigationGroup = 'Manajemen Kelas';    
     protected static ?string $modelLabel = 'Kelas';
     protected static ?int $navigationSort = 3;
 
@@ -45,17 +45,29 @@ class KelasResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nama_kelas')
-                    ->label('Nama Kelas')
-                    ->required()
-                    ->unique(ignoreRecord: true)
-                    ->maxLength(255),
-                    
-                Forms\Components\Select::make('wali_kelas_id')
-                    ->label('Wali Kelas')
-                    ->relationship('waliKelas', 'name') 
-                    ->searchable()
-                    ->preload(),
+                Forms\Components\Section::make('Informasi Kelas')
+                    ->schema([
+                        // INPUT TINGKAT KELAS KEMBALI DIMUNCULKAN
+                        Forms\Components\Select::make('tingkat_id')
+                            ->label('Tingkat Kelas')
+                            ->relationship('tingkat', 'nama_tingkat')
+                            ->required()
+                            ->native(false)
+                            ->searchable()
+                            ->preload(),
+                            
+                        Forms\Components\TextInput::make('nama_kelas')
+                            ->label('Nama Kelas')
+                            ->placeholder('Contoh: X IPA 1 / X-E1')
+                            ->required()
+                            ->maxLength(255),
+                            
+                        Forms\Components\Select::make('wali_kelas_id')
+                            ->label('Wali Kelas')
+                            ->relationship('waliKelas', 'name')
+                            ->searchable()
+                            ->preload(),
+                    ])->columns(1),
             ]);
     }
 
@@ -63,25 +75,29 @@ class KelasResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('tingkat.nama_tingkat')
+                    ->label('Tingkat')
+                    ->badge()
+                    ->color('primary')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('nama_kelas')
                     ->label('Nama Kelas')
                     ->searchable()
                     ->sortable(),
-                    
                 Tables\Columns\TextColumn::make('waliKelas.name')
                     ->label('Wali Kelas')
                     ->searchable()
                     ->sortable()
-                    ->default('Belum Diatur'),
+                    ->default('Belum diatur'),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('wali_kelas_id')
-                    ->label('Filter Wali Kelas')
-                    ->relationship('waliKelas', 'name'), 
+                Tables\Filters\SelectFilter::make('tingkat_id')
+                    ->label('Filter Tingkat')
+                    ->relationship('tingkat', 'nama_tingkat'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
