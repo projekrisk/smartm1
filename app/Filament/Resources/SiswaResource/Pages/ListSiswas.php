@@ -21,7 +21,7 @@ class ListSiswas extends ListRecords
                 ->label('Template')
                 ->color('info')
                 ->icon('heroicon-o-document-arrow-down')
-                ->visible(fn () => in_array(Auth::user()->peran, ['admin', 'staf']))
+                ->visible(fn () => Auth::user()->peran === 'admin')
                 ->action(function () {
                     $headers = ['nis', 'nisn', 'nama_lengkap', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'nik', 'no_kk', 'agama', 'telepon', 'email', 'alamat', 'rt', 'rw', 'kelurahan', 'kecamatan', 'kabupaten', 'lintang', 'bujur', 'nama_ayah', 'telepon_ayah', 'nama_ibu', 'telepon_ibu', 'nama_wali', 'telepon_wali', 'sekolah_asal', 'jalur_masuk', 'tanggal_masuk', 'nama_kelas'];
                     $csvData = implode(',', $headers) . "\n";
@@ -35,7 +35,7 @@ class ListSiswas extends ListRecords
                 ->label('Impor')
                 ->color('success')
                 ->icon('heroicon-o-arrow-down-tray')
-                ->visible(fn () => in_array(Auth::user()->peran, ['admin', 'staf']))
+                ->visible(fn () => Auth::user()->peran === 'admin')
                 ->form([
                     \Filament\Forms\Components\FileUpload::make('file')
                         ->label('Upload File CSV')
@@ -182,7 +182,7 @@ class ListSiswas extends ListRecords
                 ->label('Foto')
                 ->color('info')
                 ->icon('heroicon-o-photo')
-                ->visible(fn () => in_array(Auth::user()->peran, ['admin', 'staf']))
+                ->visible(fn () => Auth::user()->peran === 'admin')
                 ->form([
                     \Filament\Forms\Components\FileUpload::make('file_zip')
                         ->label('Upload File ZIP')
@@ -255,7 +255,7 @@ class ListSiswas extends ListRecords
                 ->label('Ekspor')
                 ->color('warning')
                 ->icon('heroicon-o-arrow-up-tray')
-                ->visible(fn () => in_array(Auth::user()->peran, ['admin', 'staf']))
+                ->visible(fn () => Auth::user()->peran === 'admin')
                 ->action(function () {
                     set_time_limit(0);
                     
@@ -311,7 +311,9 @@ class ListSiswas extends ListRecords
                     ]);
                 }),
 
-            Actions\CreateAction::make()->label('Siswa Baru'),
+            Actions\CreateAction::make()
+                ->label('Siswa Baru')
+                ->visible(fn () => Auth::user()->peran === 'admin'),
         ];
     }
 
