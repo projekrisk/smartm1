@@ -89,12 +89,12 @@ class SiswaResource extends Resource
     
     public static function canCreate(): bool
     {
-        return in_array(Auth::user()->peran, ['admin', 'staf']);
+        return in_array(Auth::user()->peran, ['admin']);
     }
 
     public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
     {
-        return in_array(Auth::user()->peran, ['admin', 'staf']);
+        return in_array(Auth::user()->peran, ['admin']);
     }
 
     public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool

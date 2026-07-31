@@ -52,15 +52,15 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     {
         return $this->hasOne(Pegawai::class, 'user_id');
     }
-    
+
     public function getFilamentAvatarUrl(): ?string
     {
         $pegawai = $this->pegawai;
         
-        if ($pegawai && $pegawai->foto) {
-            return url('/uploads/' . $pegawai->foto);
+        if ($pegawai && !empty($pegawai->foto)) {
+            return \Illuminate\Support\Facades\Storage::disk('publik_upload')->url($pegawai->foto);
         }
         
-        return asset('images/default-avatar.png'); 
+        return asset('images/default-avatar.png?v=1'); 
     }
 }
