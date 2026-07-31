@@ -1,10 +1,6 @@
 <x-filament-panels::page>
-    <!-- ======================================================= -->
-    <!-- BAGIAN 1: TAMPILAN SINGKAT (LAYAR/SCREEN) -->
-    <!-- ======================================================= -->
     <div class="space-y-6">
         
-        <!-- Filter & Tombol Cetak -->
         <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl p-6 border border-gray-200 dark:border-white/10 ring-1 ring-gray-950/5 dark:ring-white/10">
             <div class="flex flex-col md:flex-row justify-between md:items-end gap-6">
                 <div class="flex-1 w-full max-w-2xl">
@@ -14,7 +10,6 @@
                 </div>
                 <div class="shrink-0 flex items-center mb-1">
                     
-                    <!-- MENGGUNAKAN TAG LINK (a) UNTUK MENGARAH KE RUTE CETAK YANG BENAR DAN BERSIH -->
                     <x-filament::button 
                         color="success" 
                         icon="heroicon-o-printer" 
@@ -32,14 +27,13 @@
 
         <div x-data="{ activeTab: 'statistik' }">
             <x-filament::tabs label="Laporan Keadaan Siswa">
-                <x-filament::tabs.item alpine-active="activeTab === 'statistik'" x-on:click="activeTab = 'statistik'" icon="heroicon-m-chart-pie">Statistik & Tingkat</x-filament::tabs.item>
-                <x-filament::tabs.item alpine-active="activeTab === 'kelas'" x-on:click="activeTab = 'kelas'" icon="heroicon-m-building-office-2">Rincian Per Kelas</x-filament::tabs.item>
-                <x-filament::tabs.item alpine-active="activeTab === 'mutasi'" x-on:click="activeTab = 'mutasi'" icon="heroicon-m-arrows-right-left">Mutasi (Keluar/Masuk)</x-filament::tabs.item>
-                <x-filament::tabs.item alpine-active="activeTab === 'kelulusan'" x-on:click="activeTab = 'kelulusan'" icon="heroicon-m-academic-cap">Data Kelulusan & Alumni</x-filament::tabs.item>
+                <x-filament::tabs.item alpine-active="activeTab === 'statistik'" x-on:click="activeTab = 'statistik'" icon="heroicon-m-chart-pie">Statistik</x-filament::tabs.item>
+                <x-filament::tabs.item alpine-active="activeTab === 'kelas'" x-on:click="activeTab = 'kelas'" icon="heroicon-m-building-office-2">Rincian</x-filament::tabs.item>
+                <x-filament::tabs.item alpine-active="activeTab === 'mutasi'" x-on:click="activeTab = 'mutasi'" icon="heroicon-m-arrows-right-left">Mutasi</x-filament::tabs.item>
+                <x-filament::tabs.item alpine-active="activeTab === 'kelulusan'" x-on:click="activeTab = 'kelulusan'" icon="heroicon-m-academic-cap">Alumni</x-filament::tabs.item>
             </x-filament::tabs>
 
             <div class="mt-6">
-                <!-- TAB 1: STATISTIK -->
                 <div x-show="activeTab === 'statistik'" class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl p-6 border border-gray-200 dark:border-white/10 ring-1 ring-gray-950/5 dark:ring-white/10 flex flex-col justify-center">
@@ -120,10 +114,8 @@
                     </div>
                 </div>
 
-                <!-- TAB 3: MUTASI MASUK / KELUAR -->
                 <div x-show="activeTab === 'mutasi'" x-cloak class="grid grid-cols-1 gap-6">
                     
-                    <!-- WIDGET MUTASI GABUNGAN -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl p-6 border border-gray-200 dark:border-white/10 ring-1 ring-gray-950/5 dark:ring-white/10 flex flex-col justify-center">
                             <h3 class="text-sm font-bold text-green-600 dark:text-green-400 uppercase tracking-wider mb-1">Masuk ({{ $bulanNama }})</h3>
@@ -137,7 +129,6 @@
                         </div>
                     </div>
 
-                    <!-- TABEL MUTASI MASUK -->
                     <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden ring-1 ring-gray-950/5 dark:ring-white/10">
                         <div class="px-6 py-4 border-b border-gray-200 dark:border-white/10 bg-green-50 dark:bg-green-900/20">
                             <h3 class="text-lg font-bold text-green-800 dark:text-green-400">Tabel Siswa Mutasi Masuk</h3>
@@ -177,7 +168,6 @@
                         @endif
                     </div>
 
-                    <!-- TABEL SISWA KELUAR -->
                     <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden ring-1 ring-gray-950/5 dark:ring-white/10">
                         <div class="px-6 py-4 border-b border-gray-200 dark:border-white/10 bg-red-50 dark:bg-red-900/20">
                             <h3 class="text-lg font-bold text-red-800 dark:text-red-400">Tabel Siswa Keluar / Berhenti</h3>
@@ -221,10 +211,8 @@
                     </div>
                 </div>
                 
-                <!-- TAB 4: DATA KELULUSAN & ALUMNI -->
                 <div x-show="activeTab === 'kelulusan'" x-cloak class="space-y-6">
                     
-                    <!-- WIDGET STATISTIK KELULUSAN GLOBAL -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl p-6 border border-gray-200 dark:border-white/10 text-center flex flex-col justify-center">
                             <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Lulusan Laki-laki</h3>
@@ -234,34 +222,30 @@
                             <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Lulusan Perempuan</h3>
                             <div class="mt-2 text-3xl font-bold text-pink-600 dark:text-pink-400">{{ number_format($totalAlumniP) }}</div>
                         </div>
-                        <div class="bg-gradient-to-br from-primary-500 to-primary-700 shadow-sm rounded-xl p-6 border border-transparent text-center flex flex-col justify-center text-white">
-                            <h3 class="text-sm font-bold uppercase tracking-wider opacity-90">Grand Total Alumni</h3>
-                            <div class="mt-2 text-4xl font-extrabold">{{ number_format($totalAlumniAll) }}</div>
+                        <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl p-6 border border-gray-200 dark:border-white/10 text-center flex flex-col justify-center">
+                            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Alumni</h3>
+                            <div class="mt-2 text-3xl font-bold text-pink-600 dark:text-pink-400">{{ number_format($totalAlumniAll) }}</div>
                         </div>
                     </div>
                     
-                    <!-- KOTAK PENCARIAN & TABEL -->
                     <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden ring-1 ring-gray-950/5 dark:ring-white/10">
                         
-                        <!-- Header & Kotak Pencarian -->
                         <div class="px-6 py-4 border-b border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 flex flex-col md:flex-row justify-between md:items-center gap-4">
                             <div>
-                                <h3 class="text-lg font-bold text-gray-900 dark:text-white">Data Kelulusan Siswa</h3>
+                                <h3 class="text-lg font-bold text-gray-900 dark:text-white">Alumni</h3>
                                 <p class="text-xs text-gray-500 mt-1">Gunakan kolom pencarian untuk melihat daftar nama alumni.</p>
                             </div>
                             
-                            <!-- Search Input -->
                             <div class="w-full md:w-80 relative flex items-center">
-                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none" style="margin-left:10px">
                                     <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                                 </div>
-                                <input type="text" wire:model.live.debounce.500ms="searchLulusan" class="block w-full pl-10 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-800 dark:border-white/20 dark:text-white dark:placeholder-gray-400 shadow-sm transition" placeholder="Cari nama atau NISN alumni...">
+                                <input type="text" wire:model.live.debounce.500ms="searchLulusan" style="padding-left:20px" class="block w-full pl-10 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-800 dark:border-white/20 dark:text-white dark:placeholder-gray-400 shadow-sm transition" placeholder="Cari nama atau NISN alumni...">
                             </div>
                         </div>
                         
                         <div class="overflow-x-auto">
                             @if(empty($searchLulusan))
-                                <!-- TAMPILAN DEFAULT: REKAPITULASI PER TAHUN -->
                                 <table class="w-full text-sm text-left">
                                     <thead class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-white/10 shadow-sm">
                                         <tr>
@@ -285,7 +269,6 @@
                                     </tbody>
                                 </table>
                             @else
-                                <!-- TAMPILAN PENCARIAN: DAFTAR NAMA ALUMNI -->
                                 <table class="w-full text-sm text-left">
                                     <thead class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-white/10">
                                         <tr>
@@ -320,7 +303,6 @@
                             @endif
                         </div>
                         
-                        <!-- PAGINATION ALUMNI (HANYA MUNCUL SAAT MENCARI) -->
                         @if(!empty($searchLulusan) && $lulusanScreen->hasPages())
                             <div class="px-6 py-4 border-t border-gray-200 dark:border-white/10 bg-white dark:bg-gray-900">
                                 {{ $lulusanScreen->links() }}
