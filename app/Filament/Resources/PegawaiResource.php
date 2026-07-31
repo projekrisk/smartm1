@@ -13,6 +13,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use App\Filament\Resources\PegawaiResource\RelationManagers; 
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Infolists\Components\ImageEntry;
 
 class PegawaiResource extends Resource
 {
@@ -262,7 +263,9 @@ class PegawaiResource extends Resource
                                         ->circular()
                                         ->width(120)
                                         ->height(120)
+                                        ->defaultImageUrl(asset('images/default-avatar.png'))
                                         ->columnSpanFull(),
+                                    
                                     Infolists\Components\TextEntry::make('nama')->label('Nama Lengkap')->weight('bold')->size(Infolists\Components\TextEntry\TextEntrySize::Large)->columnSpanFull(),
                                     Infolists\Components\TextEntry::make('nik')->label('NIK (Nomor Kependudukan)'),
                                     Infolists\Components\TextEntry::make('no_kk')->label('Nomor KK')->default('-'),
