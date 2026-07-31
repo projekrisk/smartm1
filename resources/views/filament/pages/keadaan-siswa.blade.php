@@ -205,7 +205,7 @@
                         </div>
                         @if($mutasiKeluarScreen->hasPages())
                             <div class="px-6 py-4 border-t border-gray-200 dark:border-white/10 bg-white dark:bg-gray-900">
-                                {{ $mutasiKeluarScreen->links() }}
+                                {{ $mutasiKeluarScreen->links() }} <style>display:block</style>
                             </div>
                         @endif
                     </div>
@@ -240,7 +240,7 @@
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none" style="margin-left:10px">
                                     <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                                 </div>
-                                <input type="text" wire:model.live.debounce.500ms="searchLulusan" style="padding-left:20px" class="block w-full pl-10 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-800 dark:border-white/20 dark:text-white dark:placeholder-gray-400 shadow-sm transition" placeholder="Cari nama atau NISN alumni...">
+                                <input type="text" wire:model.live.debounce.500ms="searchLulusan" style="padding-left:40px" class="block w-full pl-10 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-800 dark:border-white/20 dark:text-white dark:placeholder-gray-400 shadow-sm transition" placeholder="Cari nama atau NISN alumni...">
                             </div>
                         </div>
                         
