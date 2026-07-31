@@ -53,6 +53,11 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         return $this->hasOne(Pegawai::class, 'user_id');
     }
 
+    public function siswa(): HasOne
+    {
+        return $this->hasOne(Siswa::class, 'user_id');
+    }
+
     public function getFilamentAvatarUrl(): ?string
     {
         $pegawai = $this->pegawai;
