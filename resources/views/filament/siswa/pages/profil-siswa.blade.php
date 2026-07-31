@@ -59,18 +59,18 @@
                 </a>
                 
                 <div style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.4); background-color: #f1f5f9; overflow: hidden; margin: 0 auto 12px auto; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-                    @if(isset($siswa->foto) && $siswa->foto)
-                        <img src="{{ url('/uploads/' . $siswa->foto) }}" alt="Foto Profil" style="width: 100%; height: 100%; object-fit: cover;">
+                    @if($siswa?->foto)
+                        <img src="{{ url('/uploads/' . $siswa?->foto) }}" alt="Foto Profil" style="width: 100%; height: 100%; object-fit: cover;">
                     @else
-                        <span style="color: #2563eb; font-weight: 900; font-size: 2rem;">{{ substr($siswa->nama_lengkap ?? 'S', 0, 1) }}</span>
+                        <span style="color: #2563eb; font-weight: 900; font-size: 2rem;">{{ substr($siswa?->nama_lengkap ?? 'S', 0, 1) }}</span>
                     @endif
                 </div>
 
                 <div style="text-align: center;">
                     <p style="font-size: 10px; font-weight: 800; letter-spacing: 1px; color: #bfdbfe; text-transform: uppercase; margin-bottom: 4px;">Profil Siswa</p>
-                    <h1 style="font-size: 1.5rem; font-weight: 900; margin: 0; line-height: 1.2; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">{{ $siswa->nama_lengkap ?? '-' }}</h1>
+                    <h1 style="font-size: 1.5rem; font-weight: 900; margin: 0; line-height: 1.2; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">{{ $siswa?->nama_lengkap ?? '-' }}</h1>
                     <div style="display: inline-flex; align-items: center; gap: 6px; background-color: rgba(0,0,0,0.25); padding: 4px 14px; border-radius: 999px; font-size: 10px; font-weight: bold; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(4px); margin-top: 10px; text-transform: uppercase; letter-spacing: 0.5px;">
-                        NISN: {{ $siswa->nisn ?? '-' }} &bull; KELAS: {{ $siswa->kelas->nama_kelas ?? '-' }}
+                        NISN: {{ $siswa?->nisn ?? '-' }} &bull; KELAS: {{ $siswa?->kelas?->nama_kelas ?? '-' }}
                     </div>
                 </div>
             </div>
@@ -116,31 +116,31 @@
                     <div style="display: flex; flex-direction: column;">
                         <div class="data-row">
                             <span class="theme-text-muted data-label">NIS Lokal</span>
-                            <span class="theme-text data-val">{{ $siswa->nis ?? '-' }}</span>
+                            <span class="theme-text data-val">{{ $siswa?->nis ?? '-' }}</span>
                         </div>
                         <div class="data-row">
                             <span class="theme-text-muted data-label">NIK (No. KTP)</span>
-                            <span class="theme-text data-val">{{ $siswa->nik ?? '-' }}</span>
+                            <span class="theme-text data-val">{{ $siswa?->nik ?? '-' }}</span>
                         </div>
                         <div class="data-row">
                             <span class="theme-text-muted data-label">No. Kartu Keluarga</span>
-                            <span class="theme-text data-val">{{ $siswa->no_kk ?? '-' }}</span>
+                            <span class="theme-text data-val">{{ $siswa?->no_kk ?? '-' }}</span>
                         </div>
                         <div class="data-row">
                             <span class="theme-text-muted data-label">Jenis Kelamin</span>
-                            <span class="theme-text data-val">{{ $siswa->jenis_kelamin ?? '-' }}</span>
+                            <span class="theme-text data-val">{{ $siswa?->jenis_kelamin ?? '-' }}</span>
                         </div>
                         <div class="data-row">
                             <span class="theme-text-muted data-label">Tempat Lahir</span>
-                            <span class="theme-text data-val">{{ $siswa->tempat_lahir ?? '-' }}</span>
+                            <span class="theme-text data-val">{{ $siswa?->tempat_lahir ?? '-' }}</span>
                         </div>
                         <div class="data-row">
                             <span class="theme-text-muted data-label">Tanggal Lahir</span>
-                            <span class="theme-text data-val">{{ $siswa->tanggal_lahir ? \Carbon\Carbon::parse($siswa->tanggal_lahir)->isoFormat('d MMMM Y') : '-' }}</span>
+                            <span class="theme-text data-val">{{ $siswa?->tanggal_lahir ? \Carbon\Carbon::parse($siswa?->tanggal_lahir)->isoFormat('d MMMM Y') : '-' }}</span>
                         </div>
                         <div class="data-row">
                             <span class="theme-text-muted data-label">Agama</span>
-                            <span class="theme-text data-val">{{ $siswa->agama ?? '-' }}</span>
+                            <span class="theme-text data-val">{{ $siswa?->agama ?? '-' }}</span>
                         </div>
                     </div>
                 </div>
@@ -154,18 +154,18 @@
                     <div style="display: flex; flex-direction: column;">
                         <div class="data-row">
                             <span class="theme-text-muted data-label">No. Telepon / HP</span>
-                            <span class="theme-text data-val">{{ $siswa->telepon ?? '-' }}</span>
+                            <span class="theme-text data-val">{{ $siswa?->telepon ?? '-' }}</span>
                         </div>
                         <div class="data-row">
                             <span class="theme-text-muted data-label">Email Aktif</span>
-                            <span class="theme-text data-val">{{ $siswa->email ?? '-' }}</span>
+                            <span class="theme-text data-val">{{ $siswa?->email ?? '-' }}</span>
                         </div>
                         <div class="data-row" style="align-items: flex-start;">
                             <span class="theme-text-muted data-label">Alamat Lengkap</span>
                             <span class="theme-text data-val">
-                                {{ $siswa->alamat ?? '-' }}<br>
-                                RT {{ $siswa->rt ?? '-' }} / RW {{ $siswa->rw ?? '-' }}, Kel. {{ $siswa->kelurahan ?? '-' }}<br>
-                                Kec. {{ $siswa->kecamatan ?? '-' }}, {{ $siswa->kabupaten ?? '-' }}
+                                {{ $siswa?->alamat ?? '-' }}<br>
+                                RT {{ $siswa?->rt ?? '-' }} / RW {{ $siswa?->rw ?? '-' }}, Kel. {{ $siswa?->kelurahan ?? '-' }}<br>
+                                Kec. {{ $siswa?->kecamatan ?? '-' }}, {{ $siswa?->kabupaten ?? '-' }}
                             </span>
                         </div>
                     </div>
@@ -180,27 +180,27 @@
                     <div style="display: flex; flex-direction: column;">
                         <div class="data-row">
                             <span class="theme-text-muted data-label">Nama Ayah</span>
-                            <span class="theme-text data-val">{{ $siswa->nama_ayah ?? '-' }}</span>
+                            <span class="theme-text data-val">{{ $siswa?->nama_ayah ?? '-' }}</span>
                         </div>
                         <div class="data-row">
                             <span class="theme-text-muted data-label">No. HP Ayah</span>
-                            <span class="theme-text data-val">{{ $siswa->telepon_ayah ?? '-' }}</span>
+                            <span class="theme-text data-val">{{ $siswa?->telepon_ayah ?? '-' }}</span>
                         </div>
                         <div class="data-row" style="border-top: 2px solid #f1f5f9; padding-top: 12px; margin-top: 4px;" class="dark:border-slate-700">
                             <span class="theme-text-muted data-label">Nama Ibu</span>
-                            <span class="theme-text data-val">{{ $siswa->nama_ibu ?? '-' }}</span>
+                            <span class="theme-text data-val">{{ $siswa?->nama_ibu ?? '-' }}</span>
                         </div>
                         <div class="data-row">
                             <span class="theme-text-muted data-label">No. HP Ibu</span>
-                            <span class="theme-text data-val">{{ $siswa->telepon_ibu ?? '-' }}</span>
+                            <span class="theme-text data-val">{{ $siswa?->telepon_ibu ?? '-' }}</span>
                         </div>
                         <div class="data-row" style="border-top: 2px solid #f1f5f9; padding-top: 12px; margin-top: 4px;" class="dark:border-slate-700">
                             <span class="theme-text-muted data-label">Nama Wali</span>
-                            <span class="theme-text data-val">{{ $siswa->nama_wali ?? '-' }}</span>
+                            <span class="theme-text data-val">{{ $siswa?->nama_wali ?? '-' }}</span>
                         </div>
                         <div class="data-row">
                             <span class="theme-text-muted data-label">No. HP Wali</span>
-                            <span class="theme-text data-val">{{ $siswa->telepon_wali ?? '-' }}</span>
+                            <span class="theme-text data-val">{{ $siswa?->telepon_wali ?? '-' }}</span>
                         </div>
                     </div>
                 </div>
