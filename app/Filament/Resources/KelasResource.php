@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class KelasResource extends Resource
 {
@@ -47,7 +48,6 @@ class KelasResource extends Resource
             ->schema([
                 Forms\Components\Section::make('Informasi Kelas')
                     ->schema([
-                        // INPUT TINGKAT KELAS KEMBALI DIMUNCULKAN
                         Forms\Components\Select::make('tingkat_id')
                             ->label('Tingkat Kelas')
                             ->relationship('tingkat', 'nama_tingkat')
@@ -64,7 +64,11 @@ class KelasResource extends Resource
                             
                         Forms\Components\Select::make('wali_kelas_id')
                             ->label('Wali Kelas')
-                            ->relationship('waliKelas', 'name')
+                            ->relationship(
+                                name: 'waliKelas', 
+                                titleAttribute: 'name',
+                                modifyQueryUsing: fn (Builder $query) => $query->whereIn('peran', ['guru', 'staf', 'admin'])
+                            )
                             ->searchable()
                             ->preload(),
                     ])->columns(1),
