@@ -58,9 +58,11 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         $pegawai = $this->pegawai;
         
         if ($pegawai && !empty($pegawai->foto)) {
-            return \Illuminate\Support\Facades\Storage::disk('publik_upload')->url($pegawai->foto);
+            if (\Illuminate\Support\Facades\Storage::disk('publik_upload')->exists($pegawai->foto)) {
+                return \Illuminate\Support\Facades\Storage::disk('publik_upload')->url($pegawai->foto);
+            }
         }
         
-        return asset('images/default-avatar.png?v=1'); 
+        return asset('images/default-avatar.png?v=2'); 
     }
 }
