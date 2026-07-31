@@ -29,7 +29,35 @@ class ProfilSiswa extends Page implements HasForms
 
     public function mount(): void
     {
-        $this->siswa = Siswa::with('kelas')->where('user_id', Auth::id())->first();
+        $user = Auth::user();
+
+        // 1. Coba cari siswa yang user_id nya sudah terhubung
+        $this->siswa = Siswa::with('kelas')->where('user_id', $user->id)->first();
+
+        // 2. CEK CERDAS: Jika tidak ketemu, atau ketemu TAPI NIS-nya kosong (berarti data ganda/belum lengkap)
+        // Maka kita cari data aslinya menggunakan kecocokan Username login dengan NIS atau NISN
+        if (!$this->siswa || empty($this->siswa->nis)) {
+            $siswaAsli = Siswa::with('kelas')
+                ->where('nis', $user->username)
+                ->orWhere('nisn', $user->username)
+                ->orWhere('email', $user->email)
+                ->first();
+                
+            if ($siswaAsli) {
+                // Hapus data yang kosong/ganda tadi (jika ada)
+                if ($this->siswa && $this->siswa->id !== $siswaAsli->id) {
+                    $this->siswa->delete(); 
+                }
+                
+                // Tautkan user_id ke data asli yang lengkap
+                $siswaAsli->updateQuietly(['user_id' => $user->id]);
+                
+                // Jadikan data asli ini sebagai data yang ditampilkan
+                $this->siswa = $siswaAsli;
+            }
+        }
+
+        // Isi form foto jika data siswa valid
         if ($this->siswa) {
             $this->fotoForm->fill([
                 'foto' => $this->siswa->foto,
@@ -50,17 +78,15 @@ class ProfilSiswa extends Page implements HasForms
                     ->hiddenLabel()
                     ->image()
                     ->avatar()
-                    // Mengaktifkan fitur crop bawaan Filament
                     ->imageEditor()
                     ->imageEditorAspectRatios(['1:1'])
                     ->imageCropAspectRatio('1:1')
-                    // Fitur Kompresi Otomatis (Resizing agar file ringan)
                     ->imageResizeMode('cover')
                     ->imageResizeTargetWidth('512')
                     ->imageResizeTargetHeight('512')
                     ->disk('publik_upload')
                     ->directory('foto-siswa')
-                    ->maxSize(2048) // Maksimal unggah 2MB
+                    ->maxSize(2048)
                     ->helperText('Pilih gambar dari Kamera/Galeri.')
                     ->extraAttributes([
                         'class' => 'mx-auto flex justify-center text-center',
