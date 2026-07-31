@@ -11,8 +11,6 @@
         * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
         .avoid-break { page-break-inside: avoid; }
         
-        /* Pattern garis diagonal untuk kolom kosong */
-        /* Pola garis diagonal untuk kolom kosong */
         .bg-pattern { 
             background-color: #ffffff; 
             background-image: linear-gradient(45deg, #f3f4f6 25%, transparent 25%, transparent 50%, #f3f4f6 50%, #f3f4f6 75%, transparent 75%, transparent);
@@ -61,7 +59,6 @@
                 }
             @endphp
 
-            <!-- KOP SURAT RATA KIRI -->
             <div class="border-b-[1px] border-gray-800 pb-3 mb-4 flex items-center gap-4">
                 <div class="w-20 h-20 flex-shrink-0 flex items-center justify-center">
                     @if($pengaturan && $pengaturan->logo_sekolah) 
@@ -82,11 +79,11 @@
                 <p class="text-sm font-bold text-gray-700">{{ $judulLembar }}</p>
             </div>
 
-            <!-- TABEL JADWAL UTAMA -->
             <div class="avoid-break mb-6">
                 <table class="w-full border-collapse border border-gray-800 text-center">
                     <thead>
                         <tr class="bg-gray-100">
+                            <th class="border border-gray-800 p-2 w-10 uppercase">NO</th>
                             <th class="border border-gray-800 p-2 w-28 uppercase">JAM</th>
                             @foreach($hariUrut as $hari)
                                 <th class="border border-gray-800 p-2 uppercase">{{ $hari }}</th>
@@ -106,8 +103,10 @@
                             }
                             $semuaJam = $semuaJam->sortBy('mulai')->values();
                         @endphp
+                        
                         @foreach($semuaJam as $waktu)
                             <tr>
+                                <td class="border border-gray-800 p-2 font-bold bg-gray-50">{{ $loop->iteration }}</td>
                                 <td class="border border-gray-800 p-2 font-bold bg-gray-50">{{ $waktu['waktu'] }}</td>
                                 @foreach($hariUrut as $hari)
                                     @php
@@ -117,9 +116,15 @@
                                     @endphp
                                     <td class="border border-gray-800 p-1 align-middle {{ $kelasBerlangsung->isEmpty() ? 'bg-pattern' : '' }}">
                                         @foreach($kelasBerlangsung as $j)
-                                            <strong class="text-[12px] font-bold text-gray-900 uppercase">
-                                                {{ $j->mataPelajaran->kode_pelajaran ?? '-' }}
-                                            </strong>
+                                            <!-- PERBAIKAN: Menambahkan nama kelas di bawah kode mapel -->
+                                            <div class="mb-1 last:mb-0">
+                                                <strong class="text-[12px] font-bold text-gray-900 uppercase block">
+                                                    {{ $j->mataPelajaran->kode_pelajaran ?? '-' }}
+                                                </strong>
+                                                <span class="text-[10px] text-gray-700 block leading-tight mt-0.5">
+                                                    {{ $j->kelas->nama_kelas ?? '-' }}
+                                                </span>
+                                            </div>
                                         @endforeach
                                     </td>
                                 @endforeach
@@ -129,7 +134,6 @@
                 </table>
             </div>
 
-            <!-- TABEL KETERANGAN & TOTAL -->
             <div class="avoid-break mb-6">
                 <strong class="text-[12px] uppercase block mb-1">Keterangan Mata Pelajaran:</strong>
                 <table class="w-full border-collapse border border-gray-800 text-[12px]">
@@ -152,7 +156,6 @@
                 </table>
             </div>
 
-            <!-- TANDA TANGAN -->
             <div class="mt-6 flex justify-end text-[12px] avoid-break">
                 <div class="w-64 text-center">
                     Malingping, {{ now()->isoFormat('D MMMM Y') }}<br>
@@ -171,3 +174,5 @@
         setTimeout(() => { window.print(); }, 800);
     }
 </script>
+</body>
+</html>
