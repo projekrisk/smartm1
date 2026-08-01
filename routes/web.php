@@ -8,15 +8,23 @@ use App\Models\Kelas;
 use App\Models\TahunAjaran;
 
 Route::get('/', function () {
-    return view('welcome');
+    if (auth()->check()) {
+        $peran = auth()->user()->peran ?? '';
+        
+        if ($peran === 'siswa') {
+            return redirect('/siswa');
+        } elseif (in_array($peran, ['admin', 'guru', 'staf'])) {
+            return redirect('/admin');
+        }
+    }
+
+    return view('welcome'); 
 });
 
-// Rute login penengah untuk mencegah error saat sesi habis
 Route::get('/login', function () {
     return redirect('/admin/login');
 })->name('login');
 
-// Menambahkan rute khusus untuk mencetak biodata siswa
 Route::get('/cetak/biodata/{id}', function ($id) {
     $tahunAjaranAktif = \App\Models\TahunAjaran::where('is_active', true)->first();
     
@@ -39,7 +47,6 @@ Route::get('/cetak/biodata/{id}', function ($id) {
     return view('cetak.biodata-siswa', compact('siswa', 'tahunAjaranAktif'));
 })->name('cetak.biodata');
 
-// ROUTE CETAK BIODATA PEGAWAI
 Route::get('/cetak/biodata-pegawai/{id}', function ($id) {
     $pegawai = \App\Models\Pegawai::findOrFail($id);
     return view('cetak.biodata-pegawai', compact('pegawai'));
@@ -56,21 +63,18 @@ Route::get('/cetak/riwayat-catatan/{id}', function ($id) {
     return view('cetak.riwayat-catatan', compact('siswa'));
 })->name('cetak.riwayat-catatan');
 
-// Rute Khusus Cetak Rekap Penilaian (Buku Nilai Harian/Tugas)
 Route::get('/cetak/penilaian/{id}', function ($id) {
     $penilaian = \App\Models\Penilaian::with(['mataPelajaran', 'kelas', 'tahunAjaran', 'bukuNilai.siswa'])
         ->findOrFail($id);
     return view('cetak.rekap-penilaian', compact('penilaian'));
 })->name('cetak.penilaian');
 
-// Rute Cetak Biodata Siswa
 Route::get('/cetak/biodata-siswa/{id}', function ($id) {
     $siswa = \App\Models\Siswa::with(['kelas', 'riwayatKelas.tahunAjaran', 'riwayatKelas.kelas', 'catatan.pencatat', 'kehadiranHarian.rekapKehadiran'])->findOrFail($id);
     $tahunAjaranAktif = \App\Models\TahunAjaran::where('is_active', true)->first();
     return view('cetak.biodata-siswa', compact('siswa', 'tahunAjaranAktif'));
 })->name('cetak.biodata');
 
-// Rute Cetak Buku Rapor
 Route::get('/cetak/buku-rapor/{id}', function ($id) {
     $siswa = \App\Models\Siswa::with('kelas')->findOrFail($id);
     $nilaisGrouped = \App\Models\NilaiRapor::with(['mataPelajaran', 'tahunAjaran'])
@@ -128,7 +132,6 @@ Route::get('/cetak/jadwal-pelajaran', function (\Illuminate\Http\Request $reques
     return view('cetak.jadwal-pelajaran', compact('dataCetak', 'jenis'));
 })->name('cetak.jadwal');
 
-// Rute Laporan Absensi Bulanan (Rentang Tanggal)
 Route::get('/cetak/laporan-absensi', function (\Illuminate\Http\Request $request) {
     $start = $request->start;
     $end = $request->end;
@@ -189,7 +192,6 @@ Route::get('/cetak/laporan-absensi', function (\Illuminate\Http\Request $request
     return view('cetak.laporan-absensi', compact('siswasGrouped', 'months', 'dataRekap', 'startDate', 'endDate'));
 })->name('cetak.laporan-absensi');
 
-// Rute Laporan Absensi Per Mata Pelajaran
 Route::get('/cetak/laporan-absensi-pelajaran', function (\Illuminate\Http\Request $request) {
     $start = $request->start_date;
     $end = $request->end_date;
@@ -264,10 +266,6 @@ Route::get('/cetak/laporan-absensi-pelajaran', function (\Illuminate\Http\Reques
     return view('cetak.laporan-absensi-pelajaran', compact('siswasGrouped', 'months', 'dataRekap', 'startDate', 'endDate', 'mataPelajaran'));
 })->name('cetak.laporan-absensi-pelajaran');
 
-
-// =========================================================================
-// RUTE EXPORT LEGER RAPOR (DINAMIS BERDASARKAN TAHUN AJARAN & ANTI NOL HILANG)
-// =========================================================================
 Route::get('/export/leger-rapor', function (\Illuminate\Http\Request $request) {
     $kelasId = $request->kelas_id;
     if (!$kelasId) abort(404);
@@ -302,7 +300,6 @@ Route::get('/export/leger-rapor', function (\Illuminate\Http\Request $request) {
         return $ta->nama_tahun . $smtOrder;
     })->values();
 
-    // Untuk Riwayat Kelas, kita hanya butuh nama tahunnya (satu tahun ajaran mewakili 1 riwayat kelas)
     $uniqueTahunNames = $semuaTa->pluck('nama_tahun')->unique()->values();
 
     $html = '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
@@ -332,12 +329,10 @@ Route::get('/export/leger-rapor', function (\Illuminate\Http\Request $request) {
     $html .= '</tr>';
 
     $html .= '<tr>';
-    // Sub-kolom Riwayat Kelas
     foreach ($uniqueTahunNames as $tahunName) {
         $html .= '<th style="background-color: #dbeafe;">TA. ' . htmlspecialchars($tahunName) . '</th>';
     }
     
-    // Sub-kolom Nilai Rapor
     foreach ($mapels as $m) {
         foreach ($semuaTa as $ta) {
             $html .= '<th style="background-color: #fef9c3; width: 65px;">' . htmlspecialchars($ta->nama_tahun) . '<br>Smt ' . htmlspecialchars($ta->semester) . '</th>';
@@ -351,7 +346,6 @@ Route::get('/export/leger-rapor', function (\Illuminate\Http\Request $request) {
 
     foreach ($siswas as $siswa) {
         
-        // Pemisah jika mengunduh untuk "Semua Kelas"
         if ($isAllClass && $currentKelasGroupId !== $siswa->kelas_id) {
             $currentKelasGroupId = $siswa->kelas_id;
             $namaKelasGrup = $siswa->kelas->nama_kelas ?? 'Tanpa Kelas';
@@ -367,31 +361,25 @@ Route::get('/export/leger-rapor', function (\Illuminate\Http\Request $request) {
         $html .= '<td>' . htmlspecialchars($siswa->nama_lengkap) . '</td>';
         $html .= '<td style="background-color: #dcfce7; text-align: center; font-weight: bold;">' . htmlspecialchars($siswa->kelas->nama_kelas ?? '-') . '</td>';
 
-        // 1. Ekstrak Riwayat Kelas Siswa
         $riwayatByTahun = [];
         $riwayatSiswa = $riwayatKelasRaw->where('siswa_id', $siswa->id);
         foreach ($riwayatSiswa as $rw) {
             if ($rw->tahunAjaran && $rw->kelas) {
-                // Gunakan nama_tahun sebagai kunci pencarian
                 $riwayatByTahun[$rw->tahunAjaran->nama_tahun] = $rw->kelas->nama_kelas;
             }
         }
 
-        // Tulis Riwayat Kelas ke Tabel sesuai dengan kolom header
         foreach ($uniqueTahunNames as $tahunName) {
             $kls = $riwayatByTahun[$tahunName] ?? '-';
             $html .= '<td style="text-align: center;">' . htmlspecialchars($kls) . '</td>';
         }
 
-        // 2. Ekstrak Nilai Rapor Siswa
         $nilaiByMapelTa = [];
         $nilaiSiswa = $nilaiRaporRaw->where('siswa_id', $siswa->id);
         foreach ($nilaiSiswa as $n) {
-            // Gunakan kombinasi ID Mapel dan ID Tahun Ajaran sebagai kunci pencarian mutlak
             $nilaiByMapelTa[$n->mata_pelajaran_id][$n->tahun_ajaran_id] = $n->nilai_akhir;
         }
 
-        // Tulis Nilai Rapor ke Tabel sesuai dengan kolom header
         foreach ($mapels as $m) {
             foreach ($semuaTa as $ta) {
                 $score = $nilaiByMapelTa[$m->id][$ta->id] ?? '';
@@ -410,11 +398,9 @@ Route::get('/export/leger-rapor', function (\Illuminate\Http\Request $request) {
 
 })->name('export.leger.rapor');
 
-// Rute Rekap Siswa Tidak Hadir Per Hari (Global Semua Kelas)
 Route::get('/cetak/rekap-harian', function (\Illuminate\Http\Request $request) {
     $tanggal = $request->query('tanggal', now()->format('Y-m-d'));
     
-    // Tarik semua siswa yang statusnya bukan Hadir pada tanggal tersebut
     $absenHarian = \App\Models\KehadiranHarian::with(['siswa.kelas'])
         ->whereHas('rekapKehadiran', function ($q) use ($tanggal) {
             $q->whereDate('tanggal', $tanggal);
@@ -422,15 +408,12 @@ Route::get('/cetak/rekap-harian', function (\Illuminate\Http\Request $request) {
         ->whereIn('status', ['Sakit', 'Izin', 'Alpa'])
         ->get();
 
-    // Mengelompokkan berdasarkan nama kelas
     $groupedByKelas = $absenHarian->groupBy(function($item) {
         return $item->siswa->kelas->nama_kelas ?? 'Tanpa Kelas';
     });
 
-    // FUNGSI AJAIB (Natural Sort): Mengurutkan X-E2 lebih dulu daripada X-E10
     $groupedAndSorted = $groupedByKelas->sortKeysUsing('strnatcasecmp');
 
-    // Mengurutkan nama siswa sesuai abjad di dalam masing-masing kelas
     foreach ($groupedAndSorted as $kelas => $siswas) {
         $groupedAndSorted[$kelas] = $siswas->sortBy('siswa.nama_lengkap')->values();
     }
@@ -441,7 +424,6 @@ Route::get('/cetak/rekap-harian', function (\Illuminate\Http\Request $request) {
     return view('cetak.rekap-harian', compact('groupedAndSorted', 'tanggal', 'pengaturan'));
 })->name('cetak.rekap-harian');
 
-// Rute Cetak Jurnal & Absensi Guru
 Route::get('/cetak/jurnal/{id}', function ($id) {
     $jurnal = \App\Models\JurnalGuru::with([
         'kelas', 
@@ -456,7 +438,6 @@ Route::get('/cetak/jurnal/{id}', function ($id) {
     return view('cetak.jurnal-absensi', compact('jurnal'));
 })->name('cetak.jurnal');
 
-// RUTE BARU: Cetak Rekapitulasi Jurnal (Backup)
 Route::get('/cetak/rekap-jurnal', function (\Illuminate\Http\Request $request) {
     $guruId = $request->query('guru_id');
     $guru = \App\Models\User::findOrFail($guruId);
@@ -475,9 +456,6 @@ Route::get('/cetak/rekap-jurnal', function (\Illuminate\Http\Request $request) {
     return view('cetak.rekap-jurnal', compact('guru', 'tahunAktif', 'jurnals'));
 })->name('cetak.rekap-jurnal');
 
-// =========================================================================
-// RUTE BARU: CETAK LAPORAN BULANAN KEADAAN SISWA (BEST PRACTICE)
-// =========================================================================
 Route::get('/cetak/keadaan-siswa', function (\Illuminate\Http\Request $request) {
     $b = $request->query('bulan', now()->format('m'));
     $t = $request->query('tahun', now()->format('Y'));
@@ -534,7 +512,6 @@ Route::get('/cetak/keadaan-siswa', function (\Illuminate\Http\Request $request) 
         $kelasMatrix['lalu_L'] = max(0, $kelasMatrix['sekarang_L'] - $kelasMatrix['masuk_L'] + $kelasMatrix['keluar_L']);
         $kelasMatrix['lalu_P'] = max(0, $kelasMatrix['sekarang_P'] - $kelasMatrix['masuk_P'] + $kelasMatrix['keluar_P']);
 
-        // FUNGSI BARU: Cegah kelas kosong masuk ke dalam laporan cetak
         if (array_sum($kelasMatrix) > 0) {
             $reportData[$tingkat][$namaKelas] = $kelasMatrix;
 
@@ -545,7 +522,6 @@ Route::get('/cetak/keadaan-siswa', function (\Illuminate\Http\Request $request) 
         }
     }
 
-    // FUNGSI BARU: Bersihkan kelompok tingkat jika kebetulan tidak ada kelas yang terisi sama sekali
     foreach ($reportData as $tingkat => $kelasData) {
         if (empty($kelasData)) {
             unset($reportData[$tingkat]);
@@ -571,9 +547,7 @@ Route::get('/cetak/keadaan-siswa', function (\Illuminate\Http\Request $request) 
     return view('cetak.keadaan-siswa', compact('reportData', 'tingkatTotals', 'grandTotal', 'mutasiMasukPrint', 'mutasiKeluarPrint', 'pengaturan', 'bulanNama'));
 })->name('cetak.keadaan-siswa');
 
-// RUTE BARU: CETAK DAFTAR PRESTASI SISWA
 Route::get('/cetak/prestasi', function () {
-    // Menarik semua prestasi yang statusnya disetujui
     $prestasis = \App\Models\Prestasi::with('siswa.kelas')
         ->where('status', 'Disetujui')
         ->orderBy('tanggal_perolehan', 'desc')

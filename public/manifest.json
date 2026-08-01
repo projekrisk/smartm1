@@ -1,7 +1,7 @@
 {
-  "name": "Portal SMART-M1",
-  "short_name": "SMART-M1",
-  "start_url": "/",
+  "name": "Smart-M1 SMAN 1 Malingping",
+  "short_name": "Smart-M1",
+  "start_url": "/siswa",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
