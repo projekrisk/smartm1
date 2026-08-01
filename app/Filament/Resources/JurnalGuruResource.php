@@ -26,22 +26,22 @@ class JurnalGuruResource extends Resource
 
     public static function canViewAny(): bool 
     { 
-        return in_array(Auth::user()->peran, ['admin', 'staf', 'guru']); 
+        return in_array(Auth::user()->peran, ['admin', 'guru']); 
     }
 
     public static function canCreate(): bool
     {
-        return auth()->user()->peran === 'admin';
+        return in_array(Auth::user()->peran, ['admin', 'guru']);  
     }
 
     public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
     {
-        return auth()->user()->peran === 'admin';
+        return in_array(Auth::user()->peran, ['admin', 'guru']); 
     }
 
     public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
     {
-        return auth()->user()->peran === 'admin';
+        return in_array(Auth::user()->peran, ['admin', 'guru']); 
     }
 
     public static function getEloquentQuery(): Builder

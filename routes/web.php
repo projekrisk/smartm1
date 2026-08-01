@@ -566,3 +566,18 @@ Route::get('/cetak/prestasi', function () {
 
     return view('cetak.prestasi-siswa', compact('prestasis', 'pengaturan'));
 })->name('cetak.prestasi');
+
+Route::get('/cetak-absensi/{id}', function ($id) {
+    $rekap = \App\Models\RekapKehadiran::with([
+        'kelas', 
+        'validator',
+        'kehadiranHarian.siswa' => function($query) {
+            $query->orderBy('nama_lengkap', 'asc');
+        }
+    ])->findOrFail($id);
+    
+    $nama_kelas = $rekap->kelas->nama_kelas ?? 'Tanpa Kelas';
+
+    return view('cetak.absensi-harian', compact('rekap', 'nama_kelas'));
+    
+})->name('cetak.absensi-harian');
