@@ -52,7 +52,7 @@
                         <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
                     </a>
                     <div>
-                        <h1 style="font-size: 1.3rem; font-weight: 900; margin: 0; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">Direktori Pegawai</h1>
+                        <h1 style="font-size: 1.3rem; font-weight: 900; margin: 0; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">Pegawai</h1>
                     </div>
                 </div>
 
