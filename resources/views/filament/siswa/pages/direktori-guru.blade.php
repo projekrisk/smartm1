@@ -75,7 +75,7 @@
                         @foreach($tabs as $key => $label)
                             <button wire:click="setKategori('{{ $key }}')" 
                                     style="border: none; padding: 6px 14px; border-radius: 999px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s;
-                                    {{ $kategori === $key ? 'background-color: #2563eb; color: white; box-shadow: 0 4px 10px rgba(37,99,235,0.3);' : '' }}"
+                                    {{ $kategori === $key ? 'background-color: #2563eb; color: white;' : '' }}"
                                     class="{{ $kategori === $key ? '' : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400' }}">
                                 {{ $label }}
                             </button>
