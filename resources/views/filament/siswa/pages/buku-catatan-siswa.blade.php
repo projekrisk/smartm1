@@ -34,7 +34,7 @@
     </div>
 
     <div class="android-app-container theme-bg">
-        <div style="flex-shrink: 0; background: linear-gradient(135deg, #6366f1, #4338ca); padding: 40px 24px 60px 24px; color: white; position: relative; z-index: 10;">
+        <div style="flex-shrink: 0; background: linear-gradient(135deg, #2563eb, #3730a3); padding: 40px 24px 60px 24px; color: white; position: relative; z-index: 10;">
             <a href="/siswa" style="position: absolute; top: 32px; left: 20px; background-color: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
                 <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
             </a>

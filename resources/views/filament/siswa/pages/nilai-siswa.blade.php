@@ -18,16 +18,18 @@
             }
 
             .theme-bg { background-color: #f8fafc; }
-            .theme-card { background-color: #ffffff; border: 1px solid #f1f5f9; box-shadow: 0 8px 30px rgba(0,0,0,0.04); }
+            .theme-card { background-color: #ffffff; border: 1px solid #f1f5f9; box-shadow: 0 8px 30px rgba(0,0,0,0.04); border: 1px solid #e2e8f0}
             .theme-text { color: #0f172a; }
             .theme-text-muted { color: #64748b; }
             .dark .theme-bg { background-color: #0f172a; }
             .dark .theme-card { background-color: #1e293b; border: 1px solid #334155; box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
             .dark .theme-text { color: #f8fafc; }
             .dark .theme-text-muted { color: #94a3b8; }
-            
-            .android-content { flex: 1; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; }
-            .android-content::-webkit-scrollbar { display: none; }
+
+            .theme-bg-smt { background-color: #fafafa; }
+            .dark .theme-bg-smt { background-color: #253145; }
+            .theme-bg-mpl { background-color: #ffffff; }
+            .dark .theme-bg-mpl { background-color: #1e293b; }
             [x-cloak] { display: none !important; }
         </style>
     </div>
@@ -96,11 +98,11 @@
                             </button>
 
                             <div x-show="activeMapel === '{{ Str::slug($mapel) }}'" x-collapse x-cloak>
-                                <div style="background-color: rgba(0,0,0,0.02); padding: 0 16px 16px 16px;" class="dark:bg-black/20">
-                                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                                <div style="padding: 10px 16px 16px 16px;" class="theme-bg-smt">
+                                    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 4px;">
                                         
                                         @foreach($nilais as $n)
-                                            <div style="background-color: white; border-radius: 12px; padding: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.02);" class="dark:bg-slate-800">
+                                            <div style="border-radius: 12px; padding: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.02);" class="theme-bg-mpl">
                                                 
                                                 <div style="flex: 1; padding-right: 12px;">
                                                     <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
