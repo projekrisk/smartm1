@@ -189,7 +189,15 @@ Route::get('/cetak/laporan-absensi', function (\Illuminate\Http\Request $request
         }
     }
 
-    return view('cetak.laporan-absensi', compact('siswasGrouped', 'months', 'dataRekap', 'startDate', 'endDate'));
+    $nama_kelas = 'Umum (Semua Kelas)';
+    if ($kelasId !== 'all' && !empty($kelasId)) {
+        $kelasInfo = \App\Models\Kelas::find($kelasId);
+        if ($kelasInfo) {
+            $nama_kelas = $kelasInfo->nama_kelas;
+        }
+    }
+
+    return view('cetak.laporan-absensi', compact('siswasGrouped', 'months', 'dataRekap', 'startDate', 'endDate', 'nama_kelas'));
 })->name('cetak.laporan-absensi');
 
 Route::get('/cetak/laporan-absensi-pelajaran', function (\Illuminate\Http\Request $request) {

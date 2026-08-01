@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
+use Filament\Support\Facades\FilamentView;
+use Filament\View\PanelsRenderHook;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -12,7 +14,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        // Memaksa Laravel agar menggunakan folder utama sebagai folder public
         $this->app->usePublicPath(base_path());
     }
 
@@ -21,9 +22,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // FUNGSI AJAIB: Memaksa Laravel & Livewire selalu menggunakan HTTPS di server hosting
         if (config('app.env') === 'production' || str_contains(config('app.url'), 'https')) {
             URL::forceScheme('https');
         }
+
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::BODY_END,
+            fn (): \Illuminate\Contracts\View\View => view('components.pwa-prompt'),
+        );
     }
 }

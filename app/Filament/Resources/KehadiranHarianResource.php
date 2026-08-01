@@ -158,8 +158,14 @@ class KehadiranHarianResource extends Resource
                     }),
             ])
             ->actions([
+                Tables\Actions\Action::make('cetak')
+                    ->label('Cetak Laporan')
+                    ->icon('heroicon-o-printer')
+                    ->color('info')
+                    ->url(fn (RekapKehadiran $record): string => url('/cetak-absensi/' . $record->id))
+                    ->openUrlInNewTab(),
+
                 Tables\Actions\ViewAction::make()->label('Lihat Detail'),
-                
                 Tables\Actions\EditAction::make()->label('Buka Daftar Hadir'),
             ])
             ->bulkActions([

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Absensi - {{ $nama_kelas }}</title>
+    <title>Laporan Absensi - {{ $record->kelas->nama_kelas ?? 'Umum' }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @page {
