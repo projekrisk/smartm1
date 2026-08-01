@@ -28,8 +28,8 @@
             .dark .android-app-container .fi-fo-field-wrp label span { color: #94a3b8 !important; }
             .android-app-container .fi-input-wrp { border-radius: 12px !important; background-color: #ffffff !important; border: 1px solid #cbd5e1 !important; box-shadow: 0 1px 2px rgba(0,0,0,0.05) !important; transition: all 0.2s ease; overflow: hidden; }
             .dark .android-app-container .fi-input-wrp { background-color: #0f172a !important; border: 1px solid #334155 !important; }
-            .android-app-container .fi-input-wrp:focus-within { border-color: #ec4899 !important; box-shadow: 0 0 0 1px #ec4899 !important; }
-            .dark .android-app-container .fi-input-wrp:focus-within { border-color: #f472b6 !important; box-shadow: 0 0 0 1px #f472b6 !important; }
+            .android-app-container .fi-input-wrp:focus-within { border-color: #4858ec !important; box-shadow: 0 0 0 1px #4861ec !important; }
+            .dark .android-app-container .fi-input-wrp:focus-within { border-color: #727ff4 !important; box-shadow: 0 0 0 1px #7274f4 !important; }
             
             .line-clamp-2 {
                 display: -webkit-box;
@@ -48,7 +48,7 @@
             </a>
             
             <div style="text-align: center; margin-top: 4px;">
-                <p style="font-size: 10px; font-weight: 800; letter-spacing: 1px; color: #fbcfe8; text-transform: uppercase; margin-bottom: 8px;">Informasi Sistem</p>
+                <p style="font-size: 10px; font-weight: 800; letter-spacing: 1px; color: #bfdbfe; text-transform: uppercase; margin-bottom: 8px;">Informasi Sistem</p>
                 <h1 style="font-size: 1.5rem; font-weight: 900; margin: 0; line-height: 1.2;">Tentang Aplikasi</h1>
             </div>
         </div>
@@ -56,11 +56,11 @@
         <div class="android-content theme-bg" style="border-top-left-radius: 2.5rem; border-top-right-radius: 2.5rem; margin-top: -30px; padding: 32px 20px 100px 20px; position: relative; z-index: 20; box-shadow: 0 -10px 25px rgba(0,0,0,0.1);">
             
             <div style="text-align: center; margin-bottom: 32px;">
-                <div style="width: 80px; height: 80px; border-radius: 24px; background: linear-gradient(135deg, #2563eb, #3730a3); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; box-shadow: 0 8px 20px rgba(219, 39, 119, 0.3);">
+                <div style="width: 80px; height: 80px; border-radius: 24px; background: linear-gradient(135deg, #2563eb, #3730a3); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; box-shadow: 0 8px 20px rgb(57 39 219 / 30%);">
                     <x-filament::icon icon="heroicon-s-academic-cap" style="width: 44px; height: 44px; color: white;" />
                 </div>
                 <h2 class="theme-text" style="font-size: 20px; font-weight: 900; margin: 0;">SMART-M1 Student</h2>
-                <p class="theme-text-muted" style="font-size: 12px; font-weight: 700; margin-top: 4px;">Versi 2.0.0 (Build 2026)</p>
+                <p class="theme-text-muted" style="font-size: 12px; font-weight: 700; margin-top: 4px;">Versi 2.1.0 (Build 2026)</p>
                 <p class="theme-text-muted" style="font-size: 11px; margin-top: 12px; line-height: 1.5; padding: 0 20px;">Platform manajemen edukasi terpadu untuk mendukung transparansi nilai, absensi, dan prestasi siswa.</p>
             </div>
 
@@ -68,18 +68,18 @@
 
             <div style="margin-top: 24px;">
                 <h3 class="theme-text" style="font-size: 14px; font-weight: 900; margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px;">
-                    <x-filament::icon icon="heroicon-s-chat-bubble-left-right" style="width: 18px; height: 18px; color: #ec4899;" />
+                    <x-filament::icon icon="heroicon-s-chat-bubble-left-right" style="width: 18px; height: 18px; color: #2563eb;" />
                     Apa Kata Mereka? ({{ $totalTestimoni }})
                 </h3>
                 
                 <div style="display: flex; flex-direction: column; gap: 12px;">
                     @forelse($semuaTestimoni as $testi)
-                        <div class="theme-card" style="border-radius: 16px; padding: 16px; position: relative; border-left: 4px solid #f472b6;">
+                        <div class="theme-card" style="border-radius: 16px; padding: 16px; position: relative; border-left: 4px solid #728af4;">
                             
                             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
                                 <div style="display: flex; gap: 10px; align-items: center;">
                                     
-                                    <div style="width: 36px; height: 36px; border-radius: 10px; background-color: rgba(236,72,153,0.1); color: #db2777; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; overflow: hidden;" class="dark:bg-pink-900/30 dark:text-pink-400 border border-pink-100 dark:border-pink-900/50">
+                                    <div style="width: 36px; height: 36px; border-radius: 10px; background-color: rgba(236,72,153,0.1); color: #272adb; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; overflow: hidden;" class="dark:bg-pink-900/30 dark:text-pink-400 border border-pink-100 dark:border-pink-900/50">
                                         @if($testi->siswa->foto)
                                             <img src="{{ url('/uploads/' . $testi->siswa->foto) }}" alt="Foto" style="width: 100%; height: 100%; object-fit: cover;">
                                         @else
@@ -141,7 +141,7 @@
 
         </div>
         
-        <button @click="formBottomSheet = true" style="position: absolute; bottom: 32px; right: 24px; width: 60px; height: 60px; background: linear-gradient(135deg, #db2777, #9d174d); color: white; border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(219,39,119,0.4); border: none; cursor: pointer; z-index: 50; transition: transform 0.1s;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">
+        <button @click="formBottomSheet = true" style="position: absolute; bottom: 32px; right: 24px; width: 60px; height: 60px; background: linear-gradient(135deg, #2563eb, #3730a3); color: white; border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(219,39,119,0.4); border: none; cursor: pointer; z-index: 50; transition: transform 0.1s;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">
             <svg style="width: 28px; height: 28px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
             </svg>
@@ -177,7 +177,7 @@
                         <div style="display: flex; flex-direction: column; gap: 16px; width: 100%; [&_.fi-fo-component-ctn]:flex [&_.fi-fo-component-ctn]:flex-col [&_.fi-fo-component-ctn]:gap-4">
                             {{ $this->form }}
                         </div>
-                        <button type="submit" wire:loading.attr="disabled" style="margin-top: 8px; width: 100%; background: linear-gradient(135deg, #db2777, #9d174d); color: white; border-radius: 16px; padding: 16px; font-weight: 900; font-size: 14px; border: none; box-shadow: 0 8px 25px rgba(219,39,119,0.3); cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                        <button type="submit" wire:loading.attr="disabled" style="margin-top: 8px; width: 100%; background: linear-gradient(135deg, rgb(42, 39, 219), #19179d); color: white; border-radius: 16px; padding: 16px; font-weight: 900; font-size: 14px; border: none; box-shadow: 0 8px 25px rgba(219,39,119,0.3); cursor: pointer; display: flex; align-items: center; justify-content: center;">
                             <span wire:loading.remove wire:target="kirimTestimoni">KIRIM ULASAN</span>
                             <span wire:loading wire:target="kirimTestimoni">MENYIMPAN...</span>
                         </button>
@@ -201,10 +201,10 @@
 
                 <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 20px; padding-right: 24px;">
                     <template x-if="reviewFoto">
-                        <img :src="reviewFoto" style="width: 48px; height: 48px; border-radius: 14px; object-fit: cover; border: 1px solid #fbcfe8;" class="dark:border-pink-900/50">
+                        <img :src="reviewFoto" style="width: 48px; height: 48px; border-radius: 14px; object-fit: cover; border: 1px solid #d2cffb;" class="dark:border-pink-900/50">
                     </template>
                     <template x-if="!reviewFoto">
-                        <div style="width: 48px; height: 48px; border-radius: 14px; background-color: rgba(236,72,153,0.1); color: #db2777; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px;" class="dark:bg-pink-900/30 dark:text-pink-400">
+                        <div style="width: 48px; height: 48px; border-radius: 14px; background-color: rgba(236,72,153,0.1); color: #4227db; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px;" class="dark:bg-pink-900/30 dark:text-pink-400">
                             <span x-text="reviewNama.substring(0,1)"></span>
                         </div>
                     </template>
