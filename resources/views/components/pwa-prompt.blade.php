@@ -25,38 +25,53 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+        if (!isMobile || isStandalone) {
+            return; 
+        }
+
         let deferredPrompt;
         const pwaPopup = document.getElementById('pwa-install-popup');
         const installBtn = document.getElementById('pwa-install-btn');
         const closeBtn = document.getElementById('pwa-close-btn');
 
-        const isDismissed = localStorage.getItem('pwa_prompt_dismissed');
-
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            
-            if (!isDismissed) {
+            pwaPopup.style.display = 'flex';
+        });
+
+        setTimeout(() => {
+            if (!deferredPrompt && !isStandalone) {
                 pwaPopup.style.display = 'flex';
             }
-        });
+        }, 1000);
 
         installBtn.addEventListener('click', async () => {
             if (deferredPrompt) {
-                pwaPopup.style.display = 'none';
-                deferredPrompt.prompt();
+                pwaPopup.style.display = 'none'; 
+                deferredPrompt.prompt(); 
                 
                 const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') {
-                    console.log('Siswa menginstal PWA');
-                }
                 deferredPrompt = null;
+            } else {
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+                
+                if (isIOS) {
+                    alert('UNTUK PENGGUNA iPhone/iPad:\n\n1. Ketuk ikon "Bagikan" (Share) berlogo kotak dengan panah ke atas di menu bawah browser Anda.\n2. Gulir ke bawah dan ketuk "Tambah ke Layar Utama" (Add to Home Screen).');
+                } else {
+                    alert('UNTUK MENGINSTAL:\n\nBuka menu browser Anda (titik tiga di pojok kanan/kiri) dan pilih opsi "Tambahkan ke Layar Utama" atau "Install Aplikasi".');
+                }
+                
+                pwaPopup.style.display = 'none';
             }
         });
 
         closeBtn.addEventListener('click', () => {
             pwaPopup.style.display = 'none';
-            localStorage.setItem('pwa_prompt_dismissed', 'true');
         });
 
         window.addEventListener('appinstalled', () => {
