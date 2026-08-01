@@ -102,6 +102,11 @@ class SiswaResource extends Resource
         return Auth::user()->peran === 'admin';
     }
 
+    public static function canReset(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return in_array(Auth::user()->peran, ['admin']);
+    }
+
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();
