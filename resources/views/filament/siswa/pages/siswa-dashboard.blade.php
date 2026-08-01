@@ -53,7 +53,7 @@
         </style>
     </div>
 
-    <div class="android-app-container theme-bg">
+    <div class="android-app-container theme-bg" x-data="{ showLogoutSheet: false }">
         <div class="android-content">            
             
             <div style="background: linear-gradient(135deg, #2563eb, #3730a3); padding: 24px 24px 48px 24px; border-bottom-left-radius: 2rem; border-bottom-right-radius: 2rem; color: white; position: relative; box-shadow: 0 10px 30px rgba(37,99,235,0.3);">
@@ -110,7 +110,6 @@
                         </div>
                     </div>
 
-                    <!-- Kolom Kanan (Rata Kanan) -->
                     <div style="width: 68px; height: 68px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.4); background-color: #f1f5f9; overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
                         @if(isset($siswa->foto) && $siswa->foto && !str_ends_with($siswa->foto, '/'))
                             <img src="{{ url('/uploads/' . $siswa->foto) }}" alt="Foto" style="width: 100%; height: 100%; object-fit: cover;">
@@ -188,6 +187,14 @@
                             </div>
                             <span class="theme-text" style="font-size: 11px; font-weight: bold;">Tentang</span>
                         </a>
+
+                        <a @click="showLogoutSheet = true" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.1s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
+                            <div style="width: 46px; height: 46px; border-radius: 14px; background-color: rgba(239, 68, 68, 0.1); color: #ef4444; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+                                <x-filament::icon icon="heroicon-s-arrow-right-on-rectangle" style="width: 22px; height: 22px;" />
+                            </div>
+                            <span class="theme-text" style="font-size: 11px; font-weight: bold;">Keluar</span>
+                        </a>
+
                     </div>
                 </div>
             </div>
@@ -279,6 +286,31 @@
                 <x-filament::icon icon="heroicon-s-user" style="width: 24px; height: 24px; margin-bottom: 4px;" />
                 <span style="font-size: 10px; font-weight: bold;">Profil</span>
             </a>
+        </div>
+
+        <div x-show="showLogoutSheet" style="display: none; position: absolute; inset: 0; background-color: rgba(0,0,0,0.5); z-index: 99; backdrop-filter: blur(2px);" x-transition.opacity @click="showLogoutSheet = false"></div>
+        
+        <div x-show="showLogoutSheet" style="display: none; position: absolute; bottom: 0; left: 0; right: 0; background-color: white; border-top-left-radius: 28px; border-top-right-radius: 28px; z-index: 100; padding: 24px; padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 -15px 40px rgba(0,0,0,0.2);" class="dark:bg-slate-900"
+             x-transition:enter="transition ease-out duration-300" 
+             x-transition:enter-start="transform translate-y-full" 
+             x-transition:enter-end="transform translate-y-0" 
+             x-transition:leave="transition ease-in duration-200" 
+             x-transition:leave-start="transform translate-y-0" 
+             x-transition:leave-end="transform translate-y-full">
+            
+            <div style="width: 48px; height: 6px; border-radius: 3px; background-color: #cbd5e1; margin: 0 auto 24px auto;" class="dark:bg-slate-700"></div>
+            
+            <h3 class="theme-text" style="font-size: 18px; font-weight: 900; text-align: center; margin: 0 0 8px 0;">Konfirmasi Keluar</h3>
+            <p class="theme-text-muted" style="font-size: 13px; text-align: center; margin: 0 0 28px 0; line-height: 1.5;">Apakah Anda yakin ingin keluar dari aplikasi Smart-M1?</p>
+            
+            <div style="display: flex; gap: 12px;">
+                <button @click="showLogoutSheet = false" style="flex: 1; padding: 14px; border-radius: 16px; background-color: #f1f5f9; color: #64748b; font-weight: 900; font-size: 13px; border: none; cursor: pointer;" class="dark:bg-slate-800 dark:text-slate-300">Batal</button>
+                
+                <button type="button" wire:click="keluarAplikasi" wire:loading.attr="disabled" style="flex: 1; padding: 14px; border-radius: 16px; background-color: #ef4444; color: white; font-weight: 900; font-size: 13px; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);">
+                    <span wire:loading.remove wire:target="keluarAplikasi">Ya, Keluar</span>
+                    <span wire:loading wire:target="keluarAplikasi">Memproses...</span>
+                </button>
+            </div>
         </div>
 
     </div>

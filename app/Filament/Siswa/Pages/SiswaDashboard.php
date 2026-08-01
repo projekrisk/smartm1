@@ -13,13 +13,11 @@ class SiswaDashboard extends BaseDashboard
     protected static ?string $title = 'Beranda';
     protected static ?string $navigationIcon = 'heroicon-o-home';
 
-    // FUNGSI AJAIB 1: Mengubah layout menjadi Simple agar tidak ada sidebar/topbar sama sekali
     public function getLayout(): string
     {
         return 'filament-panels::components.layout.simple';
     }
 
-    // FUNGSI AJAIB 2: Membunuh paksa Header & Logo bawaan Filament
     public function getHeading(): string { return ''; }
     public function hasLogo(): bool { return false; }
 
@@ -34,5 +32,15 @@ class SiswaDashboard extends BaseDashboard
             'siswa' => $siswa,
             'pengumuman' => $pengumuman,
         ];
+    }
+
+    public function keluarAplikasi()
+    {
+        auth()->logout();
+        
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+        
+        return redirect('/');
     }
 }
