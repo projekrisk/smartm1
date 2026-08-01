@@ -98,7 +98,7 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px;">
                     
                     <div style="display: flex; flex-direction: column; align-items: flex-start; flex: 1; min-width: 0;">
-                        <span style="font-size: 13px; font-weight: 600; color: #e0e7ff; margin-bottom: 2px;">{{ $greeting }},</span>
+                        <span style="font-size: 13px; font-weight: 400; color: #e0e7ff; margin-bottom: 2px;">{{ $greeting }},</span>
                         
                         <h1 style="font-size: 18px; font-weight: 900; margin: 0 0 8px 0; line-height: 1.2; text-shadow: 0 2px 4px rgba(0,0,0,0.1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;">
                             {{ $properName }}

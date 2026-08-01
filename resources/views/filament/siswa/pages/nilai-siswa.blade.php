@@ -51,7 +51,7 @@
         </div>
 
         <div class="android-content theme-bg" 
-             style="border-top-left-radius: 2.5rem; border-top-right-radius: 2.5rem; margin-top: -30px; padding: 32px 20px 40px 20px; position: relative; z-index: 20; box-shadow: 0 -10px 25px rgba(0,0,0,0.1);">
+             style="border-top-left-radius: 2.5rem; border-top-right-radius: 2.5rem; margin-top: -30px; padding: 32px 20px 40px 20px; position: relative; z-index: 20;">
             
             @if($nilaiGrouped->isEmpty())
                 <div style="text-align: center; padding: 40px 20px;">
@@ -72,7 +72,7 @@
                             $rataColor = $rataRata >= 75 ? 'text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-900/30' : 'text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-900/30';
                         @endphp
                         
-                        <div class="theme-card" style="border-radius: 20px; overflow: hidden; border: 1px solid #e2e8f0;" class="dark:border-slate-800">
+                        <div class="theme-card" style="border-radius: 20px; overflow: hidden;" class="dark:border-slate-800">
                             
                             <button @click="activeMapel = activeMapel === '{{ Str::slug($mapel) }}' ? null : '{{ Str::slug($mapel) }}'" 
                                     style="width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 16px; background-color: transparent; border: none; cursor: pointer;">
