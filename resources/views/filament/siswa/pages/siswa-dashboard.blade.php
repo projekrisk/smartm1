@@ -43,7 +43,6 @@
             .dark .theme-nav-item { color: #64748b; }
             .dark .theme-nav-item:hover { color: #f8fafc; }
 
-            /* scroll */
             .android-content { flex: 1; overflow-y: auto; overflow-x: hidden; padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px)); scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; }
             .android-content::-webkit-scrollbar { display: none; }
 
@@ -56,9 +55,10 @@
 
     <div class="android-app-container theme-bg">
         <div class="android-content">            
+            
             <div style="background: linear-gradient(135deg, #2563eb, #3730a3); padding: 24px 24px 48px 24px; border-bottom-left-radius: 2rem; border-bottom-right-radius: 2rem; color: white; position: relative; box-shadow: 0 10px 30px rgba(37,99,235,0.3);">
                 
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
                     <p style="font-size: 11px; font-weight: 800; letter-spacing: 1px; margin: 0; color: #bfdbfe; text-transform: uppercase;">
                         Smart-M1 SMAN 1 Malingping
                     </p>
@@ -78,27 +78,48 @@
                         }" 
                         @click="toggle()" 
                         type="button" 
-                        style="background-color: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;">
+                        style="background-color: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; flex-shrink: 0;">
                         <x-filament::icon icon="heroicon-m-moon" class="icon-moon" style="width: 18px; height: 18px; color: white;" />
                         <x-filament::icon icon="heroicon-m-sun" class="icon-sun" style="width: 18px; height: 18px; color: #fbbf24;" />
                     </button>
                 </div>
 
-                <div style="width: 72px; height: 72px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.4); background-color: #f1f5f9; overflow: hidden; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-                    @if(isset($siswa->foto) && $siswa->foto)
-                        <img src="{{ url('/uploads/' . $siswa->foto) }}" alt="Foto" style="width: 100%; height: 100%; object-fit: cover;">
-                    @else
-                        <span style="color: #2563eb; font-weight: 900; font-size: 1.75rem;">{{ substr($siswa->nama_lengkap ?? 'S', 0, 1) }}</span>
-                    @endif
+                @php
+                    $hour = \Carbon\Carbon::now('Asia/Jakarta')->format('H');
+                    if ($hour >= 5 && $hour < 11) $greeting = 'Selamat pagi';
+                    elseif ($hour >= 11 && $hour < 15) $greeting = 'Selamat siang';
+                    elseif ($hour >= 15 && $hour < 18) $greeting = 'Selamat sore';
+                    else $greeting = 'Selamat malam';
+
+                    $rawName = $siswa->nama_lengkap ?? Auth::user()->name ?? 'Siswa';
+                    $properName = ucwords(strtolower($rawName));
+                @endphp
+
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+                    
+                    <div style="display: flex; flex-direction: column; align-items: flex-start; flex: 1; min-width: 0;">
+                        <span style="font-size: 13px; font-weight: 600; color: #e0e7ff; margin-bottom: 2px;">{{ $greeting }},</span>
+                        
+                        <h1 style="font-size: 18px; font-weight: 900; margin: 0 0 8px 0; line-height: 1.2; text-shadow: 0 2px 4px rgba(0,0,0,0.1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%;">
+                            {{ $properName }}
+                        </h1>
+                        
+                        <div style="display: inline-flex; align-items: center; gap: 6px; background-color: rgba(0,0,0,0.25); padding: 4px 14px; border-radius: 999px; font-size: 11px; font-weight: bold; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(4px);">
+                            <div style="width: 6px; height: 6px; border-radius: 50%; background-color: #4ade80; box-shadow: 0 0 8px #4ade80;"></div>
+                            {{ $siswa->kelas->nama_kelas ?? 'Belum ada kelas' }}
+                        </div>
+                    </div>
+
+                    <!-- Kolom Kanan (Rata Kanan) -->
+                    <div style="width: 68px; height: 68px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.4); background-color: #f1f5f9; overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                        @if(isset($siswa->foto) && $siswa->foto && !str_ends_with($siswa->foto, '/'))
+                            <img src="{{ url('/uploads/' . $siswa->foto) }}" alt="Foto" style="width: 100%; height: 100%; object-fit: cover;">
+                        @else
+                            <span style="color: #2563eb; font-weight: 900; font-size: 1.75rem;">{{ substr($properName, 0, 1) }}</span>
+                        @endif
+                    </div>
                 </div>
 
-                <h1 style="font-size: 1.5rem; font-weight: 900; margin: 0 0 8px 0; line-height: 1.2; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                    {{ $siswa->nama_lengkap ?? Auth::user()->name }}
-                </h1>
-                <div style="display: inline-flex; align-items: center; gap: 6px; background-color: rgba(0,0,0,0.25); padding: 4px 14px; border-radius: 999px; font-size: 11px; font-weight: bold; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(4px);">
-                    <div style="width: 6px; height: 6px; border-radius: 50%; background-color: #4ade80; box-shadow: 0 0 8px #4ade80;"></div>
-                    {{ $siswa->kelas->nama_kelas ?? 'Belum ada kelas' }}
-                </div>
             </div>
 
             <div style="padding: 0 20px; margin-top: -30px; position: relative; z-index: 10;">
