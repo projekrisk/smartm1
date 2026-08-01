@@ -145,7 +145,7 @@
                     </h1>
 
                     <p class="md:text-base lg:text-lg xl:text-xl text-slate-600 max-w-xl mb-6 lg:mb-10 leading-relaxed font-medium">
-                        Platform digital terintegrasi yang mendukung pengelolaan administrasi, layanan akademik, absensi, e-Rapor, serta data peserta didik secara <span class="text-slate-900 font-bold border-b-2 border-edu-200">aman, efisien, dan real-time.</span>.
+                        Sarana digital terintegrasi yang mendukung pengelolaan administrasi serta layanan akademik dan non-akademik murid secara <span class="text-slate-900 font-bold border-b-2 border-edu-200">aman, efisien, dan real-time.</span>.
                     </p>
 
                     <div class="flex flex-col sm:flex-row gap-3">

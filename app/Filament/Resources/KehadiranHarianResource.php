@@ -83,9 +83,18 @@ class KehadiranHarianResource extends Resource
                         Forms\Components\Toggle::make('is_valid')
                             ->label('Validasi Selesai (Dikunci)')
                             ->helperText('Nyalakan jika absensi kelas ini sudah Anda periksa dan sah.')
-                            ->default(false),
+                            ->default(false)
+                            ->live()
+                            ->afterStateUpdated(function (Forms\Set $set, $state) {
+                                if ($state) {
+                                    $set('divalidasi_oleh', Auth::id());
+                                } else {
+                                    $set('divalidasi_oleh', null);
+                                }
+                            }),
+                            
                         Forms\Components\Hidden::make('divalidasi_oleh')
-                            ->default(fn () => Auth::id()),
+                            ->default(fn (Forms\Get $get) => $get('is_valid') ? Auth::id() : null),
                     ])
             ]);
     }
