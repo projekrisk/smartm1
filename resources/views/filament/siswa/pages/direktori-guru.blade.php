@@ -75,7 +75,7 @@
                         @foreach($tabs as $key => $label)
                             <button wire:click="setKategori('{{ $key }}')" 
                                     style="border: none; padding: 6px 14px; border-radius: 999px; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s;
-                                    {{ $kategori === $key ? 'background-color: #2563eb; color: white;' : '' }}"
+                                    {{ $kategori === $key ? 'background-color: #2563eb; color: white; box-shadow: 0 4px 10px rgba(37,99,235,0.3);' : '' }}"
                                     class="{{ $kategori === $key ? '' : 'bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400' }}">
                                 {{ $label }}
                             </button>
@@ -88,8 +88,12 @@
                     @forelse($pegawais as $index => $pegawai)
                         @php
                             $avatarUrl = asset('images/default-avatar.png');
-                            if ($pegawai->foto && \Illuminate\Support\Facades\Storage::disk('publik_upload')->exists($pegawai->foto)) {
-                                $avatarUrl = \Illuminate\Support\Facades\Storage::disk('publik_upload')->url($pegawai->foto);
+                            
+                            if (!empty($pegawai->foto) && $pegawai->foto !== '[]' && $pegawai->foto !== 'foto-pegawai/' && !str_ends_with($pegawai->foto, '/')) {
+                                
+                                if (\Illuminate\Support\Facades\Storage::disk('publik_upload')->exists($pegawai->foto)) {
+                                    $avatarUrl = \Illuminate\Support\Facades\Storage::disk('publik_upload')->url($pegawai->foto);
+                                }
                             }
 
                             $badgeBg = '#f1f5f9'; $badgeText = '#64748b';
@@ -111,7 +115,8 @@
                         
                         <div class="list-item theme-card" style="animation-delay: {{ $index * 0.05 }}s; border-radius: 16px; padding: 12px; margin-bottom: 12px; display: flex; align-items: center; gap: 12px;">
                             
-                            <div style="width: 48px; height: 48px; flex-shrink: 0; border-radius: 50%; overflow: hidden; background-color: #f1f5f9; border: 2px solid #f8fafc;" class="dark:border-slate-700">
+                            <!-- Area Foto dengan Avatar Fallback -->
+                            <div style="width: 48px; height: 48px; flex-shrink: 0; border-radius: 50%; overflow: hidden; background-color: #f1f5f9; border: 2px solid #f8fafc; position: relative;" class="dark:border-slate-700">
                                 <img src="{{ $avatarUrl }}" alt="{{ $pegawai->nama }}" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
 
