@@ -154,13 +154,11 @@
                             <span class="theme-text" style="font-size: 11px; font-weight: bold;">Dokumen</span>
                         </a>
 
-                        <a href="/siswa/direktori-guru" style="text-decoration: none;" class="theme-card flex flex-col items-center justify-center p-4 rounded-2xl transition-transform active:scale-95">
-                            <div class="bg-blue-100 dark:bg-blue-900/40 p-3 rounded-full mb-3 flex items-center justify-center">
-                                <svg class="w-7 h-7 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                                </svg>
+                        <a href="/siswa/direktori-guru" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.1s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
+                            <div style="width: 46px; height: 46px; border-radius: 14px; background-color: rgba(6, 182, 212, 0.1); color: #06b6d4; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+                                <x-filament::icon icon="heroicon-s-users" style="width: 22px; height: 22px;" />
                             </div>
-                            <span class="theme-text text-[11px] font-extrabold text-center leading-tight">Guru &<br>Staf</span>
+                            <span class="theme-text" style="font-size: 11px; font-weight: bold;">Pegawai</span>
                         </a>
 
                         <a href="/siswa/tentang" style="text-decoration: none; display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: transform 0.1s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
