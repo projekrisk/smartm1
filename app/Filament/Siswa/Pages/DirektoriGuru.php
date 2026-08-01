@@ -51,6 +51,7 @@ class DirektoriGuru extends Page
 
         return [
             'pegawais' => $query->orderBy('nama', 'asc')->get(),
+            'kategori' => $this->kategori, // <--- TAMBAHKAN BARIS INI
         ];
     }
 }
