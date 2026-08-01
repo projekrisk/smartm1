@@ -102,11 +102,6 @@ class SiswaResource extends Resource
         return Auth::user()->peran === 'admin';
     }
 
-    public static function canReset(\Illuminate\Database\Eloquent\Model $record): bool
-    {
-        return in_array(Auth::user()->peran, ['admin']);
-    }
-
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();
@@ -615,7 +610,7 @@ class SiswaResource extends Resource
                         ->icon('heroicon-o-key')
                         ->color('danger')
                         ->requiresConfirmation()
-                        ->visible(fn () => in_array(Auth::user()->peran, ['admin', 'staf']))
+                        ->visible(fn () => auth()->user()->peran === 'admin')
                         ->modalHeading('Reset Password Siswa')
                         ->modalDescription(fn (\App\Models\Siswa $record) => "Apakah Anda yakin ingin mereset password {$record->nama_lengkap} menjadi NIS-nya ({$record->nis})?")
                         ->modalSubmitActionLabel('Ya, Reset Password')
