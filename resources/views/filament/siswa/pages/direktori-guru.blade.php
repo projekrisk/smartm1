@@ -3,6 +3,11 @@
         
         <div wire:ignore>
             <style>
+                .cari-pegawai::placeholder { 
+                    color: rgba(255, 255, 255, 0.9) !important; 
+                    opacity: 1; 
+                }
+
                 .fi-topbar, .fi-sidebar, .fi-header, .fi-simple-header, .fi-logo, .fi-simple-footer { display: none !important; }
                 html, body, .fi-layout, .fi-simple-layout, .fi-main, .fi-simple-main, .fi-page, section { 
                     padding: 0 !important; margin: 0 !important; gap: 0 !important; height: 100vh !important; height: 100dvh !important; 
@@ -16,14 +21,7 @@
                     display: flex; flex-direction: column; box-shadow: 0 0 40px rgba(0,0,0,0.15); overflow: hidden; 
                     font-family: 'Inter', system-ui, sans-serif; transition: background-color 0.3s ease;
                 }
-
-                /* Tambahkan ini di dalam tag <style> */
-                .cari-pegawai::placeholder { 
-                    color: rgba(255, 255, 255, 0.9) !important; 
-                    opacity: 1; 
-                }
                 
-                /* KELAS TEMA UNTUK MODE GELAP & TERANG (Konsisten dengan halaman profil) */
                 .theme-bg { background-color: #f8fafc; }
                 .theme-card { background-color: #ffffff; border: 1px solid #f1f5f9; box-shadow: 0 8px 30px rgba(0,0,0,0.04); }
                 .theme-text { color: #0f172a; }
@@ -37,11 +35,9 @@
                 .android-content { flex: 1; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; }
                 .android-content::-webkit-scrollbar { display: none; }
                 
-                /* Menyembunyikan scrollbar untuk tab horizontal */
                 .hide-scroll::-webkit-scrollbar { display: none; }
                 .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
                 
-                /* Animasi List */
                 .list-item { animation: fadeIn 0.3s ease-out forwards; opacity: 0; }
                 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
             </style>
@@ -49,31 +45,27 @@
 
         <div class="android-app-container theme-bg">
             
-            <!-- Header Biru Konsisten Khas Aplikasi -->
             <div style="flex-shrink: 0; background: linear-gradient(135deg, #2563eb, #3730a3); padding: 40px 24px 60px 24px; color: white; position: relative; z-index: 10;">
                 <div style="display: flex; align-items: center; justify-content: center; position: relative; margin-bottom: 20px;">
                     <a href="/siswa" style="position: absolute; left: 0; background-color: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); transition: transform 0.2s;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">
                         <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
                     </a>
                     <div>
-                        <h1 style="font-size: 1.3rem; font-weight: 900; margin: 0; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">Direktori Guru</h1>
+                        <h1 style="font-size: 1.3rem; font-weight: 900; margin: 0; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">Direktori Pegawai</h1>
                     </div>
                 </div>
 
-                <!-- Input Pencarian Bulat -->
                 <div style="position: relative;">
-                    <input wire:model.live.debounce.300ms="search" type="text" class="cari-pegawai" placeholder="Cari nama atau tugas utama..." 
-       style="width: 100%; background-color: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); color: white; font-size: 13px; border-radius: 999px; padding: 12px 16px 12px 40px; outline: none; backdrop-filter: blur(4px);">
+                    <div style="position: absolute; inset-y: 0; left: 0; padding-left: 14px; display: flex; align-items: center; pointer-events: none;">
+                        <svg style="width: 18px; height: 18px; color: #bfdbfe;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                     </div>
-                    <input wire:model.live.debounce.300ms="search" type="text" placeholder="Cari nama atau tugas utama..." 
-                           style="width: 100%; background-color: rgb(255 255 255 / 76%); border: 1px solid rgba(255,255,255,0.2); color: white; font-size: 13px; border-radius: 999px; padding: 12px 16px 12px 40px; outline: none; backdrop-filter: blur(4px);">
+                    <input wire:model.live.debounce.300ms="search" type="text" class="cari-pegawai" placeholder="Cari nama atau tugas utama..." 
+                           style="width: 100%; background-color: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); color: white; font-size: 13px; border-radius: 999px; padding: 12px 16px 12px 40px; outline: none; backdrop-filter: blur(4px);">
                 </div>
             </div>
 
-            <!-- Body Area Dengan Lengkungan & Latar Tema -->
             <div class="android-content theme-bg" style="border-top-left-radius: 2.5rem; border-top-right-radius: 2.5rem; margin-top: -30px; position: relative; z-index: 20; box-shadow: 0 -10px 25px rgba(0,0,0,0.1); display: flex; flex-direction: column;">
                 
-                <!-- Tab Kategori Interaktif (Scrollable) yang menyatu dengan lengkungan -->
                 <div style="padding: 24px 20px 12px 20px; border-bottom: 1px solid rgba(0,0,0,0.05);" class="dark:border-slate-800">
                     <div class="hide-scroll" style="display: flex; gap: 8px; overflow-x: auto; white-space: nowrap; padding-bottom: 4px;">
                         @php
@@ -91,18 +83,15 @@
                     </div>
                 </div>
 
-                <!-- Daftar List Pegawai -->
                 <div style="padding: 16px 20px 40px 20px;">
                     
                     @forelse($pegawais as $index => $pegawai)
                         @php
-                            // Logika Cek Foto
                             $avatarUrl = asset('images/default-avatar.png');
                             if ($pegawai->foto && \Illuminate\Support\Facades\Storage::disk('publik_upload')->exists($pegawai->foto)) {
                                 $avatarUrl = \Illuminate\Support\Facades\Storage::disk('publik_upload')->url($pegawai->foto);
                             }
 
-                            // Penentuan Warna Badge
                             $badgeBg = '#f1f5f9'; $badgeText = '#64748b';
                             $darkBadgeBg = 'dark:bg-slate-700'; $darkBadgeText = 'dark:text-slate-300';
                             
@@ -120,15 +109,12 @@
                             }
                         @endphp
                         
-                        <!-- Menggunakan kelas theme-card agar otomatis menyesuaikan mode terang/gelap -->
                         <div class="list-item theme-card" style="animation-delay: {{ $index * 0.05 }}s; border-radius: 16px; padding: 12px; margin-bottom: 12px; display: flex; align-items: center; gap: 12px;">
                             
-                            <!-- Foto Profil (Bulat) -->
                             <div style="width: 48px; height: 48px; flex-shrink: 0; border-radius: 50%; overflow: hidden; background-color: #f1f5f9; border: 2px solid #f8fafc;" class="dark:border-slate-700">
                                 <img src="{{ $avatarUrl }}" alt="{{ $pegawai->nama }}" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>
 
-                            <!-- Info Pegawai -->
                             <div style="flex: 1; min-width: 0;">
                                 <h3 class="theme-text" style="font-size: 13px; font-weight: 800; margin: 0 0 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                     {{ $pegawai->nama }}
@@ -138,7 +124,6 @@
                                 </p>
                             </div>
 
-                            <!-- Badge Jenis PTK -->
                             <div class="{{ $darkBadgeBg }} {{ $darkBadgeText }}" style="flex-shrink: 0; background-color: {{ $badgeBg }}; color: {{ $badgeText }}; font-size: 9px; font-weight: 800; padding: 4px 8px; border-radius: 6px; text-transform: uppercase;">
                                 {{ $pegawai->jenis_ptk === 'Tenaga Kependidikan' ? 'STAF/TU' : ($pegawai->jenis_ptk === 'Kepala Sekolah' ? 'KEPSEK' : 'GURU') }}
                             </div>
