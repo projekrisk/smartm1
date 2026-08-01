@@ -16,6 +16,12 @@
                     display: flex; flex-direction: column; box-shadow: 0 0 40px rgba(0,0,0,0.15); overflow: hidden; 
                     font-family: 'Inter', system-ui, sans-serif; transition: background-color 0.3s ease;
                 }
+
+                /* Tambahkan ini di dalam tag <style> */
+                .cari-pegawai::placeholder { 
+                    color: rgba(255, 255, 255, 0.9) !important; 
+                    opacity: 1; 
+                }
                 
                 /* KELAS TEMA UNTUK MODE GELAP & TERANG (Konsisten dengan halaman profil) */
                 .theme-bg { background-color: #f8fafc; }
@@ -56,11 +62,11 @@
 
                 <!-- Input Pencarian Bulat -->
                 <div style="position: relative;">
-                    <div style="position: absolute; inset-y: 0; left: 0; padding-left: 14px; display: flex; align-items: center; pointer-events: none;">
-                        <svg style="width: 18px; height: 18px; color: #bfdbfe;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <input wire:model.live.debounce.300ms="search" type="text" class="cari-pegawai" placeholder="Cari nama atau tugas utama..." 
+       style="width: 100%; background-color: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); color: white; font-size: 13px; border-radius: 999px; padding: 12px 16px 12px 40px; outline: none; backdrop-filter: blur(4px);">
                     </div>
                     <input wire:model.live.debounce.300ms="search" type="text" placeholder="Cari nama atau tugas utama..." 
-                           style="width: 100%; background-color: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); color: white; font-size: 13px; border-radius: 999px; padding: 12px 16px 12px 40px; outline: none; backdrop-filter: blur(4px);">
+                           style="width: 100%; background-color: rgb(255 255 255 / 76%); border: 1px solid rgba(255,255,255,0.2); color: white; font-size: 13px; border-radius: 999px; padding: 12px 16px 12px 40px; outline: none; backdrop-filter: blur(4px);">
                 </div>
             </div>
 
