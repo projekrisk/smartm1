@@ -30,11 +30,4 @@ class CatatanSiswa extends Model
     {
         return $this->belongsTo(TahunAjaran::class);
     }
-
-    public function guru()
-    {
-        // Sesuaikan 'User::class' jika model pengguna Anda bernama lain (misal Pegawai::class)
-        // Sesuaikan 'guru_id' jika nama kolom di database Anda adalah 'user_id'
-        return $this->belongsTo(\App\Models\User::class, 'guru_id'); 
-    }
 }

@@ -74,7 +74,7 @@
                                 
                                 <td>{{ $c->tindak_lanjut ?? 'Belum ada tindak lanjut' }}</td>
                                 
-                                <td class="text-center">{{ $c->guru->name ?? 'Sistem / Anonim' }}</td>
+                                <td class="text-center">{{ $c->pencatat->name ?? 'Sistem / Anonim' }}</td>
                             </tr>
                         @endforeach
                     @endforeach
