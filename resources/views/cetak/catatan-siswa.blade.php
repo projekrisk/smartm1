@@ -49,11 +49,12 @@
                 <thead>
                     <tr>
                         <th style="width: 30px;">No</th>
-                        <th style="width: 150px;">Nama Siswa</th>
+                        <th style="width: 140px;">Nama Siswa</th>
                         <th style="width: 80px;">Tanggal</th>
-                        <th>Deskripsi Catatan / Kasus</th>
+                        <th style="width: 120px;">Perihal / Topik</th> <!-- Kolom Baru -->
+                        <th>Deskripsi Catatan</th>
                         <th>Tindak Lanjut</th>
-                        <th style="width: 120px;">Pelapor</th>
+                        <th style="width: 100px;">Pelapor</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,7 +62,6 @@
                     @foreach($siswas as $namaSiswa => $catatans)
                         @foreach($catatans as $index => $c)
                             <tr>
-                                <!-- Menggabungkan baris (rowspan) jika 1 siswa punya banyak catatan agar tidak berulang -->
                                 @if($index === 0)
                                     <td rowspan="{{ count($catatans) }}" class="text-center">{{ $no++ }}</td>
                                     <td rowspan="{{ count($catatans) }}" style="text-transform: uppercase; font-weight: bold;">{{ $namaSiswa }}</td>
@@ -69,12 +69,14 @@
                                 
                                 <td class="text-center">{{ \Carbon\Carbon::parse($c->tanggal)->format('d/m/Y') }}</td>
                                 
-                                <!-- SESUAIKAN DENGAN NAMA KOLOM DESKRIPSI ANDA (catatan / deskripsi) -->
-                                <td>{{ $c->catatan ?? $c->deskripsi ?? '-' }}</td>
+                                <!-- Memanggil kolom Perihal/Topik -->
+                                <td>{{ $c->perihal ?? $c->topik ?? $c->jenis_catatan ?? '-' }}</td>
+                                
+                                <!-- Memanggil kolom Deskripsi -->
+                                <td>{{ $c->deskripsi ?? $c->catatan ?? '-' }}</td>
                                 
                                 <td>{{ $c->tindak_lanjut ?? 'Belum ada tindak lanjut' }}</td>
-                                
-                                <td class="text-center">{{ $c->pencatat->name ?? 'Sistem / Anonim' }}</td>
+                                <td class="text-center">{{ $c->pencatat->name ?? 'Sistem' }}</td>
                             </tr>
                         @endforeach
                     @endforeach
