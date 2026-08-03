@@ -69,11 +69,10 @@
                                 
                                 <td class="text-center">{{ \Carbon\Carbon::parse($c->tanggal)->format('d/m/Y') }}</td>
                                 
-                                <!-- Memanggil kolom Perihal/Topik -->
-                                <td>{{ $c->perihal ?? $c->topik ?? $c->jenis_catatan ?? '-' }}</td>
+                                <!-- MEMANGGIL NAMA KOLOM YANG BENAR SESUAI DATABASE -->
+                                <td>{{ $c->judul_catatan ?? '-' }}</td>
                                 
-                                <!-- Memanggil kolom Deskripsi -->
-                                <td>{{ $c->deskripsi ?? $c->catatan ?? '-' }}</td>
+                                <td>{{ $c->isi_catatan ?? '-' }}</td>
                                 
                                 <td>{{ $c->tindak_lanjut ?? 'Belum ada tindak lanjut' }}</td>
                                 <td class="text-center">{{ $c->pencatat->name ?? 'Sistem' }}</td>
