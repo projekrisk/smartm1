@@ -82,7 +82,6 @@
                     </div>
                 </div>
 
-                <!-- TAB 2: KELAS -->
                 <div x-show="activeTab === 'kelas'" x-cloak class="bg-white dark:bg-gray-900 shadow-sm rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden ring-1 ring-gray-950/5 dark:ring-white/10">
                     <div class="px-6 py-4 border-b border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 flex justify-between items-center">
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white">Rincian Keadaan Siswa Per Kelas</h3>

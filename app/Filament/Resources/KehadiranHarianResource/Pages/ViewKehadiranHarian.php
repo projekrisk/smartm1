@@ -13,7 +13,7 @@ class ViewKehadiranHarian extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            // Jika suatu saat butuh tombol aksi di halaman View, tambahkan di sini
+            // 
         ];
     }
 }

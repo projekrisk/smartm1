@@ -18,7 +18,6 @@ class EditCatatanSiswa extends EditRecord
         ];
     }
 
-    // FUNGSI BARU: Mengarahkan pengguna kembali ke tabel setelah klik Simpan Perubahan
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');

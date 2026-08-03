@@ -116,7 +116,6 @@
                         
                         <div class="list-item theme-card" style="animation-delay: {{ $index * 0.05 }}s; border-radius: 16px; padding: 12px; margin-bottom: 12px; display: flex; align-items: center; gap: 12px;">
                             
-                            <!-- Area Foto dengan Avatar Fallback -->
                             <div style="width: 48px; height: 48px; flex-shrink: 0; border-radius: 50%; overflow: hidden; background-color: #f1f5f9; border: 2px solid #f8fafc; position: relative;" class="dark:border-slate-700">
                                 <img src="{{ $avatarUrl }}" alt="{{ $pegawai->nama }}" style="width: 100%; height: 100%; object-fit: cover;">
                             </div>

@@ -30,7 +30,6 @@ class JurnalGuru extends Model
         return $this->belongsTo(TahunAjaran::class);
     }
 
-    // Ttambahkan relasi ini agar Jurnal bisa membaca data absensi di dalamnya
     public function kehadiranPelajaran()
     {
         return $this->hasMany(KehadiranPelajaran::class);

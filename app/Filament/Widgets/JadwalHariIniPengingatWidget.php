@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class JadwalHariIniPengingatWidget extends BaseWidget
 {
-    protected static ?int $sort = 1; // Taruh di urutan paling atas Dashboard
+    protected static ?int $sort = 1;
     protected int | string | array $columnSpan = 'full';
 
     public function getHeading(): string
@@ -25,7 +25,6 @@ class JadwalHariIniPengingatWidget extends BaseWidget
         return "Pengingat Jadwal Mengajar Anda - Hari " . $hariIni;
     }
 
-    // Hanya muncul di Dashboard jika yang login adalah GURU
     public static function canView(): bool
     {
         return Auth::user()->peran === 'guru';
@@ -61,7 +60,7 @@ class JadwalHariIniPengingatWidget extends BaseWidget
                     ->label('Mata Pelajaran')
                     ->weight('bold'),
             ])
-            ->paginated(false) // Matikan paginasi agar terlihat rapi seperti daftar list
+            ->paginated(false)
             ->emptyStateHeading('Tidak Ada Jadwal Hari Ini')
             ->emptyStateDescription('Anda sedang tidak ada jadwal mengajar di kelas manapun hari ini.')
             ->emptyStateIcon('heroicon-o-face-smile');

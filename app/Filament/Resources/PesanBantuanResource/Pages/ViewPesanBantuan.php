@@ -13,7 +13,6 @@ class ViewPesanBantuan extends ViewRecord
 {
     protected static string $resource = PesanBantuanResource::class;
 
-    // FUNGSI AJAIB: Notifikasi hilang otomatis saat Admin membuka pesan ini
     public function mount(int | string $record): void
     {
         parent::mount($record);
@@ -27,7 +26,6 @@ class ViewPesanBantuan extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            // TOMBOL MEMBALAS PESAN
             Actions\Action::make('balas')
                 ->label('Balas Pesan')
                 ->icon('heroicon-o-chat-bubble-left-ellipsis')
@@ -46,7 +44,6 @@ class ViewPesanBantuan extends ViewRecord
                         'pesan' => $data['pesan'],
                     ]);
                     
-                    // Merubah status siswa menjadi belum baca
                     $this->record->update([
                         'is_read_siswa' => false,
                         'status' => 'Diproses',
@@ -54,7 +51,6 @@ class ViewPesanBantuan extends ViewRecord
                 })
                 ->hidden(fn () => $this->record->status === 'Selesai'),
 
-            // TOMBOL MENUTUP TIKET
             Actions\Action::make('selesai')
                 ->label('Tandai Kasus Selesai')
                 ->icon('heroicon-o-check-circle')

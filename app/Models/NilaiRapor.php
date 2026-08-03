@@ -10,7 +10,6 @@ class NilaiRapor extends Model
     protected $table = 'nilai_rapor';
     protected $guarded = [];
 
-    // Fungsi otomatis untuk menentukan predikat berdasarkan nilai
     protected static function booted()
     {
         static::saving(function ($model) {

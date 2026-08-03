@@ -13,6 +13,5 @@ class Penilaian extends Model
     public function kelas() { return $this->belongsTo(Kelas::class); }
     public function tahunAjaran() { return $this->belongsTo(TahunAjaran::class); }
     
-    // Relasi ke Detail Siswa
     public function bukuNilai() { return $this->hasMany(BukuNilai::class); }
 }

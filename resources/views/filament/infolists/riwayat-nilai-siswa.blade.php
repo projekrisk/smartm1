@@ -1,5 +1,4 @@
 @php
-    // Menarik data nilai dari database langsung di View
     $nilais = \App\Models\NilaiRapor::with(['tahunAjaran', 'mataPelajaran'])
         ->where('siswa_id', $getRecord()->siswa_id)
         ->get()
@@ -13,14 +12,11 @@
     @forelse($nilais as $semester => $daftarNilai)
         @php
             $daftarNilai = $daftarNilai->sortBy('mataPelajaran.nama_pelajaran');
-            // Menentukan tab semester terakhir terbuka otomatis
             $isOpen = ($semester === $latestSemester) ? 'true' : 'false';
         @endphp
         
-        <!-- Setiap tabel memiliki state Alpine.js (open) masing-masing -->
         <div x-data="{ open: {{ $isOpen }} }" class="bg-white dark:bg-gray-900 shadow-sm ring-1 ring-gray-950/5 dark:ring-white/10 rounded-xl w-full block">
             
-            <!-- Tombol Header Accordion -->
             <button type="button" @click="open = !open" 
                 class="w-full text-left px-6 py-4 bg-gray-50 hover:bg-gray-100 dark:bg-white/5 dark:hover:bg-white/10 border-b border-gray-200 dark:border-white/10 text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider flex justify-between items-center transition-colors focus:outline-none rounded-t-xl" 
                 :class="!open ? 'rounded-b-xl border-b-0' : ''">
@@ -31,7 +27,6 @@
                 </div>
             </button>
 
-            <!-- Isi Tabel (Bisa Diciutkan) -->
             <div x-show="open" x-collapse x-cloak class="w-full border-t border-gray-200 dark:border-white/10">
                 <div class="overflow-x-auto w-full">
                     <table class="w-full min-w-full text-sm text-left text-gray-700 dark:text-gray-300">

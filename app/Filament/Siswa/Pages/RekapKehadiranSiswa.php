@@ -13,13 +13,10 @@ class RekapKehadiranSiswa extends Page
     protected static ?string $title = 'Rekap Kehadiran';
     protected static string $view = 'filament.siswa.pages.rekap-kehadiran-siswa';
     
-    // FUNGSI BARU: Mengubah URL rute bawaan Filament
     protected static ?string $slug = 'rekap-absensi';
     
-    // Sembunyikan dari sidebar karena akan diakses lewat icon di Dashboard
     protected static bool $shouldRegisterNavigation = false;
 
-    // Gunakan layout simple agar header bawaan admin hilang
     public function getLayout(): string
     {
         return 'filament-panels::components.layout.simple';

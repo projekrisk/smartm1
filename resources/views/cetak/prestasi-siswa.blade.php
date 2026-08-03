@@ -30,7 +30,6 @@
                 <p class="text-[11px] mt-1 text-gray-700">Dicetak pada: {{ now()->isoFormat('D MMMM Y') }}</p>
             </div>
 
-            <!-- FUNGSI BARU: Tambahan Kolom NIS/NISN dan Penyelenggara -->
             <table class="w-full border-collapse border border-gray-600 mb-4 text-[10px]">
                 <thead>
                     <tr class="bg-gray-200 text-center uppercase font-bold">

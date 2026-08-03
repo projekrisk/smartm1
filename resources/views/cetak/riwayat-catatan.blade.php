@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Riwayat & Catatan - {{ $siswa->nama_lengkap }}</title>
-    <!-- Menggunakan Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Pengaturan wajib untuk kertas cetak A4 dengan margin 2cm */
         @page {
             size: A4 portrait;
             margin: 2cm;
@@ -18,12 +16,10 @@
             print-color-adjust: exact !important;
         }
 
-        /* Hindari elemen terpotong saat ganti halaman */
         .avoid-break {
             page-break-inside: avoid;
         }
 
-        /* Mode Cetak */
         @media print {
             .no-print {
                 display: none !important;
@@ -42,7 +38,6 @@
         }
     </style>
 </head>
-<!-- MENGGUNAKAN FONT-SERIF SAMA SEPERTI CETAK BIODATA -->
 <body class="bg-gray-200 text-gray-900 font-serif text-[13px]">
 
     <div class="no-print fixed top-5 left-5 z-50">
@@ -56,31 +51,25 @@
         </button>
     </div>
 
-    <!-- Wrapper pelindung -->
     <div class="flex justify-center py-10 print:py-0 print:block">
         
-        <!-- Kertas A4 -->
         <div class="cetak-kertas bg-white shadow-2xl rounded w-[21cm] min-h-[29.7cm] p-[2cm] mx-auto">
             
-            <!-- Struktur Table Pembungkus untuk memanipulasi Footer otomatis di setiap halaman -->
             <table class="w-full" style="height: 100%; min-height: 25.7cm;">
                 <tbody class="table-row-group">
                     <tr>
                         <td class="align-top pb-10">
                             
-                            <!-- KOP SEKOLAH -->
                             <div class="border-b-4 border-gray-800 pb-3 mb-6 text-center font-sans">
                                 <h1 class="text-2xl font-bold uppercase tracking-wider">SMAN 1 MALINGPING</h1>
                                 <p class="text-xs mt-1">Jl. Pendidikan No. 1, Kec. Pintar, Kota Cerdas, 12345</p>
                                 <p class="text-xs">Telepon: (021) 888-9999 | Email: info@smart-m1.com</p>
                             </div>
 
-                            <!-- JUDUL -->
                             <div class="text-center mb-6 font-sans">
                                 <h2 class="text-lg font-bold underline uppercase">Laporan Riwayat & Catatan Siswa</h2>
                             </div>
 
-                            <!-- IDENTITAS POKOK (POSISI FOTO DIPINDAHKAN KE KANAN) -->
                             <div class="flex items-start gap-4 mb-6 avoid-break p-3 border border-gray-400 bg-gray-50 rounded">
                                 <div class="flex-1">
                                     <table class="w-full">
@@ -99,7 +88,6 @@
                                 </div>
                             </div>
 
-                            <!-- RIWAYAT KELAS & MUTASI -->
                             <div class="mb-6 avoid-break font-sans">
                                 <h3 class="font-bold text-sm bg-gray-800 text-white px-3 py-1 mb-2 uppercase border border-gray-800">A. Riwayat Kelas & Mutasi</h3>
                                 <table class="w-full border-collapse border border-gray-400 text-center">
@@ -128,7 +116,6 @@
                                 </table>
                             </div>
 
-                            <!-- CATATAN SISWA -->
                             <div class="avoid-break mb-8 font-sans">
                                 <h3 class="font-bold text-sm bg-gray-800 text-white px-3 py-1 mb-2 uppercase border border-gray-800">B. Buku Kasus & Prestasi (Catatan Siswa)</h3>
                                 
@@ -170,7 +157,6 @@
                     </tr>
                 </tbody>
 
-                <!-- TFOOT AKAN OTOMATIS BERADA DI PALING BAWAH (SEBAGAI FOOTNOTE) SAAT DICETAK -->
                 <tfoot class="table-footer-group">
                     <tr>
                         <td class="align-bottom">

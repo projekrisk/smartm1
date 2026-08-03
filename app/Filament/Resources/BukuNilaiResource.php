@@ -23,7 +23,7 @@ class BukuNilaiResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-book-open';
     protected static ?string $navigationLabel = 'Buku Nilai';
     protected static ?string $navigationGroup = 'Akademik';    
-    protected static ?int $navigationSort = 9;
+    protected static ?int $navigationSort = 10;
 
     public static function canViewAny(): bool { return in_array(auth()->user()->peran, ['admin', 'guru']); }
 
@@ -32,7 +32,6 @@ class BukuNilaiResource extends Resource
         $query = parent::getEloquentQuery();
         $query->withCount(['bukuNilai' => function (Builder $q) { $q->whereNotNull('nilai'); }]);
 
-        // Filter Tahun Ajaran Aktif
         $tahunAktifId = \App\Models\TahunAjaran::where('is_active', true)->value('id');
         if ($tahunAktifId) {
             $query->where('tahun_ajaran_id', $tahunAktifId);
@@ -80,7 +79,7 @@ class BukuNilaiResource extends Resource
                         Forms\Components\Select::make('jenis_nilai')
                             ->label('Jenis Penilaian')
                             ->options(fn () => \App\Models\JenisNilai::all()
-                                ->sortBy('nama', SORT_NATURAL | SORT_FLAG_CASE) // <-- Kunci pengurutan natural
+                                ->sortBy('nama', SORT_NATURAL | SORT_FLAG_CASE)
                                 ->pluck('nama', 'nama')
                             )
                             ->searchable()
@@ -101,7 +100,6 @@ class BukuNilaiResource extends Resource
                                 $query = \App\Models\JadwalPelajaran::with('kelas')->where('mata_pelajaran_id', $mapelId);
                                 if (auth()->user()->peran === 'guru') $query->where('guru_id', auth()->id());
                                 
-                                // <-- Diurutkan secara natural
                                 return $query->get()->sortBy('kelas.nama_kelas', SORT_NATURAL | SORT_FLAG_CASE)->pluck('kelas.nama_kelas', 'kelas_id'); 
                             })
                             ->required()
@@ -207,9 +205,7 @@ class BukuNilaiResource extends Resource
         return [
             'index' => Pages\ListBukuNilais::route('/'),
             'create' => Pages\CreateBukuNilai::route('/create'),
-            'edit' => Pages\EditBukuNilai::route('/{record}/edit'),
-            
-            // FITUR INPUT MASSAL & PANTAU TELAH DIHAPUS DARI ROUTE
+            'edit' => Pages\EditBukuNilai::route('/{record}/edit'),            
         ];
     }
 }

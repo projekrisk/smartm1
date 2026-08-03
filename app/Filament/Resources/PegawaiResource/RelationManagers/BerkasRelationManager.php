@@ -13,7 +13,6 @@ class BerkasRelationManager extends RelationManager
     protected static string $relationship = 'berkas';
     protected static ?string $title = 'Berkas & Dokumen Pegawai';
 
-    // FUNGSI AJAIB: Memaksa tabel ini tetap bisa diedit/ditambah meskipun berada di Halaman View
     public function isReadOnly(): bool
     {
         return false;

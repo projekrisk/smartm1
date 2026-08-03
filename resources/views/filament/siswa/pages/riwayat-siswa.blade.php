@@ -68,7 +68,7 @@
                         $warnaB = $catatan->jenis_catatan === 'Positif' ? 'rgba(16,185,129,0.1)' : ($catatan->jenis_catatan === 'Negatif' ? 'rgba(239,68,68,0.1)' : 'rgba(37,99,235,0.1)');
                         $warnaT = $catatan->jenis_catatan === 'Positif' ? '#10b981' : ($catatan->jenis_catatan === 'Negatif' ? '#ef4444' : '#2563eb');
                     @endphp
-                    <div class="theme-card" style="border-radius: 20px; padding: 16px; border-left: 4px solid {{ $warnaT }};">
+                    <div class="theme-card" style="margin-bottom;14px; border-radius: 20px; padding: 16px; border-left: 4px solid {{ $warnaT }};">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                             <span style="font-size: 10px; font-weight: 800; background-color: {{ $warnaB }}; color: {{ $warnaT }}; padding: 4px 8px; border-radius: 6px; text-transform: uppercase;">{{ $catatan->jenis_catatan }}</span>
                             <span style="font-size: 11px; font-weight: 700; color: #94a3b8;">{{ \Carbon\Carbon::parse($catatan->tanggal)->format('d M Y') }}</span>

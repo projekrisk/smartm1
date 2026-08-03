@@ -20,7 +20,6 @@ class RiwayatKelasRelationManager extends RelationManager
                 Forms\Components\Select::make('tahun_ajaran_id')
                     ->label('Tahun Ajaran')
                     ->relationship('tahunAjaran', 'nama_tahun')
-                    // MODIFIKASI: Menampilkan nama tahun & semester di dropdown
                     ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->nama_tahun} ({$record->semester})")
                     ->searchable()
                     ->preload()
@@ -42,7 +41,6 @@ class RiwayatKelasRelationManager extends RelationManager
             ->recordTitleAttribute('status_riwayat')
             ->columns([
                 Tables\Columns\TextColumn::make('tahunAjaran.nama_tahun')->label('Tahun Ajaran')->sortable(),
-                // TAMBAHAN: Memunculkan Kolom Semester
                 Tables\Columns\TextColumn::make('tahunAjaran.semester')->label('Semester')->badge()->color('info')->sortable(),
                 Tables\Columns\TextColumn::make('kelas.nama_kelas')->label('Kelas')->sortable(),
                 Tables\Columns\TextColumn::make('status_riwayat')->label('Status')->badge(),

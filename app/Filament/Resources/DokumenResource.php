@@ -67,7 +67,6 @@ class DokumenResource extends Resource
                             ->live()
                             ->required(),
                             
-                        // MUNCUL JIKA PILIH FILE
                         Forms\Components\FileUpload::make('file_path')
                             ->label('Upload File Dokumen')
                             ->disk('publik_upload')

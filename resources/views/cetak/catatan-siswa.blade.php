@@ -51,7 +51,7 @@
                         <th style="width: 30px;">No</th>
                         <th style="width: 140px;">Nama Siswa</th>
                         <th style="width: 80px;">Tanggal</th>
-                        <th style="width: 120px;">Perihal / Topik</th> <!-- Kolom Baru -->
+                        <th style="width: 120px;">Perihal / Topik</th>
                         <th>Deskripsi Catatan</th>
                         <th>Tindak Lanjut</th>
                         <th style="width: 100px;">Pelapor</th>
@@ -69,7 +69,6 @@
                                 
                                 <td class="text-center">{{ \Carbon\Carbon::parse($c->tanggal)->format('d/m/Y') }}</td>
                                 
-                                <!-- MEMANGGIL NAMA KOLOM YANG BENAR SESUAI DATABASE -->
                                 <td>{{ $c->judul_catatan ?? '-' }}</td>
                                 
                                 <td>{{ $c->isi_catatan ?? '-' }}</td>

@@ -10,7 +10,6 @@ use Filament\Tables\Table;
 
 class KehadiranRelationManager extends RelationManager
 {
-    // Ini mengarah ke fungsi hasMany() di model JurnalGuru
     protected static string $relationship = 'kehadiranPelajaran';
     protected static ?string $title = 'Daftar Hadir Siswa';
 
@@ -38,7 +37,7 @@ class KehadiranRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('id')
-            ->recordAction('edit') // Klik baris langsung muncul pop-up edit
+            ->recordAction('edit')
             ->columns([
                 Tables\Columns\TextColumn::make('siswa.nama_lengkap')
                     ->label('Nama Siswa')
@@ -87,6 +86,6 @@ class KehadiranRelationManager extends RelationManager
                         ->deselectRecordsAfterCompletion(),
                 ]),
             ])
-            ->paginated(false); // Matikan pagination agar guru bisa scroll dengan enak
+            ->paginated(false);
     }
 }

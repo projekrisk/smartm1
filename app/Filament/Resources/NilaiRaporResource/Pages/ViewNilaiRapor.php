@@ -10,7 +10,6 @@ class ViewNilaiRapor extends ViewRecord
 {
     protected static string $resource = NilaiRaporResource::class;
 
-    // Mengubah judul halaman di atas agar sesuai dengan nama siswa
     public function getTitle(): string
     {
         return 'Detail Buku Rapor: ' . ($this->record->siswa->nama_lengkap ?? '-');
@@ -19,12 +18,10 @@ class ViewNilaiRapor extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            // TOMBOL BARU: CETAK BUKU RAPOR
             Actions\Action::make('cetak_rapor')
                 ->label('Cetak Buku Rapor')
                 ->icon('heroicon-o-printer')
                 ->color('success')
-                // Mengambil ID siswa untuk dilempar ke halaman cetak
                 ->url(fn (): string => url('/cetak/buku-rapor/' . $this->record->siswa_id))
                 ->openUrlInNewTab(),
 

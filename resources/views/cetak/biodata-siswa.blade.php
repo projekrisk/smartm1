@@ -4,22 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cetak Biodata & Portofolio - {{ $siswa->nama_lengkap }}</title>
-    <!-- Menggunakan Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Pengaturan wajib untuk kertas cetak A4 dengan margin 2cm */
         @page {
             size: A4 portrait;
             margin: 1cm 1.5cm;
         }
         
-        /* Memastikan background berwarna ikut tercetak (termasuk watermark) */
         * {
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
         }
 
-        /* Hindari elemen terpotong saat ganti halaman */
         .avoid-break {
             page-break-inside: avoid;
         }
@@ -44,7 +40,6 @@
 </head>
 <body class="bg-gray-200 text-gray-900 font-serif">
 
-    <!-- Tombol Navigasi (Sembunyi saat cetak) -->
     <div class="no-print fixed top-5 left-5 z-50">
         <button onclick="window.close()" class="bg-gray-800 text-white px-4 py-2 rounded shadow hover:bg-gray-700 transition">
             &larr; Tutup Halaman
@@ -57,20 +52,16 @@
         </button>
     </div>
 
-    <!-- Wrapper pelindung -->
     <div class="flex justify-center py-10 print:py-0 print:block">
         
-        <!-- Kertas A4 (Menggunakan flex-col agar layout bisa mengalir multi-halaman) -->
         <div class="cetak-kertas bg-white shadow-2xl rounded w-[21cm] min-h-[29.7cm] p-[1cm] mx-auto relative flex flex-col overflow-hidden">
             
-            <!-- WATERMARK BACKGROUND -->
             <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden">
                 <div class="text-[110px] font-bold text-gray-200 transform -rotate-45 tracking-widest text-center leading-none opacity-60">
                     DATA<br>RAHASIA
                 </div>
             </div>
 
-            <!-- KONTEN UTAMA (Diberi z-10 agar berada di atas watermark) -->
             <div class="relative z-10 flex-1 flex flex-col">
                 
                 <div class="border-b-4 border-gray-800 pb-3 mb-6 text-center avoid-break">
@@ -79,7 +70,6 @@
                     <p class="text-xs">Telepon: (021) 888-9999 | Email: info@smart-m1.com</p>
                 </div>
 
-                <!-- JUDUL DOKUMEN -->
                 <div class="text-center mb-6 avoid-break">
                     <h2 class="text-lg font-bold underline uppercase">Buku Induk - Profil & Portofolio Siswa</h2>
                     <p class="text-xs mt-1">Nomor Induk Siswa Nasional (NISN): <span class="font-bold">{{ $siswa->nisn ?? '-' }}</span></p>
@@ -99,7 +89,6 @@
                     </table>
                 </div>
 
-                <!-- DATA TEMPAT TINGGAL -->
                 <div class="mb-4 text-[13px] avoid-break">
                     <h3 class="font-bold bg-gray-200 px-2 py-1 mb-2 uppercase text-xs border border-gray-400">B. Keterangan Tempat Tinggal</h3>
                     <table class="w-full ml-1">
@@ -124,7 +113,6 @@
                     </table>
                 </div>
 
-                <!-- DATA AKADEMIK DASAR & FOTO -->
                 <div class="mb-6 text-[13px] avoid-break">
                     <h3 class="font-bold bg-gray-200 px-2 py-1 mb-2 uppercase text-xs border border-gray-400">D. Keterangan Akademik Dasar</h3>
                     
@@ -212,7 +200,6 @@
                     </h3>
                     
                     @php
-                        // Mengelompokkan data berdasarkan Bulan dan Tahun
                         $absensiGrouped = $siswa->kehadiranHarian->groupBy(function($item) {
                             return \Carbon\Carbon::parse($item->rekapKehadiran->tanggal)->isoFormat('MMMM YYYY');
                         });
@@ -257,7 +244,6 @@
         </div>
     </div>
 
-    <!-- Script Print Otomatis -->
     <script>
         window.onload = function() {
             setTimeout(() => {

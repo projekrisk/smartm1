@@ -10,7 +10,6 @@ class CreateCatatanSiswa extends CreateRecord
 {
     protected static string $resource = CatatanSiswaResource::class;
 
-    // FUNGSI BARU: Mengarahkan pengguna kembali ke tabel setelah klik Simpan
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');

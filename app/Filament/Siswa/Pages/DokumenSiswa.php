@@ -23,7 +23,6 @@ class DokumenSiswa extends Page
         $user = Auth::user();
         $siswa = Siswa::with('kelas')->where('user_id', $user->id)->first();
         
-        // Tarik dokumen yang ditujukan untuk Siswa atau Semua
         $dokumens = Dokumen::whereIn('target_audience', ['Semua', 'Siswa'])
             ->orderBy('created_at', 'desc')
             ->get();

@@ -13,9 +13,6 @@ class ViewCatatanSiswa extends ViewRecord
 {
     protected static string $resource = CatatanSiswaResource::class;
 
-    // ===========================================================================
-    // FUNGSI 1: OTOMATIS TANDAI "SUDAH DIBACA" SAAT HALAMAN INI DIBUKA WALI KELAS
-    // ===========================================================================
     public function mount(int | string $record): void
     {
         parent::mount($record);
@@ -23,32 +20,25 @@ class ViewCatatanSiswa extends ViewRecord
         $catatan = $this->record;
         $user = Auth::user();
 
-        // Jika yang membuka adalah Wali Kelas dari siswa tersebut, dan statusnya belum dibaca
         if ($user->peran === 'guru' && !$catatan->is_read) {
             $isWaliKelas = Kelas::where('wali_kelas_id', $user->id)
                 ->where('id', $catatan->siswa->kelas_id)
                 ->exists();
 
             if ($isWaliKelas) {
-                // Tandai sudah dibaca di database agar notifikasi (badge) angka merahnya berkurang/hilang
                 $catatan->update(['is_read' => true]);
             }
         }
     }
 
-    // ===========================================================================
-    // FUNGSI 2: TOMBOL-TOMBOL AKSI DI POJOK KANAN ATAS (KEMBALI, TINDAK LANJUT, EDIT)
-    // ===========================================================================
     protected function getHeaderActions(): array
     {
         return [
-            // TOMBOL KEMBALI
             Actions\Action::make('kembali')
                 ->label('Kembali ke Daftar')
                 ->color('gray')
                 ->url($this->getResource()::getUrl('index')),
 
-            // TOMBOL TINDAK LANJUT (HANYA MUNCUL DI VIEW JIKA BELUM DITINDAKLANJUTI & DIA WALI KELAS/ADMIN)
             Actions\Action::make('tindak_lanjut')
                 ->label('Tindak Lanjuti Kasus')
                 ->icon('heroicon-o-check-badge')

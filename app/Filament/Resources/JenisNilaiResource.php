@@ -14,10 +14,9 @@ class JenisNilaiResource extends Resource
 {
     protected static ?string $model = JenisNilai::class;
     protected static ?string $navigationIcon = 'heroicon-o-tag';
-    protected static ?string $navigationLabel = 'Master Jenis Nilai';
-    protected static ?string $navigationGroup = 'Pengaturan';
-    
-    // Hanya Admin yang boleh mengatur daftar ini
+    protected static ?string $navigationGroup = 'Akademik';    
+    protected static ?string $navigationLabel = 'Jenis Nilai';
+    protected static ?int $navigationSort = 9;    
     public static function canViewAny(): bool
     {
         return auth()->user()->peran === 'admin';

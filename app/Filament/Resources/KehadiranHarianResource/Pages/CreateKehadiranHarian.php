@@ -11,7 +11,6 @@ class CreateKehadiranHarian extends CreateRecord
 {
     protected static string $resource = KehadiranHarianResource::class;
 
-    // FUNGSI AJAIB: Otomatis mengisi 30+ siswa dengan status "Hadir" ke Database
     protected function afterCreate(): void
     {
         $rekap = $this->record;
@@ -30,11 +29,9 @@ class CreateKehadiranHarian extends CreateRecord
             ];
         }
         
-        // Memasukkan semua data sekaligus agar server tidak lemot
         KehadiranHarian::insert($dataInsert);
     }
 
-    // Mengarahkan langsung ke halaman Edit agar Admin bisa melihat Tabel Daftar Hadir
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('edit', ['record' => $this->record]);

@@ -13,6 +13,5 @@ class PesanBantuan extends Model
 
     public function siswa(): BelongsTo { return $this->belongsTo(Siswa::class); }
     
-    // Relasi untuk menarik seluruh isi chat
     public function details(): HasMany { return $this->hasMany(PesanBantuanDetail::class); }
 }

@@ -75,7 +75,6 @@ class CatatanRelationManager extends RelationManager
                 Tables\Actions\CreateAction::make()->label('Tambah Catatan Baru'),
             ])
             ->actions([
-                // AKSI TINDAK LANJUT CEPAT
                 Tables\Actions\Action::make('tindak_lanjut')
                     ->label('Tindak Lanjut')
                     ->icon('heroicon-o-check-badge')

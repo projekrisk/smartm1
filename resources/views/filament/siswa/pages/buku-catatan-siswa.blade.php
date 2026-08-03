@@ -14,15 +14,20 @@
                 display: flex; flex-direction: column; box-shadow: 0 0 40px rgba(0,0,0,0.15); overflow: hidden; font-family: 'Inter', system-ui, sans-serif; transition: background-color 0.3s ease;
             }
             .theme-bg { background-color: #f8fafc; }
-            .theme-card { background-color: #ffffff; box-shadow: 0 8px 30px rgba(0,0,0,0.04); }
+            .theme-card { background-color: #ffffff; border: 1px solid #f1f5f9; box-shadow: 0 8px 30px rgba(0,0,0,0.04); border: 1px solid #e2e8f0}
             .theme-text { color: #0f172a; }
             .theme-text-muted { color: #64748b; }
             .dark .theme-bg { background-color: #0f172a; }
-            .dark .theme-card { background-color: #1e293b; box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
+            .dark .theme-card { background-color: #1e293b; border: 1px solid #334155; box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
             .dark .theme-text { color: #f8fafc; }
             .dark .theme-text-muted { color: #94a3b8; }
             .android-content { flex: 1; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; }
             .android-content::-webkit-scrollbar { display: none; }
+
+            .theme-bg-smt { background-color: #fafafa; }
+            .dark .theme-bg-smt { background-color: #253145; }
+            .theme-bg-mpl { background-color: #ffffff; }
+            .dark .theme-bg-mpl { background-color: #1e293b; }
             
             /* CSS UNTUK BARIS KIRI-KANAN */
             .data-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 6px 0; border-bottom: 1px dashed rgba(0,0,0,0.05); }
@@ -59,7 +64,7 @@
                         if ($item->jenis_catatan == 'Panggilan Ortu') { $bg = 'rgba(245,158,11,0.1)'; $tc = '#f59e0b'; $icon = 'heroicon-s-bell-alert'; }
                     @endphp
                     
-                    <div class="theme-card" style="border-radius: 16px; overflow: hidden; border: 1px solid #f1f5f9;" class="dark:border-slate-800">
+                    <div class="theme-card" style="border-radius: 20px; overflow: hidden;" class="dark:border-slate-800">
                         
                         <button @click="activeAccordion = activeAccordion === {{ $index }} ? null : {{ $index }}" type="button" style="width: 100%; text-align: left; padding: 16px; background: transparent; border: none; cursor: pointer; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; outline: none;">
                             
@@ -84,7 +89,7 @@
                                 
                                 <div style="border-top: 1px dashed rgba(0,0,0,0.1); padding-top: 12px;" class="dark:border-white/10">
                                     
-                                    <div style="background-color: #f8fafc; padding: 12px; border-radius: 12px; margin-bottom: 12px; border: 1px solid #e2e8f0;" class="dark:bg-slate-800 dark:border-slate-700">
+                                    <div style="border-radius: 12px; padding: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.02);" class="theme-bg-mpl">
                                         <p class="theme-text" style="font-size: 12px; line-height: 1.5; margin: 0; font-weight: 600;">{{ $item->isi_catatan }}</p>
                                     </div>
 

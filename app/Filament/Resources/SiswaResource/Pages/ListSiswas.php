@@ -166,7 +166,7 @@ class ListSiswas extends ListRecords
                         \Illuminate\Support\Facades\DB::commit();
 
                     } catch (\Exception $e) {
-                        \Illuminate\Support\Facades\DB::rollBack(); // Batalkan semua jika ada 1 error
+                        \Illuminate\Support\Facades\DB::rollBack();
                         \Filament\Notifications\Notification::make()->title('Gagal Impor')->body('Kesalahan: ' . $e->getMessage())->danger()->send();
                         fclose($file); 
                         return;

@@ -17,7 +17,6 @@ class EditPrestasi extends EditRecord
         ];
     }
 
-    // Mengembalikan user ke daftar tabel setelah selesai memverifikasi
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');

@@ -6,7 +6,6 @@
     <title>Rekap Jurnal Mengajar - {{ $guru->name }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Menggunakan kertas A4 memanjang (Landscape) */
         @page { size: A4 landscape; margin: 1.5cm; }
         * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; font-family: Arial, sans-serif; }
         .avoid-break { page-break-inside: avoid; }
@@ -39,13 +38,11 @@
                 try { if (\Illuminate\Support\Facades\Schema::hasTable('pengaturan')) $pengaturan = \App\Models\Pengaturan::first(); } catch (\Exception $e) {}
             @endphp
 
-            <!-- KOP SURAT -->
             <div class="border-b-4 border-gray-800 pb-3 mb-6 text-center">
                 <h1 class="text-xl font-bold uppercase tracking-wider">REKAPITULASI JURNAL MENGAJAR GURU</h1>
                 <h1 class="text-2xl font-bold uppercase tracking-wider mt-1">{{ $pengaturan->nama_sekolah ?? 'SMART-M1 SMAN 1 MALINGPING' }}</h1>
             </div>
 
-            <!-- INFO GURU DAN TAHUN AJARAN -->
             <div class="flex justify-between items-start mb-6">
                 <table class="w-1/2 text-[12px]">
                     <tr><td class="w-24 font-bold py-1">Nama Guru</td><td class="w-2">:</td><td class="font-bold uppercase">{{ $guru->name }}</td></tr>
@@ -62,7 +59,6 @@
                 </table>
             </div>
 
-            <!-- TABEL REKAP JURNAL -->
             <table class="w-full border-collapse border border-gray-600 mb-6 text-[11px]">
                 <thead>
                     <tr class="bg-gray-200 text-center font-bold uppercase">
@@ -85,15 +81,12 @@
                     
                     @forelse($jurnals as $j)
                         @php
-                            // Filter anak yang tidak hadir dan reset index array dengan values()
                             $absenSiswa = clone $j->kehadiranPelajaran; 
                             $tidakHadir = $absenSiswa->where('status', '!=', 'Hadir')->sortBy('siswa.nama_lengkap')->values();
                             
-                            // Rowspan dinamis: Minimal 1 (walau semua hadir), jika ada yang absen maka sebanyak anak absen
                             $rowspan = max(1, $tidakHadir->count());
                         @endphp
                         
-                        <!-- BARIS PERTAMA (Memuat Data Jurnal Induk + Anak Absen ke-1) -->
                         <tr class="avoid-break hover:bg-gray-50">
                             <td rowspan="{{ $rowspan }}" class="border border-gray-600 p-2 text-center align-top">{{ $no++ }}</td>
                             <td rowspan="{{ $rowspan }}" class="border border-gray-600 p-2 text-center align-top whitespace-nowrap">{{ \Carbon\Carbon::parse($j->tanggal)->isoFormat('DD MMM YYYY') }}</td>
@@ -129,7 +122,6 @@
                             @endif
                         </tr>
                         
-                        <!-- BARIS KEDUA DAN SETERUSNYA (Hanya mengeprint sisa anak yang absen) -->
                         @if($tidakHadir->count() > 1)
                             @for($i = 1; $i < $tidakHadir->count(); $i++)
                                 @php 
@@ -162,7 +154,6 @@
             </table>
 
             @php
-                // Algoritma untuk menghitung total ketidakhadiran per siswa dari seluruh jurnal di atas
                 $rekapAbsenSiswa = [];
                 foreach($jurnals as $j) {
                     if($j->kehadiranPelajaran) {
@@ -181,7 +172,6 @@
                                         'Total' => 0
                                     ];
                                 }
-                                // Menambahkan hitungan sesuai statusnya
                                 if(isset($rekapAbsenSiswa[$sId][$absen->status])) {
                                     $rekapAbsenSiswa[$sId][$absen->status]++;
                                     $rekapAbsenSiswa[$sId]['Total']++;
@@ -191,7 +181,6 @@
                     }
                 }
                 
-                // Urutkan siswa berdasarkan total absen terbanyak ke yang paling sedikit
                 $topAbsen = collect($rekapAbsenSiswa)->sortByDesc('Total')->values();
             @endphp
             
@@ -231,7 +220,6 @@
                 </div>
             @endif
 
-            <!-- KETERANGAN & TANDA TANGAN -->
             <div class="mt-4 flex justify-between text-[11px] avoid-break">
                 <div>
                     <strong>Keterangan Status:</strong><br>
@@ -249,7 +237,6 @@
         </div>
     </div>
 
-    <!-- Script Cetak Otomatis -->
     <script>
         window.onload = function() { 
             setTimeout(() => { window.print(); }, 800); 

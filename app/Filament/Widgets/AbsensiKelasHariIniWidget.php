@@ -14,10 +14,8 @@ class AbsensiKelasHariIniWidget extends BaseWidget
 {
     protected static ?int $sort = 3;
 
-    // Mengatur lebar tabel menjadi setengah halaman agar bisa berdampingan
     protected int | string | array $columnSpan = ['md' => 1];
 
-    // FUNGSI BARU: Menghitung otomatis jumlah siswa yang absen HARI INI
     public function getHeading(): string
     {
         $kelasId = Kelas::where('wali_kelas_id', Auth::id())->value('id');
@@ -33,7 +31,6 @@ class AbsensiKelasHariIniWidget extends BaseWidget
         return "Tidak Hadir Hari Ini ({$jumlahAbsen})";
     }
 
-    // HANYA MUNCUL UNTUK WALI KELAS
     public static function canView(): bool
     {
         if (Auth::user()->peran !== 'guru') return false;
@@ -44,13 +41,11 @@ class AbsensiKelasHariIniWidget extends BaseWidget
     {
         $kelasId = Kelas::where('wali_kelas_id', Auth::id())->value('id');
         
-        // Ambil ID Rekap Absensi hari ini untuk kelas tersebut (Jika belum diabsen oleh TU, nilainya 0)
         $rekapHariIni = RekapKehadiran::where('kelas_id', $kelasId)->whereDate('tanggal', today())->first();
         $rekapId = $rekapHariIni ? $rekapHariIni->id : 0;
 
         return $table
             ->query(
-                // Hanya panggil siswa yang statusnya S/I/A di rekap hari ini
                 KehadiranHarian::where('rekap_kehadiran_id', $rekapId)
                     ->whereIn('status', ['Sakit', 'Izin', 'Alpa'])
             )

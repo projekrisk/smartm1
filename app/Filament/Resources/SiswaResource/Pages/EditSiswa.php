@@ -15,7 +15,6 @@ class EditSiswa extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            // TOMBOL CETAK BIODATA (Hanya untuk Admin & Staf)
             Actions\Action::make('cetak_biodata')
                 ->label('Cetak Biodata')
                 ->icon('heroicon-o-printer')
@@ -24,7 +23,6 @@ class EditSiswa extends EditRecord
                 ->url(fn (Siswa $record): string => route('cetak.biodata', $record->id))
                 ->openUrlInNewTab(),
             
-            // TOMBOL CETAK RIWAYAT & CATATAN (Hanya untuk Admin & Staf)
             Actions\Action::make('cetak_riwayat_catatan')
                 ->label('Riwayat & Catatan')
                 ->icon('heroicon-o-document-text')
@@ -33,7 +31,6 @@ class EditSiswa extends EditRecord
                 ->url(fn (Siswa $record): string => route('cetak.riwayat-catatan', $record->id))
                 ->openUrlInNewTab(),
 
-            // Tombol bawaan Hapus Data
             Actions\DeleteAction::make(),
         ];
     }

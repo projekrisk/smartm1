@@ -10,7 +10,6 @@ use Filament\Tables\Table;
 
 class DaftarHadirRelationManager extends RelationManager
 {
-    // ... isi kodenya sama dengan yang saya berikan sebelumnya ...
     protected static string $relationship = 'kehadiranHarian';
     protected static ?string $title = 'Daftar Hadir Siswa';
 

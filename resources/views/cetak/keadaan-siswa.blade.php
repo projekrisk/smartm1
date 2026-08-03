@@ -28,7 +28,6 @@
     <div class="flex justify-center py-10 print:py-0 print:block min-w-max">
         <div class="cetak-kertas bg-white shadow-2xl rounded p-[1cm] mx-auto min-w-[29.7cm] flex flex-col">
 
-            <!-- KOP LAPORAN -->
             <div style="display: flex; align-items: center; border-bottom: 2px solid black; padding-bottom: 10px; margin-bottom: 15px;">
                 <div style="width: 70px; height: 70px; margin-right: 15px; flex-shrink: 0; display: flex; justify-content: center; align-items: center;">
                     @if(isset($pengaturan) && $pengaturan->logo_sekolah)
@@ -175,7 +174,6 @@
         </div>
     </div>
 
-    <!-- Print Otomatis -->
     <script>
         window.onload = function() {
             setTimeout(() => { window.print(); }, 800);

@@ -18,7 +18,6 @@ class EditJadwalPelajaran extends EditRecord
         ];
     }
 
-    // Mengarahkan kembali ke tabel setelah data selesai diedit
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');

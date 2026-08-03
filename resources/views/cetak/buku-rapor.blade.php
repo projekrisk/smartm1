@@ -6,7 +6,6 @@
     <title>Buku Induk Rapor - {{ $siswa->nama_lengkap }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Mengatur agar font menggunakan Arial secara global */
         body, table, th, td, p, h1, h2, h3, span, div {
             font-family: Arial, Helvetica, sans-serif !important;
         }
@@ -37,7 +36,6 @@
 </head>
 <body class="bg-gray-200 text-gray-900 text-[13px]">
     
-    <!-- Navigasi -->
     <div class="no-print fixed top-5 left-5 z-50">
         <button onclick="window.close()" class="bg-gray-800 text-white px-4 py-2 rounded shadow hover:bg-gray-700 transition">&larr; Tutup Halaman</button>
     </div>
@@ -49,7 +47,6 @@
         <div class="cetak-kertas bg-white shadow-2xl rounded w-[21cm] min-h-[29.7cm] p-[1.5cm] mx-auto">
             
             @php
-                // Menarik data pengaturan untuk logo dan kepala sekolah
                 $pengaturan = null;
                 try {
                     if (\Illuminate\Support\Facades\Schema::hasTable('pengaturan')) {
@@ -58,19 +55,15 @@
                 } catch (\Exception $e) {}
             @endphp
 
-            <!-- KOP SURAT RESMI (Kiri Dinas, Kanan Sekolah) -->
             <div class="border-b-4 border-gray-800 pb-3 mb-6 flex items-center justify-between">
-                <!-- Logo Dinas (Kiri) -->
                 <div class="w-24 h-24 flex-shrink-0 flex items-center justify-center">
                     @if($pengaturan && $pengaturan->logo_dinas)
                         <img src="{{ url('/uploads/' . $pengaturan->logo_dinas) }}" alt="Logo Dinas" class="max-w-full max-h-full object-contain">
                     @else
-                        <!-- Placeholder jika belum diunggah -->
                         <div class="w-20 h-20 border-2 border-dashed border-gray-400 text-gray-400 flex items-center justify-center text-[10px] text-center">Logo<br>Dinas</div>
                     @endif
                 </div>
 
-                <!-- Teks Kop Tengah -->
                 <div class="flex-1 text-center px-4">
                     <h1 class="text-xl font-bold uppercase tracking-wider">PEMERINTAH PROVINSI BANTEN</h1>
                     <h1 class="text-xl font-bold uppercase tracking-wider leading-tight">DINAS PENDIDIKAN DAN KEBUDAYAAN</h1>
@@ -80,12 +73,10 @@
                     <p class="text-[11px]">Website: https://sman1malingping.sch.id – Email: sman1malingping@ymail.com</p>
                 </div>
 
-                <!-- Logo Sekolah (Kanan) -->
                 <div class="w-24 h-24 flex-shrink-0 flex items-center justify-center">
                     @if($pengaturan && $pengaturan->logo_sekolah)
                         <img src="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}" alt="Logo Sekolah" class="max-w-full max-h-full object-contain">
                     @else
-                        <!-- Placeholder jika belum diunggah -->
                         <div class="w-20 h-20 border-2 border-dashed border-gray-400 text-gray-400 flex items-center justify-center text-[10px] text-center">Logo<br>Sekolah</div>
                     @endif
                 </div>
@@ -95,7 +86,6 @@
                 <h2 class="text-lg font-bold underline uppercase">Buku Induk Penilaian Siswa</h2>
             </div>
 
-            <!-- IDENTITAS SISWA (Ditambah Foto di Kanan) -->
             <div class="flex items-start justify-between mb-8 avoid-break">
                 <div class="flex-1 pr-4">
                     <table class="w-full text-[13px]">
@@ -106,7 +96,6 @@
                     </table>
                 </div>
                 
-                <!-- Foto Siswa 3x4 -->
                 <div class="w-[3cm] h-[4cm] border-2 border-gray-800 p-1 flex items-center justify-center overflow-hidden bg-white flex-shrink-0 relative z-20">
                     @if($siswa->foto)
                         <img src="{{ url('/uploads/' . $siswa->foto) }}" alt="Foto" class="w-full h-full object-cover">
@@ -116,12 +105,10 @@
                 </div>
             </div>
 
-            <!-- PENGOLAHAN DATA NILAI MENJADI MATRIKS (KOLOM SEMESTER) -->
             @php
                 $semuaSemester = [];
                 $mapelData = [];
 
-                // 1. Ekstrak unik semester dan gabungkan nilai berdasarkan mapel
                 foreach($nilaisGrouped as $semesterName => $nilais) {
                     if(!in_array($semesterName, $semuaSemester)) {
                         $semuaSemester[] = $semesterName;
@@ -134,17 +121,14 @@
                         $mapelData[$mapelName][$semesterName] = $n->nilai_akhir;
                     }
                 }
-                // Urutkan mapel secara abjad A-Z
                 ksort($mapelData);
 
-                // Penyiapan variabel untuk rata-rata baris paling bawah (Per Semester)
                 $sumSemester = array_fill_keys($semuaSemester, 0);
                 $countSemester = array_fill_keys($semuaSemester, 0);
                 $grandTotalSum = 0;
                 $grandTotalCount = 0;
             @endphp
 
-            <!-- TABEL NILAI MATRIKS -->
             <div class="mb-8 avoid-break">
                 @if(count($semuaSemester) > 0)
                     <table class="w-full border-collapse border border-gray-400 text-center text-[12px]">
@@ -153,13 +137,11 @@
                                 <th rowspan="2" class="border border-gray-400 p-2 w-10">No</th>
                                 <th rowspan="2" class="border border-gray-400 p-2 text-left">Mata Pelajaran</th>
                                 <th colspan="{{ count($semuaSemester) }}" class="border border-gray-400 p-2">Nilai Semester</th>
-                                <!-- Kolom Rata-rata per Mapel -->
                                 <th rowspan="2" class="border border-gray-400 p-2 w-16 bg-gray-300">Rata-<br>rata</th>
                             </tr>
                             <tr class="bg-gray-100">
                                 @foreach($semuaSemester as $sem)
                                     @php
-                                        // Memisahkan "2025/2026 (Ganjil)" menjadi Tahun dan Ganjil/Genap
                                         $parts = explode(' (', $sem);
                                         $tahun = $parts[0] ?? $sem;
                                         $smt = isset($parts[1]) ? str_replace(')', '', $parts[1]) : '';
@@ -175,7 +157,6 @@
                             @php $no = 1; @endphp
                             @foreach($mapelData as $mapel => $nilaiSmt)
                                 @php
-                                    // Variabel untuk menghitung rata-rata menyamping (Per Mapel)
                                     $sumMapel = 0;
                                     $countMapel = 0;
                                 @endphp
@@ -186,17 +167,13 @@
                                         @php
                                             $val = $nilaiSmt[$sem] ?? null;
                                             
-                                            // Jika nilai berupa angka, tambahkan ke perhitungan rata-rata
                                             if(is_numeric($val)) {
-                                                // Kalkulasi ke samping (Mapel)
                                                 $sumMapel += $val;
                                                 $countMapel++;
                                                 
-                                                // Kalkulasi ke bawah (Semester)
                                                 $sumSemester[$sem] += $val;
                                                 $countSemester[$sem]++;
                                                 
-                                                // Kalkulasi total ujung (Keseluruhan)
                                                 $grandTotalSum += $val;
                                                 $grandTotalCount++;
                                             }
@@ -205,14 +182,12 @@
                                             {{ $val ?? '-' }}
                                         </td>
                                     @endforeach
-                                    <!-- Menampilkan rata-rata nilai mapel -->
                                     <td class="border border-gray-400 p-2 font-bold text-[14px] bg-gray-100 text-blue-800">
                                         {{ $countMapel > 0 ? round($sumMapel / $countMapel, 2) : '-' }}
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
-                        <!-- Baris Rata-rata per Semester di Bawah Tabel -->
                         <tfoot>
                             <tr class="bg-gray-200">
                                 <td colspan="2" class="border border-gray-400 p-2 text-right font-bold uppercase">Rata-rata Nilai</td>
@@ -234,7 +209,6 @@
                 @endif
             </div>
 
-            <!-- TANDA TANGAN KEPALA SEKOLAH -->
             <div class="mt-12 flex justify-end text-[13px] avoid-break">
                 <div class="text-center w-64">
                     <p>Malingping, ....................................</p>
@@ -247,7 +221,6 @@
         </div>
     </div>
 
-    <!-- Script Cetak Otomatis -->
     <script>
         window.onload = function() {
             setTimeout(() => {

@@ -5,7 +5,6 @@
 </head>
 <body>
     @php
-        // Hitung total kolom dinamis untuk keperluan merge (colspan) judul
         $totalKolom = 3; // Nomor, NISN, Nama
         foreach($grupMapel as $penilaians) {
             $totalKolom += count($penilaians);
@@ -14,7 +13,6 @@
 
     <table>
         <thead>
-            <!-- ===================== KOP JUDUL EXCEL ===================== -->
             <tr>
                 <th colspan="{{ $totalKolom }}" style="text-align: center; font-weight: bold; font-size: 16px;">
                     {{ strtoupper($namaSekolah) }}
@@ -31,11 +29,10 @@
                 </th>
             </tr>
             <tr>
-                <th colspan="{{ $totalKolom }}"></th> <!-- Baris Kosong sebagai pemisah -->
+                <th colspan="{{ $totalKolom }}"></th>
             </tr>
             <!-- =========================================================== -->
 
-            <!-- HEADER TABEL INTI -->
             <tr>
                 <th rowspan="2" style="font-weight: bold; text-align: center; background-color: #f8fafc; border: 1px solid #000000;">No</th>
                 <th rowspan="2" style="font-weight: bold; text-align: center; background-color: #f8fafc; border: 1px solid #000000;">NISN</th>
@@ -69,7 +66,6 @@
                             @php $nilai = $data['nilai'][$p->id]; @endphp
                             
                             @if(is_null($nilai))
-                                <!-- Kotak Merah Jika Kosong -->
                                 <td style="text-align: center; background-color: #ffcccc; color: #ff0000; font-weight: bold; border: 1px solid #000000;">X</td>
                             @else
                                 <td style="text-align: center; border: 1px solid #000000;">{{ $nilai }}</td>

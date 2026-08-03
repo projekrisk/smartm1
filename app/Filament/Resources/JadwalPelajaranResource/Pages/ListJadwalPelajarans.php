@@ -18,20 +18,16 @@ class ListJadwalPelajarans extends ListRecords
     {
         $actions = [];
 
-        // Tombol Cetak (Hanya muncul jika ada data)
         $actions[] = Actions\Action::make('cetak_jadwal')
             ->label('Cetak Jadwal')
             ->icon('heroicon-o-printer')
             ->color('success')
-            // Form cerdas: Guru hanya bisa cetak jadwalnya sendiri. Admin bisa pilih mau cetak jadwal guru siapa atau kelas apa.
             ->form(function () {
                 $user = Auth::user();
                 if ($user->peran === 'guru') {
-                    // Jika guru, langsung cetak tanpa form pilihan
                     return [];
                 }
 
-                // Jika Admin/Staf, tampilkan form pilihan cetak
                 return [
                     Select::make('jenis_cetak')
                         ->label('Cetak Berdasarkan')
@@ -60,7 +56,6 @@ class ListJadwalPelajarans extends ListRecords
                 ];
             })
             ->action(function (array $data, \Livewire\Component $livewire) {
-                // Menyiapkan parameter pencetakan berdasarkan siapa yang menekan tombol
                 $user = Auth::user();
                 
                 if ($user->peran === 'guru') {
@@ -71,11 +66,9 @@ class ListJadwalPelajarans extends ListRecords
                     $url = url('/cetak/jadwal-pelajaran?jenis=' . $jenis . '&id=' . $id);
                 }
 
-                // Membuka tab baru untuk halaman cetak
                 $livewire->js("window.open('{$url}', '_blank');");
             });
 
-        // Tombol Tambah (Hanya untuk Admin/Staf)
         if (in_array(Auth::user()->peran, ['admin', 'staf'])) {
             $actions[] = Actions\CreateAction::make()->label('Tambah Jadwal');
         }

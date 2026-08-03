@@ -9,7 +9,6 @@ use Filament\Forms\Components\Component;
 use Illuminate\Support\Facades\Hash;
 use Filament\Models\Contracts\FilamentUser;
 
-// WAJIB DITAMBAHKAN AGAR PHP MENGENALI MODEL DATABASE:
 use App\Models\Siswa;
 use App\Models\User;
 use Illuminate\Validation\ValidationException;
@@ -52,26 +51,21 @@ class SiswaLogin extends BaseLogin
         $nisn = $data['username'];
         $password = $data['password'];
 
-        // Cek apakah NISN tersebut terdaftar di tabel Siswa
         $siswa = Siswa::where('nisn', $nisn)->first();
 
         if ($siswa) {
-            // Cek apakah akun loginnya sudah dibuat
             $user = User::where('username', $nisn)->first();
             
             if (!$user) {
-                // Jika belum ada, dan password yang diketik sama dengan NISN, buat akunnya!
                 if ($password === $nisn) {
                     $user = User::create([
                         'name' => $siswa->nama_lengkap,
                         'username' => $nisn,
-                        // Buat email palsu sementara agar tidak error validasi Laravel
                         'email' => $nisn . '@siswa.smartm1.com', 
                         'password' => Hash::make($nisn),
                         'peran' => 'siswa',
                     ]);
                     
-                    // Hubungkan ID user ke tabel siswa
                     $siswa->updateQuietly(['user_id' => $user->id]);
                 } else {
                     throw ValidationException::withMessages([
@@ -88,15 +82,11 @@ class SiswaLogin extends BaseLogin
         return parent::authenticate();
     }
 
-    // --- TAMBAHAN BARU: MEMBUNUH TAMPILAN BAWAAN FILAMENT ---
-
-    // Membunuh judul "Masuk ke akun Anda" bawaan Filament
     public function getHeading(): string | \Illuminate\Contracts\Support\Htmlable
     {
         return '';
     }
 
-    // Membunuh Logo Banten raksasa bawaan Filament
     public function hasLogo(): bool
     {
         return false;

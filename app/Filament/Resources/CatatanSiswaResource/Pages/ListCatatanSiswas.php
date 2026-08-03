@@ -16,9 +16,6 @@ class ListCatatanSiswas extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            // ==========================================
-            // FITUR BARU: TOMBOL CETAK CATATAN
-            // ==========================================
             Actions\Action::make('cetak_catatan')
                 ->label('Cetak Catatan')
                 ->icon('heroicon-o-printer')
@@ -26,9 +23,6 @@ class ListCatatanSiswas extends ListRecords
                 ->url(fn () => url('/cetak-catatan-siswa'))
                 ->openUrlInNewTab(),
 
-            // ==========================================
-            // FITUR LAMA ANDA: TANDAI DIBACA (DIPERTAHANKAN)
-            // ==========================================
             Actions\Action::make('tandai_dibaca')
                 ->label('Tandai Dibaca')
                 ->icon('heroicon-o-check-circle')

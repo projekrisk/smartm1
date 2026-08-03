@@ -15,7 +15,6 @@ class AbsensiSekretaris extends Page
     protected static ?string $title = 'Absensi Kelas';
     protected static string $view = 'filament.siswa.pages.absensi-sekretaris';
     
-    // FUNGSI BARU: Mengubah URL rute bawaan Filament
     protected static ?string $slug = 'absensi';
     
     protected static bool $shouldRegisterNavigation = false;

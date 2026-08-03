@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Absensi Harian - {{ $nama_kelas }} - {{ \Carbon\Carbon::parse($rekap->tanggal)->isoFormat('D MMMM Y') }}</title>
-    <!-- Tailwind untuk struktur luar di layar monitor -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
@@ -13,12 +12,10 @@
             font-family: Arial, Helvetica, sans-serif !important;
         }
         
-        /* Mengatur Margin Fisik Printer */
         @page { size: A4 portrait; margin: 1cm 1.5cm; }
         
         .avoid-break { page-break-inside: avoid; }
         
-        /* Gaya Tabel Kaku (Anti-Gagal) */
         .info-table { width: 100%; margin-bottom: 15px; font-size: 13px; }
         .info-table td { padding: 4px 5px; vertical-align: top; }
         
@@ -37,16 +34,15 @@
             border-radius: 8px;
         }
         
-        /* MERESET DESAIN SAAT MASUK MESIN PRINTER */
         @media print {
             .no-print { display: none !important; }
             body { background-color: white !important; margin: 0 !important; padding: 0 !important; }
             
             .cetak-kertas { 
-                width: 100% !important; /* Paksa memenuhi lebar kertas */
+                width: 100% !important;
                 max-width: 100% !important;
-                min-height: auto !important; /* Hapus paksaan tinggi */
-                padding: 0 !important; /* Hapus padding, diwakili margin @page */
+                min-height: auto !important;
+                padding: 0 !important;
                 margin: 0 !important; 
                 box-shadow: none !important; 
                 border-radius: 0 !important;
@@ -56,7 +52,6 @@
 </head>
 <body class="bg-gray-200 text-gray-900 text-xs">
 
-    <!-- Tombol Print di Layar Monitor -->
     <div class="no-print fixed top-5 left-5 z-50 flex gap-2">
         <button onclick="window.close()" class="bg-gray-800 text-white px-4 py-2 rounded shadow hover:bg-gray-700 font-sans">&larr; Tutup Tab</button>
         <button onclick="window.print()" class="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-500 font-bold font-sans">Cetak PDF</button>
@@ -66,10 +61,8 @@
         <div class="cetak-kertas">
             
             <div class="border-b-4 border-gray-800 pb-3 mb-6 flex items-center justify-between">
-                <!-- Logo Dinas (Kiri) -->
                 <div class="w-24 h-24 flex-shrink-0 flex items-center justify-center">
                     @php
-                        // Memastikan pengaturan ter-load aman
                         $pengaturan = null;
                         try { if (\Illuminate\Support\Facades\Schema::hasTable('pengaturan')) $pengaturan = \App\Models\Pengaturan::first(); } catch (\Exception $e) {}
                     @endphp

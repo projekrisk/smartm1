@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class PengampuPelajaran extends Model
 {
-    // Menggunakan tabel pivot lama yang sudah dimodifikasi
     protected $table = 'kelas_mata_pelajaran';
     
     public $timestamps = false;

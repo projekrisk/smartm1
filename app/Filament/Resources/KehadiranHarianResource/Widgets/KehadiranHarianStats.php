@@ -12,7 +12,6 @@ class KehadiranHarianStats extends BaseWidget
     {
         $today = today();
         
-        // Menghitung status dari detail absensi yang rekapnya adalah hari ini
         $sakit = KehadiranHarian::whereHas('rekapKehadiran', function ($q) use ($today) {
             $q->whereDate('tanggal', $today);
         })->where('status', 'Sakit')->count();

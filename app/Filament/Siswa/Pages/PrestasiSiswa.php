@@ -89,7 +89,7 @@ class PrestasiSiswa extends Page implements HasForms
                 ->maxSize(2048)
                 ->required()
                 ->helperText('Wajib mengunggah 1 bukti foto/scan asli (Maks 2MB).'),
-        ])->statePath('data')->columns(1); // PAKSA MURNI 1 KOLOM UNTUK APLIKASI SISWA
+        ])->statePath('data')->columns(1);
     }
 
     public function kirimPengajuan(): void

@@ -9,7 +9,6 @@ class MataPelajaran extends Model
     protected $table = 'mata_pelajaran';
     protected $guarded = [];
 
-    // FUNGSI BARU: Relasi sekarang langsung mengarah ke Jadwal Pelajaran (Bukan lagi ke tabel pengampu/pivot)
     public function jadwalPelajaran()
     {
         return $this->hasMany(JadwalPelajaran::class);

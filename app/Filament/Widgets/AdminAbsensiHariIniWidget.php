@@ -12,12 +12,10 @@ class AdminAbsensiHariIniWidget extends BaseWidget
 {
     protected static ?int $sort = 3;
 
-    // Memakan setengah layar (1 kolom dari total 2 kolom Grid) di Desktop
     protected int | string | array $columnSpan = ['md' => 1];
 
     public function getHeading(): string
     {
-        // Hitung total absen hari ini
         $jumlahAbsen = KehadiranHarian::whereHas('rekapKehadiran', function ($q) {
             $q->whereDate('tanggal', today());
         })->whereIn('status', ['Sakit', 'Izin', 'Alpa'])->count();
@@ -25,7 +23,6 @@ class AdminAbsensiHariIniWidget extends BaseWidget
         return "Absen Hari Ini ({$jumlahAbsen} Siswa)";
     }
 
-    // Hanya untuk Admin dan Staf TU
     public static function canView(): bool
     {
         return in_array(Auth::user()->peran, ['admin', 'staf']);
@@ -60,7 +57,7 @@ class AdminAbsensiHariIniWidget extends BaseWidget
                         default => 'gray',
                     }),
             ])
-            ->paginated([10]) // Paginasi per 10 data
+            ->paginated([10])
             ->emptyStateHeading('Semua Hadir / Belum Diabsen')
             ->emptyStateDescription('Belum ada laporan ketidakhadiran dari Wali Kelas/TU untuk hari ini.')
             ->emptyStateIcon('heroicon-o-check-circle');

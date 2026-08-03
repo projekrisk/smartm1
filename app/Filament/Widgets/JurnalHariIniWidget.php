@@ -12,10 +12,8 @@ class JurnalHariIniWidget extends BaseWidget
 {
     protected static ?string $heading = 'Aktivitas Mengajar Anda Hari Ini';
     
-    // Membuat tabel ini memanjang penuh (full width) ke samping
     protected int | string | array $columnSpan = 'full';
 
-    // Widget ini HANYA BOLEH DILIHAT oleh Guru
     public static function canView(): bool
     {
         return Auth::user()->peran === 'guru';
@@ -25,7 +23,6 @@ class JurnalHariIniWidget extends BaseWidget
     {
         return $table
             ->query(
-                // Hanya memanggil jurnal milik guru yang login DAN tanggalnya adalah hari ini
                 JurnalGuru::where('guru_id', Auth::id())
                     ->whereDate('tanggal', today())
                     ->orderBy('jam_mulai', 'asc')
@@ -49,12 +46,10 @@ class JurnalHariIniWidget extends BaseWidget
                     ->limit(40),
             ])
             ->actions([
-                // Tombol jalan pintas untuk langsung pergi ke halaman Absensi Pelajaran
                 Tables\Actions\Action::make('isi_absen')
                     ->label('Cek Absensi')
                     ->icon('heroicon-o-check-circle')
                     ->color('primary')
-                    // PERBAIKAN MUTLAK: Menggunakan URL langsung agar tidak terjadi Error "Class Not Found"
                     ->url(fn (): string => url('/admin/absensi-pelajaran')),
             ]);
     }

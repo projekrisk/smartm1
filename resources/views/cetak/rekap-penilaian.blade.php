@@ -32,7 +32,6 @@
                 $pengaturan = null;
                 try { if (\Illuminate\Support\Facades\Schema::hasTable('pengaturan')) $pengaturan = \App\Models\Pengaturan::first(); } catch (\Exception $e) {}
                 
-                // LOGIKA MENCARI NAMA GURU & NIP (Berdasarkan Jadwal Mapel & Kelas Ini)
                 $namaGuru = '___________________________';
                 $nipGuru = '-';
                 
@@ -49,14 +48,12 @@
                 }
             @endphp
 
-            <!-- KOP SURAT -->
             <div class="border-b-4 border-gray-800 pb-3 mb-6 text-center">
                 <h1 class="text-xl font-bold uppercase tracking-wider">PEMERINTAH PROVINSI BANTEN</h1>
                 <h1 class="text-2xl font-bold uppercase tracking-wider mt-1">{{ $pengaturan->nama_sekolah ?? 'SMART-M1 SMAN 1 MALINGPING' }}</h1>
                 <p class="text-[11px] mt-1">Laporan Rekapitulasi Daftar Nilai Siswa</p>
             </div>
 
-            <!-- INFO PENILAIAN -->
             <div class="flex justify-between items-start mb-6">
                 <table class="w-2/3 text-[13px]">
                     <tr><td class="w-32 font-bold py-1">Mata Pelajaran</td><td class="w-2">:</td><td class="font-bold uppercase">{{ $penilaian->mataPelajaran->nama_pelajaran ?? '-' }}</td></tr>
@@ -73,7 +70,6 @@
                 <span class="font-bold">Materi / Topik:</span> {{ $penilaian->materi ?? '-' }}
             </div>
 
-            <!-- TABEL NILAI (Diperbaiki Menggunakan Persentase Lebar) -->
             <table class="w-full table-fixed border-collapse border border-gray-600 mb-6 text-sm">
                 <thead>
                     <tr class="bg-gray-200 text-center font-bold">
@@ -89,7 +85,6 @@
                         $no = 1; 
                         $totalNilai = 0;
                         $jumlahSiswa = 0;
-                        // Urutkan siswa berdasarkan nama
                         $bukuNilais = $penilaian->bukuNilai->sortBy('siswa.nama_lengkap');
                     @endphp
                     
@@ -118,7 +113,6 @@
                 </tfoot>
             </table>
 
-            <!-- TANDA TANGAN (Otomatis Mencari Guru Mapel) -->
             <div class="mt-auto pt-6 flex justify-end avoid-break">
                 <div class="text-center w-72">
                     <p>Malingping, {{ now()->isoFormat('D MMMM Y') }}</p>

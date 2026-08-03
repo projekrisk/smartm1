@@ -18,10 +18,8 @@ class UbahPasswordSiswa extends Page implements HasForms
     protected static ?string $title = 'Keamanan Akun';
     protected static string $view = 'filament.siswa.pages.ubah-password-siswa';
     
-    // FUNGSI BARU: Mengubah URL menjadi lebih pendek
     protected static ?string $slug = 'ubah-password';
     
-    // Sembunyikan dari menu sidebar
     protected static bool $shouldRegisterNavigation = false;
 
     public ?array $data = [];
@@ -56,11 +54,9 @@ class UbahPasswordSiswa extends Page implements HasForms
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        // Update password baru ke database
         $user->password = Hash::make($data['new_password']);
         $user->save();
 
-        // TRIK MENCEGAH LOGOUT: Perbarui hash password di dalam sesi browser saat ini
         request()->session()->put([
             'password_hash_web' => $user->getAuthPassword(),
         ]);
@@ -73,7 +69,6 @@ class UbahPasswordSiswa extends Page implements HasForms
             ->success()
             ->send();
 
-        // Arahkan masuk ke Dashboard menggunakan metode redirect bawaan Livewire
         $this->redirect('/siswa');
     }
 }

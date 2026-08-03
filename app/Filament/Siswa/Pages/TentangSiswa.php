@@ -25,7 +25,6 @@ class TentangSiswa extends Page implements HasForms
     public ?array $data = [];
     public bool $sudahMenilai = false;
     
-    // FUNGSI LAZY LOADING: Menentukan batas jumlah data yang dimuat
     public int $perPage = 5;
     public int $totalTestimoni = 0;
 
@@ -35,19 +34,16 @@ class TentangSiswa extends Page implements HasForms
 
     public function mount(): void
     {
-        // Setiap kali masuk halaman, kita reset state agar siswa bisa menilai lagi
         $this->sudahMenilai = false;
         $this->form->fill();
     }
 
-    // Fungsi untuk tombol "Tulis Ulasan Lagi"
     public function tulisLagi(): void
     {
         $this->sudahMenilai = false;
         $this->form->fill();
     }
 
-    // Fungsi untuk tombol "Muat Lainnya"
     public function loadMore(): void
     {
         $this->perPage += 5;
@@ -80,7 +76,6 @@ class TentangSiswa extends Page implements HasForms
         $siswa = Siswa::where('user_id', Auth::id())->first();
         $data = $this->form->getState();
 
-        // LOGIKA FILTER KATA KASAR
         $pengaturan = Pengaturan::first();
         if ($pengaturan && $pengaturan->filter_kata_kasar) {
             $kataTerlarang = explode(',', $pengaturan->filter_kata_kasar);
@@ -118,13 +113,10 @@ class TentangSiswa extends Page implements HasForms
 
     protected function getViewData(): array
     {
-        // Menyusun query ulasan
         $query = Testimoni::with('siswa.kelas')->orderBy('created_at', 'desc');
         
-        // Hitung total seluruh ulasan di database
         $this->totalTestimoni = $query->count();
         
-        // Tarik data hanya sejumlah $perPage (Awalnya 5)
         $semuaTestimoni = $query->take($this->perPage)->get();
 
         return [
