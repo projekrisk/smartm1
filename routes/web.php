@@ -666,7 +666,7 @@ Route::get('/cetak-catatan-siswa', function () {
     
     // 1. Query Dasar Catatan beserta relasinya
     // Asumsi: Model bernama CatatanSiswa (Sesuaikan jika namanya beda)
-    $query = \App\Models\CatatanSiswa::with(['siswa.kelas', 'guru']);
+    $query = \App\Models\CatatanSiswa::with(['siswa.kelas', 'user']);
 
     // 2. Logika Pembatasan Hak Akses
     if ($user->peran === 'guru') {
