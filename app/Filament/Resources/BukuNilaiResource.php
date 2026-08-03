@@ -79,8 +79,10 @@ class BukuNilaiResource extends Resource
 
                         Forms\Components\Select::make('jenis_nilai')
                             ->label('Jenis Penilaian')
-                            // Mengambil data dinamis dari tabel Master (value=nama, label=nama)
-                            ->options(\App\Models\JenisNilai::pluck('nama', 'nama'))
+                            ->options(fn () => \App\Models\JenisNilai::all()
+                                ->sortBy('nama', SORT_NATURAL | SORT_FLAG_CASE) // <-- Kunci pengurutan natural
+                                ->pluck('nama', 'nama')
+                            )
                             ->searchable()
                             ->preload()
                             ->required(),
@@ -98,7 +100,9 @@ class BukuNilaiResource extends Resource
                                 
                                 $query = \App\Models\JadwalPelajaran::with('kelas')->where('mata_pelajaran_id', $mapelId);
                                 if (auth()->user()->peran === 'guru') $query->where('guru_id', auth()->id());
-                                return $query->get()->pluck('kelas.nama_kelas', 'kelas_id');
+                                
+                                // <-- Diurutkan secara natural
+                                return $query->get()->sortBy('kelas.nama_kelas', SORT_NATURAL | SORT_FLAG_CASE)->pluck('kelas.nama_kelas', 'kelas_id'); 
                             })
                             ->required()
                             ->live()

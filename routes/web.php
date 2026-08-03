@@ -581,3 +581,44 @@ Route::get('/cetak-absensi/{id}', function ($id) {
     return view('cetak.absensi-harian', compact('rekap', 'nama_kelas'));
     
 })->name('cetak.absensi-harian');
+
+Route::get('/cetak-rekap-buku-nilai/{kelas_id}/{mapel_id}', function ($kelas_id, $mapel_id) {
+    $kelas = \App\Models\Kelas::findOrFail($kelas_id);
+    $mapel = \App\Models\MataPelajaran::findOrFail($mapel_id);
+    $tahunAktifId = \App\Models\TahunAjaran::where('is_active', true)->value('id');
+
+    // 1. Ambil semua jadwal penilaian (kolom header)
+    $penilaians = \App\Models\Penilaian::where('kelas_id', $kelas_id)
+        ->where('mata_pelajaran_id', $mapel_id)
+        ->where('tahun_ajaran_id', $tahunAktifId)
+        ->orderBy('jenis_nilai', 'asc') // Diurutkan berdasarkan jenis
+        ->get()
+        ->sortBy('jenis_nilai', SORT_NATURAL | SORT_FLAG_CASE);
+
+    // 2. Ambil siswa di kelas tersebut (baris tabel)
+    $siswas = \App\Models\Siswa::where('kelas_id', $kelas_id)
+        ->where(function ($q) {
+            $q->whereIn('status_siswa', ['Aktif', 'Mutasi Masuk'])->orWhereNull('status_siswa');
+        })
+        ->orderBy('nama_lengkap', 'asc')
+        ->get();
+
+    // 3. Susun Matriks Nilai
+    $rekap = [];
+    foreach ($siswas as $siswa) {
+        $nilai_siswa = [];
+        foreach ($penilaians as $p) {
+            // Cek nilai siswa pada penilaian ini
+            $bukuNilai = \App\Models\BukuNilai::where('penilaian_id', $p->id)
+                            ->where('siswa_id', $siswa->id)
+                            ->first();
+            $nilai_siswa[$p->id] = $bukuNilai ? $bukuNilai->nilai : null;
+        }
+        $rekap[] = [
+            'siswa' => $siswa,
+            'nilai' => $nilai_siswa
+        ];
+    }
+
+    return view('cetak.rekap-buku-nilai', compact('kelas', 'mapel', 'penilaians', 'rekap'));
+});
