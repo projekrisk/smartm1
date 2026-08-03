@@ -77,22 +77,12 @@ class BukuNilaiResource extends Resource
                                 $set('bukuNilai', []);
                             }),
 
-                        // PERBAIKAN: Menggunakan Dropdown Select Fix (Sumatif 1-10 & Sikap)
                         Forms\Components\Select::make('jenis_nilai')
                             ->label('Jenis Penilaian')
-                            ->options([
-                                'Sumatif 1' => 'Sumatif 1',
-                                'Sumatif 2' => 'Sumatif 2',
-                                'Sumatif 3' => 'Sumatif 3',
-                                'Sumatif 4' => 'Sumatif 4',
-                                'Sumatif 5' => 'Sumatif 5',
-                                'Sumatif 6' => 'Sumatif 6',
-                                'Sumatif 7' => 'Sumatif 7',
-                                'Sumatif 8' => 'Sumatif 8',
-                                'Sumatif 9' => 'Sumatif 9',
-                                'Sumatif 10' => 'Sumatif 10',
-                                'Sikap' => 'Sikap',
-                            ])
+                            // Mengambil data dinamis dari tabel Master (value=nama, label=nama)
+                            ->options(\App\Models\JenisNilai::pluck('nama', 'nama'))
+                            ->searchable()
+                            ->preload()
                             ->required(),
 
                         Forms\Components\DatePicker::make('tanggal_penilaian')
