@@ -44,13 +44,13 @@ class JurnalHariIniWidget extends BaseWidget
                 Tables\Columns\TextColumn::make('materi_pembahasan')
                     ->label('Materi')
                     ->limit(40),
-            ])
-            ->actions([
-                Tables\Actions\Action::make('isi_absen')
-                    ->label('Cek Absensi')
-                    ->icon('heroicon-o-check-circle')
-                    ->color('primary')
-                    ->url(fn (): string => url('/admin/absensi-pelajaran')),
             ]);
+//            ->actions([
+//                Tables\Actions\Action::make('isi_absen')
+//                    ->label('Cek Absensi')
+//                    ->icon('heroicon-o-check-circle')
+//                    ->color('primary')
+//                    ->url(fn (): string => url('/admin/absensi-pelajaran')),
+//            ]);
     }
 }
