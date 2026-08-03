@@ -582,20 +582,31 @@ Route::get('/cetak-absensi/{id}', function ($id) {
     
 })->name('cetak.absensi-harian');
 
-Route::get('/cetak-rekap-buku-nilai/{kelas_id}/{mapel_id}', function ($kelas_id, $mapel_id) {
+Route::get('/cetak-rekap-wali-kelas/{kelas_id}', function ($kelas_id) {
     $kelas = \App\Models\Kelas::findOrFail($kelas_id);
-    $mapel = \App\Models\MataPelajaran::findOrFail($mapel_id);
     $tahunAktifId = \App\Models\TahunAjaran::where('is_active', true)->value('id');
 
-    // 1. Ambil semua jadwal penilaian (kolom header)
-    $penilaians = \App\Models\Penilaian::where('kelas_id', $kelas_id)
-        ->where('mata_pelajaran_id', $mapel_id)
+    // 1. Ambil semua Penilaian di kelas tersebut, urutkan mapel dan jenisnya
+    $penilaians = \App\Models\Penilaian::with('mataPelajaran')
+        ->where('kelas_id', $kelas_id)
         ->where('tahun_ajaran_id', $tahunAktifId)
-        ->orderBy('jenis_nilai', 'asc') // Diurutkan berdasarkan jenis
         ->get()
-        ->sortBy('jenis_nilai', SORT_NATURAL | SORT_FLAG_CASE);
+        ->sortBy('jenis_nilai', SORT_NATURAL | SORT_FLAG_CASE)
+        ->sortBy(fn($p) => $p->mataPelajaran->nama_pelajaran);
 
-    // 2. Ambil siswa di kelas tersebut (baris tabel)
+    // 2. Susun Header Dinamis (Mapel -> Jenis Nilai)
+    $grupMapel = [];
+    $penilaianIds = [];
+    foreach ($penilaians as $p) {
+        $namaMapel = $p->mataPelajaran->nama_pelajaran;
+        if (!isset($grupMapel[$namaMapel])) {
+            $grupMapel[$namaMapel] = [];
+        }
+        $grupMapel[$namaMapel][] = $p;
+        $penilaianIds[] = $p->id;
+    }
+
+    // 3. Ambil data Siswa
     $siswas = \App\Models\Siswa::where('kelas_id', $kelas_id)
         ->where(function ($q) {
             $q->whereIn('status_siswa', ['Aktif', 'Mutasi Masuk'])->orWhereNull('status_siswa');
@@ -603,22 +614,27 @@ Route::get('/cetak-rekap-buku-nilai/{kelas_id}/{mapel_id}', function ($kelas_id,
         ->orderBy('nama_lengkap', 'asc')
         ->get();
 
-    // 3. Susun Matriks Nilai
+    // 4. Ambil semua Buku Nilai dalam satu query (Mencegah Lemot / N+1)
+    $bukuNilais = \App\Models\BukuNilai::whereIn('penilaian_id', $penilaianIds)
+        ->get()
+        ->groupBy('siswa_id');
+
+    // 5. Rakit Matriks
     $rekap = [];
     foreach ($siswas as $siswa) {
         $nilai_siswa = [];
-        foreach ($penilaians as $p) {
-            // Cek nilai siswa pada penilaian ini
-            $bukuNilai = \App\Models\BukuNilai::where('penilaian_id', $p->id)
-                            ->where('siswa_id', $siswa->id)
-                            ->first();
-            $nilai_siswa[$p->id] = $bukuNilai ? $bukuNilai->nilai : null;
+        $dataNilaiSiswaIni = $bukuNilais->get($siswa->id) ? $bukuNilais->get($siswa->id)->keyBy('penilaian_id') : collect();
+        
+        foreach ($penilaianIds as $pid) {
+            $bn = $dataNilaiSiswaIni->get($pid);
+            $nilai_siswa[$pid] = $bn ? $bn->nilai : null;
         }
+
         $rekap[] = [
             'siswa' => $siswa,
             'nilai' => $nilai_siswa
         ];
     }
 
-    return view('cetak.rekap-buku-nilai', compact('kelas', 'mapel', 'penilaians', 'rekap'));
+    return view('cetak.rekap-wali-kelas', compact('kelas', 'grupMapel', 'rekap'));
 });

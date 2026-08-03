@@ -6,6 +6,7 @@ use App\Filament\Resources\BukuNilaiResource;
 use Filament\Actions;
 use Filament\Forms;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Support\Facades\Schema;
 
 class ListBukuNilais extends ListRecords
 {
@@ -15,39 +16,39 @@ class ListBukuNilais extends ListRecords
     {
         return [
             Actions\Action::make('cetak_rekap_kelas')
-                ->label('Cetak Rekap Buku Nilai')
-                ->icon('heroicon-o-table-cells')
+                ->label('Pantauan Wali Kelas')
+                ->icon('heroicon-o-presentation-chart-line')
                 ->color('success')
                 ->form([
                     Forms\Components\Select::make('kelas_id')
-                        ->label('Pilih Kelas Binaan / Ajar')
+                        ->label('Pilih Kelas Binaan Anda')
                         ->options(function () {
-                            if (auth()->user()->peran === 'admin') {
-                                return \App\Models\Kelas::all()->sortBy('nama_kelas', SORT_NATURAL | SORT_FLAG_CASE)->pluck('nama_kelas', 'id')->toArray();
+                            $query = \App\Models\Kelas::query();
+                            
+                            // Jika Guru, HANYA tampilkan kelas di mana dia adalah wali kelasnya.
+                            // (Mengecek kolom guru_id atau wali_kelas_id di tabel kelas)
+                            if (auth()->user()->peran === 'guru') {
+                                if (Schema::hasColumn('kelas', 'wali_kelas_id')) {
+                                    $query->where('wali_kelas_id', auth()->id());
+                                } else {
+                                    $query->where('guru_id', auth()->id());
+                                }
                             }
-                            $kelasIds = \App\Models\JadwalPelajaran::where('guru_id', auth()->id())->pluck('kelas_id');
-                            return \App\Models\Kelas::whereIn('id', $kelasIds)->get()->sortBy('nama_kelas', SORT_NATURAL | SORT_FLAG_CASE)->pluck('nama_kelas', 'id')->toArray();
-                        })
-                        ->searchable()
-                        ->required()
-                        ->live(), // Live agar Mapel menyesuaikan
-                        
-                    Forms\Components\Select::make('mata_pelajaran_id')
-                        ->label('Pilih Mata Pelajaran')
-                        ->options(function (Forms\Get $get) {
-                            if (!$get('kelas_id')) return [];
-                            $mapelIds = \App\Models\JadwalPelajaran::where('kelas_id', $get('kelas_id'))->pluck('mata_pelajaran_id');
-                            return \App\Models\MataPelajaran::whereIn('id', $mapelIds)->pluck('nama_pelajaran', 'id')->toArray();
+                            
+                            return $query->get()
+                                ->sortBy('nama_kelas', SORT_NATURAL | SORT_FLAG_CASE)
+                                ->pluck('nama_kelas', 'id')
+                                ->toArray();
                         })
                         ->searchable()
                         ->required(),
                 ])
                 ->action(function (array $data) {
-                    // Melempar ke rute laporan rekap buku nilai spesifik
-                    return redirect()->to('/cetak-rekap-buku-nilai/' . $data['kelas_id'] . '/' . $data['mata_pelajaran_id']);
+                    // Melempar ke rute laporan matriks wali kelas
+                    return redirect()->to('/cetak-rekap-wali-kelas/' . $data['kelas_id']);
                 })
-                ->modalHeading('Cetak Rekap Progres Nilai')
-                ->modalDescription('Cetak laporan ini untuk melihat matriks seluruh nilai (Sumatif, Sikap, dll) siswa di kelas tersebut. Kotak kosong menandakan siswa belum memiliki nilai.')
+                ->modalHeading('Cetak Pantauan Nilai Kelas')
+                ->modalDescription('Laporan ini akan menarik SEMUA data nilai dari berbagai mata pelajaran sekaligus, khusus untuk kelas binaan Anda. Sangat berguna untuk mendeteksi siswa yang banyak bolos / kosong nilainya.')
                 ->modalSubmitActionLabel('Buka Laporan'),
 
             Actions\CreateAction::make()->label('Buat Penilaian'),
