@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laporan Catatan Siswa</title>
     <style>
-        body { font-family: 'Times New Roman', Times, serif; font-size: 12px; margin: 20px; }
+        body { font-family: 'Arial'; font-size: 12px; margin: 20px; }
         .header { text-align: center; border-bottom: 3px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
         .header h2, .header h3, .header p { margin: 0; padding: 2px 0; }
         .header h2 { font-size: 18px; text-transform: uppercase; }
@@ -14,7 +14,7 @@
         th, td { border: 1px solid #000; padding: 6px 8px; vertical-align: top; }
         th { background-color: #f3f4f6; font-weight: bold; text-align: center; }
         .text-center { text-align: center; }
-        .kelas-title { font-size: 14px; font-weight: bold; margin-bottom: 10px; background-color: #e5e7eb; padding: 5px; display: inline-block;}
+        .kelas-title { font-size: 14px; font-weight: bold; margin-bottom: 10px; display: inline-block;}
         
         @media print {
             .no-print { display: none; }
@@ -30,6 +30,7 @@
 
     <div class="header">
         <h2>LAPORAN CATATAN SISWA</h2>
+        <h2>{{ $pengaturan->nama_sekolah ?? 'SMART-M1 SMAN 1 MALINGPING' }}</h2>
         <h3>Aplikasi Manajemen Akademik Terpadu</h3>
         <p>
             Dicetak Oleh: <strong>{{ $user->name }}</strong> ({{ ucfirst($user->peran) }})<br>
@@ -49,12 +50,12 @@
                 <thead>
                     <tr>
                         <th style="width: 30px;">No</th>
-                        <th style="width: 140px;">Nama Siswa</th>
-                        <th style="width: 80px;">Tanggal</th>
-                        <th style="width: 120px;">Perihal / Topik</th>
+                        <th style="width: 170px;">Nama Siswa</th>
+                        <th style="width: 70px;">Tanggal</th>
+                        <th style="width: 160px;">Perihal / Topik</th>
                         <th>Deskripsi Catatan</th>
                         <th>Tindak Lanjut</th>
-                        <th style="width: 100px;">Pelapor</th>
+                        <th style="width: 150px;">Pelapor</th>
                     </tr>
                 </thead>
                 <tbody>
