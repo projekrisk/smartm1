@@ -18,7 +18,7 @@
         
         @media print {
             .no-print { display: none; }
-            @page { size: A4 portrait; margin: 1cm; }
+            @page { size: A4 landscape; margin: 1cm; }
         }
     </style>
 </head>
