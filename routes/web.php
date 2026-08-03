@@ -582,7 +582,8 @@ Route::get('/cetak-absensi/{id}', function ($id) {
     
 })->name('cetak.absensi-harian');
 
-Route::get('/export-pantauan-wali/{kelas_id}', function ($kelas_id) {
+// PERHATIKAN BARIS PERTAMA, URL-NYA KITA UBAH MENJADI /rekap-buku-nilai
+Route::get('/rekap-buku-nilai/{kelas_id}', function ($kelas_id) {
     $kelas = \App\Models\Kelas::findOrFail($kelas_id);
     $tahunAktifId = \App\Models\TahunAjaran::where('is_active', true)->value('id');
 
@@ -639,9 +640,9 @@ Route::get('/export-pantauan-wali/{kelas_id}', function ($kelas_id) {
     // NAMA FILE EXCEL
     $namaFile = 'Pantauan_Wali_Kelas_' . str_replace(' ', '_', $kelas->nama_kelas) . '.xls';
 
-    // TRIK CERDAS: Paksa browser mengunduh HTML sebagai Excel
+    // Download sebagai Excel
     return response(view('exports.pantauan-wali-kelas', compact('kelas', 'grupMapel', 'rekap')))
         ->header('Content-Type', 'application/vnd.ms-excel; charset=utf-8')
         ->header('Content-Disposition', 'attachment; filename="' . $namaFile . '"');
 
-})->name('export.pantauan.wali');
+});

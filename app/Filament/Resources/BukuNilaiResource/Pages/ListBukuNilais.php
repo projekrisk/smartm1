@@ -44,8 +44,8 @@ class ListBukuNilais extends ListRecords
                         ->required(),
                 ])
                 ->action(function (array $data) {
-                    // Melempar ke rute laporan matriks wali kelas
-                    return redirect()->to('/cetak-rekap-wali-kelas/' . $data['kelas_id']);
+                    // PASTIKAN URL-NYA MENGARAH KE SINI
+                    return redirect()->to('/rekap-buku-nilai/' . $data['kelas_id']);
                 })
                 ->modalHeading('Cetak Pantauan Nilai Kelas')
                 ->modalDescription('Laporan ini akan menarik SEMUA data nilai dari berbagai mata pelajaran sekaligus, khusus untuk kelas binaan Anda. Sangat berguna untuk mendeteksi siswa yang banyak bolos / kosong nilainya.')
