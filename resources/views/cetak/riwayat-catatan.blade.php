@@ -61,9 +61,11 @@
                         <td class="align-top pb-10">
                             
                             <div class="border-b-4 border-gray-800 pb-3 mb-6 text-center font-sans">
+                                <h1 class="text-xl font-bold uppercase tracking-wider">PEMERINTAH PROVINSI BANTEN</h1>
+                                <h1 class="text-xl font-bold uppercase tracking-wider leading-tight">DINAS PENDIDIKAN DAN KEBUDAYAAN</h1>
                                 <h1 class="text-2xl font-bold uppercase tracking-wider">SMAN 1 MALINGPING</h1>
-                                <p class="text-xs mt-1">Jl. Pendidikan No. 1, Kec. Pintar, Kota Cerdas, 12345</p>
-                                <p class="text-xs">Telepon: (021) 888-9999 | Email: info@smart-m1.com</p>
+                                <p class="text-[11px] mt-1 font-bold">NPSN: 20601875 AKREDITASI: A (96)</p>
+                                <p class="text-[11px]">Jl. Raya Bayah KM. 4 No. 39 Malingping – Lebak, 42391</p>
                             </div>
 
                             <div class="text-center mb-6 font-sans">

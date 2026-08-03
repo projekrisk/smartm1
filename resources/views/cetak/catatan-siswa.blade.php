@@ -30,8 +30,7 @@
 
     <div class="header">
         <h2>LAPORAN CATATAN SISWA</h2>
-        <h2>{{ $pengaturan->nama_sekolah ?? 'SMART-M1 SMAN 1 MALINGPING' }}</h2>
-        <h3>Aplikasi Manajemen Akademik Terpadu</h3>
+        <h2>{{ $pengaturan->nama_sekolah ?? 'SMAN 1 MALINGPING' }}</h2>
         <p>
             Dicetak Oleh: <strong>{{ $user->name }}</strong> ({{ ucfirst($user->peran) }})<br>
             Tanggal Akses: {{ \Carbon\Carbon::now()->isoFormat('D MMMM YYYY, HH:mm') }} WIB
