@@ -32,6 +32,12 @@ class BukuNilaiResource extends Resource
         $query = parent::getEloquentQuery();
         $query->withCount(['bukuNilai' => function (Builder $q) { $q->whereNotNull('nilai'); }]);
 
+        // 1. FILTER OTOMATIS: Hanya tampilkan data di Tahun Ajaran Aktif
+        $tahunAktifId = \App\Models\TahunAjaran::where('is_active', true)->value('id');
+        if ($tahunAktifId) {
+            $query->where('tahun_ajaran_id', $tahunAktifId);
+        }
+
         if (auth()->user()->peran === 'guru') {
             $guruId = auth()->id();
             $query->whereExists(function($q) use ($guruId) {
@@ -71,9 +77,16 @@ class BukuNilaiResource extends Resource
                                 $set('bukuNilai', []);
                             }),
 
-                        Forms\Components\Select::make('jenis_nilai')
-                            ->label('Jenis Nilai')
-                            ->options([ 'Tugas' => 'Tugas', 'Ulangan Harian' => 'Ulangan Harian', 'UTS' => 'UTS', 'UAS' => 'UAS', 'Sikap' => 'Sikap' ])
+                        // 2. PERBAIKAN UX JENIS NILAI: Menggunakan Input Pintar (Datalist)
+                        Forms\Components\TextInput::make('jenis_nilai')
+                            ->label('Jenis Penilaian')
+                            ->placeholder('Contoh: Sumatif 1, Sikap, STS...')
+                            ->datalist([
+                                'Sumatif 1', 'Sumatif 2', 'Sumatif 3', 'Sumatif 4', 'Sumatif 5',
+                                'Sikap', 'STS', 'SAS'
+                            ])
+                            ->helperText('Pilih dari saran, atau ketik manual sesuai kebutuhan Anda (Misal: Sumatif 8, Proyek, Praktik).')
+                            ->autocomplete(false)
                             ->required(),
 
                         Forms\Components\DatePicker::make('tanggal_penilaian')
@@ -96,7 +109,13 @@ class BukuNilaiResource extends Resource
                             ->disabled(fn (string $operation) => $operation !== 'create')
                             ->afterStateUpdated(function ($state, callable $set, string $operation) {
                                 if ($operation !== 'create' || !$state) { $set('bukuNilai', []); return; }
-                                $siswas = Siswa::where('kelas_id', $state)->orderBy('nama_lengkap')->get();
+                                // Hanya load siswa yang aktif/mutasi masuk
+                                $siswas = Siswa::where('kelas_id', $state)
+                                    ->where(function ($q) {
+                                        $q->whereIn('status_siswa', ['Aktif', 'Mutasi Masuk'])->orWhereNull('status_siswa');
+                                    })
+                                    ->orderBy('nama_lengkap')
+                                    ->get();
                                 $daftar = [];
                                 foreach ($siswas as $siswa) {
                                     $daftar[(string) Str::uuid()] = [ 'siswa_id' => $siswa->id, 'nilai' => null, 'catatan_guru' => null ];
@@ -160,6 +179,34 @@ class BukuNilaiResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            // 3. FITUR BARU: Tombol Unduh Leger/Rekap Kelas khusus untuk Guru (Wali Kelas)
+            ->headerActions([
+                Tables\Actions\Action::make('cetak_rekap_kelas')
+                    ->label('Cetak Leger / Rekap Kelas')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->color('success')
+                    ->form([
+                        Forms\Components\Select::make('kelas_id')
+                            ->label('Pilih Kelas Binaan / Ajar')
+                            ->options(function () {
+                                if (auth()->user()->peran === 'admin') {
+                                    return \App\Models\Kelas::pluck('nama_kelas', 'id')->toArray();
+                                }
+                                // Batasi hanya kelas yang berhubungan dengan guru tersebut
+                                $kelasIds = \App\Models\JadwalPelajaran::where('guru_id', auth()->id())->pluck('kelas_id');
+                                return \App\Models\Kelas::whereIn('id', $kelasIds)->pluck('nama_kelas', 'id')->toArray();
+                            })
+                            ->searchable()
+                            ->required()
+                    ])
+                    ->action(function (array $data) {
+                        // Mengarahkan ke rute Excel Leger Kelas yang sudah ada
+                        return redirect()->route('export.leger.rapor', ['kelas_id' => $data['kelas_id']]);
+                    })
+                    ->modalHeading('Unduh Rekap Nilai Kelas')
+                    ->modalDescription('Fitur ini akan mengunduh seluruh data nilai siswa di kelas tersebut (dalam format Excel) untuk dianalisis oleh Wali Kelas atau Guru.')
+                    ->modalSubmitActionLabel('Unduh Excel')
+            ])
             ->columns([
                 Tables\Columns\TextColumn::make('tanggal_penilaian')->label('Tanggal')->date('d M Y'),
                 Tables\Columns\TextColumn::make('mataPelajaran.nama_pelajaran')->label('Mata Pelajaran')->weight('bold'),
@@ -169,10 +216,7 @@ class BukuNilaiResource extends Resource
                 Tables\Columns\TextColumn::make('buku_nilai_count')->label('Siswa Dinilai')->badge()->color('primary')->formatStateUsing(fn ($state) => $state . ' Orang'),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('tahun_ajaran_id')
-                    ->label('Filter Tahun Ajaran')
-                    ->options(fn () => \App\Models\TahunAjaran::orderBy('id', 'desc')->get()->mapWithKeys(fn ($ta) => [$ta->id => $ta->nama_tahun . ' (' . $ta->semester . ')']))
-                    ->default(fn () => \App\Models\TahunAjaran::where('is_active', true)->first()?->id),
+                // 4. FILTER TAHUN AJARAN TELAH DIHAPUS
             ])
             ->actions([ 
                 Tables\Actions\EditAction::make()->label('Ubah Nilai'),
@@ -198,7 +242,7 @@ class BukuNilaiResource extends Resource
             'create' => Pages\CreateBukuNilai::route('/create'),
             'edit' => Pages\EditBukuNilai::route('/{record}/edit'),
             
-            'pantau' => Pages\PantauPengumpulan::route('/pantau-pengumpulan'),
+            // 5. FITUR PANTAU PENGUMPULAN NILAI TELAH DIHAPUS
             'input-massal' => Pages\InputNilaiMassal::route('/input-massal'),
         ];
     }

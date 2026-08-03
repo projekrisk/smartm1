@@ -144,11 +144,8 @@ class CatatanSiswaResource extends Resource
                         Forms\Components\Select::make('jenis_catatan')
                             ->label('Kategori / Jenis')
                             ->options([
-                                'Negatif' => 'Pelanggaran / Kasus',
-                                'Positif' => 'Prestasi / Apresiasi',
-                                'Bimbingan' => 'Bimbingan / Pembinaan Khusus',
-                                'Panggilan Ortu' => 'Tindak Lanjut & Panggilan Ortu',
-                                'Biasa' => 'Catatan Biasa / Informasi',
+                                'Negatif' => 'Negatif',
+                                'Positif' => 'Positif',
                             ])
                             ->required(),
                             
@@ -159,7 +156,7 @@ class CatatanSiswaResource extends Resource
                             
                         Forms\Components\TextInput::make('judul_catatan')
                             ->label('Perihal / Topik')
-                            ->placeholder('Contoh: Terlambat, Home Visit, Konseling Nilai Turun')
+                            ->placeholder('Contoh: Terlambat, Membantu Teman, dll.')
                             ->required()
                             ->maxLength(255)
                             ->columnSpanFull(),
