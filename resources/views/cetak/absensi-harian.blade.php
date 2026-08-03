@@ -23,7 +23,6 @@
         .tabel-cetak th, .tabel-cetak td { border: 1px solid #000; padding: 6px 8px; font-size: 12px; }
         .tabel-cetak th { background-color: #f3f4f6; font-weight: bold; text-align: center; text-transform: uppercase; }
         
-        /* DESAIN KERTAS DI LAYAR MONITOR */
         .cetak-kertas {
             width: 21cm;
             min-height: 29.7cm;

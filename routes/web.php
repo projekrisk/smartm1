@@ -301,7 +301,6 @@ Route::get('/export/leger-rapor', function (\Illuminate\Http\Request $request) {
     $riwayatKelasRaw = \App\Models\RiwayatKelasSiswa::with(['kelas', 'tahunAjaran'])->whereIn('siswa_id', $siswaIds)->get();
     $nilaiRaporRaw = \App\Models\NilaiRapor::with('tahunAjaran')->whereIn('siswa_id', $siswaIds)->get();
     
-    // Menarik seluruh tahun ajaran dan diurutkan. Ganjil harus tampil duluan sebelum Genap di tahun yang sama.
     $semuaTaRaw = \App\Models\TahunAjaran::all();
     $semuaTa = $semuaTaRaw->sortBy(function($ta) {
         $smtOrder = strtolower($ta->semester) == 'ganjil' ? 1 : 2;
@@ -316,7 +315,7 @@ Route::get('/export/leger-rapor', function (\Illuminate\Http\Request $request) {
     $html .= 'table { border-collapse: collapse; font-family: Arial, sans-serif; font-size: 11px; } ';
     $html .= 'th, td { border: .5pt solid windowtext; padding: 4px; vertical-align: middle; } ';
     $html .= 'th { background-color: #f3f4f6; font-weight: bold; text-align: center; } ';
-    $html .= '.str { mso-number-format:"\@"; } '; // Format untuk mencegah angka 0 di depan hilang
+    $html .= '.str { mso-number-format:"\@"; } ';
     $html .= '</style></head>';
     $html .= '<body><table>';
     
@@ -585,12 +584,10 @@ Route::get('/cetak-absensi/{id}', function ($id) {
 Route::get('/rekap-buku-nilai/{kelas_id}', function ($kelas_id) {
     $kelas = \App\Models\Kelas::findOrFail($kelas_id);
     
-    // Ambil Data Tahun Ajaran Aktif
     $tahunAktif = \App\Models\TahunAjaran::where('is_active', true)->first();
     $tahunAktifId = $tahunAktif ? $tahunAktif->id : null;
     $tahunAjaranNama = $tahunAktif ? $tahunAktif->nama_tahun . ' (' . $tahunAktif->semester . ')' : '-';
 
-    // Ambil Nama Sekolah dari database Pengaturan (fallback ke nama default)
     $namaSekolah = 'SMAN 1 MALINGPING';
     try {
         if (\Illuminate\Support\Facades\Schema::hasTable('pengaturan')) {
@@ -601,7 +598,6 @@ Route::get('/rekap-buku-nilai/{kelas_id}', function ($kelas_id) {
         }
     } catch (\Exception $e) {}
 
-    // 1. Ambil semua Penilaian
     $penilaians = \App\Models\Penilaian::with('mataPelajaran')
         ->where('kelas_id', $kelas_id)
         ->where('tahun_ajaran_id', $tahunAktifId)
@@ -609,7 +605,6 @@ Route::get('/rekap-buku-nilai/{kelas_id}', function ($kelas_id) {
         ->sortBy('jenis_nilai', SORT_NATURAL | SORT_FLAG_CASE)
         ->sortBy(fn($p) => $p->mataPelajaran->nama_pelajaran);
 
-    // 2. Susun Header Dinamis
     $grupMapel = [];
     $penilaianIds = [];
     foreach ($penilaians as $p) {
@@ -621,7 +616,6 @@ Route::get('/rekap-buku-nilai/{kelas_id}', function ($kelas_id) {
         $penilaianIds[] = $p->id;
     }
 
-    // 3. Ambil data Siswa
     $siswas = \App\Models\Siswa::where('kelas_id', $kelas_id)
         ->where(function ($q) {
             $q->whereIn('status_siswa', ['Aktif', 'Mutasi Masuk'])->orWhereNull('status_siswa');
@@ -629,12 +623,10 @@ Route::get('/rekap-buku-nilai/{kelas_id}', function ($kelas_id) {
         ->orderBy('nama_lengkap', 'asc')
         ->get();
 
-    // 4. Ambil Buku Nilai
     $bukuNilais = \App\Models\BukuNilai::whereIn('penilaian_id', $penilaianIds)
         ->get()
         ->groupBy('siswa_id');
 
-    // 5. Rakit Matriks
     $rekap = [];
     foreach ($siswas as $siswa) {
         $nilai_siswa = [];
@@ -651,10 +643,8 @@ Route::get('/rekap-buku-nilai/{kelas_id}', function ($kelas_id) {
         ];
     }
 
-    // UBAH NAMA FILE EXCEL DI SINI
     $namaFile = 'Rekap Nilai Kelas ' . $kelas->nama_kelas . '.xls';
 
-    // Download sebagai Excel (Menambahkan $namaSekolah & $tahunAjaranNama)
     return response(view('exports.pantauan-wali-kelas', compact('kelas', 'grupMapel', 'rekap', 'namaSekolah', 'tahunAjaranNama')))
         ->header('Content-Type', 'application/vnd.ms-excel; charset=utf-8')
         ->header('Content-Disposition', 'attachment; filename="' . $namaFile . '"');
@@ -664,15 +654,11 @@ Route::get('/rekap-buku-nilai/{kelas_id}', function ($kelas_id) {
 Route::get('/cetak-catatan-siswa', function () {
     $user = auth()->user();
     
-    // 1. Query Dasar Catatan beserta relasinya
-    // Asumsi: Model bernama CatatanSiswa (Sesuaikan jika namanya beda)
     $query = \App\Models\CatatanSiswa::with(['siswa.kelas', 'pencatat']);
 
-    // 2. Logika Pembatasan Hak Akses
     if ($user->peran === 'guru') {
         $guruId = $user->id;
         
-        // Cari ID Kelas di mana guru ini menjadi wali kelas
         $kelasBinaanIds = [];
         if (\Illuminate\Support\Facades\Schema::hasColumn('kelas', 'wali_kelas_id')) {
             $kelasBinaanIds = \App\Models\Kelas::where('wali_kelas_id', $guruId)->pluck('id')->toArray();
@@ -681,9 +667,7 @@ Route::get('/cetak-catatan-siswa', function () {
         }
 
         $query->where(function($q) use ($guruId, $kelasBinaanIds) {
-            // Syarat 1: Catatan yang dibuat oleh guru tersebut
             $q->where('guru_id', $guruId) 
-              // Syarat 2: ATAU Catatan milik siswa yang berada di kelas binaannya
               ->orWhereHas('siswa', function($q2) use ($kelasBinaanIds) {
                   $q2->whereIn('kelas_id', $kelasBinaanIds);
               });
@@ -692,27 +676,20 @@ Route::get('/cetak-catatan-siswa', function () {
 
     $catatans = $query->get();
 
-    // 3. Pengurutan Data (Sorting)
-    // Diurutkan dari: Nama Kelas -> Nama Siswa -> Tanggal Terbaru
     $catatans = $catatans->sort(function ($a, $b) {
-        // 1. Sort Nama Kelas (Natural Sort)
         $kelasA = $a->siswa->kelas->nama_kelas ?? 'ZZZ';
         $kelasB = $b->siswa->kelas->nama_kelas ?? 'ZZZ';
         $cmpKelas = strnatcasecmp($kelasA, $kelasB);
         if ($cmpKelas !== 0) return $cmpKelas;
         
-        // 2. Sort Nama Siswa
         $namaA = $a->siswa->nama_lengkap ?? 'ZZZ';
         $namaB = $b->siswa->nama_lengkap ?? 'ZZZ';
         $cmpNama = strcmp($namaA, $namaB);
         if ($cmpNama !== 0) return $cmpNama;
         
-        // 3. Sort Tanggal Descending (Terbaru di atas)
         return strtotime($b->tanggal) - strtotime($a->tanggal);
     });
 
-    // 4. Kelompokkan Data (Grouping)
-    // Dikelompokkan per Kelas -> lalu per Siswa
     $groupedData = $catatans->groupBy(function($item) {
         return $item->siswa->kelas->nama_kelas ?? 'Tanpa Kelas';
     })->map(function($classGroup) {
