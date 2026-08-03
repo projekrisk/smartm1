@@ -582,11 +582,11 @@ Route::get('/cetak-absensi/{id}', function ($id) {
     
 })->name('cetak.absensi-harian');
 
-Route::get('/cetak-rekap-wali-kelas/{kelas_id}', function ($kelas_id) {
+Route::get('/export-pantauan-wali/{kelas_id}', function ($kelas_id) {
     $kelas = \App\Models\Kelas::findOrFail($kelas_id);
     $tahunAktifId = \App\Models\TahunAjaran::where('is_active', true)->value('id');
 
-    // 1. Ambil semua Penilaian di kelas tersebut, urutkan mapel dan jenisnya
+    // 1. Ambil semua Penilaian
     $penilaians = \App\Models\Penilaian::with('mataPelajaran')
         ->where('kelas_id', $kelas_id)
         ->where('tahun_ajaran_id', $tahunAktifId)
@@ -594,7 +594,7 @@ Route::get('/cetak-rekap-wali-kelas/{kelas_id}', function ($kelas_id) {
         ->sortBy('jenis_nilai', SORT_NATURAL | SORT_FLAG_CASE)
         ->sortBy(fn($p) => $p->mataPelajaran->nama_pelajaran);
 
-    // 2. Susun Header Dinamis (Mapel -> Jenis Nilai)
+    // 2. Susun Header Dinamis
     $grupMapel = [];
     $penilaianIds = [];
     foreach ($penilaians as $p) {
@@ -614,7 +614,7 @@ Route::get('/cetak-rekap-wali-kelas/{kelas_id}', function ($kelas_id) {
         ->orderBy('nama_lengkap', 'asc')
         ->get();
 
-    // 4. Ambil semua Buku Nilai dalam satu query (Mencegah Lemot / N+1)
+    // 4. Ambil Buku Nilai
     $bukuNilais = \App\Models\BukuNilai::whereIn('penilaian_id', $penilaianIds)
         ->get()
         ->groupBy('siswa_id');
@@ -636,5 +636,12 @@ Route::get('/cetak-rekap-wali-kelas/{kelas_id}', function ($kelas_id) {
         ];
     }
 
-    return view('cetak.rekap-wali-kelas', compact('kelas', 'grupMapel', 'rekap'));
-});
+    // NAMA FILE EXCEL
+    $namaFile = 'Pantauan_Wali_Kelas_' . str_replace(' ', '_', $kelas->nama_kelas) . '.xls';
+
+    // TRIK CERDAS: Paksa browser mengunduh HTML sebagai Excel
+    return response(view('exports.pantauan-wali-kelas', compact('kelas', 'grupMapel', 'rekap')))
+        ->header('Content-Type', 'application/vnd.ms-excel; charset=utf-8')
+        ->header('Content-Disposition', 'attachment; filename="' . $namaFile . '"');
+
+})->name('export.pantauan.wali');
