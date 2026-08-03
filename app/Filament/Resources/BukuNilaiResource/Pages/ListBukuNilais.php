@@ -13,18 +13,17 @@ class ListBukuNilais extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        $actions = [];
-
-        if (in_array(Auth::user()->peran, ['admin', 'staf'])) {
-            $actions[] = Actions\Action::make('pantau_ujian')
-                ->label('Nilai UTS/UAS')
-                ->icon('heroicon-o-eye')
-                ->color('warning')
-                ->url(fn (): string => BukuNilaiResource::getUrl('pantau'));
-        }
-
-        $actions[] = Actions\CreateAction::make()->label('Input Nilai Kelas');
-
-        return $actions;
+        return [
+            // TOMBOL INI YANG BIKIN ERROR, HAPUS ATAU JADIKAN KOMENTAR:
+            // Actions\Action::make('pantau')
+            //     ->label('Pantau Pengumpulan')
+            //     ->url(fn (): string => BukuNilaiResource::getUrl('pantau')),
+            
+            Actions\Action::make('input_massal')
+                ->label('Input Nilai Massal')
+                ->url(fn (): string => BukuNilaiResource::getUrl('input-massal')),
+                
+            Actions\CreateAction::make(),
+        ];
     }
 }
