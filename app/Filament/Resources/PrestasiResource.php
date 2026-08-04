@@ -32,14 +32,24 @@ class PrestasiResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        $user = Auth::user();
+        $user = \Illuminate\Support\Facades\Auth::user();
+        
         if ($user->peran === 'admin' || $user->tugas_tambahan === 'Wakasek Kesiswaan') {
             $count = static::getModel()::where('status', 'Menunggu')->count();
             return $count > 0 ? (string) $count : null;
         }
-        return null;
+        
+        $countGuru = static::getModel()::where('status', 'Menunggu')
+                        ->where('guru_id', $user->id) 
+                        ->count();
+                        
+        return $countGuru > 0 ? (string) $countGuru : null;
     }
-    public static function getNavigationBadgeColor(): ?string { return 'danger'; }
+
+    public static function getNavigationBadgeColor(): ?string 
+    { 
+        return 'danger';
+    }
     
     public static function canCreate(): bool
     {
