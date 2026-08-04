@@ -37,9 +37,9 @@ class KehadiranRelationManager extends RelationManager
     {
         return $table
             ->modifyQueryUsing(fn (\Illuminate\Database\Eloquent\Builder $query) => $query
-                ->join('siswas', 'kehadiran_pelajarans.siswa_id', '=', 'siswas.id')
-                ->orderBy('siswas.nama_lengkap', 'asc')
-                ->select('kehadiran_pelajarans.*')
+                ->join('siswa', 'kehadiran_pelajaran.siswa_id', '=', 'siswa.id')
+                ->orderBy('siswa.nama_lengkap', 'asc')
+                ->select('kehadiran_pelajaran.*')
             )
             
             ->recordTitleAttribute('id')
