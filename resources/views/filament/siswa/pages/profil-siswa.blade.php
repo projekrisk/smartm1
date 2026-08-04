@@ -136,7 +136,7 @@
                         </div>
                         <div class="data-row">
                             <span class="theme-text-muted data-label">Tanggal Lahir</span>
-                            <span class="theme-text data-val">{{ $siswa?->tanggal_lahir ? \Carbon\Carbon::parse($siswa?->tanggal_lahir)->isoFormat('d MMMM Y') : '-' }}</span>
+                            <span class="theme-text data-val">{{ $siswa?->tanggal_lahir ? \Carbon\Carbon::parse($siswa?->tanggal_lahir)->isoFormat('D MMMM Y') : '-' }}</span>
                         </div>
                         <div class="data-row">
                             <span class="theme-text-muted data-label">Agama</span>
