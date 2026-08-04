@@ -191,7 +191,7 @@ class PrestasiResource extends Resource
                         ]);
                     }),
 
-                Tables\Actions\EditAction::make()->label(fn () => \App\Filament\Resources\PrestasiResource::isValidator() ? 'Cek & Validasi' : 'Edit'),
+                Tables\Actions\EditAction::make()->label(fn () => \App\Filament\Resources\PrestasiResource::isValidator() ? 'Validasi' : 'Edit'),
                 Tables\Actions\DeleteAction::make(),
             ]);
     }
