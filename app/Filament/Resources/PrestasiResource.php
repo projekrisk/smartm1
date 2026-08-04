@@ -39,16 +39,12 @@ class PrestasiResource extends Resource
             return $count > 0 ? (string) $count : null;
         }
         
-        $countGuru = static::getModel()::where('status', 'Menunggu')
-                        ->where('guru_id', $user->id) 
-                        ->count();
-                        
-        return $countGuru > 0 ? (string) $countGuru : null;
+        return null;
     }
 
     public static function getNavigationBadgeColor(): ?string 
     { 
-        return 'danger';
+        return 'danger'; 
     }
     
     public static function canCreate(): bool
