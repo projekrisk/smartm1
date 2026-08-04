@@ -33,14 +33,16 @@ class PrestasiResource extends Resource
             return true;
         }
 
-        $tugas = $user->tugas_tambahan;
-        
-        if (is_array($tugas)) {
-            foreach ($tugas as $t) {
-                if (stripos((string) $t, 'kesiswaan') !== false) return true;
+        if ($user->pegawai && $user->pegawai->tugas_tambahan) {
+            $tugas = $user->pegawai->tugas_tambahan;
+            
+            if (is_array($tugas)) {
+                foreach ($tugas as $t) {
+                    if (stripos((string) $t, 'kesiswaan') !== false) return true;
+                }
+            } elseif (is_string($tugas)) {
+                if (stripos($tugas, 'kesiswaan') !== false) return true;
             }
-        } elseif (is_string($tugas)) {
-            if (stripos($tugas, 'kesiswaan') !== false) return true;
         }
 
         return false;
