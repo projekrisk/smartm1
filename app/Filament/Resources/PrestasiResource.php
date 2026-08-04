@@ -25,6 +25,12 @@ class PrestasiResource extends Resource
     protected static ?string $navigationGroup = 'Kesiswaan';    
     protected static ?int $navigationSort = 12;
 
+    public static function canViewAny(): bool
+    {
+        $user = Auth::user();
+        return $user->peran === 'admin' || ($user->peran === 'guru' && $user->tugas_tambahan === 'Wakasek Kesiswaan');
+    }
+
     public static function getNavigationBadge(): ?string
     {
         $count = static::getModel()::where('status', 'Menunggu')->count();
@@ -34,17 +40,31 @@ class PrestasiResource extends Resource
     
     public static function canCreate(): bool
     {
-        return auth()->user()->peran === 'admin';
+        $user = Auth::user();
+        return $user->peran === 'admin' || ($user->peran === 'guru' && $user->tugas_tambahan === 'Wakasek Kesiswaan');
     }
 
     public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
     {
-        return auth()->user()->peran === 'admin';
+        $user = Auth::user();
+        return $user->peran === 'admin' || ($user->peran === 'guru' && $user->tugas_tambahan === 'Wakasek Kesiswaan');
     }
 
     public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
     {
-        return auth()->user()->peran === 'admin';
+        $user = Auth::user();
+        return $user->peran === 'admin' || ($user->peran === 'guru' && $user->tugas_tambahan === 'Wakasek Kesiswaan');
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+        
+        if (!static::canViewAny()) {
+            return $query->where('id', 0);
+        }
+        
+        return $query;
     }
 
     public static function form(Form $form): Form
@@ -116,7 +136,7 @@ class PrestasiResource extends Resource
                             ->visible(fn (\Filament\Forms\Get $get) => $get('status') === 'Ditolak')
                             ->required(fn (\Filament\Forms\Get $get) => $get('status') === 'Ditolak'),
                             
-                        Forms\Components\Hidden::make('diajukan_oleh')->default('Admin/Staf'),
+                        Forms\Components\Hidden::make('diajukan_oleh')->default('Admin/Wakasek'),
                         Forms\Components\Hidden::make('validator_id')->default(fn () => Auth::id()),
                     ])
             ]);
@@ -140,7 +160,22 @@ class PrestasiResource extends Resource
                 Tables\Filters\SelectFilter::make('status')->options(['Menunggu'=>'Menunggu', 'Disetujui'=>'Disetujui', 'Ditolak'=>'Ditolak']),
             ])
             ->actions([
-                Tables\Actions\EditAction::make()->label('Cek & Validasi'),
+                Tables\Actions\Action::make('validasi_cepat')
+                    ->label('Setujui')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->visible(fn ($record) => $record->status === 'Menunggu')
+                    ->requiresConfirmation()
+                    ->modalHeading('Setujui Prestasi')
+                    ->modalDescription('Anda yakin ingin menyetujui prestasi ini? Sertifikat akan dianggap valid dan masuk ke profil siswa.')
+                    ->action(function ($record) {
+                        $record->update([
+                            'status' => 'Disetujui',
+                            'validator_id' => Auth::id(),
+                        ]);
+                    }),
+
+                Tables\Actions\EditAction::make()->label('Cek Detail & Edit'),
                 Tables\Actions\DeleteAction::make(),
             ]);
     }
