@@ -25,6 +25,27 @@ class PrestasiResource extends Resource
     protected static ?string $navigationGroup = 'Kesiswaan';    
     protected static ?int $navigationSort = 12;
 
+    public static function isValidator(): bool
+    {
+        $user = Auth::user();
+        
+        if ($user->peran === 'admin') {
+            return true;
+        }
+
+        $tugas = $user->tugas_tambahan;
+        
+        if (is_array($tugas)) {
+            foreach ($tugas as $t) {
+                if (stripos((string) $t, 'kesiswaan') !== false) return true;
+            }
+        } elseif (is_string($tugas)) {
+            if (stripos($tugas, 'kesiswaan') !== false) return true;
+        }
+
+        return false;
+    }
+
     public static function canViewAny(): bool
     {
         return true; 
@@ -32,20 +53,14 @@ class PrestasiResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        $user = \Illuminate\Support\Facades\Auth::user();
-        
-        if ($user->peran === 'admin' || $user->tugas_tambahan === 'Wakasek Kesiswaan') {
+        if (static::isValidator()) {
             $count = static::getModel()::where('status', 'Menunggu')->count();
             return $count > 0 ? (string) $count : null;
         }
-        
         return null;
     }
 
-    public static function getNavigationBadgeColor(): ?string 
-    { 
-        return 'danger'; 
-    }
+    public static function getNavigationBadgeColor(): ?string { return 'danger'; }
     
     public static function canCreate(): bool
     {
@@ -54,22 +69,14 @@ class PrestasiResource extends Resource
 
     public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
     {
-        $user = Auth::user();
+        if (static::isValidator()) return true;
         
-        if ($user->peran === 'admin' || $user->tugas_tambahan === 'Wakasek Kesiswaan') {
-            return true;
-        }
-
         return $record->status === 'Menunggu';
     }
 
     public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
     {
-        $user = Auth::user();
-        
-        if ($user->peran === 'admin' || $user->tugas_tambahan === 'Wakasek Kesiswaan') {
-            return true;
-        }
+        if (static::isValidator()) return true;
         return $record->status === 'Menunggu';
     }
 
@@ -124,7 +131,7 @@ class PrestasiResource extends Resource
                     ])->columns(2),
 
                 Forms\Components\Section::make('Verifikasi & Validasi')
-                    ->visible(fn () => Auth::user()->peran === 'admin' || Auth::user()->tugas_tambahan === 'Wakasek Kesiswaan')
+                    ->visible(fn () => \App\Filament\Resources\PrestasiResource::isValidator())
                     ->schema([
                         Forms\Components\Select::make('status')
                             ->label('Keputusan Status')
@@ -171,7 +178,7 @@ class PrestasiResource extends Resource
                     ->label('Setujui')
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
-                    ->visible(fn ($record) => $record->status === 'Menunggu' && (Auth::user()->peran === 'admin' || Auth::user()->tugas_tambahan === 'Wakasek Kesiswaan'))
+                    ->visible(fn ($record) => $record->status === 'Menunggu' && \App\Filament\Resources\PrestasiResource::isValidator())
                     ->requiresConfirmation()
                     ->modalHeading('Setujui Prestasi')
                     ->modalDescription('Anda yakin ingin menyetujui prestasi ini? Sertifikat akan dianggap valid dan masuk ke profil siswa.')
@@ -182,7 +189,7 @@ class PrestasiResource extends Resource
                         ]);
                     }),
 
-                Tables\Actions\EditAction::make()->label(fn () => (Auth::user()->peran === 'admin' || Auth::user()->tugas_tambahan === 'Wakasek Kesiswaan') ? 'Cek & Validasi' : 'Edit'),
+                Tables\Actions\EditAction::make()->label(fn () => \App\Filament\Resources\PrestasiResource::isValidator() ? 'Cek & Validasi' : 'Edit'),
                 Tables\Actions\DeleteAction::make(),
             ]);
     }
