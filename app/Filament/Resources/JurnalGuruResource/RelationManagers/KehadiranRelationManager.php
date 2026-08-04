@@ -36,6 +36,12 @@ class KehadiranRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (\Illuminate\Database\Eloquent\Builder $query) => $query
+                ->join('siswas', 'kehadiran_pelajarans.siswa_id', '=', 'siswas.id')
+                ->orderBy('siswas.nama_lengkap', 'asc')
+                ->select('kehadiran_pelajarans.*')
+            )
+            
             ->recordTitleAttribute('id')
             ->recordAction('edit')
             ->columns([
