@@ -12,29 +12,6 @@ class ListPrestasis extends ListRecords
 {
     protected static string $resource = PrestasiResource::class;
 
-    public function getTabs(): array
-    {
-        return [
-            'Siswa Aktif' => Tab::make('Siswa Aktif')
-                ->modifyQueryUsing(fn (Builder $query) => $query->whereHas('siswa', function ($q) {
-                    $q->whereIn('status_siswa', ['Aktif', 'Mutasi Masuk'])->orWhereNull('status_siswa');
-                }))
-                ->badge(Prestasi::whereHas('siswa', function ($q) {
-                    $q->whereIn('status_siswa', ['Aktif', 'Mutasi Masuk'])->orWhereNull('status_siswa');
-                })->count()),
-                
-            'Alumni (Lulus)' => Tab::make('Alumni (Lulus)')
-                ->modifyQueryUsing(fn (Builder $query) => $query->whereHas('siswa', function ($q) {
-                    $q->where('status_siswa', 'Lulus');
-                }))
-                ->badge(Prestasi::whereHas('siswa', function ($q) {
-                    $q->where('status_siswa', 'Lulus');
-                })->count()),
-                
-            'Semua Data' => Tab::make('Semua Data'),
-        ];
-    }
-
     protected function getHeaderActions(): array 
     { 
         return [ 
