@@ -90,9 +90,6 @@ class ProfilSiswa extends Page implements HasForms
                     ->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file) use ($nisn) {
                         $ekstensi = $file->getClientOriginalExtension();
                         return 'Foto_' . $nisn . '_' . time() . '.' . $ekstensi;
-                    })                    
-                    ->getUploadedFileUrlUsing(function ($state) {
-                        return \Illuminate\Support\Facades\Storage::disk('publik_upload')->url($state);
                     }),
             ])
             ->statePath('fotoData')
