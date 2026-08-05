@@ -10,7 +10,7 @@
             .android-app-container {
                 width: 100%; max-width: 414px; margin: 0 auto; height: 100vh; height: 100dvh; position: relative; 
                 position: fixed; top: 0; bottom: 0; left: 0; right: 0;
-                height: 100% !important;                 
+                height: 100% !important;                
                 display: flex; flex-direction: column; box-shadow: 0 0 40px rgba(0,0,0,0.15); overflow: hidden; font-family: 'Inter', system-ui, sans-serif; transition: background-color 0.3s ease;
             }
             .theme-bg { background-color: #f8fafc; }
@@ -81,7 +81,8 @@
                                     
                                     <div style="width: 36px; height: 36px; border-radius: 10px; background-color: rgba(236,72,153,0.1); color: #272adb; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; overflow: hidden;" class="dark:bg-pink-900/30 dark:text-pink-400 border border-pink-100 dark:border-pink-900/50">
                                         @if($testi->siswa->foto)
-                                            <img src="{{ url('/uploads/' . $testi->siswa->foto) }}" alt="Foto" style="width: 100%; height: 100%; object-fit: cover;">
+                                            <!-- 🌟 PERBAIKAN 1: Tambahkan onerror untuk list ulasan -->
+                                            <img src="{{ url('/uploads/' . $testi->siswa->foto) }}" alt="Foto" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.outerHTML='{{ substr($testi->siswa->nama_lengkap ?? 'S', 0, 1) }}'">
                                         @else
                                             {{ substr($testi->siswa->nama_lengkap ?? 'S', 0, 1) }}
                                         @endif
@@ -114,7 +115,7 @@
                                         reviewPesan = {{ json_encode($testi->pesan) }};
                                         reviewFoto = '{{ $testi->siswa->foto ? url('/uploads/' . $testi->siswa->foto) : '' }}';
                                         reviewModal = true;
-                                    " style="color: #db2777; font-size: 10px; font-weight: 900; background: transparent; border: none; padding: 0; margin-top: 4px; cursor: pointer;">
+                                    " style="color: #3927db; font-size: 10px; font-weight: 900; background: transparent; border: none; padding: 0; margin-top: 4px; cursor: pointer;">
                                         Baca Selengkapnya
                                     </button>
                                 @endif
@@ -201,7 +202,7 @@
 
                 <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 20px; padding-right: 24px;">
                     <template x-if="reviewFoto">
-                        <img :src="reviewFoto" style="width: 48px; height: 48px; border-radius: 14px; object-fit: cover; border: 1px solid #d2cffb;" class="dark:border-pink-900/50">
+                        <img :src="reviewFoto" @error="reviewFoto = null" style="width: 48px; height: 48px; border-radius: 14px; object-fit: cover; border: 1px solid #d2cffb;" class="dark:border-pink-900/50">
                     </template>
                     <template x-if="!reviewFoto">
                         <div style="width: 48px; height: 48px; border-radius: 14px; background-color: rgba(236,72,153,0.1); color: #4227db; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px;" class="dark:bg-pink-900/30 dark:text-pink-400">
