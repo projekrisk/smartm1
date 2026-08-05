@@ -193,23 +193,9 @@ class PrestasiResource extends Resource
                     ->options(['Menunggu'=>'Menunggu', 'Disetujui'=>'Disetujui', 'Ditolak'=>'Ditolak']),
             ])
             ->actions([
-                Tables\Actions\Action::make('validasi_cepat')
-                    ->label('Setujui')
-                    ->icon('heroicon-o-check-circle')
-                    ->color('success')
-                    ->visible(fn ($record) => $record->status === 'Menunggu' && \App\Filament\Resources\PrestasiResource::isValidator())
-                    ->requiresConfirmation()
-                    ->modalHeading('Setujui Prestasi')
-                    ->modalDescription('Anda yakin ingin menyetujui prestasi ini? Sertifikat akan dianggap valid dan masuk ke profil siswa.')
-                    ->action(function ($record) {
-                        $record->update([
-                            'status' => 'Disetujui',
-                            'validator_id' => Auth::id(),
-                        ]);
-                    }),
-
-                Tables\Actions\EditAction::make()->label(fn () => \App\Filament\Resources\PrestasiResource::isValidator() ? 'Validasi' : 'Edit'),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->label('Cek & Validasi')
+                    ->icon('heroicon-o-document-magnifying-glass'),
             ]);
     }
 

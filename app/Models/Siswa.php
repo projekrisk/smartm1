@@ -87,4 +87,31 @@ class Siswa extends Model implements HasAvatar
     {
         return $this->hasMany(KehadiranHarian::class);
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::updating(function ($siswa) {
+            if ($siswa->isDirty('foto')) {
+                $fotoLama = $siswa->getOriginal('foto');
+                
+                if ($fotoLama) {
+                    $path = public_path('uploads/' . $fotoLama);
+                    if (File::exists($path)) {
+                        File::delete($path);
+                    }
+                }
+            }
+        });
+
+        static::deleting(function ($siswa) {
+            if ($siswa->foto) {
+                $path = public_path('uploads/' . $siswa->foto);
+                if (File::exists($path)) {
+                    File::delete($path);
+                }
+            }
+        });
+    }
 }
