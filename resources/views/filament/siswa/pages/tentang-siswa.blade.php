@@ -202,7 +202,7 @@
 
                 <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 20px; padding-right: 24px;">
                     <template x-if="reviewFoto">
-                        <img :src="reviewFoto" @error="reviewFoto = null" style="width: 48px; height: 48px; border-radius: 14px; object-fit: cover; border: 1px solid #d2cffb;" class="dark:border-pink-900/50">
+                        <img :src="reviewFoto" x-on:error="reviewFoto = null" style="width: 48px; height: 48px; border-radius: 14px; object-fit: cover; border: 1px solid #d2cffb;" class="dark:border-pink-900/50">
                     </template>
                     <template x-if="!reviewFoto">
                         <div style="width: 48px; height: 48px; border-radius: 14px; background-color: rgba(236,72,153,0.1); color: #4227db; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px;" class="dark:bg-pink-900/30 dark:text-pink-400">
