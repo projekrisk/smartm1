@@ -298,7 +298,13 @@ class SiswaResource extends Resource
                                     ->directory('foto-siswa')
                                     ->image()
                                     ->avatar() 
-                                    ->columnSpanFull(),
+                                    ->columnSpanFull()
+                                    ->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file, $get) {
+                                        $nisn = $get('nisn') ?? 'Siswa'; 
+                                        $ekstensi = $file->getClientOriginalExtension();
+                                        
+                                        return 'Foto_' . $nisn . '_' . time() . '.' . $ekstensi;
+                                    }),
                                     
                                 Forms\Components\Select::make('user_id')
                                     ->label('Akun Login (User ID)')

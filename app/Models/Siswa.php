@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Filament\Models\Contracts\HasAvatar;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class Siswa extends Model implements HasAvatar
 {
@@ -98,20 +98,14 @@ class Siswa extends Model implements HasAvatar
                 $fotoLama = $siswa->getOriginal('foto');
                 
                 if ($fotoLama) {
-                    $path = public_path('uploads/' . $fotoLama);
-                    if (File::exists($path)) {
-                        File::delete($path);
-                    }
+                    Storage::disk('publik_upload')->delete($fotoLama);
                 }
             }
         });
 
         static::deleting(function ($siswa) {
             if ($siswa->foto) {
-                $path = public_path('uploads/' . $siswa->foto);
-                if (File::exists($path)) {
-                    File::delete($path);
-                }
+                Storage::disk('publik_upload')->delete($siswa->foto);
             }
         });
     }
