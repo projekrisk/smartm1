@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Filament\Models\Contracts\HasAvatar;
+use Illuminate\Support\Facades\File;
 
 class Siswa extends Model implements HasAvatar
 {
