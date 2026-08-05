@@ -36,16 +36,34 @@ class PrestasiResource extends Resource
         if ($user->pegawai && $user->pegawai->tugas_tambahan) {
             $tugas = $user->pegawai->tugas_tambahan;
             
+            $cekAkses = function($teks) {
+                $teks = strtolower((string) $teks);
+                return str_contains($teks, 'kesiswaan') || 
+                       str_contains($teks, 'bimbingan') || 
+                       str_contains($teks, 'konseling');
+            };
+            
             if (is_array($tugas)) {
                 foreach ($tugas as $t) {
-                    if (stripos((string) $t, 'kesiswaan') !== false) return true;
+                    if ($cekAkses($t)) return true;
                 }
             } elseif (is_string($tugas)) {
-                if (stripos($tugas, 'kesiswaan') !== false) return true;
+                if ($cekAkses($tugas)) return true;
             }
         }
 
         return false;
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        if (!static::isValidator()) {
+            $query->where('status', 'Disetujui');
+        }
+
+        return $query;
     }
 
     public static function canViewAny(): bool
@@ -71,15 +89,12 @@ class PrestasiResource extends Resource
 
     public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
     {
-        if (static::isValidator()) return true;
-        
-        return $record->status === 'Menunggu';
+        return static::isValidator();
     }
 
     public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
     {
-        if (static::isValidator()) return true;
-        return $record->status === 'Menunggu';
+        return static::isValidator();
     }
 
     public static function form(Form $form): Form
@@ -173,7 +188,9 @@ class PrestasiResource extends Resource
                 Tables\Columns\TextColumn::make('tanggal_perolehan')->label('Tanggal')->date('d M Y'),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('status')->options(['Menunggu'=>'Menunggu', 'Disetujui'=>'Disetujui', 'Ditolak'=>'Ditolak']),
+                Tables\Filters\SelectFilter::make('status')
+                    ->visible(fn () => \App\Filament\Resources\PrestasiResource::isValidator())
+                    ->options(['Menunggu'=>'Menunggu', 'Disetujui'=>'Disetujui', 'Ditolak'=>'Ditolak']),
             ])
             ->actions([
                 Tables\Actions\Action::make('validasi_cepat')
