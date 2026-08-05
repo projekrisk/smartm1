@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\PesanBantuanResource\Pages;
 
 use App\Filament\Resources\PesanBantuanResource;
+use App\Filament\Resources\SiswaResource; 
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Actions;
 use Filament\Forms;
@@ -16,9 +17,10 @@ class ViewPesanBantuan extends ViewRecord
     public function mount(int | string $record): void
     {
         parent::mount($record);
-        if (!$this->record->is_read_admin) {$this->record->update([
+        if (!$this->record->is_read_admin) {
+            $this->record->update([
                 'is_read_admin' => true,
-                'status' => $this->record->status === 'Open' ? 'Diproses' :$this->record->status
+                'status' => $this->record->status === 'Open' ? 'Diproses' : $this->record->status
             ]);
         }
     }
@@ -26,6 +28,14 @@ class ViewPesanBantuan extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
+            Actions\Action::make('lihat_profil')
+                ->label('Lihat Profil Siswa')
+                ->icon('heroicon-o-identification')
+                ->color('info')
+                ->url(fn () => SiswaResource::getUrl('edit', ['record' => $this->record->siswa_id]))
+                ->openUrlInNewTab() // Membuka URL di tab baru
+                ->visible(fn () => filled($this->record->siswa_id)),
+
             Actions\Action::make('balas')
                 ->label('Balas Pesan')
                 ->icon('heroicon-o-chat-bubble-left-ellipsis')
