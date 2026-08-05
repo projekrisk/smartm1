@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class Pegawai extends Model
 {
@@ -82,5 +83,26 @@ class Pegawai extends Model
     public function berkas()
     {
         return $this->hasMany(BerkasPegawai::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::updating(function ($pegawai) {
+            if ($pegawai->isDirty('foto')) {
+                $fotoLama = $pegawai->getOriginal('foto');
+                
+                if ($fotoLama) {
+                    Storage::disk('publik_upload')->delete($fotoLama);
+                }
+            }
+        });
+
+        static::deleting(function ($pegawai) {
+            if ($pegawai->foto) {
+                Storage::disk('publik_upload')->delete($pegawai->foto);
+            }
+        });
     }
 }

@@ -68,7 +68,11 @@
 
                 <div style="text-align: center;">
                     <p style="font-size: 10px; font-weight: 800; letter-spacing: 1px; color: #bfdbfe; text-transform: uppercase; margin-bottom: 4px;">Profil Siswa</p>
-                    <h1 style="font-size: 1.5rem; font-weight: 900; margin: 0; line-height: 1.2; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">{{ $siswa?->nama_lengkap ?? '-' }}</h1>
+                    
+                    <h1 style="font-size: 20px; font-weight: 900; margin: 0; line-height: 1.2; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        {{ ucwords(strtolower($siswa?->nama_lengkap ?? '-')) }}
+                    </h1>
+                    
                     <div style="display: inline-flex; align-items: center; gap: 6px; background-color: rgba(0,0,0,0.25); padding: 4px 14px; border-radius: 999px; font-size: 10px; font-weight: bold; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(4px); margin-top: 10px; text-transform: uppercase; letter-spacing: 0.5px;">
                         NISN: {{ $siswa?->nisn ?? '-' }} &bull; KELAS: {{ $siswa?->kelas?->nama_kelas ?? '-' }}
                     </div>

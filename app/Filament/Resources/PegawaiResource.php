@@ -12,6 +12,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use App\Filament\Resources\PegawaiResource\RelationManagers; 
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Infolists\Components\ImageEntry;
 
@@ -76,7 +77,14 @@ class PegawaiResource extends Resource
                                         ->avatar()
                                         ->maxSize(2048)
                                         ->columnSpanFull()
-                                        ->extraAttributes(['class' => 'flex justify-center']),
+                                        ->extraAttributes(['class' => 'flex justify-center'])
+                                        ->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file, $get) {                                            
+                                            $identitas = $get('nik') ?? 'Pegawai'; 
+                                            
+                                            $ekstensi = $file->getClientOriginalExtension();
+                                            
+                                            return 'Foto_' . $identitas . '_' . time() . '.' . $ekstensi;
+                                        }),
                                         
                                     Forms\Components\TextInput::make('nama')
                                         ->label('Nama Lengkap (Beserta Gelar)')

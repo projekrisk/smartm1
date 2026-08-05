@@ -194,7 +194,7 @@ class PrestasiResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                    ->label('Cek & Validasi')
+                    ->label('Validasi')
                     ->icon('heroicon-o-document-magnifying-glass'),
             ]);
     }
