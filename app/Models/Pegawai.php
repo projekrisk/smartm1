@@ -90,33 +90,22 @@ class Pegawai extends Model
         parent::boot();
 
         static::updating(function ($pegawai) {
-            
             if ($pegawai->isDirty('foto')) {
                 $fotoLama = $pegawai->getOriginal('foto');
                 if ($fotoLama) {
                     Storage::disk('publik_upload')->delete($fotoLama);
                 }
             }
-
-            if ($pegawai->isDirty('berkas')) {
-                $berkasLama = $pegawai->getOriginal('berkas');
-                if ($berkasLama) {
-                    Storage::disk('publik_upload')->delete($berkasLama);
-                }
-            }
-            
         });
 
         static::deleting(function ($pegawai) {
-            
             if ($pegawai->foto) {
                 Storage::disk('publik_upload')->delete($pegawai->foto);
             }
             
-            if ($pegawai->berkas) {
-                Storage::disk('publik_upload')->delete($pegawai->berkas);
-            }
-            
+            $pegawai->berkas()->each(function($berkas) {
+                $berkas->delete();
+            });
         });
     }
 }
