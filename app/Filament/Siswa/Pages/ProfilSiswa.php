@@ -10,6 +10,7 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Form;
 use Filament\Forms;
 use Filament\Notifications\Notification;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class ProfilSiswa extends Page implements HasForms
 {
@@ -65,6 +66,8 @@ class ProfilSiswa extends Page implements HasForms
 
     public function fotoForm(Form $form): Form
     {
+        $nisn = $this->siswa->nisn ?? 'Siswa';
+
         return $form
             ->schema([
                 Forms\Components\FileUpload::make('foto')
@@ -83,7 +86,11 @@ class ProfilSiswa extends Page implements HasForms
                     ->helperText('Pilih gambar dari Kamera/Galeri.')
                     ->extraAttributes([
                         'class' => 'mx-auto flex justify-center text-center',
-                    ]),
+                    ])
+                    ->getUploadedFileNameForStorageUsing(function (TemporaryUploadedFile $file) use ($nisn) {
+                        $ekstensi = $file->getClientOriginalExtension();
+                        return 'Foto_' . $nisn . '_' . time() . '.' . $ekstensi;
+                    }),
             ])
             ->statePath('fotoData');
     }
@@ -92,9 +99,11 @@ class ProfilSiswa extends Page implements HasForms
     {
         if ($this->siswa) {
             $data = $this->fotoForm->getState();
-            $this->siswa->updateQuietly([
+            
+            $this->siswa->update([
                 'foto' => $data['foto'],
             ]);
+            
             Notification::make()
                 ->title('Foto Profil Diperbarui!')
                 ->success()
