@@ -69,7 +69,7 @@ class AbsensiSekretaris extends Page
 
             if ($adaDispensasi) {
                 $status = 'Dispensasi';
-                $keterangan = "Surat No: " . $adaDispensasi->nomor_surat_lengkap; 
+                $keterangan = "Nomor Surat: " . $adaDispensasi->nomor_surat_lengkap; 
                 $isDispensasi = true; // Kunci statusnya!
             }
 
@@ -90,9 +90,10 @@ class AbsensiSekretaris extends Page
                 'nama' => $siswa->nama_lengkap,
                 'nisn' => $siswa->nisn,
                 'nis' => $siswa->nis,
+                'foto' => $siswa->foto, // 🌟 TAMBAHKAN BARIS INI
                 'status' => $status,
                 'keterangan' => $keterangan,
-                'is_dispensasi' => $isDispensasi, // Bawa penanda ini ke Frontend
+                'is_dispensasi' => $isDispensasi,
             ];
         }
     }

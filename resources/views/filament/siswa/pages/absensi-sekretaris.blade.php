@@ -65,7 +65,6 @@
             .badge-izin { background-color: #e0e7ff; color: #4f46e5; border: 1px solid #c7d2fe; }
             .badge-alpa { background-color: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
             
-            /* Warna Khusus Dispensasi */
             .badge-dispensasi { background-color: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
             
             .dark .badge-sakit { background-color: rgba(217, 119, 6, 0.2); color: #fcd34d; border-color: rgba(253, 230, 138, 0.2); }
@@ -108,29 +107,36 @@
                 <div style="display: flex; flex-direction: column; gap: 12px;">
                     @foreach($absensi as $index => $item)
                         @php
-                            // Ambil penanda apakah dia sedang dispensasi
                             $isDispensasi = $item['is_dispensasi'] ?? false;
                         @endphp
                         
                         <div wire:key="siswa-row-{{ $item['siswa_id'] }}" x-data="{ localStatus: '{{ $item['status'] }}' }">
                             
-                            <!-- 🌟 LOGIKA: Hapus 'cursor-pointer' dan cegah @click jika siswa sedang Dispensasi -->
                             <div class="theme-card rounded-[20px] p-[16px] {{ $isDispensasi || $isLocked ? 'opacity-80' : 'cursor-pointer' }} transition-transform duration-200 flex items-center justify-between" 
                                  @if(!$isLocked && !$isDispensasi) @click="activeModal = {{ $index }}" @endif
                                  :style="activeModal === {{ $index }} ? 'transform: scale(0.96); opacity: 0.8;' : ''">
                                 
                                 <div style="display: flex; align-items: center; gap: 14px; overflow: hidden; flex: 1; min-width: 0;">
-                                    <div style="flex-shrink: 0; width: 46px; height: 46px; border-radius: 14px; background-color: rgba(37,99,235,0.1); color: #2563eb; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px;" class="dark:bg-slate-700 dark:text-blue-400">
-                                        {{ substr($item['nama'], 0, 1) }}
-                                    </div>
+                                    
+                                    <!-- 🌟 FOTO PROFIL SISWA (LIST) -->
+                                    @if(!empty($item['foto']))
+                                        <img src="{{ url('/uploads/' . $item['foto']) }}" 
+                                             style="flex-shrink: 0; width: 46px; height: 46px; border-radius: 14px; object-fit: cover; border: 1px solid #e2e8f0;" 
+                                             class="dark:border-slate-700" 
+                                             onerror="this.outerHTML='<div style=\'flex-shrink: 0; width: 46px; height: 46px; border-radius: 14px; background-color: rgba(37,99,235,0.1); color: #2563eb; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px;\' class=\'dark:bg-slate-700 dark:text-blue-400\'>{{ substr($item['nama'], 0, 1) }}</div>'">
+                                    @else
+                                        <div style="flex-shrink: 0; width: 46px; height: 46px; border-radius: 14px; background-color: rgba(37,99,235,0.1); color: #2563eb; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px;" class="dark:bg-slate-700 dark:text-blue-400">
+                                            {{ substr($item['nama'], 0, 1) }}
+                                        </div>
+                                    @endif
+
                                     <div style="display: flex; flex-direction: column; min-width: 0;">
                                         <span class="theme-text" style="font-weight: 800; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; width: 100%;">{{ $item['nama'] }}</span>
                                         
                                         @if($isDispensasi)
-                                            <!-- Tampilkan informasi gembok Keterangan Surat -->
                                             <span style="font-size: 10px; font-weight: 700; margin-top: 2px; color: #0ea5e9;" class="dark:text-sky-400">
                                                 <svg style="width: 10px; height: 10px; display: inline-block; vertical-align: text-top; margin-right: 2px;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
-                                                Terkunci: {{ $item['keterangan'] }}
+                                                {{ $item['keterangan'] }}
                                             </span>
                                         @else
                                             <span class="theme-text-muted" style="font-size: 10px; font-weight: 700; margin-top: 2px;">NISN: {{ $item['nisn'] ?? $item['nis'] }}</span>
@@ -143,21 +149,18 @@
                                     <div x-show="localStatus === 'Hadir'" x-cloak style="color: #cbd5e1;" class="dark:text-slate-600">
                                         <svg style="width: 24px; height: 24px;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
                                     </div>
-                                    <!-- Menambahkan badge-dispensasi -->
                                     <div x-show="localStatus !== 'Hadir'" x-cloak class="badge-status" 
-                                         style="display: flex; align-items: center; justify-content: center; gap: 4px;"
+                                         style="display: flex; align-items: center; justify-content: center; gap: 4px; justify-items: center;"
                                          :class="{ 'badge-sakit': localStatus === 'Sakit', 'badge-izin': localStatus === 'Izin', 'badge-alpa': localStatus === 'Alpa', 'badge-dispensasi': localStatus === 'Dispensasi' }">
                                         <span x-text="localStatus"></span>
                                         
                                         @if($isDispensasi)
-                                            <!-- Ikon gembok di dalam badge Dispensasi -->
                                             <svg style="width: 12px; height: 12px; opacity: 0.7;" fill="currentColor" viewBox="0 0 20 20"><path d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"></path></svg>
                                         @endif
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Modal Pilihan Status (Tidak akan terbuka jika Dispensasi) -->
                             <div x-show="activeModal === {{ $index }}" x-cloak 
                                  style="position: fixed; top: 0; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 414px; z-index: 999999; background-color: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px);"
                                  x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
@@ -172,9 +175,19 @@
                                      <div style="width: 48px; height: 6px; border-radius: 999px; background-color: #cbd5e1; margin: 0 auto 24px auto;" class="dark:bg-slate-600"></div>
 
                                      <div style="text-align: center; margin-bottom: 24px;">
-                                        <div style="width: 56px; height: 56px; border-radius: 16px; background-color: rgba(37,99,235,0.1); color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900; margin: 0 auto 12px auto;" class="dark:bg-slate-700 dark:text-blue-400">
-                                            {{ substr($item['nama'], 0, 1) }}
-                                        </div>
+                                        
+                                        <!-- 🌟 FOTO PROFIL SISWA (MODAL) -->
+                                        @if(!empty($item['foto']))
+                                            <img src="{{ url('/uploads/' . $item['foto']) }}" 
+                                                 style="width: 56px; height: 56px; border-radius: 16px; object-fit: cover; display: block; margin: 0 auto 12px auto; border: 2px solid #e2e8f0;" 
+                                                 class="dark:border-slate-700" 
+                                                 onerror="this.outerHTML='<div style=\'width: 56px; height: 56px; border-radius: 16px; background-color: rgba(37,99,235,0.1); color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900; margin: 0 auto 12px auto;\' class=\'dark:bg-slate-700 dark:text-blue-400\'>{{ substr($item['nama'], 0, 1) }}</div>'">
+                                        @else
+                                            <div style="width: 56px; height: 56px; border-radius: 16px; background-color: rgba(37,99,235,0.1); color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900; margin: 0 auto 12px auto;" class="dark:bg-slate-700 dark:text-blue-400">
+                                                {{ substr($item['nama'], 0, 1) }}
+                                            </div>
+                                        @endif
+
                                         <h3 class="theme-text" style="font-weight: 900; font-size: 1.125rem; text-transform: uppercase; line-height: 1.2; margin: 0;">{{ $item['nama'] }}</h3>
                                         <p class="theme-text-muted" style="font-size: 10px; font-weight: 800; margin-top: 6px; letter-spacing: 0.5px;">PILIH STATUS KEHADIRAN</p>
                                     </div>
