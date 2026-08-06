@@ -163,20 +163,22 @@ Route::get('/cetak/laporan-absensi', function (\Illuminate\Http\Request $request
 
     $semuaSiswaIds = $siswasGrouped->flatten()->pluck('id');
 
+    // 🌟 PERBAIKAN: Menambahkan 'Dispensasi' ke dalam daftar pencarian absen
     $absensiData = \App\Models\KehadiranHarian::with('rekapKehadiran')
         ->whereIn('siswa_id', $semuaSiswaIds)
         ->whereHas('rekapKehadiran', function ($q) use ($start, $end) {
             $q->whereBetween('tanggal', [$start, $end]);
         })
-        ->whereIn('status', ['Sakit', 'Izin', 'Alpa'])
+        ->whereIn('status', ['Sakit', 'Izin', 'Alpa', 'Dispensasi']) // <-- DISINI DITAMBAHKAN
         ->get();
 
     $dataRekap = [];
     foreach ($semuaSiswaIds as $sId) {
         foreach ($months as $m) {
-            $dataRekap[$sId][$m['key']] = ['Sakit' => 0, 'Izin' => 0, 'Alpa' => 0];
+            // 🌟 PERBAIKAN: Menyiapkan wadah hitungan untuk Dispensasi
+            $dataRekap[$sId][$m['key']] = ['Sakit' => 0, 'Izin' => 0, 'Alpa' => 0, 'Dispensasi' => 0];
         }
-        $dataRekap[$sId]['total'] = ['Sakit' => 0, 'Izin' => 0, 'Alpa' => 0];
+        $dataRekap[$sId]['total'] = ['Sakit' => 0, 'Izin' => 0, 'Alpa' => 0, 'Dispensasi' => 0];
     }
 
     foreach ($absensiData as $absen) {
@@ -413,7 +415,7 @@ Route::get('/cetak/rekap-harian', function (\Illuminate\Http\Request $request) {
         ->whereHas('rekapKehadiran', function ($q) use ($tanggal) {
             $q->whereDate('tanggal', $tanggal);
         })
-        ->whereIn('status', ['Sakit', 'Izin', 'Alpa'])
+        ->whereIn('status', ['Sakit', 'Izin', 'Alpa', 'Dispensasi'])
         ->get();
 
     $groupedByKelas = $absenHarian->groupBy(function($item) {
