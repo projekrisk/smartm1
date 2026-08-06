@@ -115,7 +115,6 @@
                     <h1 class="text-[22pt] font-bold uppercase">{{ $pengaturan->nama_sekolah ?? 'SMA NEGERI 1 MALINGPING' }}</h1>
                     <p>NPSN: 20601875 AKREDITASI: A (96)</p>
                     <p>Jl. Raya Bayah KM. 4 No. 39 Malingping – Lebak, 42391</p>
-                    <p>Website: https://sman1malingping.sch.id – Email: sman1malingping@ymail.com</p>
                 </div>
 
                 <!-- Logo Sekolah (Kanan) -->
@@ -126,6 +125,7 @@
                         <div class="w-20 h-20 border-2 border-dashed border-gray-400 text-gray-400 flex items-center justify-center text-[10px] text-center">Logo<br>Sekolah</div>
                     @endif
                 </div>
+                <p>Website: https://sman1malingping.sch.id – Email: sman1malingping@ymail.com</p>
             </div>
 
             <!-- ISI SURAT -->
