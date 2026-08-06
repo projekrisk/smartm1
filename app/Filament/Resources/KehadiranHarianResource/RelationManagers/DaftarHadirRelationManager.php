@@ -24,11 +24,14 @@ class DaftarHadirRelationManager extends RelationManager
                         'Sakit' => 'Sakit',
                         'Izin' => 'Izin',
                         'Alpa' => 'Alpa',
+                        'Dispensasi' => 'Dispensasi',
                     ])
-                    ->required(),
+                    ->required()
+                    ->disabled(fn ($record) => $record && $record->status === 'Dispensasi'),
+
                 Forms\Components\TextInput::make('keterangan')
-                    ->label('Keterangan Tambahan')
-                    ->placeholder('Contoh: Surat dari Dokter / Dispensasi Lomba'),
+                    ->label('Keterangan')
+                    ->disabled(fn ($record) => $record && $record->status === 'Dispensasi'),
             ])->columns(1);
     }
 
