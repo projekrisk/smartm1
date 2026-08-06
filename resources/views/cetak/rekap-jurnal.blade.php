@@ -21,7 +21,7 @@
         .status-i { color: #1d4ed8; font-weight: bold; }
         .status-a { color: #b91c1c; font-weight: bold; }
         .status-t { color: #7e22ce; font-weight: bold; }
-        .status-d { color: #4b5563; font-weight: bold; } /* Tambahan Warna Dispensasi (Abu-abu gelap) */
+        .status-d { color: #4b5563; font-weight: bold; }
     </style>
 </head>
 <body class="bg-gray-200 text-gray-900 text-[11px]">
@@ -109,7 +109,7 @@
                                     if($absen1->status == 'Izin') $warna = 'status-i';
                                     if($absen1->status == 'Alpa') $warna = 'status-a';
                                     if($absen1->status == 'Terlambat') $warna = 'status-t';
-                                    if($absen1->status == 'Dispensasi') $warna = 'status-d'; // Warna dispensasi
+                                    if($absen1->status == 'Dispensasi') $warna = 'status-d';
                                 @endphp
                                 <td class="border border-gray-600 p-1 text-center align-top">{{ $absen1->siswa->nis ?? '-' }}</td>
                                 <td class="border border-gray-600 p-1 align-top uppercase text-[10px] font-bold">
@@ -133,7 +133,7 @@
                                     if($absenN->status == 'Izin') $warnaN = 'status-i';
                                     if($absenN->status == 'Alpa') $warnaN = 'status-a';
                                     if($absenN->status == 'Terlambat') $warnaN = 'status-t';
-                                    if($absenN->status == 'Dispensasi') $warnaN = 'status-d'; // Warna dispensasi
+                                    if($absenN->status == 'Dispensasi') $warnaN = 'status-d';
                                 @endphp
                                 <tr class="avoid-break hover:bg-gray-50">
                                     <td class="border border-gray-600 p-1 text-center align-top">{{ $absenN->siswa->nis ?? '-' }}</td>
@@ -172,7 +172,7 @@
                                         'Izin' => 0,
                                         'Alpa' => 0,
                                         'Terlambat' => 0,
-                                        'Dispensasi' => 0, // 🌟 WADAH DISPENSASI DITAMBAHKAN
+                                        'Dispensasi' => 0,
                                         'Total' => 0
                                     ];
                                 }
@@ -198,11 +198,11 @@
                                 <th class="border border-gray-600 p-1 w-20">NIS</th>
                                 <th class="border border-gray-600 p-1 text-left">Nama Lengkap Siswa</th>
                                 <th class="border border-gray-600 p-1 w-24">Kelas</th>
-                                <th class="border border-gray-600 p-1 w-10 text-yellow-700" title="Sakit">S</th>
-                                <th class="border border-gray-600 p-1 w-10 text-blue-700" title="Izin">I</th>
+                                <!-- 🌟 URUTAN KOLOM BARU: A - I - S - T - D -->
                                 <th class="border border-gray-600 p-1 w-10 text-red-700" title="Alpa">A</th>
+                                <th class="border border-gray-600 p-1 w-10 text-blue-700" title="Izin">I</th>
+                                <th class="border border-gray-600 p-1 w-10 text-yellow-700" title="Sakit">S</th>
                                 <th class="border border-gray-600 p-1 w-10 text-purple-700" title="Terlambat">T</th>
-                                <!-- 🌟 KOLOM DISPENSASI DITAMBAHKAN -->
                                 <th class="border border-gray-600 p-1 w-10 text-gray-700" title="Dispensasi">D</th>
                                 <th class="border border-gray-600 p-1 w-12 bg-gray-200">Total</th>
                             </tr>
@@ -214,12 +214,11 @@
                                     <td class="border border-gray-600 p-1 text-center">{{ $siswa['nis'] }}</td>
                                     <td class="border border-gray-600 p-1 font-bold uppercase">{{ $siswa['nama'] }}</td>
                                     <td class="border border-gray-600 p-1 text-center">{{ $siswa['kelas'] }}</td>
-                                    <td class="border border-gray-600 p-1 text-center {{ $siswa['Sakit'] > 0 ? 'font-bold' : 'text-gray-400' }}">{{ $siswa['Sakit'] ?: '-' }}</td>
-                                    <td class="border border-gray-600 p-1 text-center {{ $siswa['Izin'] > 0 ? 'font-bold' : 'text-gray-400' }}">{{ $siswa['Izin'] ?: '-' }}</td>
+                                    <!-- 🌟 URUTAN DATA BARU MENYESUAIKAN HEADER -->
                                     <td class="border border-gray-600 p-1 text-center {{ $siswa['Alpa'] > 0 ? 'font-bold text-red-600' : 'text-gray-400' }}">{{ $siswa['Alpa'] ?: '-' }}</td>
+                                    <td class="border border-gray-600 p-1 text-center {{ $siswa['Izin'] > 0 ? 'font-bold' : 'text-gray-400' }}">{{ $siswa['Izin'] ?: '-' }}</td>
+                                    <td class="border border-gray-600 p-1 text-center {{ $siswa['Sakit'] > 0 ? 'font-bold' : 'text-gray-400' }}">{{ $siswa['Sakit'] ?: '-' }}</td>
                                     <td class="border border-gray-600 p-1 text-center {{ $siswa['Terlambat'] > 0 ? 'font-bold' : 'text-gray-400' }}">{{ $siswa['Terlambat'] ?: '-' }}</td>
-                                    
-                                    <!-- 🌟 DATA DISPENSASI DITAMBAHKAN -->
                                     <td class="border border-gray-600 p-1 text-center {{ $siswa['Dispensasi'] > 0 ? 'font-bold text-gray-700' : 'text-gray-400' }}">{{ $siswa['Dispensasi'] ?: '-' }}</td>
                                     
                                     <td class="border border-gray-600 p-1 text-center font-bold bg-yellow-50">{{ $siswa['Total'] }}</td>
@@ -233,8 +232,8 @@
             <div class="mt-4 flex justify-between text-[11px] avoid-break">
                 <div>
                     <strong>Keterangan Status:</strong><br>
-                    <!-- 🌟 KETERANGAN DISPENSASI DITAMBAHKAN -->
-                    S = Sakit &nbsp; | &nbsp; I = Izin &nbsp; | &nbsp; A = Alpa &nbsp; | &nbsp; T = Terlambat &nbsp; | &nbsp; D = Dispensasi
+                    <!-- 🌟 URUTAN KETERANGAN BARU -->
+                    A = Alpa &nbsp; | &nbsp; I = Izin &nbsp; | &nbsp; S = Sakit &nbsp; | &nbsp; T = Terlambat &nbsp; | &nbsp; D = Dispensasi
                 </div>
                 <div class="text-center w-64 pr-10">
                     Malingping, {{ now()->isoFormat('D MMMM Y') }}<br>
