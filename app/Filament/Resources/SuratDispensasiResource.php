@@ -26,6 +26,33 @@ class SuratDispensasiResource extends Resource
 
     public static function form(Form $form): Form
     {
+        // 1. KITA BUAT LOGIKA PENCARIANNYA DI SINI
+        $getPenandatangan = function () {
+            // Ambil semua pegawai, lalu saring menggunakan PHP (bukan query database)
+            return Pegawai::all()->filter(function ($pegawai) {
+                $tugas = $pegawai->tugas_tambahan;
+                if (!$tugas) return false;
+                
+                $cekKesiswaan = function($teks) {
+                    $teks = strtolower((string) $teks);
+                    // Sama persis dengan logika hak akses Anda
+                    return str_contains($teks, 'kesiswaan') || 
+                           str_contains($teks, 'bimbingan') || 
+                           str_contains($teks, 'konseling');
+                };
+                
+                if (is_array($tugas)) {
+                    foreach ($tugas as $t) {
+                        if ($cekKesiswaan($t)) return true;
+                    }
+                } elseif (is_string($tugas)) {
+                    return $cekKesiswaan($tugas);
+                }
+                
+                return false;
+            });
+        };
+
         return $form
             ->schema([
                 Forms\Components\Section::make('Informasi Surat')
@@ -34,7 +61,7 @@ class SuratDispensasiResource extends Resource
                             ->label('Jenis Surat')
                             ->relationship('kategori', 'nama_kategori')
                             ->required()
-                            ->live() // Memastikan form update saat ini dipilih
+                            ->live()
                             ->afterStateUpdated(function (Get $get, Set $set) {
                                 self::generateNomorSurat($get, $set);
                             }),
@@ -43,15 +70,15 @@ class SuratDispensasiResource extends Resource
                             ->label('Nomor Surat (Input Manual)')
                             ->required()
                             ->numeric()
-                            ->live(onBlur: true) // Update saat TU selesai mengetik nomor
+                            ->live(onBlur: true)
                             ->afterStateUpdated(function (Get $get, Set $set) {
                                 self::generateNomorSurat($get, $set);
                             }),
 
                         Forms\Components\TextInput::make('nomor_surat_lengkap')
                             ->label('Format Lengkap (Otomatis)')
-                            ->disabled() // Tidak bisa diedit manual
-                            ->dehydrated() // Tapi tetap disimpan ke database
+                            ->disabled()
+                            ->dehydrated()
                             ->required()
                             ->columnSpanFull(),
                     ])->columns(2),
@@ -65,16 +92,16 @@ class SuratDispensasiResource extends Resource
                         Forms\Components\DatePicker::make('tanggal_selesai')->required(),
                         Forms\Components\DatePicker::make('tanggal_surat')->default(now())->required(),
                         
+                        // 2. KITA TERAPKAN HASIL PENCARIAN TADI DI SINI
                         Forms\Components\Select::make('penandatangan_id')
-                            ->label('Ditandatangani Oleh (Wakasek Kesiswaan)')
-                            ->options(function () {
-                                // Mencari Pegawai yang punya tugas Kesiswaan
-                                return Pegawai::where('tugas_tambahan', 'LIKE', '%kesiswaan%')
-                                    ->pluck('nama', 'id');
+                            ->label('Ditandatangani Oleh (Wakasek Kesiswaan / BK)')
+                            ->options(function () use ($getPenandatangan) {
+                                // Tampilkan nama pegawai yang lolos seleksi
+                                return $getPenandatangan()->pluck('nama', 'id');
                             })
-                            ->default(function () {
-                                // Otomatis terisi jika ada
-                                $wakasek = Pegawai::where('tugas_tambahan', 'LIKE', '%kesiswaan%')->first();
+                            ->default(function () use ($getPenandatangan) {
+                                // Otomatis pilih orang pertama yang ketemu
+                                $wakasek = $getPenandatangan()->first();
                                 return $wakasek ? $wakasek->id : null;
                             })
                             ->required()
@@ -85,7 +112,7 @@ class SuratDispensasiResource extends Resource
                     ->schema([
                         Forms\Components\Select::make('siswa')
                             ->multiple()
-                            ->relationship('siswa', 'nama_lengkap') // Menggunakan relasi Banyak-ke-Banyak
+                            ->relationship('siswa', 'nama_lengkap')
                             ->preload()
                             ->searchable()
                             ->label('Pilih Siswa yang Diberi Dispensasi')
