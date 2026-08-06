@@ -65,9 +65,13 @@
             .badge-izin { background-color: #e0e7ff; color: #4f46e5; border: 1px solid #c7d2fe; }
             .badge-alpa { background-color: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
             
+            /* Warna Khusus Dispensasi */
+            .badge-dispensasi { background-color: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+            
             .dark .badge-sakit { background-color: rgba(217, 119, 6, 0.2); color: #fcd34d; border-color: rgba(253, 230, 138, 0.2); }
             .dark .badge-izin { background-color: rgba(79, 70, 229, 0.2); color: #a5b4fc; border-color: rgba(199, 210, 254, 0.2); }
             .dark .badge-alpa { background-color: rgba(220, 38, 38, 0.2); color: #fca5a5; border-color: rgba(254, 202, 202, 0.2); }
+            .dark .badge-dispensasi { background-color: rgba(71, 85, 105, 0.3); color: #cbd5e1; border-color: rgba(100, 116, 139, 0.4); }
         </style>
     </div>
 
@@ -103,10 +107,16 @@
 
                 <div style="display: flex; flex-direction: column; gap: 12px;">
                     @foreach($absensi as $index => $item)
+                        @php
+                            // Ambil penanda apakah dia sedang dispensasi
+                            $isDispensasi = $item['is_dispensasi'] ?? false;
+                        @endphp
+                        
                         <div wire:key="siswa-row-{{ $item['siswa_id'] }}" x-data="{ localStatus: '{{ $item['status'] }}' }">
                             
-                            <div class="theme-card rounded-[20px] p-[16px] cursor-pointer transition-transform duration-200 flex items-center justify-between" 
-                                 @if(!$isLocked) @click="activeModal = {{ $index }}" @endif
+                            <!-- 🌟 LOGIKA: Hapus 'cursor-pointer' dan cegah @click jika siswa sedang Dispensasi -->
+                            <div class="theme-card rounded-[20px] p-[16px] {{ $isDispensasi || $isLocked ? 'opacity-80' : 'cursor-pointer' }} transition-transform duration-200 flex items-center justify-between" 
+                                 @if(!$isLocked && !$isDispensasi) @click="activeModal = {{ $index }}" @endif
                                  :style="activeModal === {{ $index }} ? 'transform: scale(0.96); opacity: 0.8;' : ''">
                                 
                                 <div style="display: flex; align-items: center; gap: 14px; overflow: hidden; flex: 1; min-width: 0;">
@@ -115,7 +125,17 @@
                                     </div>
                                     <div style="display: flex; flex-direction: column; min-width: 0;">
                                         <span class="theme-text" style="font-weight: 800; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; width: 100%;">{{ $item['nama'] }}</span>
-                                        <span class="theme-text-muted" style="font-size: 10px; font-weight: 700; margin-top: 2px;">NISN: {{ $item['nisn'] ?? $item['nis'] }}</span>
+                                        
+                                        @if($isDispensasi)
+                                            <!-- Tampilkan informasi gembok Keterangan Surat -->
+                                            <span style="font-size: 10px; font-weight: 700; margin-top: 2px; color: #0ea5e9;" class="dark:text-sky-400">
+                                                <svg style="width: 10px; height: 10px; display: inline-block; vertical-align: text-top; margin-right: 2px;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
+                                                Terkunci: {{ $item['keterangan'] }}
+                                            </span>
+                                        @else
+                                            <span class="theme-text-muted" style="font-size: 10px; font-weight: 700; margin-top: 2px;">NISN: {{ $item['nisn'] ?? $item['nis'] }}</span>
+                                        @endif
+                                        
                                     </div>
                                 </div>
 
@@ -123,13 +143,21 @@
                                     <div x-show="localStatus === 'Hadir'" x-cloak style="color: #cbd5e1;" class="dark:text-slate-600">
                                         <svg style="width: 24px; height: 24px;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
                                     </div>
+                                    <!-- Menambahkan badge-dispensasi -->
                                     <div x-show="localStatus !== 'Hadir'" x-cloak class="badge-status" 
-                                         :class="{ 'badge-sakit': localStatus === 'Sakit', 'badge-izin': localStatus === 'Izin', 'badge-alpa': localStatus === 'Alpa' }" 
-                                         x-text="localStatus">
+                                         style="display: flex; align-items: center; justify-content: center; gap: 4px;"
+                                         :class="{ 'badge-sakit': localStatus === 'Sakit', 'badge-izin': localStatus === 'Izin', 'badge-alpa': localStatus === 'Alpa', 'badge-dispensasi': localStatus === 'Dispensasi' }">
+                                        <span x-text="localStatus"></span>
+                                        
+                                        @if($isDispensasi)
+                                            <!-- Ikon gembok di dalam badge Dispensasi -->
+                                            <svg style="width: 12px; height: 12px; opacity: 0.7;" fill="currentColor" viewBox="0 0 20 20"><path d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"></path></svg>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
 
+                            <!-- Modal Pilihan Status (Tidak akan terbuka jika Dispensasi) -->
                             <div x-show="activeModal === {{ $index }}" x-cloak 
                                  style="position: fixed; top: 0; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 414px; z-index: 999999; background-color: rgba(15, 23, 42, 0.75); backdrop-filter: blur(4px);"
                                  x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"

@@ -26,30 +26,22 @@ class SuratDispensasiResource extends Resource
 
     public static function form(Form $form): Form
     {
-        // 1. LOGIKA PENCARIAN DIPERBARUI UNTUK KEPALA SEKOLAH & WAKASEK
         $getPenandatangan = function () {
             return \App\Models\Pegawai::all()->filter(function ($pegawai) {
                 
-                // Cek 1: Apakah dia Kepala Sekolah? (Dari kolom jenis_ptk)
+                // Cek 1: Kepala Sekolah dari kolom jenis_ptk
                 $jenisPtk = strtolower((string) $pegawai->jenis_ptk);
                 if (str_contains($jenisPtk, 'kepala sekolah')) {
                     return true;
                 }
                 
-                // Cek 2: Apakah dia punya tugas Kesiswaan / Kepala Sekolah? (Dari kolom tugas_tambahan)
-                $tugas = $pegawai->tugas_tambahan;
+                // Cek 2: Wakasek / Kepala Sekolah dari tugas_tambahan
+                // Trik: Ubah apapun formatnya (Array/JSON/String) menjadi satu baris teks biasa
+                $tugas = json_encode($pegawai->tugas_tambahan);
+                $tugas = strtolower($tugas);
                 
-                $cekJabatan = function($teks) {
-                    $teks = strtolower((string) $teks);
-                    return str_contains($teks, 'kesiswaan') || str_contains($teks, 'kepala sekolah');
-                };
-                
-                if (is_array($tugas)) {
-                    foreach ($tugas as $t) {
-                        if ($cekJabatan($t)) return true;
-                    }
-                } elseif (is_string($tugas)) {
-                    return $cekJabatan($tugas);
+                if (str_contains($tugas, 'kesiswaan') || str_contains($tugas, 'kepala sekolah')) {
+                    return true;
                 }
                 
                 return false;

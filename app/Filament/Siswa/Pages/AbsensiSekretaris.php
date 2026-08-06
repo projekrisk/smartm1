@@ -59,10 +59,9 @@ class AbsensiSekretaris extends Page
         foreach ($siswas as $siswa) {
             $status = 'Hadir'; 
             $keterangan = '';
+            $isDispensasi = false; // Penanda khusus untuk mengunci pilihan
 
-            // =========================================================
-            // 🌟 LOGIKA BARU: CEK SURAT DISPENSASI HARI INI
-            // =========================================================
+            // Cek Surat Dispensasi Hari Ini
             $adaDispensasi = $siswa->suratDispensasi()
                 ->where('tanggal_mulai', '<=', $today->format('Y-m-d'))
                 ->where('tanggal_selesai', '>=', $today->format('Y-m-d'))
@@ -70,17 +69,19 @@ class AbsensiSekretaris extends Page
 
             if ($adaDispensasi) {
                 $status = 'Dispensasi';
-                // Opsional: Masukkan nama kegiatan sbg keterangan
                 $keterangan = "Surat No: " . $adaDispensasi->nomor_surat_lengkap; 
+                $isDispensasi = true; // Kunci statusnya!
             }
 
             // Jika rekap hari ini sudah pernah disimpan (Edit Mode)
-            // maka timpa status default/dispensasi dengan yang ada di database
             if ($rekap) {
                 $hadir = KehadiranHarian::where('rekap_kehadiran_id', $rekap->id)->where('siswa_id', $siswa->id)->first();
                 if ($hadir) {
-                    $status = $hadir->status;
-                    $keterangan = $hadir->keterangan ?? '';
+                    // PENTING: Jangan timpa status menjadi data lama database JIKA hari ini dia ada surat dispensasi aktif
+                    if (!$isDispensasi) {
+                        $status = $hadir->status;
+                        $keterangan = $hadir->keterangan ?? '';
+                    }
                 }
             }
 
@@ -91,6 +92,7 @@ class AbsensiSekretaris extends Page
                 'nis' => $siswa->nis,
                 'status' => $status,
                 'keterangan' => $keterangan,
+                'is_dispensasi' => $isDispensasi, // Bawa penanda ini ke Frontend
             ];
         }
     }
@@ -111,9 +113,15 @@ class AbsensiSekretaris extends Page
         );
 
         foreach ($this->absensi as $item) {
+            
+            // =========================================================
+            // KEAMANAN BACKEND: Paksa statusnya jika is_dispensasi = true
+            // =========================================================
+            $statusFinal = ($item['is_dispensasi'] ?? false) ? 'Dispensasi' : $item['status'];
+
             KehadiranHarian::updateOrCreate(
                 ['rekap_kehadiran_id' => $rekap->id, 'siswa_id' => $item['siswa_id']],
-                ['status' => $item['status'], 'keterangan' => $item['keterangan']]
+                ['status' => $statusFinal, 'keterangan' => $item['keterangan']]
             );
         }
 
