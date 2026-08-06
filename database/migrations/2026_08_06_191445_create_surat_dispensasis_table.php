@@ -11,19 +11,31 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('surat_dispensasi', function (Blueprint $table) {
+        Schema::create('siswa_surat_dispensasi', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('kategori_surat_id')->constrained('kategori_surat')->cascadeOnDelete();
-            $table->string('nomor_urut'); // Nomor yang diinput TU
-            $table->string('nomor_surat_lengkap'); // Hasil gabungan otomatis
-            $table->string('nama_kegiatan');
-            $table->string('penyelenggara');
-            $table->string('tempat');
-            $table->date('tanggal_mulai');
-            $table->date('tanggal_selesai');
-            $table->date('tanggal_surat');
-            $table->foreignId('penandatangan_id')->nullable()->constrained('pegawai')->nullOnDelete(); // Relasi ke Pegawai (Wakasek)
-            $table->timestamps();
+            
+            // 1. Buat kolom untuk relasi surat_dispensasi (Pasti BigInteger karena tabel baru)
+            $table->unsignedBigInteger('surat_dispensasi_id');
+            
+            // 2. Buat kolom untuk relasi siswa
+            // Coba gunakan unsignedBigInteger terlebih dahulu
+            $table->unsignedBigInteger('siswa_id'); 
+            
+            // CATATAN PENTING: 
+            // Jika setelah di-migrate MASIH error 150, berarti tabel siswa Anda menggunakan Integer biasa.
+            // Hapus/Komentari baris di atas, dan gunakan baris di bawah ini:
+            // $table->unsignedInteger('siswa_id');
+
+            // 3. Definisikan kunci tamu (Foreign Key) secara manual
+            $table->foreign('surat_dispensasi_id')
+                ->references('id')
+                ->on('surat_dispensasi')
+                ->onDelete('cascade');
+                
+            $table->foreign('siswa_id')
+                ->references('id')
+                ->on('siswa') // Pastikan nama tabel siswa di sini benar
+                ->onDelete('cascade');
         });
     }
 
