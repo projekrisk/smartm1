@@ -709,3 +709,8 @@ Route::get('/cetak-dispensasi/{id}', function ($id) {
     $surat = SuratDispensasi::with(['penandatangan', 'siswa.kelas'])->findOrFail($id);
     return view('cetak.surat-dispensasi', compact('surat'));
 })->name('cetak.dispensasi');
+
+Route::get('/verifikasi/surat-dispensasi/{id}', function ($id) {
+    $surat = SuratDispensasi::with(['penandatangan', 'siswa.kelas'])->findOrFail($id);
+    return view('cetak.verifikasi-surat', compact('surat'));
+})->name('verifikasi.dispensasi');

@@ -8,7 +8,7 @@
         /* PENGATURAN KERTAS A4 & FONT ARIAL */
         @page {
             size: A4 portrait;
-            margin: 1cm 1.5cm;
+            margin: 2cm;
         }
         
         * { box-sizing: border-box; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; font-family: Arial, Helvetica, sans-serif !important; }
@@ -26,7 +26,7 @@
         .cetak-kertas {
             width: 21cm;
             min-height: 29.7cm;
-            padding: 1.5cm;
+            padding:2cm;
             margin: 0 auto;
             background-color: white;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
@@ -36,7 +36,7 @@
         }
 
         /* KONTEN SURAT */
-        .judul-surat { text-align: center; font-weight: bold; text-decoration: underline; margin-bottom: 0; font-size: 14pt;}
+        .judul-surat { text-align: center; font-weight: bold; text-decoration: underline; margin-bottom: 0; font-size: 16pt;}
         .nomor-surat { text-align: center; margin-top: 0; margin-bottom: 25px; }
         
         .tabel-kegiatan { width: 100%; margin: 15px 0; }
@@ -47,7 +47,7 @@
         .tabel-siswa th, .tabel-siswa td { border: 1px solid black; padding: 8px 10px; text-align: left; }
         
         /* AREA TANDA TANGAN */
-        .ttd-area { width: 320px; float: right; text-align: left; margin-top: 30px; line-height: 1.3; }
+        .ttd-area { width: 320px; float: right; text-align: left; margin-top: 30px; line-height: 1.3; margin-left: 420px; }
         .ttd-area b { font-size: 12pt; }
         
         .page-break { page-break-before: always; }
@@ -110,11 +110,12 @@
 
                 <!-- Teks Kop Tengah -->
                 <div class="flex-1 text-center px-4">
-                    <h1 class="text-[15pt] font-bold uppercase tracking-wider mb-1">PEMERINTAH PROVINSI BANTEN</h1>
-                    <h1 class="text-[15pt] font-bold uppercase tracking-wider leading-tight mb-2">DINAS PENDIDIKAN DAN KEBUDAYAAN</h1>
-                    <h1 class="text-[18pt] font-bold uppercase tracking-wider mt-1" style="font-family: Arial, sans-serif;">{{ $pengaturan->nama_sekolah ?? 'SMA NEGERI 1 MALINGPING' }}</h1>
-                    <p class="text-[10pt] mt-1" style="font-family: 'Times New Roman', Times, serif;">Jalan Raya Binuangeun Km. 02 Malingping Lebak - Banten 42391</p>
-                    <p class="text-[10pt]" style="font-family: 'Times New Roman', Times, serif;">Email: sman1mlp@yahoo.co.id Website: sman1malingping.sch.id</p>
+                    <h1 class="text-[14pt] font-bold uppercase">PEMERINTAH PROVINSI BANTEN</h1>
+                    <h1 class="text-[14pt] font-bold uppercase">DINAS PENDIDIKAN DAN KEBUDAYAAN</h1>
+                    <h1 class="text-[22pt] font-bold uppercase">{{ $pengaturan->nama_sekolah ?? 'SMA NEGERI 1 MALINGPING' }}</h1>
+                    <p>NPSN: 20601875 AKREDITASI: A (96)</p>
+                    <p>Jl. Raya Bayah KM. 4 No. 39 Malingping – Lebak, 42391</p>
+                    <p>Website: https://sman1malingping.sch.id – Email: sman1malingping@ymail.com</p>
                 </div>
 
                 <!-- Logo Sekolah (Kanan) -->
@@ -159,21 +160,38 @@
             </p>
 
             <!-- BAGIAN TANDA TANGAN -->
-            <div class="ttd-area avoid-break">
+            <div class="ttd-area avoid-break" style="float: right; width: 280px; text-align: center; margin-top: 20px;">
                 Malingping, {{ \Carbon\Carbon::parse($surat->tanggal_surat)->isoFormat('D MMMM Y') }}<br>
                 
                 @if($isKepalaSekolah)
-                    <!-- TTD Kepala Sekolah -->
-                    Mengetahui,<br>
-                    Kepala {{ $pengaturan->nama_sekolah ?? 'SMA Negeri 1 Malingping' }}<br><br><br><br><br>
+                    Kepala {{ $pengaturan->nama_sekolah ?? 'SMA Negeri 1 Malingping' }}<br>
                 @else
-                    <!-- TTD Wakasek / Lainnya -->
-                    a.n. Kepala {{ $pengaturan->nama_sekolah ?? 'SMA Negeri 1 Malingping' }}<br>
-                    Wakil Kepala Sekolah<br>
-                    Bidang Kesiswaan<br><br><br><br><br>
+                    a.n. Kepala Sekolah<br>
+                    Wakil Kepala Sekolah Bidang Kesiswaan<br>
                 @endif
-                
-                <b><u>{{ $surat->penandatangan->nama ?? '........................................' }}</u></b><br>
+
+                @php
+                    // URL Tujuan saat QR Code di-scan
+                    $urlVerifikasi = route('verifikasi.dispensasi', $surat->id);
+                    
+                    // Ambil path logo sekolah dari pengaturan
+                    $logoPath = ($pengaturan && $pengaturan->logo_sekolah) 
+                        ? public_path('uploads/' . $pengaturan->logo_sekolah) 
+                        : null;
+                @endphp
+
+                <!-- Kotak QR Code -->
+                <div style="margin: 10px auto; display: inline-block; padding: 5px; background: white; border: 1px solid #ccc;">
+                    @if($logoPath && file_exists($logoPath))
+                        {!! QrCode::format('svg')->size(90)->errorCorrection('H')->merge($logoPath, 0.28, true)->generate($urlVerifikasi) !!}
+                    @else
+                        {!! QrCode::format('svg')->size(90)->errorCorrection('H')->generate($urlVerifikasi) !!}
+                    @endif
+                </div>
+
+                <div style="font-size: 8pt; color: #555; margin-bottom: 5px;">Scan untuk verifikasi keaslian surat</div>
+
+                <b style="font-size: 11pt;"><u>{{ $surat->penandatangan->nama ?? '........................................' }}</u></b><br>
                 NIP. {{ $surat->penandatangan->nip ?? '........................................' }}
             </div>
 
