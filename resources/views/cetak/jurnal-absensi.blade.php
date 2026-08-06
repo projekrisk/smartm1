@@ -21,6 +21,7 @@
         .status-izin { color: #1d4ed8; }
         .status-alpa { color: #b91c1c; }
         .status-terlambat { color: #7e22ce; }
+        .status-dispensasi { color: #4b5563; } /* Tambahan warna abu-abu gelap untuk Dispensasi */
     </style>
 </head>
 <body class="bg-gray-200 text-gray-900 text-[12px]">
@@ -79,7 +80,8 @@
                 <tbody>
                     @php 
                         $no = 1; 
-                        $daftarHadir = $jurnal->kehadiranPelajaran;
+                        // 🌟 LOGIKA BARU: Mengurutkan data berdasarkan abjad nama siswa
+                        $daftarHadir = $jurnal->kehadiranPelajaran->sortBy('siswa.nama_lengkap');
                     @endphp
                     
                     @forelse($daftarHadir as $item)
@@ -90,6 +92,7 @@
                             elseif($item->status == 'Izin') $statusClass = 'status-izin';
                             elseif($item->status == 'Alpa') $statusClass = 'status-alpa';
                             elseif($item->status == 'Terlambat') $statusClass = 'status-terlambat';
+                            elseif($item->status == 'Dispensasi') $statusClass = 'status-dispensasi'; // Tambahan untuk Dispensasi
                         @endphp
                         <tr class="avoid-break hover:bg-gray-50">
                             <td class="border border-gray-600 p-2 text-center">{{ $no++ }}</td>

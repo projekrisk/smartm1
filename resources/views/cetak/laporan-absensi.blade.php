@@ -58,20 +58,24 @@
                             <th rowspan="2" class="border border-gray-600 p-1 w-48">Nama Siswa</th>
                             
                             @foreach($months as $m)
-                                <th colspan="3" class="border border-gray-600 p-1">{{ $m['label'] }}</th>
+                                <!-- Ubah colspan menjadi 4 untuk memuat kolom Dispensasi -->
+                                <th colspan="4" class="border border-gray-600 p-1">{{ $m['label'] }}</th>
                             @endforeach
                             
-                            <th colspan="3" class="border border-gray-600 p-1 bg-yellow-100 font-bold">TOTAL</th>
+                            <!-- Ubah colspan TOTAL menjadi 4 -->
+                            <th colspan="4" class="border border-gray-600 p-1 bg-yellow-100 font-bold">TOTAL</th>
                         </tr>
                         <tr class="bg-gray-100 text-center text-[10px]">
                             @foreach($months as $m)
                                 <th class="border border-gray-600 p-1 text-yellow-700">S</th>
                                 <th class="border border-gray-600 p-1 text-blue-700">I</th>
                                 <th class="border border-gray-600 p-1 text-red-700">A</th>
+                                <th class="border border-gray-600 p-1 text-gray-700">D</th>
                             @endforeach
                             <th class="border border-gray-600 p-1 bg-yellow-100">S</th>
                             <th class="border border-gray-600 p-1 bg-yellow-100">I</th>
                             <th class="border border-gray-600 p-1 bg-yellow-100">A</th>
+                            <th class="border border-gray-600 p-1 bg-yellow-100">D</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -85,20 +89,24 @@
                                         $s = $dataRekap[$siswa->id][$m['key']]['Sakit'] ?? 0;
                                         $i = $dataRekap[$siswa->id][$m['key']]['Izin'] ?? 0;
                                         $a = $dataRekap[$siswa->id][$m['key']]['Alpa'] ?? 0;
+                                        $d = $dataRekap[$siswa->id][$m['key']]['Dispensasi'] ?? 0;
                                     @endphp
                                     <td class="border border-gray-600 p-1 text-center {{ $s > 0 ? 'font-bold' : 'text-gray-400' }}">{{ $s ?: '-' }}</td>
                                     <td class="border border-gray-600 p-1 text-center {{ $i > 0 ? 'font-bold' : 'text-gray-400' }}">{{ $i ?: '-' }}</td>
                                     <td class="border border-gray-600 p-1 text-center {{ $a > 0 ? 'font-bold text-red-600' : 'text-gray-400' }}">{{ $a ?: '-' }}</td>
+                                    <td class="border border-gray-600 p-1 text-center {{ $d > 0 ? 'font-bold text-gray-700' : 'text-gray-400' }}">{{ $d ?: '-' }}</td>
                                 @endforeach
 
                                 @php
                                     $totS = $dataRekap[$siswa->id]['total']['Sakit'] ?? 0;
                                     $totI = $dataRekap[$siswa->id]['total']['Izin'] ?? 0;
                                     $totA = $dataRekap[$siswa->id]['total']['Alpa'] ?? 0;
+                                    $totD = $dataRekap[$siswa->id]['total']['Dispensasi'] ?? 0;
                                 @endphp
                                 <td class="border border-gray-600 p-1 text-center bg-yellow-50 font-bold">{{ $totS ?: '-' }}</td>
                                 <td class="border border-gray-600 p-1 text-center bg-yellow-50 font-bold">{{ $totI ?: '-' }}</td>
                                 <td class="border border-gray-600 p-1 text-center bg-red-50 font-bold text-red-600">{{ $totA ?: '-' }}</td>
+                                <td class="border border-gray-600 p-1 text-center bg-gray-50 font-bold text-gray-700">{{ $totD ?: '-' }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -109,7 +117,8 @@
                         <strong>Keterangan:</strong><br>
                         S = Sakit<br>
                         I = Izin<br>
-                        A = Alpa (Tanpa Keterangan)
+                        A = Alpa (Tanpa Keterangan)<br>
+                        D = Dispensasi (Tugas Sekolah / Lainnya)
                     </div>
                     <div class="text-center">
                         Malingping, {{ now()->isoFormat('D MMMM Y') }}<br>
