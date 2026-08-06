@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('siswa_surat_dispensasi', function (Blueprint $table) {
             $table->id();
             $table->foreignId('surat_dispensasi_id')->constrained('surat_dispensasi')->cascadeOnDelete();
-            $table->foreignId('siswa_id')->constrained('siswas')->cascadeOnDelete(); // Sesuaikan nama tabel siswa Anda jika beda
+            $table->foreignId('siswa_id')->constrained('siswa')->cascadeOnDelete(); // Sesuaikan nama tabel siswa Anda jika beda
         });
     }
 
