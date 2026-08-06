@@ -25,11 +25,17 @@ class KehadiranRelationManager extends RelationManager
                         'Izin' => 'Izin',
                         'Alpa' => 'Alpa',
                         'Terlambat' => 'Terlambat',
+                        'Dispensasi' => 'Dispensasi', // Tambahkan Dispensasi di form
                     ])
-                    ->required(),
+                    ->required()
+                    // 🌟 KUNCI OPSI JIKA STATUSNYA DISPENSASI
+                    ->disabled(fn ($record) => $record && $record->status === 'Dispensasi'),
+                    
                 Forms\Components\TextInput::make('keterangan')
                     ->label('Keterangan Tambahan')
-                    ->placeholder('Contoh: Surat di meja piket'),
+                    ->placeholder('Contoh: Surat di meja piket')
+                    // 🌟 KUNCI JUGA KETERANGANNYA JIKA DISPENSASI
+                    ->disabled(fn ($record) => $record && $record->status === 'Dispensasi'),
             ])->columns(1);
     }
 
@@ -49,7 +55,10 @@ class KehadiranRelationManager extends RelationManager
                     ->label('Nama Siswa')
                     ->searchable()
                     ->sortable()
-                    ->weight('bold'),
+                    ->weight('bold')
+                    // Beri penanda visual berupa gembok jika siswa tersebut Dispensasi
+                    ->description(fn ($record) => $record->status === 'Dispensasi' ? 'Terkunci (Dispensasi)' : null),
+                    
                 Tables\Columns\TextColumn::make('status')
                     ->label('Status')
                     ->badge()
@@ -59,8 +68,10 @@ class KehadiranRelationManager extends RelationManager
                         'Izin' => 'info',
                         'Alpa' => 'danger',
                         'Terlambat' => 'purple',
+                        'Dispensasi' => 'gray', // Beri warna beda untuk Dispensasi
                         default => 'gray',
                     }),
+                    
                 Tables\Columns\TextColumn::make('keterangan')
                     ->label('Keterangan')
                     ->limit(30)
@@ -73,7 +84,9 @@ class KehadiranRelationManager extends RelationManager
                     ->label('Ubah')
                     ->icon('heroicon-o-pencil-square')
                     ->modalHeading(fn ($record) => 'Kehadiran: ' . ($record->siswa->nama_lengkap ?? '-'))
-                    ->modalWidth('md'),
+                    ->modalWidth('md')
+                    // 🌟 SEMBUNYIKAN TOMBOL "UBAH" JIKA DISPENSASI
+                    ->hidden(fn ($record) => $record->status === 'Dispensasi'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -87,7 +100,12 @@ class KehadiranRelationManager extends RelationManager
                                 ->required(),
                         ])
                         ->action(function (\Illuminate\Database\Eloquent\Collection $records, array $data) {
-                            foreach ($records as $record) { $record->update(['status' => $data['status']]); }
+                            foreach ($records as $record) { 
+                                // 🌟 CEGAH UBAH MASSAL JIKA DISPENSASI
+                                if($record->status !== 'Dispensasi') {
+                                    $record->update(['status' => $data['status']]); 
+                                }
+                            }
                         })
                         ->deselectRecordsAfterCompletion(),
                 ]),
