@@ -8,11 +8,17 @@ return new class extends Migration
 {
     public function up()
     {
-        // 🌟 TAMBAHKAN 2 BARIS INI: Hapus tabel jika sebelumnya sudah nyangkut
+        // 🌟 1. Matikan sementara aturan Foreign Key (Relasi)
+        Schema::disableForeignKeyConstraints();
+
+        // 🌟 2. Hapus tabel dengan aman
         Schema::dropIfExists('jenis_surat');
         Schema::dropIfExists('kategori_surat');
 
-        // Baru buat ulang tabelnya
+        // 🌟 3. Nyalakan kembali aturan Foreign Key
+        Schema::enableForeignKeyConstraints();
+
+        // 4. Buat ulang tabel
         Schema::create('kategori_surat', function (Blueprint $table) {
             $table->id();
             $table->string('nama_kategori');
