@@ -21,8 +21,10 @@ class SuratDispensasiResource extends Resource
 {
     protected static ?string $model = \App\Models\SuratDispensasi::class;
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
+
     protected static ?string $navigationGroup = 'Persuratan';
-    protected static ?string $navigationLabel = 'Dispensasi Belajar';
+    protected static ?string $navigationLabel = 'Arsip Dispensasi';
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {

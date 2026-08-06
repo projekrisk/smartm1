@@ -68,7 +68,7 @@
         }
     </style>
 </head>
-<body class="text-gray-900 text-xs">
+<body class="text-gray-900">
 
     <div class="no-print fixed top-5 left-5 z-50 flex gap-2">
         <button onclick="window.close()" class="bg-gray-800 text-white px-4 py-2 rounded shadow hover:bg-gray-700 font-sans">&larr; Tutup Tab</button>

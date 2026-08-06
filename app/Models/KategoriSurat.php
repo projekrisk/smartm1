@@ -6,4 +6,9 @@ class KategoriSurat extends Model
 {
     protected $table = 'kategori_surat';
     protected $guarded = [];
+
+    public function jenisSurat()
+    {
+        return $this->hasMany(JenisSurat::class, 'kategori_surat_id');
+    }
 }
