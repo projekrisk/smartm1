@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\SuratDispensasiResource\Pages;
-use App\Filament\Resources\SuratDispensasiResource\RelationManagers;
 use App\Models\SuratDispensasi;
 use App\Models\Pegawai;
 use App\Models\KategoriSurat;
@@ -15,7 +14,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SuratDispensasiResource extends Resource
 {
@@ -43,7 +41,6 @@ class SuratDispensasiResource extends Resource
                 }
                 
                 // Cek 2: Wakasek / Kepala Sekolah dari tugas_tambahan
-                // Trik: Ubah apapun formatnya (Array/JSON/String) menjadi satu baris teks biasa
                 $tugas = json_encode($pegawai->tugas_tambahan);
                 $tugas = strtolower($tugas);
                 
@@ -59,13 +56,12 @@ class SuratDispensasiResource extends Resource
             ->schema([
                 Forms\Components\Section::make('Informasi Surat')
                     ->schema([
-                        Forms\Components\Select::make('kategori_surat_id')
-                            ->label('Jenis Surat')
-                            ->relationship('kategori', 'nama_kategori')
-                            ->required()
-                            ->live()
-                            ->afterStateUpdated(function (Get $get, Set $set) {
-                                self::generateNomorSurat($get, $set);
+                        // 🌟 Field Kategori Surat DIGANTI menjadi Hidden (Otomatis mencari ID dari database)
+                        Forms\Components\Hidden::make('kategori_surat_id')
+                            ->default(function () {
+                                // Mencari kategori yang namanya mengandung kata 'Kesiswaan'
+                                $kategori = KategoriSurat::where('nama_kategori', 'like', '%Kesiswaan%')->first();
+                                return $kategori ? $kategori->id : null;
                             }),
                             
                         Forms\Components\TextInput::make('nomor_urut')
@@ -94,15 +90,12 @@ class SuratDispensasiResource extends Resource
                         Forms\Components\DatePicker::make('tanggal_selesai')->required(),
                         Forms\Components\DatePicker::make('tanggal_surat')->default(now())->required(),
                         
-                        // 2. FORM SELECT PENANDATANGAN
                         Forms\Components\Select::make('penandatangan_id')
                             ->label('Ditandatangani Oleh (Kepala Sekolah / Wakasek)')
                             ->options(function () use ($getPenandatangan) {
-                                // Akan memunculkan opsi pegawai yang lolos seleksi di atas
                                 return $getPenandatangan()->pluck('nama', 'id');
                             })
                             ->default(function () use ($getPenandatangan) {
-                                // Otomatis memilih pejabat pertama yang ditemukan
                                 $pejabat = $getPenandatangan()->first();
                                 return $pejabat ? $pejabat->id : null;
                             })
@@ -123,17 +116,30 @@ class SuratDispensasiResource extends Resource
             ]);
     }
 
-    // Fungsi canggih pembuat nomor urut
+    // 🌟 FUNGSI NOMOR SURAT DIPERBARUI
     public static function generateNomorSurat(Get $get, Set $set)
     {
         $kategoriId = $get('kategori_surat_id');
         $nomor = $get('nomor_urut');
 
-        if ($kategoriId && $nomor) {
-            $kategori = KategoriSurat::find($kategoriId);
+        if ($nomor) {
             $tahun = date('Y');
+            
+            // Default format jika tidak ada kategori_id yang ketemu
+            $kodePrefix = '400.03.08'; 
+            $kodeSuffix = 'SMA.01-MLP';
+
+            // Jika punya KategoriSurat ID, ambil dari database
+            if ($kategoriId) {
+                $kategori = KategoriSurat::find($kategoriId);
+                if ($kategori && isset($kategori->kode_prefix)) {
+                    $kodePrefix = $kategori->kode_prefix;
+                    $kodeSuffix = $kategori->kode_suffix ?? $kodeSuffix;
+                }
+            }
+
             // Hasil: 400.03.08/123/SMA.01-MLP/2026
-            $nomorLengkap = "{$kategori->kode_prefix}/{$nomor}/{$kategori->kode_suffix}/{$tahun}";
+            $nomorLengkap = "{$kodePrefix}/{$nomor}/{$kodeSuffix}/{$tahun}";
             $set('nomor_surat_lengkap', $nomorLengkap);
         }
     }
@@ -151,7 +157,6 @@ class SuratDispensasiResource extends Resource
                     ->badge(),
             ])
             ->actions([
-                // Tombol Cetak HTML
                 Tables\Actions\Action::make('cetak')
                     ->label('Cetak')
                     ->icon('heroicon-o-printer')
@@ -164,9 +169,7 @@ class SuratDispensasiResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
