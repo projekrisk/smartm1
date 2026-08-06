@@ -14,10 +14,18 @@ class BuatSuratBaru extends Page
     protected static ?string $navigationLabel = 'Buat Surat Baru';
     protected static ?int $navigationSort = 2;
 
+    // ========================================================
+    // 🌟 PEMBATASAN HAK AKSES: HANYA ADMIN & STAF (Guru tidak bisa)
+    // ========================================================
+    public static function canAccess(): bool
+    {
+        return in_array(auth()->user()->peran, ['admin', 'staf']);
+    }
+    // ========================================================
+
     protected function getViewData(): array
     {
         return [
-            // Mengambil semua kategori beserta jenis suratnya
             'kategoris' => KategoriSurat::with('jenisSurat')->get()
         ];
     }

@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class KategoriSuratResource extends Resource
 {
@@ -18,6 +19,30 @@ class KategoriSuratResource extends Resource
     protected static ?string $navigationLabel = 'Kategori Surat';
     protected static ?string $pluralModelLabel = 'Kategori Surat';
     protected static ?int $navigationSort = 1;
+
+    // ========================================================
+    // 🌟 PEMBATASAN HAK AKSES: HANYA ADMIN
+    // ========================================================
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->peran === 'admin';
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->user()->peran === 'admin';
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return auth()->user()->peran === 'admin';
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return auth()->user()->peran === 'admin';
+    }
+    // ========================================================
 
     public static function form(Form $form): Form
     {
@@ -38,11 +63,17 @@ class KategoriSuratResource extends Resource
                             ->schema([
                                 Forms\Components\TextInput::make('nama_surat')
                                     ->required()->placeholder('Contoh: Surat Dispensasi'),
+                                
                                 Forms\Components\TextInput::make('url_create')
                                     ->label('URL Halaman Tambah Surat')
-                                    ->required()->placeholder('Contoh: /admin/surat-dispensasis/create'),
+                                    ->required()
+                                    ->prefix('/admin/')
+                                    ->placeholder('surat-dispensasis/create')
+                                    ->helperText('Buka menu surat yang asli di sidebar (contoh: Arsip Dispensasi), klik tombol "New", lalu lihat link di browser Anda. Copy teks SETELAH kata /admin/. Contoh pengisian: surat-dispensasis/create'),
+                                    
                                 Forms\Components\TextInput::make('deskripsi')
                                     ->placeholder('Penjelasan singkat surat'),
+                                    
                                 Forms\Components\Select::make('icon')
                                     ->options([
                                         'heroicon-o-document-text' => 'Dokumen Biasa',

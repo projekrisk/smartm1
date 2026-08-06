@@ -26,6 +26,11 @@ class SuratDispensasiResource extends Resource
     protected static ?string $navigationLabel = 'Arsip Dispensasi';
     protected static ?int $navigationSort = 3;
 
+    public static function canViewAny(): bool
+    {
+        return in_array(auth()->user()->peran, ['admin', 'staf']);
+    }
+
     public static function form(Form $form): Form
     {
         $getPenandatangan = function () {
