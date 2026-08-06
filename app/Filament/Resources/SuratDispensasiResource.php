@@ -26,27 +26,30 @@ class SuratDispensasiResource extends Resource
 
     public static function form(Form $form): Form
     {
-        // 1. KITA BUAT LOGIKA PENCARIANNYA DI SINI
+        // 1. LOGIKA PENCARIAN DIPERBARUI UNTUK KEPALA SEKOLAH & WAKASEK
         $getPenandatangan = function () {
-            // Ambil semua pegawai, lalu saring menggunakan PHP (bukan query database)
-            return Pegawai::all()->filter(function ($pegawai) {
-                $tugas = $pegawai->tugas_tambahan;
-                if (!$tugas) return false;
+            return \App\Models\Pegawai::all()->filter(function ($pegawai) {
                 
-                $cekKesiswaan = function($teks) {
+                // Cek 1: Apakah dia Kepala Sekolah? (Dari kolom jenis_ptk)
+                $jenisPtk = strtolower((string) $pegawai->jenis_ptk);
+                if (str_contains($jenisPtk, 'kepala sekolah')) {
+                    return true;
+                }
+                
+                // Cek 2: Apakah dia punya tugas Kesiswaan / Kepala Sekolah? (Dari kolom tugas_tambahan)
+                $tugas = $pegawai->tugas_tambahan;
+                
+                $cekJabatan = function($teks) {
                     $teks = strtolower((string) $teks);
-                    // Sama persis dengan logika hak akses Anda
-                    return str_contains($teks, 'kesiswaan') || 
-                           str_contains($teks, 'bimbingan') || 
-                           str_contains($teks, 'konseling');
+                    return str_contains($teks, 'kesiswaan') || str_contains($teks, 'kepala sekolah');
                 };
                 
                 if (is_array($tugas)) {
                     foreach ($tugas as $t) {
-                        if ($cekKesiswaan($t)) return true;
+                        if ($cekJabatan($t)) return true;
                     }
                 } elseif (is_string($tugas)) {
-                    return $cekKesiswaan($tugas);
+                    return $cekJabatan($tugas);
                 }
                 
                 return false;
@@ -92,17 +95,17 @@ class SuratDispensasiResource extends Resource
                         Forms\Components\DatePicker::make('tanggal_selesai')->required(),
                         Forms\Components\DatePicker::make('tanggal_surat')->default(now())->required(),
                         
-                        // 2. KITA TERAPKAN HASIL PENCARIAN TADI DI SINI
+                        // 2. FORM SELECT PENANDATANGAN
                         Forms\Components\Select::make('penandatangan_id')
-                            ->label('Ditandatangani Oleh (Wakasek Kesiswaan / BK)')
+                            ->label('Ditandatangani Oleh (Kepala Sekolah / Wakasek)')
                             ->options(function () use ($getPenandatangan) {
-                                // Tampilkan nama pegawai yang lolos seleksi
+                                // Akan memunculkan opsi pegawai yang lolos seleksi di atas
                                 return $getPenandatangan()->pluck('nama', 'id');
                             })
                             ->default(function () use ($getPenandatangan) {
-                                // Otomatis pilih orang pertama yang ketemu
-                                $wakasek = $getPenandatangan()->first();
-                                return $wakasek ? $wakasek->id : null;
+                                // Otomatis memilih pejabat pertama yang ditemukan
+                                $pejabat = $getPenandatangan()->first();
+                                return $pejabat ? $pejabat->id : null;
                             })
                             ->required()
                             ->searchable(),
