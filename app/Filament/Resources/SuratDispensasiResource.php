@@ -18,6 +18,8 @@ class SuratDispensasiResource extends Resource
 {
     protected static ?string $model = \App\Models\SuratDispensasi::class;
 
+    protected static ?string $slug = 'surat-dispensasi';
+
     // Hak Akses Global Resource (Hanya Admin & Staf)
     public static function canViewAny(): bool
     {

@@ -16,4 +16,10 @@ class EditSuratDispensasi extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    // 🌟 Otomatis kembali ke tabel arsip (/admin/surat-dispensasi) setelah berhasil disimpan/diubah
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }
