@@ -109,4 +109,9 @@ class Siswa extends Model implements HasAvatar
             }
         });
     }
+
+    public function suratDispensasi()
+    {
+        return $this->belongsToMany(SuratDispensasi::class, 'siswa_surat_dispensasi', 'siswa_id', 'surat_dispensasi_id');
+    }
 }

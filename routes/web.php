@@ -6,6 +6,7 @@ use App\Models\MataPelajaran;
 use App\Models\NilaiRapor;
 use App\Models\Kelas;
 use App\Models\TahunAjaran;
+use App\Models\SuratDispensasi;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -700,3 +701,9 @@ Route::get('/cetak-catatan-siswa', function () {
 
     return view('cetak.catatan-siswa', compact('groupedData', 'user'));
 });
+
+
+Route::get('/cetak-dispensasi/{id}', function ($id) {
+    $surat = SuratDispensasi::with(['penandatangan', 'siswa.kelas'])->findOrFail($id);
+    return view('cetak.surat-dispensasi', compact('surat'));
+})->name('cetak.dispensasi');

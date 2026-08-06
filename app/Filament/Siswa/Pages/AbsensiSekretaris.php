@@ -57,8 +57,25 @@ class AbsensiSekretaris extends Page
             ->get();
 
         foreach ($siswas as $siswa) {
-            $status = 'Hadir'; $keterangan = '';
+            $status = 'Hadir'; 
+            $keterangan = '';
 
+            // =========================================================
+            // 🌟 LOGIKA BARU: CEK SURAT DISPENSASI HARI INI
+            // =========================================================
+            $adaDispensasi = $siswa->suratDispensasi()
+                ->where('tanggal_mulai', '<=', $today->format('Y-m-d'))
+                ->where('tanggal_selesai', '>=', $today->format('Y-m-d'))
+                ->first();
+
+            if ($adaDispensasi) {
+                $status = 'Dispensasi';
+                // Opsional: Masukkan nama kegiatan sbg keterangan
+                $keterangan = "Surat No: " . $adaDispensasi->nomor_surat_lengkap; 
+            }
+
+            // Jika rekap hari ini sudah pernah disimpan (Edit Mode)
+            // maka timpa status default/dispensasi dengan yang ada di database
             if ($rekap) {
                 $hadir = KehadiranHarian::where('rekap_kehadiran_id', $rekap->id)->where('siswa_id', $siswa->id)->first();
                 if ($hadir) {
