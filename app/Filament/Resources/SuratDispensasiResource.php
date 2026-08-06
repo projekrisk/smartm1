@@ -5,7 +5,6 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\SuratDispensasiResource\Pages;
 use App\Models\SuratDispensasi;
 use App\Models\Pegawai;
-use App\Models\KategoriSurat;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Forms;
@@ -13,40 +12,49 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
+use Filament\Navigation\NavigationItem;
 
 class SuratDispensasiResource extends Resource
 {
     protected static ?string $model = \App\Models\SuratDispensasi::class;
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
 
-    protected static ?string $navigationGroup = 'Persuratan';
-    protected static ?string $navigationLabel = 'Arsip Dispensasi';
-    protected static ?int $navigationSort = 3;
-
+    // Hak Akses Global Resource (Hanya Admin & Staf)
     public static function canViewAny(): bool
     {
         return in_array(auth()->user()->peran, ['admin', 'staf']);
+    }
+
+    // 🌟 KUNCI UTAMA: MEMBUAT 2 MENU CUSTOM DI SIDEBAR
+    public static function getNavigationItems(): array
+    {
+        return [
+            NavigationItem::make('Buat Surat Baru')
+                ->icon('heroicon-o-plus-circle')
+                ->group('Dispensasi')
+                ->sort(1)
+                ->url(static::getUrl('create'))
+                ->isActiveWhen(fn () => request()->routeIs(static::getRouteBaseName() . '.create'))
+                ->visible(fn() => in_array(auth()->user()->peran, ['admin', 'staf'])),
+
+            NavigationItem::make('Arsip Dispensasi')
+                ->icon('heroicon-o-archive-box')
+                ->group('Dispensasi')
+                ->sort(2)
+                ->url(static::getUrl('index'))
+                ->isActiveWhen(fn () => request()->routeIs(static::getRouteBaseName() . '.index'))
+                ->visible(fn() => in_array(auth()->user()->peran, ['admin', 'staf'])),
+        ];
     }
 
     public static function form(Form $form): Form
     {
         $getPenandatangan = function () {
             return \App\Models\Pegawai::all()->filter(function ($pegawai) {
-                
-                // Cek 1: Kepala Sekolah dari kolom jenis_ptk
                 $jenisPtk = strtolower((string) $pegawai->jenis_ptk);
-                if (str_contains($jenisPtk, 'kepala sekolah')) {
-                    return true;
-                }
+                if (str_contains($jenisPtk, 'kepala sekolah')) return true;
                 
-                // Cek 2: Wakasek / Kepala Sekolah dari tugas_tambahan
-                $tugas = json_encode($pegawai->tugas_tambahan);
-                $tugas = strtolower($tugas);
-                
-                if (str_contains($tugas, 'kesiswaan') || str_contains($tugas, 'kepala sekolah')) {
-                    return true;
-                }
+                $tugas = strtolower(json_encode($pegawai->tugas_tambahan));
+                if (str_contains($tugas, 'kesiswaan') || str_contains($tugas, 'kepala sekolah')) return true;
                 
                 return false;
             });
@@ -56,14 +64,6 @@ class SuratDispensasiResource extends Resource
             ->schema([
                 Forms\Components\Section::make('Informasi Surat')
                     ->schema([
-                        // 🌟 Field Kategori Surat DIGANTI menjadi Hidden (Otomatis mencari ID dari database)
-                        Forms\Components\Hidden::make('kategori_surat_id')
-                            ->default(function () {
-                                // Mencari kategori yang namanya mengandung kata 'Kesiswaan'
-                                $kategori = KategoriSurat::where('nama_kategori', 'like', '%Kesiswaan%')->first();
-                                return $kategori ? $kategori->id : null;
-                            }),
-                            
                         Forms\Components\TextInput::make('nomor_urut')
                             ->label('Nomor Surat (Input Manual)')
                             ->required()
@@ -77,8 +77,7 @@ class SuratDispensasiResource extends Resource
                             ->label('Format Lengkap (Otomatis)')
                             ->disabled()
                             ->dehydrated()
-                            ->required()
-                            ->columnSpanFull(),
+                            ->required(),
                     ])->columns(2),
 
                 Forms\Components\Section::make('Detail Kegiatan')
@@ -116,27 +115,15 @@ class SuratDispensasiResource extends Resource
             ]);
     }
 
-    // 🌟 FUNGSI NOMOR SURAT DIPERBARUI
+    // 🌟 FUNGSI NOMOR SURAT DISEDERHANAKAN (Tanpa Kategori)
     public static function generateNomorSurat(Get $get, Set $set)
     {
-        $kategoriId = $get('kategori_surat_id');
         $nomor = $get('nomor_urut');
 
         if ($nomor) {
             $tahun = date('Y');
-            
-            // Default format jika tidak ada kategori_id yang ketemu
             $kodePrefix = '400.03.08'; 
             $kodeSuffix = 'SMA.01-MLP';
-
-            // Jika punya KategoriSurat ID, ambil dari database
-            if ($kategoriId) {
-                $kategori = KategoriSurat::find($kategoriId);
-                if ($kategori && isset($kategori->kode_prefix)) {
-                    $kodePrefix = $kategori->kode_prefix;
-                    $kodeSuffix = $kategori->kode_suffix ?? $kodeSuffix;
-                }
-            }
 
             // Hasil: 400.03.08/123/SMA.01-MLP/2026
             $nomorLengkap = "{$kodePrefix}/{$nomor}/{$kodeSuffix}/{$tahun}";
