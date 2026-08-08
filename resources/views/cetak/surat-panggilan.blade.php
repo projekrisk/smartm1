@@ -7,7 +7,7 @@
     <style>
         @page { size: A4 portrait; margin: 1.5cm; }
         * { box-sizing: border-box; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; font-family: Arial, Helvetica, sans-serif !important; }
-        body { font-size: 12pt; line-height: 1.4; margin: 0; padding: 0; color: black; background-color: #e5e7eb; }
+        body { font-size: 11.5pt; line-height: 1.4; margin: 0; padding: 0; color: black; background-color: #e5e7eb; }
         .cetak-kertas { width: 21cm; min-height: 29.7cm; padding: 1.5cm; margin: 0 auto; background-color: white; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border-radius: 8px; display: flex; flex-direction: column; }
         
         .tabel-data { width: 100%; margin: 0 0 10px 1cm; }
@@ -73,13 +73,13 @@
                 </div>
             </div>
 
-            <table style="line-height: 1.5; font-size: 11pt; margin-bottom: 15px;">
+            <table style="font-size: 11pt; margin-bottom: 15px;">
                 <tr><td style="width: 80px; vertical-align: top;">Nomor</td><td style="width: 15px; vertical-align: top;">:</td><td>{{ $surat->nomor_surat }}</td></tr>
                 <tr><td style="vertical-align: top;">Lampiran</td><td style="vertical-align: top;">:</td><td>-</td></tr>
                 <tr><td style="vertical-align: top;">Perihal</td><td style="vertical-align: top;">:</td><td><b>Panggilan Orang Tua / Wali Murid</b></td></tr>
             </table>
 
-            <div style="margin-bottom: 20px; line-height: 1.5;">
+            <div style="margin-bottom: 20px;">
                 Kepada Yth.<br>
                 Bapak/Ibu Orang Tua / Wali Murid dari:<br>
                 Siswa bernama <b>{{ $surat->siswa->nama_lengkap ?? '-' }}</b><br>

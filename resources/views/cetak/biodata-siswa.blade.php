@@ -6,7 +6,7 @@
     <title>Cetak Biodata & Portofolio - {{ $siswa->nama_lengkap }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* 🌟 Margin Kertas 1cm Semua Sisi */
+        /* Margin Kertas 1cm Semua Sisi */
         @page {
             size: A4 portrait;
             margin: 1cm;
@@ -21,20 +21,20 @@
             page-break-inside: avoid;
         }
 
-        /* 🌟 Pengaturan Font Arial dan Ukuran 12pt Secara Global */
+        /* 🌟 Pengaturan Font Arial dan Ukuran 11pt Secara Global */
         body {
             font-family: Arial, Helvetica, sans-serif !important;
-            font-size: 12pt !important;
+            font-size: 11pt !important;
             line-height: 1.5;
         }
         
         table, tr, td, th, p, span, div {
-            font-size: 12pt;
+            font-size: 11pt;
         }
 
         /* Khusus pengecualian untuk Kop Surat dan Watermark agar tetap proporsional */
-        .kop-1 { font-size: 14pt !important; }
-        .kop-2 { font-size: 16pt !important; }
+        .kop-1 { font-size: 13pt !important; }
+        .kop-2 { font-size: 15pt !important; }
         .watermark { font-size: 100pt !important; }
 
         /* Mode Cetak */
@@ -48,7 +48,7 @@
             .cetak-kertas {
                 width: 100% !important;
                 margin: 0 !important;
-                padding: 1cm !important; /* 🌟 Padding Kertas 1cm Semua Sisi */
+                padding: 1cm !important; /* Padding Kertas 1cm Semua Sisi */
                 box-shadow: none !important;
                 min-height: auto !important;
             }
@@ -70,14 +70,12 @@
     </div>
 
     @php
-        // Mengambil data Kop Surat dinamis jika ada
         $pengaturan = null;
         try { if (\Illuminate\Support\Facades\Schema::hasTable('pengaturan')) $pengaturan = \App\Models\Pengaturan::first(); } catch (\Exception $e) {}
     @endphp
 
     <div class="flex justify-center py-10 print:py-0 print:block">
         
-        <!-- 🌟 Padding Kertas 1cm -->
         <div class="cetak-kertas bg-white shadow-2xl w-[21cm] min-h-[29.7cm] p-[1cm] mx-auto relative flex flex-col overflow-hidden">
             
             <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden">
@@ -95,13 +93,11 @@
                             <img src="{{ url('/uploads/' . $pengaturan->logo_dinas) }}" alt="Logo Dinas" class="max-w-full max-h-full object-contain">
                         @endif
                     </div>
-                    <div class="flex-1 text-center px-4" style="line-height: 1.3;">
-                        <h1 class="text-[14pt] font-bold uppercase">PEMERINTAH PROVINSI BANTEN</h1>
-                        <h1 class="text-[14pt] font-bold uppercase">DINAS PENDIDIKAN DAN KEBUDAYAAN</h1>
-                        <h1 class="text-[22pt] font-bold uppercase">{{ $pengaturan->nama_sekolah ?? 'SMA NEGERI 1 MALINGPING' }}</h1>
-                        <p>NPSN: 20601875 AKREDITASI: A (96)</p>
-                        <p>Jl. Raya Bayah KM. 4 No. 39 Malingping – Lebak, 42391</p>
-                        <p style="position: absolute; justify-self: center;">Website: <u>https://sman1malingping.sch.id</u> – Email: <u>info@sman1malingping.sch.id</u></p>
+                    <div class="flex-1 text-center px-4">
+                        <h1 class="kop-1 font-bold uppercase tracking-wider mb-1">PEMERINTAH PROVINSI BANTEN</h1>
+                        <h1 class="kop-1 font-bold uppercase tracking-wider leading-tight mb-2">DINAS PENDIDIKAN DAN KEBUDAYAAN</h1>
+                        <h1 class="kop-2 font-bold uppercase tracking-wider mt-1">{{ $pengaturan->nama_sekolah ?? 'SMA NEGERI 1 MALINGPING' }}</h1>
+                        <p class="mt-1">Jalan Raya Binuangeun Km. 02 Malingping Lebak - Banten 42391</p>
                     </div>
                     <div class="w-24 h-24 flex-shrink-0 flex items-center justify-center">
                         @if(isset($pengaturan) && $pengaturan->logo_sekolah)
@@ -111,7 +107,7 @@
                 </div>
 
                 <div class="text-center mb-6 avoid-break">
-                    <h2 class="font-bold underline uppercase" style="font-size: 14pt;">Buku Induk - Profil & Portofolio Siswa</h2>
+                    <h2 class="font-bold underline uppercase" style="font-size: 13pt;">Buku Induk - Profil & Portofolio Siswa</h2>
                     <p class="mt-1">Nomor Induk Siswa Nasional (NISN): <span class="font-bold">{{ $siswa->nisn ?? '-' }}</span></p>
                 </div>
 
@@ -172,7 +168,7 @@
                             @if($siswa->foto)
                                 <img src="{{ url('/uploads/' . $siswa->foto) }}" alt="Foto" class="w-full h-full object-cover">
                             @else
-                                <span class="text-gray-400 text-center">Pas Foto<br>3 x 4</span>
+                                <span class="text-gray-400 text-center text-[10pt]">Pas Foto<br>3 x 4</span>
                             @endif
                         </div>
                     </div>
@@ -233,7 +229,6 @@
                     </table>
                 </div>
 
-                <!-- 🌟 RIWAYAT SURAT PANGGILAN DIURUTKAN BERDASARKAN TANGGAL LAMA -> BARU -->
                 <div class="mb-6 avoid-break">
                     <h3 class="font-bold bg-gray-200 px-2 py-1 mb-2 uppercase border border-gray-400">G. Riwayat Surat Panggilan Orang Tua</h3>
                     <table class="w-full border-collapse border border-gray-400 text-center">
@@ -241,13 +236,11 @@
                             <tr class="bg-gray-100">
                                 <th class="border border-gray-400 p-2 w-12">No</th>
                                 <th class="border border-gray-400 p-2 w-48">Tgl Pemanggilan</th>
-                                <!-- Kolom No Surat sudah dihilangkan -->
                                 <th class="border border-gray-400 p-2">Keperluan / Keterangan</th>
                                 <th class="border border-gray-400 p-2 w-32">Status</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Pengurutan secara Ascending (Lama ke Baru) -->
                             @forelse($siswa->suratPanggilan->sortBy('tanggal_surat') as $index => $sp)
                                 <tr>
                                     <td class="border border-gray-400 p-2 align-top">{{ $index + 1 }}</td>
@@ -307,8 +300,15 @@
                     @endif
                 </div>
 
-                <div class="mt-auto border-t-2 border-gray-800 pt-3 text-center text-gray-700 italic avoid-break">
-                    Dicetak pada Sistem Informasi {{ $pengaturan->nama_sekolah ?? 'Sekolah' }} | Waktu Cetak: {{ now()->isoFormat('D MMMM Y - HH:mm') }} WIB
+                <!-- 🌟 FOOTER BARU (BIODATA | HALAMAN | DICETAK PADA) -->
+                <div class="mt-auto border-t-2 border-gray-800 pt-3 avoid-break">
+                    <div class="flex justify-between font-bold mb-2 text-[10pt]">
+                        <span>Biodata {{ $siswa->nama_lengkap }}</span>
+                        <span>Halaman 1 dari 1</span>
+                    </div>
+                    <div class="text-center text-gray-700 italic text-[10pt]">
+                        Dicetak pada Sistem Informasi {{ $pengaturan->nama_sekolah ?? 'Sekolah' }} | Waktu Cetak: {{ now()->isoFormat('D MMMM Y - HH:mm') }} WIB
+                    </div>
                 </div>
 
             </div>
