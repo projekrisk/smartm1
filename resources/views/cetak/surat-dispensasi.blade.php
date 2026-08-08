@@ -47,19 +47,14 @@
         // 2. PENGATURAN LOGO SEKOLAH
         $pengaturan = null;
         try { if (\Illuminate\Support\Facades\Schema::hasTable('pengaturan')) $pengaturan = \App\Models\Pengaturan::first(); } catch (\Exception $e) {}
-        $logoSekolahPath = ($pengaturan && $pengaturan->logo_sekolah) ? public_path('uploads/' . $pengaturan->logo_sekolah) : null;
 
         // 3. GENERATE URL DENGAN TOKEN KEAMANAN
         $token = substr(md5($surat->nomor_surat_lengkap . config('app.key')), 0, 10);
         $urlVerifikasi = url('/verifikasi-surat/dispensasi?nomor=' . urlencode($surat->nomor_surat_lengkap) . '&token=' . $token);
         
-        // 4. GENERATE QR CODE (FORMAT PNG + BASE64 AGAR LOGO MUNCUL SEMPURNA)
-        if($logoSekolahPath && file_exists($logoSekolahPath)) {
-            $qrData = QrCode::format('png')->size(300)->errorCorrection('H')->merge($logoSekolahPath, 0.3, true)->generate($urlVerifikasi);
-        } else {
-            $qrData = QrCode::format('png')->size(300)->errorCorrection('H')->generate($urlVerifikasi);
-        }
-        $qrCodeImage = '<img src="data:image/png;base64,' . base64_encode($qrData) . '" alt="QR Code" style="width: 95px; height: 95px; object-fit: contain;">';
+        // 4. GENERATE QR CODE MURNI (KODE H: HIGH ERROR CORRECTION AGAR TETAP BISA DI-SCAN WALAUPUN TERTIMPA LOGO)
+        $qrData = QrCode::format('png')->size(300)->margin(1)->errorCorrection('H')->generate($urlVerifikasi);
+        $qrCodeImage = 'data:image/png;base64,' . base64_encode($qrData);
     @endphp
 
     <div class="flex flex-col items-center py-10 print:py-0 print:block">
@@ -74,13 +69,12 @@
                         <img src="{{ url('/uploads/' . $pengaturan->logo_dinas) }}" alt="Logo Dinas" class="max-w-full max-h-full object-contain">
                     @endif
                 </div>
-                <div class="flex-1 text-center px-4" style="line-height: 1.3;">
-                    <h1 class="text-[14pt] font-bold uppercase">PEMERINTAH PROVINSI BANTEN</h1>
-                    <h1 class="text-[14pt] font-bold uppercase">DINAS PENDIDIKAN DAN KEBUDAYAAN</h1>
-                    <h1 class="text-[22pt] font-bold uppercase">{{ $pengaturan->nama_sekolah ?? 'SMA NEGERI 1 MALINGPING' }}</h1>
-                    <p>NPSN: 20601875 AKREDITASI: A (96)</p>
-                    <p>Jl. Raya Bayah KM. 4 No. 39 Malingping – Lebak, 42391</p>
-                    <p style="position: absolute; justify-self: center;">Website: <u>https://sman1malingping.sch.id</u> – Email: <u>info@sman1malingping.sch.id</u></p>
+                <div class="flex-1 text-center px-4">
+                    <h1 class="text-[15pt] font-bold uppercase tracking-wider mb-1">PEMERINTAH PROVINSI BANTEN</h1>
+                    <h1 class="text-[15pt] font-bold uppercase tracking-wider leading-tight mb-2">DINAS PENDIDIKAN DAN KEBUDAYAAN</h1>
+                    <h1 class="text-[18pt] font-bold uppercase tracking-wider mt-1" style="font-family: Arial, sans-serif;">{{ $pengaturan->nama_sekolah ?? 'SMA NEGERI 1 MALINGPING' }}</h1>
+                    <p class="text-[10pt] mt-1" style="font-family: 'Times New Roman', Times, serif;">Jalan Raya Binuangeun Km. 02 Malingping Lebak - Banten 42391</p>
+                    <p class="text-[10pt]" style="font-family: 'Times New Roman', Times, serif;">Email: sman1mlp@yahoo.co.id Website: sman1malingping.sch.id</p>
                 </div>
                 <div class="w-24 h-24 flex-shrink-0 flex items-center justify-center">
                     @if(isset($pengaturan) && $pengaturan->logo_sekolah)
@@ -131,7 +125,7 @@
             </p>
             <p style="text-indent: 1cm; text-align: justify;">Demikian surat dispensasi belajar ini dibuat untuk dipergunakan sebagaimana mestinya.</p>
 
-            <!-- BLOK TANDA TANGAN 1 -->
+            <!-- BLOK TANDA TANGAN 1 DENGAN LOGO BACKGROUND PUTIH -->
             <div class="ttd-area avoid-break">
                 Malingping, {{ \Carbon\Carbon::parse($surat->tanggal_surat)->isoFormat('D MMMM Y') }}<br>
                 @if($isKepalaSekolah)
@@ -140,9 +134,17 @@
                     a.n. Kepala Sekolah<br>Wakil Kepala Sekolah Bidang Kesiswaan<br>
                 @endif
 
-                <div style="margin: 8px auto; display: inline-block; padding: 4px; background: white; border: 1px solid #ddd; border-radius: 4px; width: 105px; height: 105px;">
-                    <!-- TAMPILKAN QR CODE DISINI -->
-                    {!! $qrCodeImage !!}
+                <!-- WADAH QR CODE -->
+                <div style="position: relative; margin: 8px auto; display: block; padding: 4px; background: white; border: 1px solid #ddd; border-radius: 4px; width: 105px; height: 105px;">
+                    <!-- GAMBAR QR -->
+                    <img src="{{ $qrCodeImage }}" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain;">
+                    
+                    <!-- 🌟 OVERLAY LOGO DENGAN BACKGROUND PUTIH (Ukuran Besar & Rapi) -->
+                    @if(isset($pengaturan) && $pengaturan->logo_sekolah)
+                        <div style="position: absolute; top: 50%; left: 50%; width: 38px; height: 38px; margin-top: -19px; margin-left: -19px; background: white; padding: 3px; border-radius: 5px;">
+                            <img src="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                    @endif
                 </div>
                 <div style="font-size: 7.5pt; color: #666; margin-bottom: 5px;">Dokumen TTE Valid</div>
 
@@ -184,7 +186,7 @@
                 </tbody>
             </table>
 
-            <!-- BLOK TANDA TANGAN 2 (DI HALAMAN LAMPIRAN) -->
+            <!-- BLOK TANDA TANGAN 2 DENGAN LOGO BACKGROUND PUTIH (DI HALAMAN LAMPIRAN) -->
             <div class="ttd-area avoid-break" style="margin-top: 40px;">
                 Malingping, {{ \Carbon\Carbon::parse($surat->tanggal_surat)->isoFormat('D MMMM Y') }}<br>
                 @if($isKepalaSekolah)
@@ -193,9 +195,17 @@
                     a.n. Kepala Sekolah<br>Wakil Kepala Sekolah Bidang Kesiswaan<br>
                 @endif
 
-                <div style="margin: 8px auto; display: inline-block; padding: 4px; background: white; border: 1px solid #ddd; border-radius: 4px; width: 105px; height: 105px;">
-                    <!-- TAMPILKAN QR CODE DISINI -->
-                    {!! $qrCodeImage !!}
+                <!-- WADAH QR CODE -->
+                <div style="position: relative; margin: 8px auto; display: block; padding: 4px; background: white; border: 1px solid #ddd; border-radius: 4px; width: 105px; height: 105px;">
+                    <!-- GAMBAR QR -->
+                    <img src="{{ $qrCodeImage }}" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain;">
+                    
+                    <!-- 🌟 OVERLAY LOGO DENGAN BACKGROUND PUTIH -->
+                    @if(isset($pengaturan) && $pengaturan->logo_sekolah)
+                        <div style="position: absolute; top: 50%; left: 50%; width: 38px; height: 38px; margin-top: -19px; margin-left: -19px; background: white; padding: 3px; border-radius: 5px;">
+                            <img src="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                    @endif
                 </div>
                 <div style="font-size: 7.5pt; color: #666; margin-bottom: 5px;">Dokumen TTE Valid</div>
 
