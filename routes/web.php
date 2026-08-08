@@ -8,6 +8,7 @@ use App\Models\NilaiRapor;
 use App\Models\Kelas;
 use App\Models\TahunAjaran;
 use App\Models\SuratDispensasi;
+use App\Models\SuratPanggilan;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -732,3 +733,24 @@ Route::get('/verifikasi-surat/dispensasi', function (Request $request) {
 
     return view('cetak.verifikasi-surat', compact('surat'));
 })->name('verifikasi.dispensasi');
+
+Route::get('/cetak/surat-panggilan/{id}', function ($id) {
+    $surat = SuratPanggilan::with('siswa.kelas')->findOrFail($id);
+    return view('cetak.surat-panggilan', compact('surat'));
+})->name('cetak.panggilan');
+
+// 🌟 RUTE VERIFIKASI QR CODE SURAT PANGGILAN
+Route::get('/verifikasi-surat/panggilan', function (Request $request) {
+    $nomor = $request->query('nomor');
+    $token = $request->query('token');
+
+    if (!$nomor || !$token) return abort(404, 'Parameter URL tidak lengkap.');
+
+    $expectedToken = substr(md5($nomor . config('app.key')), 0, 10);
+    if ($token !== $expectedToken) {
+        return abort(403, 'AKSES DITOLAK: Token tidak valid atau URL telah dimanipulasi.');
+    }
+
+    $surat = SuratPanggilan::with('siswa.kelas')->where('nomor_surat', $nomor)->firstOrFail();
+    return view('cetak.verifikasi-panggilan', compact('surat'));
+})->name('verifikasi.panggilan');
