@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Riwayat & Catatan - {{ $siswa->nama_lengkap }}</title>
+    <title>Riwayat & Portofolio - {{ $siswa->nama_lengkap }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @page {
@@ -51,7 +51,7 @@
             bottom: 1cm;
             left: 1cm;
             right: 1cm;
-            border-top: 1px solid #1f2937;
+            border-top: 2px solid #1f2937;
             padding-top: 10px;
         }
 
@@ -80,7 +80,7 @@
             }
             
             .footer-space {
-                height: 60px;
+                height: 70px;
             }
         }
     </style>
@@ -103,7 +103,7 @@
         try { if (\Illuminate\Support\Facades\Schema::hasTable('pengaturan')) $pengaturan = \App\Models\Pengaturan::first(); } catch (\Exception $e) {}
 
         $namaSekolah = strtoupper($pengaturan->nama_sekolah ?? 'SMA NEGERI 1 MALINGPING');
-        $watermarkText = 'DATA RAHASIA - ' . $namaSekolah;
+        $watermarkText = 'DATA ' . $namaSekolah;
         
         $svg = '
         <svg xmlns="http://www.w3.org/2000/svg" width="280" height="150">
@@ -148,16 +148,15 @@
                             </div>
 
                             <div class="text-center mb-6 avoid-break">
-                                <h2 class="font-bold underline uppercase" style="font-size: 13pt;">Laporan Riwayat & Catatan Siswa</h2>
+                                <h2 class="font-bold underline uppercase" style="font-size: 13pt;">Laporan Portofolio & Catatan Siswa</h2>
                             </div>
 
                             <div class="flex items-start gap-4 mb-6 avoid-break p-3 border border-gray-400 bg-gray-50 rounded">                                
                                 <div class="flex-1">
                                     <table class="w-full">
                                         <tr><td class="py-1 w-32 font-bold">Nama Lengkap</td><td class="w-2">:</td><td class="py-1 uppercase font-bold">{{ $siswa->nama_lengkap }}</td></tr>
-                                        <tr><td class="py-1 font-bold">NIS</td><td>:</td><td class="py-1">{{ $siswa->nis }}</td></tr>
-                                        <tr><td class="py-1 font-bold">NISN</td><td>:</td><td class="py-1">{{ $siswa->nisn ?? '-' }}</td></tr>
-                                        <tr><td class="py-1 font-bold">Kelas Saat Ini</td><td>:</td><td class="py-1">{{ $siswa->kelas->nama_kelas ?? 'Belum ada kelas' }}</td></tr>
+                                        <tr><td class="py-1 font-bold">NIS / NISN</td><td>:</td><td class="py-1">{{ $siswa->nis }} / {{ $siswa->nisn ?? '-' }}</td></tr>
+                                        <tr><td class="py-1 font-bold">Kelas Saat Ini</td><td>:</td><td class="py-1 font-bold">{{ $siswa->kelas->nama_kelas ?? 'Belum ada kelas' }}</td></tr>
                                         <tr><td class="py-1 font-bold">Status</td><td>:</td><td class="py-1 uppercase">{{ $siswa->status_siswa }} ({{ $siswa->jalur_masuk ?? 'Siswa Baru' }})</td></tr>
                                     </table>
                                 </div>      
@@ -199,7 +198,7 @@
                             </div>
 
                             <div class="avoid-break mb-6">
-                                <h3 class="font-bold bg-gray-200 px-2 py-1 mb-2 uppercase border border-gray-400">B. Buku Kasus & Prestasi (Catatan Siswa)</h3>
+                                <h3 class="font-bold bg-gray-200 px-2 py-1 mb-2 uppercase border border-gray-400">B. Catatan Siswa (Buku Kasus)</h3>
                                 
                                 @if($siswa->catatan->count() > 0)
                                     <table class="w-full border-collapse border border-gray-400">
@@ -230,13 +229,56 @@
                                     </table>
                                 @else
                                     <div class="border border-gray-400 p-4 text-center italic text-gray-500 bg-gray-50">
-                                        Belum ada catatan pelanggaran atau prestasi untuk siswa ini.
+                                        Belum ada catatan atau buku kasus untuk siswa ini.
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="avoid-break mb-6">
+                                <h3 class="font-bold bg-gray-200 px-2 py-1 mb-2 uppercase border border-gray-400">C. Riwayat Prestasi Siswa</h3>
+                                
+                                @if(isset($siswa->prestasi) && $siswa->prestasi->count() > 0)
+                                    <table class="w-full border-collapse border border-gray-400 text-center">
+                                        <thead>
+                                            <tr class="bg-gray-100">
+                                                <th class="border border-gray-400 p-2 w-12">No</th>
+                                                <th class="border border-gray-400 p-2 w-32">Tgl Perolehan</th>
+                                                <th class="border border-gray-400 p-2">Nama Prestasi & Penyelenggara</th>
+                                                <th class="border border-gray-400 p-2 w-48">Juara & Tingkat</th>
+                                                <th class="border border-gray-400 p-2 w-28">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($siswa->prestasi->sortByDesc('tanggal_perolehan') as $index => $pres)
+                                                <tr>
+                                                    <td class="border border-gray-400 p-2 align-top">{{ $index + 1 }}</td>
+                                                    <td class="border border-gray-400 p-2 align-top">{{ \Carbon\Carbon::parse($pres->tanggal_perolehan)->format('d/m/Y') }}</td>
+                                                    <td class="border border-gray-400 p-2 text-left align-top">
+                                                        <strong class="block mb-1 text-green-700">{{ $pres->nama_prestasi }}</strong>
+                                                        <span class="text-gray-700 text-sm">Oleh: {{ $pres->penyelenggara ?? '-' }} <br>({{ $pres->jenis ?? '-' }} - {{ $pres->kategori ?? '-' }})</span>
+                                                    </td>
+                                                    <td class="border border-gray-400 p-2 align-top font-bold text-blue-700">
+                                                        {{ $pres->juara }}<br>
+                                                        <span class="text-sm font-normal text-gray-600">Tingkat {{ $pres->tingkat }}</span>
+                                                    </td>
+                                                    <td class="border border-gray-400 p-2 align-top">
+                                                        <span class="uppercase font-bold text-[10px] {{ $pres->status == 'Disetujui' ? 'text-green-600' : ($pres->status == 'Ditolak' ? 'text-red-600' : 'text-yellow-600') }}">
+                                                            {{ $pres->status }}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                @else
+                                    <div class="border border-gray-400 p-4 text-center italic text-gray-500 bg-gray-50">
+                                        Siswa belum memiliki riwayat prestasi yang dicatat.
                                     </div>
                                 @endif
                             </div>
 
                             <div class="mb-6 avoid-break">
-                                <h3 class="font-bold bg-gray-200 px-2 py-1 mb-2 uppercase border border-gray-400">C. Riwayat Surat Panggilan Orang Tua</h3>
+                                <h3 class="font-bold bg-gray-200 px-2 py-1 mb-2 uppercase border border-gray-400">D. Riwayat Surat Panggilan Orang Tua</h3>
                                 <table class="w-full border-collapse border border-gray-400 text-center">
                                     <thead>
                                         <tr class="bg-gray-100">
