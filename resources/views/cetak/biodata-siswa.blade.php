@@ -32,10 +32,19 @@
             font-size: 11pt;
         }
 
-        /* Khusus pengecualian untuk Kop Surat dan Watermark */
+        /* Khusus pengecualian untuk Kop Surat */
         .kop-1 { font-size: 13pt !important; }
         .kop-2 { font-size: 15pt !important; }
-        .watermark { font-size: 80pt !important; color: #f3f4f6 !important; }
+
+        /* 🌟 WATERMARK KECIL PENUH SATU HALAMAN */
+        .watermark-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            /* Latar belakang akan mengambil data SVG dari PHP di bawah */
+            background-repeat: repeat;
+        }
 
         /* FOOTER BERULANG DI SETIAP HALAMAN */
         .print-footer {
@@ -62,7 +71,6 @@
                 overflow: visible !important;
             }
             
-            /* Menempelkan Footer di bawah setiap kertas */
             .print-footer {
                 position: fixed;
                 bottom: 0;
@@ -71,7 +79,7 @@
                 margin-top: 0;
                 background-color: white;
             }
-            /* Memberi jarak agar konten tabel tidak tertutup footer */
+            
             .footer-space {
                 height: 70px;
             }
@@ -95,17 +103,29 @@
     @php
         $pengaturan = null;
         try { if (\Illuminate\Support\Facades\Schema::hasTable('pengaturan')) $pengaturan = \App\Models\Pengaturan::first(); } catch (\Exception $e) {}
+
+        // 🌟 KODE GENERATOR SVG WATERMARK
+        $namaSekolah = strtoupper($pengaturan->nama_sekolah ?? 'SMA NEGERI 1 MALINGPING');
+        $watermarkText = 'DATA RAHASIA - ' . $namaSekolah;
+        
+        // Membuat gambar SVG transparan berulang secara matematis
+        $svg = '
+        <svg xmlns="http://www.w3.org/2000/svg" width="280" height="150">
+            <text x="50%" y="50%" transform="rotate(-30 140 75)" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="rgba(150,150,150,0.18)">
+                ' . $watermarkText . '
+            </text>
+        </svg>';
+        
+        // Encode ke Base64 agar bisa digunakan di CSS
+        $base64Svg = base64_encode($svg);
     @endphp
 
     <div class="flex justify-center py-10 print:py-0 print:block">
         
         <div class="cetak-kertas bg-white shadow-2xl w-[21cm] p-[1cm] mx-auto relative block">
             
-            <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-                <div class="watermark font-bold transform -rotate-45 tracking-widest text-center leading-none opacity-50">
-                    DATA<br>RAHASIA
-                </div>
-            </div>
+            <!-- 🌟 INI ADALAH AREA WATERMARK BARU YANG MENGGUNAKAN BACKGROUND CSS SVG -->
+            <div class="watermark-bg" style="background-image: url('data:image/svg+xml;base64,{{ $base64Svg }}');"></div>
 
             <!-- WADAH TABEL AGAR FOOTER BISA BEKERJA SEMPURNA -->
             <table style="width: 100%; position: relative; z-index: 10;">
@@ -114,7 +134,7 @@
                         <td>
                             
                             <!-- KOP SEKOLAH -->
-                            <div class="border-b-4 border-gray-800 pb-3 mb-6 flex items-center justify-between avoid-break">
+                            <div class="border-b-4 border-gray-800 pb-6 mb-6 flex items-center justify-between avoid-break">
                                 <div class="w-24 h-24 flex-shrink-0 flex items-center justify-center">
                                     @if(isset($pengaturan) && $pengaturan->logo_dinas)
                                         <img src="{{ url('/uploads/' . $pengaturan->logo_dinas) }}" alt="Logo Dinas" class="max-w-full max-h-full object-contain">
@@ -140,7 +160,7 @@
                                 <p class="mt-1">Nomor Induk Siswa Nasional (NISN): <span class="font-bold">{{ $siswa->nisn ?? '-' }}</span></p>
                             </div>
 
-                            <!-- 🌟 FOTO SISWA DI TENGAH -->
+                            <!-- FOTO SISWA DI TENGAH -->
                             <div class="flex justify-center mb-6 avoid-break">
                                 <div class="w-[3.5cm] h-[4.5cm] border-2 border-gray-800 p-1 flex items-center justify-center overflow-hidden bg-white relative z-20">
                                     @if($siswa->foto)
@@ -191,7 +211,6 @@
 
                             <div class="mb-6 avoid-break">
                                 <h3 class="font-bold bg-gray-200 px-2 py-1 mb-2 uppercase border border-gray-400">D. Keterangan Akademik Dasar</h3>
-                                <!-- 🌟 Layout dirapikan karena foto sudah tidak ada di samping -->
                                 <table class="w-full ml-1">
                                     <tr><td class="py-1 w-1/3">21. NIS / NISN</td><td class="w-4">:</td><td class="py-1 font-bold">{{ $siswa->nis }} / {{ $siswa->nisn ?? '-' }}</td></tr>
                                     <tr><td class="py-1">22. Kelas Saat Ini</td><td>:</td><td class="py-1 font-bold">{{ $siswa->kelas->nama_kelas ?? 'Belum ada kelas' }}</td></tr>
