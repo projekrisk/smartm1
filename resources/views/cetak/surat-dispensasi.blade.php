@@ -12,7 +12,7 @@
         .tabel-kegiatan { width: 100%; margin: 5px 0 15px 0; }
         .tabel-kegiatan td { vertical-align: top; }
         .tabel-kegiatan td:first-child { width: 160px; }
-        .tabel-siswa { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .tabel-siswa { width: 100%; border-collapse: collapse; margin-top: 0px; }
         .tabel-siswa th, .tabel-siswa td { border: 1px solid black; padding: 8px 10px; text-align: left; }
         
         .ttd-area { width: 300px; float: right; text-align: center; margin-top: 40px; margin-left: 360px;}
@@ -152,8 +152,8 @@
                 <thead>
                     <tr style="background-color: #f3f4f6;">
                         <th style="width: 5%; text-align: center;">No</th>
-                        <th style="width: 30%;">NISN / NIS</th>
-                        <th style="width: 60%;">Nama Peserta Didik</th>
+                        <th style="width: 28%; text-align: center;">NIS / NISN</th>
+                        <th style="width: 55%; text-align: center;">Nama Peserta Didik</th>
                         <th style="width: 15%; text-align: center;">Kelas</th>
                     </tr>
                 </thead>
@@ -161,7 +161,7 @@
                     @foreach($surat->siswa->sortBy('nama_lengkap') as $index => $s)
                     <tr class="avoid-break">
                         <td style="text-align: center;">{{ $index + 1 }}</td>
-                        <td>{{ $s->nisn ?? '-' }} / {{ $s->nis ?? '-' }}</td>
+                        <td>{{ $s->nis ?? '-' }} / {{ $s->nisn ?? '-' }}</td>
                         <td style="text-align: left;" class="uppercase font-semibold">{{ $s->nama_lengkap }}</td>
                         <td style="text-align: center; font-weight: bold;">{{ $s->kelas->nama_kelas ?? '-' }}</td>
                     </tr>
