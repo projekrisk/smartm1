@@ -737,6 +737,7 @@ class SiswaResource extends Resource
             RelationManagers\RiwayatKelasRelationManager::class,
             RelationManagers\CatatanRelationManager::class,
             RelationManagers\KehadiranHarianRelationManager::class,
+            RelationManagers\SuratPanggilanRelationManager::class,
         ];
     }
 

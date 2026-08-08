@@ -19,6 +19,7 @@ class Siswa extends Model implements HasAvatar
     {
         return $this->foto ? url('/uploads/' . $this->foto) : null;
     }
+    
     protected static function booted()
     {
         static::created(function ($siswa) {
@@ -87,6 +88,11 @@ class Siswa extends Model implements HasAvatar
     public function kehadiranHarian(): HasMany
     {
         return $this->hasMany(KehadiranHarian::class);
+    }
+
+    public function suratPanggilan(): HasMany
+    {
+        return $this->hasMany(SuratPanggilan::class, 'siswa_id');
     }
 
     protected static function boot()

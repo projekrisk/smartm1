@@ -5,7 +5,7 @@
     <title>Cetak Surat Panggilan - {{ $surat->nomor_surat }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @page { size: A4 portrait; margin: 2cm 2cm; }
+        @page { size: A4 portrait; margin: 1.5cm; }
         * { box-sizing: border-box; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; font-family: Arial, Helvetica, sans-serif !important; }
         body { font-size: 12pt; line-height: 1.4; margin: 0; padding: 0; color: black; background-color: #e5e7eb; }
         .cetak-kertas { width: 21cm; min-height: 29.7cm; padding: 1.5cm; margin: 0 auto; background-color: white; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border-radius: 8px; display: flex; flex-direction: column; }
@@ -14,7 +14,7 @@
         .tabel-data td { vertical-align: top;}
         .tabel-data td:first-child { width: 180px; }
 
-        .ttd-area { width: 300px; float: right; text-align: center; margin-top: 20px; margin-left: 360px; }
+        .ttd-area { width: 300px; float: right; text-align: center; margin-top: 20px; margin-left: 370px; }
         .ttd-area b { font-size: 11pt; }
         @media print {
             .no-print { display: none !important; }
@@ -23,7 +23,7 @@
         }
     </style>
 </head>
-<body class="text-gray-900 text-xs">
+<body class="text-gray-900">
 
     <div class="no-print fixed top-5 left-5 z-50 flex gap-2">
         <button onclick="window.close()" class="bg-gray-800 text-white px-4 py-2 rounded shadow hover:bg-gray-700 font-sans">&larr; Tutup Tab</button>
@@ -52,7 +52,7 @@
     <div class="flex flex-col items-center py-10 print:py-0 print:block">
         <div class="cetak-kertas">
             
-            <div class="border-b-4 border-gray-800 pb-3 mb-5 flex items-center justify-between">
+            <div class="border-b-4 border-gray-800 pb-6 mb-5 flex items-center justify-between">
                 <div class="w-24 h-24 flex-shrink-0 flex items-center justify-center">
                     @if(isset($pengaturan) && $pengaturan->logo_dinas)
                         <img src="{{ url('/uploads/' . $pengaturan->logo_dinas) }}" alt="Logo" class="max-w-full max-h-full object-contain">
