@@ -180,7 +180,8 @@ class KehadiranHarianResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                ])
+                ->visible(fn () => auth()->user()->peran === 'admin'),
             ]);
     }
 
