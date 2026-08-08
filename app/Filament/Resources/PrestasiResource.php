@@ -167,7 +167,7 @@ class PrestasiResource extends Resource
                             ->visible(fn (\Filament\Forms\Get $get) => $get('status') === 'Ditolak')
                             ->required(fn (\Filament\Forms\Get $get) => $get('status') === 'Ditolak'),
                             
-                        Forms\Components\Hidden::make('diajukan_oleh')->default(fn () => Auth::user()->name),
+                        Forms\Components\Hidden::make('diajukan_oleh')->default(fn () => ucfirst(Auth::user()->peran)),
                         Forms\Components\Hidden::make('validator_id')->default(fn () => Auth::id()),
                     ])
             ]);
