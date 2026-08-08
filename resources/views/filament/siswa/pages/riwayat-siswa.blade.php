@@ -73,10 +73,10 @@
                         $warnaB = $catatan->jenis_catatan === 'Positif' ? 'rgba(16,185,129,0.1)' : ($catatan->jenis_catatan === 'Negatif' ? 'rgba(239,68,68,0.1)' : 'rgba(37,99,235,0.1)');
                         $warnaT = $catatan->jenis_catatan === 'Positif' ? '#10b981' : ($catatan->jenis_catatan === 'Negatif' ? '#ef4444' : '#2563eb');
                     @endphp
-                    <div class="theme-card" style="margin-bottom;14px; border-radius: 20px; padding: 16px; border-left: 4px solid {{ $warnaT }};">
+                    <div class="theme-card" style="margin-bottom:14px; border-radius: 20px; padding: 16px; border-left: 4px solid {{ $warnaT }};">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                             <span style="font-size: 10px; font-weight: 800; background-color: {{ $warnaB }}; color: {{ $warnaT }}; padding: 4px 8px; border-radius: 6px; text-transform: uppercase;">{{ $catatan->jenis_catatan }}</span>
-                            <span style="font-size: 11px; font-weight: 700; color: #94a3b8;">{{ \Carbon\Carbon::parse($catatan->tanggal)->format('d M Y') }}</span>
+                            <span style="font-size: 11px; font-weight: 700; color: #94a3b8;">{{ \Carbon\Carbon::parse($catatan->tanggal)->isoFormat('D MMM Y') }}</span>
                         </div>
                         <h3 class="theme-text" style="font-size: 14px; font-weight: 800; margin: 0 0 6px 0; line-height: 1.3;">{{ $catatan->judul_catatan }}</h3>
                         <p class="theme-text-muted" style="font-size: 12px; line-height: 1.5; margin: 0 0 12px 0;">"{{ $catatan->isi_catatan }}"</p>
@@ -99,7 +99,7 @@
 
             <div x-show="tab === 'panggilan'" x-cloak style="display: flex; flex-direction: column; gap: 16px;">
                 @forelse($panggilans as $sp)
-                    <div class="theme-card" style="border-radius: 20px; padding: 16px; border: 1px solid {{ $sp->status === 'Dibuat' ? '#fecaca' : '#e2e8f0' }};" class="dark:border-slate-700">
+                    <div class="theme-card" style="border-radius: 20px; padding: 16px; border: 1px solid {{ $sp->status === 'Selesai' ? '#10b981' : '#ef4444' }};" class="dark:border-slate-700">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                             <span class="theme-text" style="font-size: 11px; font-weight: 800;">No. {{ $sp->nomor_surat }}</span>
                             <span style="font-size: 10px; font-weight: 800; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; 
@@ -110,7 +110,9 @@
                         
                         <div style="border-radius: 12px; padding: 12px; margin-bottom: 12px;" class="theme-bg-mpl">
                             <h4 style="font-size: 12px; font-weight: 800; color: #ef4444; margin: 0 0 4px 0;">Jadwal Pertemuan Orang Tua:</h4>
-                            <p class="theme-text" style="font-size: 13px; font-weight: 800; margin: 0;">{{ \Carbon\Carbon::parse($sp->tanggal_panggilan)->format('d F Y') }} - Pukul {{ date('H:i', strtotime($sp->waktu_panggilan)) }}</p>
+                            <p class="theme-text" style="font-size: 13px; font-weight: 800; margin: 0;">
+                                {{ \Carbon\Carbon::parse($sp->tanggal_panggilan)->isoFormat('D MMMM Y') }} - Pukul {{ date('H:i', strtotime($sp->waktu_panggilan)) }}
+                            </p>
                             <p class="theme-text-muted" style="font-size: 11px; font-weight: 600; margin: 4px 0 0 0;">Tempat: {{ $sp->tempat_pertemuan }}</p>
                         </div>
                         
