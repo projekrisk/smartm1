@@ -22,7 +22,6 @@ class SuratDispensasi extends Model
         return $this->belongsTo(Pegawai::class, 'penandatangan_id');
     }
 
-    // Relasi Banyak-ke-Banyak dengan Siswa
     public function siswa()
     {
         return $this->belongsToMany(Siswa::class, 'siswa_surat_dispensasi', 'surat_dispensasi_id', 'siswa_id');

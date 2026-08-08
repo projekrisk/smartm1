@@ -34,14 +34,14 @@ class SuratPanggilanResource extends Resource
         $user = Auth::user();
         
         if ($user->peran === 'guru') {
-            $pegawai = Pegawai::where('user_id', $user->id)->first();
-            if ($pegawai) {
-                // Mencari surat yang Siswanya berada di Kelas binaan Guru (Pegawai) ini
+            // Mencari Kelas yang wali_kelas_id-nya sama dengan ID User ini
+            $kelasIds = Kelas::where('wali_kelas_id', $user->id)->pluck('id')->toArray();
+            
+            if (!empty($kelasIds)) {
                 $count = static::getModel()::where('status', 'Dibuat')
-                    ->whereHas('siswa.kelas', function ($q) use ($pegawai) {
-                        $q->where('wali_kelas_id', $pegawai->id);
+                    ->whereHas('siswa', function ($q) use ($kelasIds) {
+                        $q->whereIn('kelas_id', $kelasIds);
                     })->count();
-                    
                 return $count > 0 ? (string) $count : null;
             }
             return null;
@@ -87,14 +87,15 @@ class SuratPanggilanResource extends Resource
         $user = Auth::user();
         
         if ($user->peran === 'guru') {
-            $pegawai = Pegawai::where('user_id', $user->id)->first();
-            if ($pegawai) {
-                // Relasi tembus pandang: Surat -> Siswa -> Kelas -> wali_kelas_id
-                $query->whereHas('siswa.kelas', function ($q) use ($pegawai) {
-                    $q->where('wali_kelas_id', $pegawai->id);
+            // Mencari Kelas yang wali_kelas_id-nya sama dengan ID User ini
+            $kelasIds = Kelas::where('wali_kelas_id', $user->id)->pluck('id')->toArray();
+            
+            if (!empty($kelasIds)) {
+                $query->whereHas('siswa', function ($q) use ($kelasIds) {
+                    $q->whereIn('kelas_id', $kelasIds);
                 });
             } else {
-                $query->where('id', 0); // Kosongkan jika bukan pegawai valid
+                $query->where('id', 0); // Sembunyikan tabel jika bukan wali kelas manapun
             }
         }
         
