@@ -96,7 +96,7 @@ class JurnalGuruResource extends Resource
                             ->visible(fn () => in_array(Auth::user()->peran, ['admin', 'staf'])),
 
                         Forms\Components\Select::make('mata_pelajaran_id')
-                            ->label('1. Pilih Mata Pelajaran')
+                            ->label('Pilih Mata Pelajaran')
                             ->options(function (callable $get) {
                                 $guruId = Auth::user()->peran === 'guru' ? Auth::id() : $get('guru_id');
                                 if (!$guruId) return [];
@@ -117,7 +117,7 @@ class JurnalGuruResource extends Resource
                             ->required(),
 
                         Forms\Components\Select::make('kelas_id')
-                            ->label('2. Pilih Kelas')
+                            ->label('Pilih Kelas')
                             ->options(function (callable $get) {
                                 $guruId = Auth::user()->peran === 'guru' ? Auth::id() : $get('guru_id');
                                 $mapelId = $get('mata_pelajaran_id');
@@ -128,7 +128,7 @@ class JurnalGuruResource extends Resource
                                     ->where('guru_id', $guruId)
                                     ->where('mata_pelajaran_id', $mapelId)
                                     ->get()
-                                    ->sortBy('kelas.nama_kelas')
+                                    ->sortBy('kelas.nama_kelas', SORT_NATURAL) 
                                     ->pluck('kelas.nama_kelas', 'kelas_id')
                                     ->unique();
                             })
@@ -141,7 +141,7 @@ class JurnalGuruResource extends Resource
                             ->required(),
 
                         Forms\Components\Select::make('waktu_jadwal')
-                            ->label('3. Pilih Waktu Jadwal')
+                            ->label('Pilih Waktu Jadwal')
                             ->placeholder('Pilih hari dan jam...')
                             ->options(function (callable $get) {
                                 $guruId = Auth::user()->peran === 'guru' ? Auth::id() : $get('guru_id');
