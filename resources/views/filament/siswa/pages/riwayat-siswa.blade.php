@@ -16,7 +16,7 @@
                 font-family: 'Inter', system-ui, sans-serif; transition: background-color 0.3s ease;
             }
             .theme-bg { background-color: #f8fafc; }
-            .theme-card { background-color: #ffffff; border: 1px solid #f1f5f9; box-shadow: 0 8px 30px rgba(0,0,0,0.04); border: 1px solid #e2e8f0}
+            .theme-card { background-color: #ffffff; border: 1px solid #f1f5f9; box-shadow: 0 8px 30px rgba(0,0,0,0.04); border: 1px solid #e2e8f0; margin-bottom: 10px; }
             .theme-text { color: #0f172a; }
             .theme-text-muted { color: #64748b; }
             .dark .theme-bg { background-color: #0f172a; }
@@ -27,7 +27,7 @@
             .theme-bg-smt { background-color: #fafafa; }
             .dark .theme-bg-smt { background-color: #253145; }
             .theme-bg-mpl { background-color: #ffffff; }
-            .dark .theme-bg-mpl { background-color: #1e293b; }
+            .dark .theme-bg-mpl { background-color: #131c31; }
 
             .theme-menu-tab { background-color:  #ffffff; }
 
@@ -54,7 +54,7 @@
 
         <div class="android-content theme-bg" x-data="{ tab: 'catatan' }" wire:ignore.self style="border-top-left-radius: 2.5rem; border-top-right-radius: 2.5rem; margin-top: -30px; padding: 24px 20px 40px 20px; position: relative; z-index: 20; box-shadow: 0 -10px 25px rgba(0,0,0,0.1);">
             
-            <div class="flex theme-bg-tab p-1 rounded-2xl mb-6 shadow-inner rounded-xl">
+            <div class="flex theme-bg-tab p-1 rounded-2xl mb-6 shadow-inner rounded-xl" style="margin-bottom:20px">
                 <button @click="tab = 'catatan'" 
                         :class="tab === 'catatan' ? 'theme-menu-tab text-blue-600 dark:text-blue-400 shadow-sm font-extrabold' : 'text-gray-500 dark:text-gray-400 font-semibold hover:text-gray-700'" 
                         class="flex-1 py-3 px-4 rounded-xl text-xs transition-all duration-200 focus:outline-none">
@@ -108,7 +108,7 @@
                             </span>
                         </div>
                         
-                        <div style="background-color: rgba(0,0,0,0.03); border-radius: 12px; padding: 12px; margin-bottom: 12px;" class="theme-bg-mpl">
+                        <div style="border-radius: 12px; padding: 12px; margin-bottom: 12px;" class="theme-bg-mpl">
                             <h4 style="font-size: 12px; font-weight: 800; color: #ef4444; margin: 0 0 4px 0;">Jadwal Pertemuan Orang Tua:</h4>
                             <p class="theme-text" style="font-size: 13px; font-weight: 800; margin: 0;">{{ \Carbon\Carbon::parse($sp->tanggal_panggilan)->format('d F Y') }} - Pukul {{ date('H:i', strtotime($sp->waktu_panggilan)) }}</p>
                             <p class="theme-text-muted" style="font-size: 11px; font-weight: 600; margin: 4px 0 0 0;">Tempat: {{ $sp->tempat_pertemuan }}</p>
