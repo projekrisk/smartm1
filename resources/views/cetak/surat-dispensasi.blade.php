@@ -48,16 +48,20 @@
         try { if (\Illuminate\Support\Facades\Schema::hasTable('pengaturan')) $pengaturan = \App\Models\Pengaturan::first(); } catch (\Exception $e) {}
         $logoSekolahPath = ($pengaturan && $pengaturan->logo_sekolah) ? public_path('uploads/' . $pengaturan->logo_sekolah) : null;
 
-        // 3. 🌟 GENERATE URL DENGAN TOKEN KEAMANAN
+        // 3. GENERATE URL DENGAN TOKEN KEAMANAN
         $token = substr(md5($surat->nomor_surat_lengkap . config('app.key')), 0, 10);
         $urlVerifikasi = url('/verifikasi-surat/dispensasi?nomor=' . urlencode($surat->nomor_surat_lengkap) . '&token=' . $token);
         
-        // 4. GENERATE QR CODE BERLOGO UNTUK DIGUNAKAN DI SEMUA HALAMAN
+        // 4. 🌟 GENERATE QR CODE (FORMAT PNG + BASE64 AGAR LOGO MUNCUL SEMPURNA)
         if($logoSekolahPath && file_exists($logoSekolahPath)) {
-            $qrCodeImage = QrCode::format('svg')->size(95)->errorCorrection('H')->merge($logoSekolahPath, 0.28, true)->generate($urlVerifikasi);
+            // Dibuat resolusi 300 agar tajam saat dicetak, lalu dimerge dengan logo (skala 0.3)
+            $qrData = QrCode::format('png')->size(300)->errorCorrection('H')->merge($logoSekolahPath, 0.3, true)->generate($urlVerifikasi);
         } else {
-            $qrCodeImage = QrCode::format('svg')->size(95)->errorCorrection('H')->generate($urlVerifikasi);
+            $qrData = QrCode::format('png')->size(300)->errorCorrection('H')->generate($urlVerifikasi);
         }
+        
+        // Ubah menjadi HTML Image tag
+        $qrCodeImage = '<img src="data:image/png;base64,' . base64_encode($qrData) . '" alt="QR Code" style="width: 95px; height: 95px; object-fit: contain;">';
     @endphp
 
     <div class="flex flex-col items-center py-10 print:py-0 print:block">
@@ -114,7 +118,7 @@
             </p>
             <p style="text-indent: 1cm; text-align: justify;">Demikian surat dispensasi belajar ini dibuat untuk dipergunakan sebagaimana mestinya.</p>
 
-            <!-- 🌟 BLOK TANDA TANGAN 1 -->
+            <!-- BLOK TANDA TANGAN 1 -->
             <div class="ttd-area avoid-break">
                 Malingping, {{ \Carbon\Carbon::parse($surat->tanggal_surat)->isoFormat('D MMMM Y') }}<br>
                 @if($isKepalaSekolah)
@@ -123,7 +127,8 @@
                     a.n. Kepala Sekolah<br>Wakil Kepala Sekolah Bidang Kesiswaan<br>
                 @endif
 
-                <div style="margin: 8px auto; display: inline-block; padding: 4px; background: white; border: 1px solid #ddd; border-radius: 4px;">
+                <div style="margin: 8px auto; display: inline-block; padding: 4px; background: white; border: 1px solid #ddd; border-radius: 4px; width: 105px; height: 105px;">
+                    <!-- 🌟 TAMPILKAN QR CODE DISINI -->
                     {!! $qrCodeImage !!}
                 </div>
                 <div style="font-size: 7.5pt; color: #666; margin-bottom: 5px;">Dokumen TTE Valid</div>
@@ -166,7 +171,7 @@
                 </tbody>
             </table>
 
-            <!-- 🌟 BLOK TANDA TANGAN 2 (DI HALAMAN LAMPIRAN) -->
+            <!-- BLOK TANDA TANGAN 2 (DI HALAMAN LAMPIRAN) -->
             <div class="ttd-area avoid-break" style="margin-top: 40px;">
                 Malingping, {{ \Carbon\Carbon::parse($surat->tanggal_surat)->isoFormat('D MMMM Y') }}<br>
                 @if($isKepalaSekolah)
@@ -175,7 +180,8 @@
                     a.n. Kepala Sekolah<br>Wakil Kepala Sekolah Bidang Kesiswaan<br>
                 @endif
 
-                <div style="margin: 8px auto; display: inline-block; padding: 4px; background: white; border: 1px solid #ddd; border-radius: 4px;">
+                <div style="margin: 8px auto; display: inline-block; padding: 4px; background: white; border: 1px solid #ddd; border-radius: 4px; width: 105px; height: 105px;">
+                    <!-- 🌟 TAMPILKAN QR CODE DISINI -->
                     {!! $qrCodeImage !!}
                 </div>
                 <div style="font-size: 7.5pt; color: #666; margin-bottom: 5px;">Dokumen TTE Valid</div>
