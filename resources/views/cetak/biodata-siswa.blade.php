@@ -6,7 +6,7 @@
     <title>Cetak Biodata & Portofolio - {{ $siswa->nama_lengkap }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* 🌟 Margin Kertas 1cm Semua Sisi */
+        /* Margin Kertas 1cm Semua Sisi */
         @page {
             size: A4 portrait;
             margin: 1cm;
@@ -21,7 +21,7 @@
             page-break-inside: avoid;
         }
 
-        /* 🌟 Pengaturan Font Arial dan Ukuran 11pt Secara Global */
+        /* Pengaturan Font Arial dan Ukuran 11pt Secara Global */
         body {
             font-family: Arial, Helvetica, sans-serif !important;
             font-size: 11pt !important;
@@ -37,7 +37,7 @@
         .kop-2 { font-size: 15pt !important; }
         .watermark { font-size: 80pt !important; color: #f3f4f6 !important; }
 
-        /* 🌟 FOOTER BERULANG DI SETIAP HALAMAN */
+        /* FOOTER BERULANG DI SETIAP HALAMAN */
         .print-footer {
             margin-top: 20px;
             border-top: 2px solid #1f2937;
@@ -53,10 +53,10 @@
                 background-color: white !important;
             }
             .cetak-kertas {
-                display: block !important; /* 🌟 Mencegah Halaman Pertama Kosong */
+                display: block !important;
                 width: 100% !important;
                 margin: 0 !important;
-                padding: 0 !important; /* Padding diatur oleh margin @page */
+                padding: 0 !important;
                 box-shadow: none !important;
                 min-height: auto !important;
                 overflow: visible !important;
@@ -107,7 +107,7 @@
                 </div>
             </div>
 
-            <!-- 🌟 WADAH TABEL AGAR FOOTER BISA BEKERJA SEMPURNA -->
+            <!-- WADAH TABEL AGAR FOOTER BISA BEKERJA SEMPURNA -->
             <table style="width: 100%; position: relative; z-index: 10;">
                 <tbody>
                     <tr>
@@ -120,11 +120,13 @@
                                         <img src="{{ url('/uploads/' . $pengaturan->logo_dinas) }}" alt="Logo Dinas" class="max-w-full max-h-full object-contain">
                                     @endif
                                 </div>
-                                <div class="flex-1 text-center px-4">
-                                    <h1 class="kop-1 font-bold uppercase tracking-wider mb-1">PEMERINTAH PROVINSI BANTEN</h1>
-                                    <h1 class="kop-1 font-bold uppercase tracking-wider leading-tight mb-2">DINAS PENDIDIKAN DAN KEBUDAYAAN</h1>
-                                    <h1 class="kop-2 font-bold uppercase tracking-wider mt-1">{{ $pengaturan->nama_sekolah ?? 'SMA NEGERI 1 MALINGPING' }}</h1>
-                                    <p class="mt-1">Jalan Raya Binuangeun Km. 02 Malingping Lebak - Banten 42391</p>
+                                <div class="flex-1 text-center px-4" style="line-height: 1.3;">
+                                    <h1 class="text-[14pt] font-bold uppercase">PEMERINTAH PROVINSI BANTEN</h1>
+                                    <h1 class="text-[14pt] font-bold uppercase">DINAS PENDIDIKAN DAN KEBUDAYAAN</h1>
+                                    <h1 class="text-[22pt] font-bold uppercase">{{ $pengaturan->nama_sekolah ?? 'SMA NEGERI 1 MALINGPING' }}</h1>
+                                    <p>NPSN: 20601875 AKREDITASI: A (96)</p>
+                                    <p>Jl. Raya Bayah KM. 4 No. 39 Malingping – Lebak, 42391</p>
+                                    <p style="position: absolute; justify-self: center;">Website: <u>https://sman1malingping.sch.id</u> – Email: <u>info@sman1malingping.sch.id</u></p>
                                 </div>
                                 <div class="w-24 h-24 flex-shrink-0 flex items-center justify-center">
                                     @if(isset($pengaturan) && $pengaturan->logo_sekolah)
@@ -136,6 +138,17 @@
                             <div class="text-center mb-6 avoid-break">
                                 <h2 class="font-bold underline uppercase" style="font-size: 13pt;">Buku Induk - Profil & Portofolio Siswa</h2>
                                 <p class="mt-1">Nomor Induk Siswa Nasional (NISN): <span class="font-bold">{{ $siswa->nisn ?? '-' }}</span></p>
+                            </div>
+
+                            <!-- 🌟 FOTO SISWA DI TENGAH -->
+                            <div class="flex justify-center mb-6 avoid-break">
+                                <div class="w-[3.5cm] h-[4.5cm] border-2 border-gray-800 p-1 flex items-center justify-center overflow-hidden bg-white relative z-20">
+                                    @if($siswa->foto)
+                                        <img src="{{ url('/uploads/' . $siswa->foto) }}" alt="Foto" class="w-full h-full object-cover">
+                                    @else
+                                        <span class="text-gray-400 text-center text-[10pt]">Pas Foto<br>3 x 4</span>
+                                    @endif
+                                </div>
                             </div>
 
                             <div class="mb-4 avoid-break">
@@ -178,27 +191,15 @@
 
                             <div class="mb-6 avoid-break">
                                 <h3 class="font-bold bg-gray-200 px-2 py-1 mb-2 uppercase border border-gray-400">D. Keterangan Akademik Dasar</h3>
-                                
-                                <div class="flex items-start justify-between ml-1">
-                                    <div class="flex-1 pr-4">
-                                        <table class="w-full">
-                                            <tr><td class="py-1 w-2/5">21. NIS / NISN</td><td class="w-4">:</td><td class="py-1 font-bold">{{ $siswa->nis }} / {{ $siswa->nisn ?? '-' }}</td></tr>
-                                            <tr><td class="py-1">22. Kelas Saat Ini</td><td>:</td><td class="py-1 font-bold">{{ $siswa->kelas->nama_kelas ?? 'Belum ada kelas' }}</td></tr>
-                                            <tr><td class="py-1">23. Sekolah Asal</td><td>:</td><td class="py-1">{{ $siswa->sekolah_asal ?? '-' }}</td></tr>
-                                            <tr><td class="py-1">24. Status Masuk</td><td>:</td><td class="py-1">{{ $siswa->jalur_masuk ?? 'Siswa Baru' }}</td></tr>
-                                            <tr><td class="py-1">25. Tanggal Masuk</td><td>:</td><td class="py-1">{{ $siswa->tanggal_masuk ? \Carbon\Carbon::parse($siswa->tanggal_masuk)->isoFormat('D MMMM Y') : '-' }}</td></tr>
-                                            <tr><td class="py-1">26. Status Terkini</td><td>:</td><td class="py-1 font-bold uppercase {{ $siswa->status_siswa == 'Aktif' ? 'text-green-700' : 'text-red-700' }}">{{ $siswa->status_siswa }}</td></tr>
-                                        </table>
-                                    </div>
-                                    
-                                    <div class="w-[3.5cm] h-[4.5cm] border-2 border-gray-800 p-1 flex items-center justify-center overflow-hidden bg-white flex-shrink-0 relative z-20">
-                                        @if($siswa->foto)
-                                            <img src="{{ url('/uploads/' . $siswa->foto) }}" alt="Foto" class="w-full h-full object-cover">
-                                        @else
-                                            <span class="text-gray-400 text-center text-[10pt]">Pas Foto<br>3 x 4</span>
-                                        @endif
-                                    </div>
-                                </div>
+                                <!-- 🌟 Layout dirapikan karena foto sudah tidak ada di samping -->
+                                <table class="w-full ml-1">
+                                    <tr><td class="py-1 w-1/3">21. NIS / NISN</td><td class="w-4">:</td><td class="py-1 font-bold">{{ $siswa->nis }} / {{ $siswa->nisn ?? '-' }}</td></tr>
+                                    <tr><td class="py-1">22. Kelas Saat Ini</td><td>:</td><td class="py-1 font-bold">{{ $siswa->kelas->nama_kelas ?? 'Belum ada kelas' }}</td></tr>
+                                    <tr><td class="py-1">23. Sekolah Asal</td><td>:</td><td class="py-1">{{ $siswa->sekolah_asal ?? '-' }}</td></tr>
+                                    <tr><td class="py-1">24. Status Masuk</td><td>:</td><td class="py-1">{{ $siswa->jalur_masuk ?? 'Siswa Baru' }}</td></tr>
+                                    <tr><td class="py-1">25. Tanggal Masuk</td><td>:</td><td class="py-1">{{ $siswa->tanggal_masuk ? \Carbon\Carbon::parse($siswa->tanggal_masuk)->isoFormat('D MMMM Y') : '-' }}</td></tr>
+                                    <tr><td class="py-1">26. Status Terkini</td><td>:</td><td class="py-1 font-bold uppercase {{ $siswa->status_siswa == 'Aktif' ? 'text-green-700' : 'text-red-700' }}">{{ $siswa->status_siswa }}</td></tr>
+                                </table>
                             </div>
 
                             <div class="mb-6 avoid-break">
@@ -330,7 +331,7 @@
                         </td>
                     </tr>
                 </tbody>
-                <!-- 🌟 TFOOT INI MEMBERIKAN JARAK AGAR KONTEN TIDAK TERTUTUP OLEH FOOTER BAWAH -->
+                <!-- TFOOT INI MEMBERIKAN JARAK AGAR KONTEN TIDAK TERTUTUP OLEH FOOTER BAWAH -->
                 <tfoot>
                     <tr>
                         <td>
@@ -340,11 +341,11 @@
                 </tfoot>
             </table>
 
-            <!-- 🌟 FOOTER YANG AKAN BERULANG DI SETIAP HALAMAN BAWAH KETIKA DICETAK -->
+            <!-- FOOTER YANG AKAN BERULANG DI SETIAP HALAMAN BAWAH KETIKA DICETAK -->
             <div class="print-footer relative z-20">
                 <div class="flex justify-between font-bold mb-1 text-[10pt]">
                     <span>Biodata {{ $siswa->nama_lengkap }}</span>
-                    <span>Halaman ... dari ...</span> <!-- Chrome secara otomatis akan mengisi footer jika fiturnya diaktifkan, atau kita sediakan area tulis manual -->
+                    <span>Halaman ... dari ...</span>
                 </div>
                 <div class="text-center text-gray-700 italic text-[10pt]">
                     Dicetak pada Sistem Informasi {{ $pengaturan->nama_sekolah ?? 'Sekolah' }} | Waktu Cetak: {{ now()->isoFormat('D MMMM Y - HH:mm') }} WIB

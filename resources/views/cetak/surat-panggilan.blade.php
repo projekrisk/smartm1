@@ -7,14 +7,14 @@
     <style>
         @page { size: A4 portrait; margin: 1.5cm; }
         * { box-sizing: border-box; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; font-family: Arial, Helvetica, sans-serif !important; }
-        body { font-size: 11.5pt; line-height: 1.4; margin: 0; padding: 0; color: black; background-color: #e5e7eb; }
+        body { font-size: 11.5pt; line-height: 1.4 !important; margin: 0; padding: 0; color: black; background-color: #e5e7eb; }
         .cetak-kertas { width: 21cm; min-height: 29.7cm; padding: 1.5cm; margin: 0 auto; background-color: white; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border-radius: 8px; display: flex; flex-direction: column; }
         
         .tabel-data { width: 100%; margin: 0 0 10px 1cm; }
         .tabel-data td { vertical-align: top;}
         .tabel-data td:first-child { width: 180px; }
 
-        .ttd-area { width: 300px; float: right; text-align: center; margin-top: 20px; margin-left: 370px; }
+        .ttd-area { width: 300px; float: right; text-align: center; margin-top: 20px; margin-left: 380px; }
         .ttd-area b { font-size: 11pt; }
         @media print {
             .no-print { display: none !important; }
@@ -125,7 +125,7 @@
                     a.n. Kepala Sekolah<br>Wakil Kepala Sekolah Bidang Kesiswaan<br>
                 @endif
 
-                <div style="position: relative; margin: 8px auto; display: block; padding: 4px; background: white; border: 1px solid #ddd; border-radius: 4px; width: 105px; height: 105px;">
+                <div style="position: relative; margin: 0 auto; display: block; padding: 4px; background: white; border: 1px solid #ddd; border-radius: 4px; width: 105px; height: 105px;">
                     <img src="{{ $qrCodeImage }}" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain;">
                     @if(isset($pengaturan) && $pengaturan->logo_sekolah)
                         <div style="position: absolute; top: 50%; left: 50%; width: 38px; height: 38px; margin-top: -19px; margin-left: -19px; background: white; padding: 3px; border-radius: 5px;">
