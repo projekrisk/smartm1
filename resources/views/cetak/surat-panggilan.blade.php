@@ -5,16 +5,16 @@
     <title>Cetak Surat Panggilan - {{ $surat->nomor_surat }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @page { size: A4 portrait; margin: 1cm 1.5cm; }
+        @page { size: A4 portrait; margin: 2cm 2cm; }
         * { box-sizing: border-box; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; font-family: Arial, Helvetica, sans-serif !important; }
-        body { font-size: 11pt; line-height: 1.5; margin: 0; padding: 0; color: black; background-color: #e5e7eb; }
+        body { font-size: 12pt; line-height: 1.4; margin: 0; padding: 0; color: black; background-color: #e5e7eb; }
         .cetak-kertas { width: 21cm; min-height: 29.7cm; padding: 1.5cm; margin: 0 auto; background-color: white; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border-radius: 8px; display: flex; flex-direction: column; }
         
-        .tabel-data { width: 100%; margin: 10px 0 10px 1cm; }
-        .tabel-data td { vertical-align: top; padding: 4px 0; }
+        .tabel-data { width: 100%; margin: 0 0 10px 1cm; }
+        .tabel-data td { vertical-align: top;}
         .tabel-data td:first-child { width: 180px; }
 
-        .ttd-area { width: 300px; float: right; text-align: center; margin-top: 20px; line-height: 1.3; }
+        .ttd-area { width: 300px; float: right; text-align: center; margin-top: 20px; margin-left: 360px; }
         .ttd-area b { font-size: 11pt; }
         @media print {
             .no-print { display: none !important; }
@@ -41,7 +41,6 @@
         $qrData = QrCode::format('png')->size(300)->margin(1)->errorCorrection('H')->generate($urlVerifikasi);
         $qrCodeImage = 'data:image/png;base64,' . base64_encode($qrData);
 
-        // 🌟 LOGIKA TANDA TANGAN DINAMIS (SEPERTI DISPENSASI)
         $isKepalaSekolah = false;
         if ($surat->penandatangan) {
             $jenis = strtolower((string) $surat->penandatangan->jenis_ptk);
@@ -53,18 +52,19 @@
     <div class="flex flex-col items-center py-10 print:py-0 print:block">
         <div class="cetak-kertas">
             
-            <!-- KOP SURAT -->
             <div class="border-b-4 border-gray-800 pb-3 mb-5 flex items-center justify-between">
                 <div class="w-24 h-24 flex-shrink-0 flex items-center justify-center">
                     @if(isset($pengaturan) && $pengaturan->logo_dinas)
                         <img src="{{ url('/uploads/' . $pengaturan->logo_dinas) }}" alt="Logo" class="max-w-full max-h-full object-contain">
                     @endif
                 </div>
-                <div class="flex-1 text-center px-4">
-                    <h1 class="text-[15pt] font-bold uppercase tracking-wider mb-1">PEMERINTAH PROVINSI BANTEN</h1>
-                    <h1 class="text-[15pt] font-bold uppercase tracking-wider leading-tight mb-2">DINAS PENDIDIKAN DAN KEBUDAYAAN</h1>
-                    <h1 class="text-[18pt] font-bold uppercase tracking-wider mt-1" style="font-family: Arial, sans-serif;">{{ $pengaturan->nama_sekolah ?? 'SMA NEGERI 1 MALINGPING' }}</h1>
-                    <p class="text-[10pt] mt-1" style="font-family: 'Times New Roman', Times, serif;">Jalan Raya Binuangeun Km. 02 Malingping Lebak - Banten 42391</p>
+                <div class="flex-1 text-center px-4" style="line-height: 1.3;">
+                    <h1 class="text-[14pt] font-bold uppercase">PEMERINTAH PROVINSI BANTEN</h1>
+                    <h1 class="text-[14pt] font-bold uppercase">DINAS PENDIDIKAN DAN KEBUDAYAAN</h1>
+                    <h1 class="text-[22pt] font-bold uppercase">{{ $pengaturan->nama_sekolah ?? 'SMA NEGERI 1 MALINGPING' }}</h1>
+                    <p>NPSN: 20601875 AKREDITASI: A (96)</p>
+                    <p>Jl. Raya Bayah KM. 4 No. 39 Malingping – Lebak, 42391</p>
+                    <p style="position: absolute; justify-self: center;">Website: <u>https://sman1malingping.sch.id</u> – Email: <u>info@sman1malingping.sch.id</u></p>
                 </div>
                 <div class="w-24 h-24 flex-shrink-0 flex items-center justify-center">
                     @if(isset($pengaturan) && $pengaturan->logo_sekolah)
@@ -73,7 +73,6 @@
                 </div>
             </div>
 
-            <!-- DETAIL SURAT -->
             <table style="line-height: 1.5; font-size: 11pt; margin-bottom: 15px;">
                 <tr><td style="width: 80px; vertical-align: top;">Nomor</td><td style="width: 15px; vertical-align: top;">:</td><td>{{ $surat->nomor_surat }}</td></tr>
                 <tr><td style="vertical-align: top;">Lampiran</td><td style="vertical-align: top;">:</td><td>-</td></tr>
@@ -95,8 +94,8 @@
             <!-- 🌟 IDENTITAS SISWA LENGKAP -->
             <table class="tabel-data">
                 <tr><td>Nama</td><td>:</td><td class="font-bold uppercase">{{ $surat->siswa->nama_lengkap ?? '-' }}</td></tr>
-                <tr><td>Tempat, Tanggal Lahir</td><td>:</td><td>{{ $surat->siswa->tempat_lahir ?? '-' }}, {{ $surat->siswa->tanggal_lahir ? \Carbon\Carbon::parse($surat->siswa->tanggal_lahir)->isoFormat('D MMMM Y') : '-' }}</td></tr>
-                <tr><td>NIS / NISN</td><td>:</td><td>{{ $surat->siswa->nis ?? '-' }} / {{ $surat->siswa->nisn ?? '-' }}</td></tr>
+                <tr><td>Tempat, Tanggal Lahir</td><td>:</td><td class="font-bold uppercase">{{ $surat->siswa->tempat_lahir ?? '-' }}, {{ $surat->siswa->tanggal_lahir ? \Carbon\Carbon::parse($surat->siswa->tanggal_lahir)->isoFormat('D MMMM Y') : '-' }}</td></tr>
+                <tr><td>NIS / NISN</td><td>:</td><td class="font-bold">{{ $surat->siswa->nis ?? '-' }} / {{ $surat->siswa->nisn ?? '-' }}</td></tr>
                 <tr><td>Kelas</td><td>:</td><td class="font-bold">{{ $surat->siswa->kelas->nama_kelas ?? '-' }}</td></tr>
             </table>
 
@@ -107,9 +106,9 @@
             <!-- JADWAL PERTEMUAN -->
             <table class="tabel-data">
                 <tr><td>Hari/Tanggal</td><td>:</td><td class="font-bold">{{ \Carbon\Carbon::parse($surat->tanggal_panggilan)->isoFormat('dddd, D MMMM Y') }}</td></tr>
-                <tr><td>Pukul</td><td>:</td><td>{{ date('H:i', strtotime($surat->waktu_panggilan)) }} WIB s.d Selesai</td></tr>
+                <tr><td>Pukul</td><td>:</td><td class="font-bold">{{ date('H:i', strtotime($surat->waktu_panggilan)) }} WIB s.d Selesai</td></tr>
                 <tr><td>Tempat</td><td>:</td><td class="font-bold">{{ $surat->tempat_pertemuan }}</td></tr>
-                <tr><td>Keperluan</td><td>:</td><td>{{ $surat->alasan_panggilan }}</td></tr>
+                <tr><td>Keperluan</td><td>:</td><td class="font-bold">{{ $surat->alasan_panggilan }}</td></tr>
             </table>
 
             <p style="text-indent: 1cm; text-align: justify; margin-bottom: 10px;">
