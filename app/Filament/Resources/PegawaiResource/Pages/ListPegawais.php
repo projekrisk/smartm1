@@ -4,6 +4,7 @@ namespace App\Filament\Resources\PegawaiResource\Pages;
 
 use App\Filament\Resources\PegawaiResource;
 use App\Filament\Resources\PegawaiResource\Widgets\PegawaiStatsWidget;
+use App\Filament\Resources\PegawaiResource\Widgets\PegawaiRincianWidget;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
@@ -15,6 +16,7 @@ class ListPegawais extends ListRecords
     {
         return [
             PegawaiStatsWidget::class,
+            PegawaiRincianWidget::class,
         ];
     }
 
