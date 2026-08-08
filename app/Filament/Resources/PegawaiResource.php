@@ -406,17 +406,19 @@ class PegawaiResource extends Resource
                     ->action(function () {
                         $pegawais = Pegawai::orderBy('nama', 'asc')->get();
 
+                        // Mulai merangkai file HTML khusus untuk Excel
                         $html = '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
                         $html .= '<head><meta charset="utf-8">';
                         $html .= '<style>';
                         $html .= 'table { border-collapse: collapse; font-family: Arial, sans-serif; font-size: 11px; } ';
                         $html .= 'th, td { border: .5pt solid windowtext; padding: 4px; vertical-align: middle; } ';
                         $html .= 'th { background-color: #f3f4f6; font-weight: bold; text-align: center; } ';
-                        $html .= '.str { mso-number-format:"\@"; } '; // Mencegah angka NIK berubah jadi 1.23E+15
+                        $html .= '.str { mso-number-format:"\@"; } '; 
                         $html .= '.title { font-size: 14px; font-weight: bold; text-align: center; border: none; } ';
                         $html .= '</style></head>';
                         $html .= '<body>';
 
+                        // ===== TABEL 1: DAFTAR DATA PEGAWAI (LENGKAP SEMUA DATA) =====
                         $headers = [
                             'No', 'Nama Lengkap', 'NIK', 'No KK', 'NPWP', 'Jenis Kelamin', 'Tempat Lahir', 'Tanggal Lahir',
                             'No Telepon', 'Email', 'Jenis PTK', 'Status Kepegawaian', 'Tugas Utama', 'NIP', 'NUPTK',
@@ -428,7 +430,7 @@ class PegawaiResource extends Resource
                         $html .= '<table>';
                         $html .= '<tr><td colspan="'.$cols.'" class="title" style="border:none;">DAFTAR DATA LENGKAP PEGAWAI</td></tr>';
                         $html .= '<tr><td colspan="'.$cols.'" style="border:none; text-align:center;">Per Tanggal: ' . now()->isoFormat('D MMMM YYYY') . '</td></tr>';
-                        $html .= '<tr><td colspan="'.$cols.'" style="border:none;"></td></tr>'; // Baris kosong
+                        $html .= '<tr><td colspan="'.$cols.'" style="border:none;"></td></tr>';
                         
                         $html .= '<tr>';
                         foreach ($headers as $h) { $html .= '<th>' . $h . '</th>'; }
@@ -469,6 +471,7 @@ class PegawaiResource extends Resource
 
                         $html .= '<br><br>';
 
+                        // ===== TABEL 2: REKAPITULASI =====
                         $html .= '<table>';
                         $html .= '<tr><td colspan="4" class="title" style="border:none; text-align:left;">REKAPITULASI JUMLAH PEGAWAI</td></tr>';
                         $html .= '<tr>';
@@ -484,7 +487,7 @@ class PegawaiResource extends Resource
                             $l = $pegawais->where('jenis_ptk', $ptk)->where('jenis_kelamin', 'Laki-laki')->count();
                             $p = $pegawais->where('jenis_ptk', $ptk)->where('jenis_kelamin', 'Perempuan')->count();
                             $html .= '<tr>';
-                            $html .= '<td>' . $ptk . '</td>';
+                            $html .= '<td>' . $ptk . '</td>'; 
                             $html .= '<td style="text-align:center;">' . $l . '</td>';
                             $html .= '<td style="text-align:center;">' . $p . '</td>';
                             $html .= '<td style="text-align:center; font-weight:bold;">' . ($l + $p) . '</td>';
@@ -516,9 +519,12 @@ class PegawaiResource extends Resource
                         $html .= '</table>';
                         $html .= '</body></html>';
 
-                        return response($html)
-                            ->header('Content-Type', 'application/vnd.ms-excel; charset=utf-8')
-                            ->header('Content-Disposition', 'attachment; filename="Rekap_Pegawai_Lengkap_' . date('Y-m-d') . '.xls"');
+                        // 🌟 MENGGUNAKAN STREAM DOWNLOAD AGAR DITANGKAP OLEH BROWSER
+                        return response()->streamDownload(function () use ($html) {
+                            echo $html;
+                        }, 'Rekap_Pegawai_Lengkap_' . date('Y-m-d') . '.xls', [
+                            'Content-Type' => 'application/vnd.ms-excel; charset=utf-8'
+                        ]);
                     }),
 
                 Tables\Actions\Action::make('unduh_template')
