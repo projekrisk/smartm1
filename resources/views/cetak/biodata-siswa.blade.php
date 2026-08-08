@@ -6,7 +6,6 @@
     <title>Cetak Biodata & Portofolio - {{ $siswa->nama_lengkap }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Margin Kertas 1cm Semua Sisi */
         @page {
             size: A4 portrait;
             margin: 1cm;
@@ -21,7 +20,6 @@
             page-break-inside: avoid;
         }
 
-        /* Pengaturan Font Arial dan Ukuran 11pt Secara Global */
         body {
             font-family: Arial, Helvetica, sans-serif !important;
             font-size: 11pt !important;
@@ -32,28 +30,23 @@
             font-size: 11pt;
         }
 
-        /* Khusus pengecualian untuk Kop Surat */
         .kop-1 { font-size: 13pt !important; }
         .kop-2 { font-size: 15pt !important; }
 
-        /* 🌟 WATERMARK KECIL PENUH SATU HALAMAN */
         .watermark-bg {
             position: absolute;
             inset: 0;
             z-index: 0;
             pointer-events: none;
-            /* Latar belakang akan mengambil data SVG dari PHP di bawah */
             background-repeat: repeat;
         }
 
-        /* FOOTER BERULANG DI SETIAP HALAMAN */
         .print-footer {
             margin-top: 20px;
-            border-top: 2px solid #1f2937;
+            border-top: 1px solid #1f2937;
             padding-top: 10px;
         }
 
-        /* Mode Cetak */
         @media print {
             .no-print {
                 display: none !important;
@@ -104,11 +97,9 @@
         $pengaturan = null;
         try { if (\Illuminate\Support\Facades\Schema::hasTable('pengaturan')) $pengaturan = \App\Models\Pengaturan::first(); } catch (\Exception $e) {}
 
-        // 🌟 KODE GENERATOR SVG WATERMARK
         $namaSekolah = strtoupper($pengaturan->nama_sekolah ?? 'SMA NEGERI 1 MALINGPING');
         $watermarkText = 'DATA RAHASIA - ' . $namaSekolah;
         
-        // Membuat gambar SVG transparan berulang secara matematis
         $svg = '
         <svg xmlns="http://www.w3.org/2000/svg" width="280" height="150">
             <text x="50%" y="50%" transform="rotate(-30 140 75)" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="rgba(150,150,150,0.18)">
@@ -116,7 +107,6 @@
             </text>
         </svg>';
         
-        // Encode ke Base64 agar bisa digunakan di CSS
         $base64Svg = base64_encode($svg);
     @endphp
 
@@ -124,16 +114,13 @@
         
         <div class="cetak-kertas bg-white shadow-2xl w-[21cm] p-[1cm] mx-auto relative block">
             
-            <!-- 🌟 INI ADALAH AREA WATERMARK BARU YANG MENGGUNAKAN BACKGROUND CSS SVG -->
             <div class="watermark-bg" style="background-image: url('data:image/svg+xml;base64,{{ $base64Svg }}');"></div>
 
-            <!-- WADAH TABEL AGAR FOOTER BISA BEKERJA SEMPURNA -->
             <table style="width: 100%; position: relative; z-index: 10;">
                 <tbody>
                     <tr>
                         <td>
                             
-                            <!-- KOP SEKOLAH -->
                             <div class="border-b-4 border-gray-800 pb-6 mb-6 flex items-center justify-between avoid-break">
                                 <div class="w-24 h-24 flex-shrink-0 flex items-center justify-center">
                                     @if(isset($pengaturan) && $pengaturan->logo_dinas)
@@ -160,7 +147,6 @@
                                 <p class="mt-1">Nomor Induk Siswa Nasional (NISN): <span class="font-bold">{{ $siswa->nisn ?? '-' }}</span></p>
                             </div>
 
-                            <!-- FOTO SISWA DI TENGAH -->
                             <div class="flex justify-center mb-6 avoid-break">
                                 <div class="w-[3.5cm] h-[4.5cm] border-2 border-gray-800 p-1 flex items-center justify-center overflow-hidden bg-white relative z-20">
                                     @if($siswa->foto)
@@ -263,7 +249,7 @@
                                             <tr>
                                                 <td class="border border-gray-400 p-2 align-top">{{ \Carbon\Carbon::parse($catatan->tanggal)->format('d/m/Y') }}</td>
                                                 <td class="border border-gray-400 p-2 align-top font-bold {{ $catatan->jenis_catatan == 'Positif' ? 'text-green-700' : ($catatan->jenis_catatan == 'Negatif' ? 'text-red-700' : 'text-blue-700') }}">{{ $catatan->jenis_catatan }}</td>
-                                                <td class="border border-gray-400 p-2 text-left">
+                                                <td class="border border-gray-400 p-2 text-left align-top">
                                                     <strong class="block mb-1">{{ $catatan->judul_catatan }}</strong>
                                                     <span class="text-gray-700">{{ $catatan->isi_catatan }}</span>
                                                 </td>
@@ -350,7 +336,6 @@
                         </td>
                     </tr>
                 </tbody>
-                <!-- TFOOT INI MEMBERIKAN JARAK AGAR KONTEN TIDAK TERTUTUP OLEH FOOTER BAWAH -->
                 <tfoot>
                     <tr>
                         <td>
@@ -360,14 +345,9 @@
                 </tfoot>
             </table>
 
-            <!-- FOOTER YANG AKAN BERULANG DI SETIAP HALAMAN BAWAH KETIKA DICETAK -->
             <div class="print-footer relative z-20">
-                <div class="flex justify-between font-bold mb-1 text-[10pt]">
-                    <span>Biodata {{ $siswa->nama_lengkap }}</span>
-                    <span>Halaman ... dari ...</span>
-                </div>
-                <div class="text-center text-gray-700 italic text-[10pt]">
-                    Dicetak pada Sistem Informasi {{ $pengaturan->nama_sekolah ?? 'Sekolah' }} | Waktu Cetak: {{ now()->isoFormat('D MMMM Y - HH:mm') }} WIB
+                <div class="text-gray-700 italic text-[10pt]">
+                    Dicetak pada Smart-M1 {{ $pengaturan->nama_sekolah ?? 'Sekolah' }} | Waktu Cetak: {{ now()->isoFormat('D MMMM Y - HH:mm') }} WIB
                 </div>
             </div>
 
