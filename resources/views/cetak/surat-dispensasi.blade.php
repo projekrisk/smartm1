@@ -5,7 +5,7 @@
     <title>Cetak Surat Dispensasi - {{ $surat->nomor_surat_lengkap }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @page { size: A4 portrait; margin: 1cm 1.5cm; }
+        @page { size: A4 portrait; margin: 2cm 2cm; }
         * { box-sizing: border-box; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; font-family: Arial, Helvetica, sans-serif !important; }
         body { font-size: 11pt; line-height: 1.5; margin: 0; padding: 0; color: black; background-color: #e5e7eb; }
         .cetak-kertas { width: 21cm; min-height: 29.7cm; padding: 1.5cm; margin: 0 auto; background-color: white; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border-radius: 8px; display: flex; flex-direction: column; }
@@ -16,7 +16,7 @@
         .tabel-siswa th, .tabel-siswa td { border: 1px solid black; padding: 8px 10px; text-align: left; }
         
         /* Pengaturan Tanda Tangan: Sebelah Kanan & Teks Rata Tengah */
-        .ttd-area { width: 300px; float: right; text-align: center; margin-top: 20px; line-height: 1.3; }
+        .ttd-area { width: 300px; float: right; text-align: left; margin-top: 40px; line-height: 1.3; margin-left: 500px;}
         .ttd-area b { font-size: 11pt; }
         
         .page-break { page-break-before: always; }
@@ -24,11 +24,11 @@
         @media print {
             .no-print { display: none !important; }
             body { background-color: white !important; padding: 0 !important; margin: 0 !important; }
-            .cetak-kertas { width: 100% !important; max-width: 100% !important; min-height: auto !important; padding: 0 !important; margin: 0 !important; box-shadow: none !important; border-radius: 0 !important; }
+            .cetak-kertas { width: 100% !important; max-width: 100% !important; min-height: auto !important; padding: margin: 2cm 2cm !important; margin: margin: 2cm 2cm !important; box-shadow: none !important; border-radius: 0 !important; }
         }
     </style>
 </head>
-<body class="text-gray-900 text-xs">
+<body class="text-gray-900" style="font-size: 11pt; ">
 
     <div class="no-print fixed top-5 left-5 z-50 flex gap-2">
         <button onclick="window.close()" class="bg-gray-800 text-white px-4 py-2 rounded shadow hover:bg-gray-700 font-sans">&larr; Tutup Tab</button>
@@ -86,7 +86,7 @@
             <!-- ISI SURAT -->
             
             <!-- Format Judul Kiri -->
-            <table style="line-height: 1.5; font-size: 11pt; margin-bottom: 15px;">
+            <table style="line-height: 1.5; margin-bottom: 15px;">
                 <tr><td style="width: 80px; vertical-align: top;">Nomor</td><td style="width: 15px; vertical-align: top;">:</td><td>{{ $surat->nomor_surat_lengkap }}</td></tr>
                 <tr><td style="vertical-align: top;">Lampiran</td><td style="vertical-align: top;">:</td><td>1 (satu) Berkas</td></tr>
                 <tr><td style="vertical-align: top;">Perihal</td><td style="vertical-align: top;">:</td><td><b>Dispensasi Belajar</b></td></tr>
@@ -127,7 +127,7 @@
 
             <!-- BLOK TANDA TANGAN 1 DENGAN LOGO BACKGROUND PUTIH -->
             <div class="ttd-area avoid-break">
-                Malingping, {{ \Carbon\Carbon::parse($surat->tanggal_surat)->isoFormat('D MMMM Y') }}<br>
+                Malingping, {{ \Carbon\Carbon::parse($surat->tanggal_surat)->isoFormat('D MMMM Y') }}<br><br>
                 @if($isKepalaSekolah)
                     Kepala {{ $pengaturan->nama_sekolah ?? 'SMA Negeri 1 Malingping' }}<br>
                 @else
@@ -135,13 +135,13 @@
                 @endif
 
                 <!-- WADAH QR CODE -->
-                <div style="position: relative; margin: 8px auto; display: block; padding: 4px; background: white; border: 1px solid #ddd; border-radius: 4px; width: 105px; height: 105px;">
+                <div style="position: relative; margin: 8px 0; display: block; padding: 4px; background: white; border: 1px solid #ddd; width: 105px; height: 105px;">
                     <!-- GAMBAR QR -->
                     <img src="{{ $qrCodeImage }}" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain;">
                     
                     <!-- 🌟 OVERLAY LOGO DENGAN BACKGROUND PUTIH (Ukuran Besar & Rapi) -->
                     @if(isset($pengaturan) && $pengaturan->logo_sekolah)
-                        <div style="position: absolute; top: 50%; left: 50%; width: 38px; height: 38px; margin-top: -19px; margin-left: -19px; background: white; padding: 3px; border-radius: 5px;">
+                        <div style="position: absolute; top: 50%; left: 50%; width: 38px; height: 38px; margin-top: -19px; margin-left: -19px; background: white; padding: 3px; border-radius: 10px; border:1px solid #d7cccc;">
                             <img src="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
                         </div>
                     @endif
