@@ -406,26 +406,68 @@ class PegawaiResource extends Resource
                     ->action(function () {
                         $pegawais = Pegawai::orderBy('nama', 'asc')->get();
                         
-                        $headers = ['Nama Lengkap', 'NIP', 'Jenis PTK', 'Status Kepegawaian'];
+                        $headers = [
+                            'No', 'Nama Lengkap', 'NIK', 'Jenis Kelamin', 'Jenis PTK', 
+                            'Status Kepegawaian', 'Tugas Utama', 'Pangkat/Golongan'
+                        ];
                         
                         $callback = function() use ($pegawais, $headers) {
                             $file = fopen('php://output', 'w');
+                            
+                            fputcsv($file, ['DAFTAR DATA PEGAWAI']);
                             fputcsv($file, $headers);
                             
+                            $no = 1;
                             foreach ($pegawais as $pegawai) {
                                 fputcsv($file, [
+                                    $no++,
                                     $pegawai->nama,
-                                    $pegawai->nip ? '="' . $pegawai->nip . '"' : '-',
+                                    $pegawai->nik ? '="' . $pegawai->nik . '"' : '-',
+                                    $pegawai->jenis_kelamin ?? '-',
                                     $pegawai->jenis_ptk ?? '-',
                                     $pegawai->status_kepegawaian ?? '-',
+                                    $pegawai->tugas_utama ?? '-',
+                                    $pegawai->pangkat_golongan ?? '-'
                                 ]);
                             }
+                            
+                            fputcsv($file, []); fputcsv($file, []); fputcsv($file, []);
+
+                            fputcsv($file, ['REKAPITULASI JUMLAH PEGAWAI']);
+                            fputcsv($file, ['Kategori / Rincian', 'Laki-laki (L)', 'Perempuan (P)', 'Total']);
+                            
+                            $jenisPtkList = ['Kepala Sekolah', 'Guru', 'Tenaga Kependidikan'];
+                            fputcsv($file, ['BERDASARKAN JENIS PTK']);
+                            
+                            foreach ($jenisPtkList as $ptk) {
+                                $l = $pegawais->where('jenis_ptk', $ptk)->where('jenis_kelamin', 'Laki-laki')->count();
+                                $p = $pegawais->where('jenis_ptk', $ptk)->where('jenis_kelamin', 'Perempuan')->count();
+                                fputcsv($file, ["- $ptk", $l, $p, ($l + $p)]);
+                            }
+                            
+                            fputcsv($file, []);
+
+                            $statusList = ['PNS', 'PPPK', 'Honorer', 'GTY/PTY'];
+                            fputcsv($file, ['BERDASARKAN STATUS KEPEGAWAIAN']);
+                            
+                            foreach ($statusList as $status) {
+                                $l = $pegawais->where('status_kepegawaian', $status)->where('jenis_kelamin', 'Laki-laki')->count();
+                                $p = $pegawais->where('status_kepegawaian', $status)->where('jenis_kelamin', 'Perempuan')->count();
+                                fputcsv($file, ["- $status", $l, $p, ($l + $p)]);
+                            }
+
+                            fputcsv($file, []);
+
+                            $totalL = $pegawais->where('jenis_kelamin', 'Laki-laki')->count();
+                            $totalP = $pegawais->where('jenis_kelamin', 'Perempuan')->count();
+                            fputcsv($file, ['TOTAL KESELURUHAN', $totalL, $totalP, ($totalL + $totalP)]);
+                            
                             fclose($file);
                         };
 
                         return response()->stream($callback, 200, [
                             "Content-type"        => "text/csv",
-                            "Content-Disposition" => "attachment; filename=rekap_pegawai_" . date('Y-m-d') . ".csv",
+                            "Content-Disposition" => "attachment; filename=rekap_lengkap_pegawai_" . date('Y-m-d') . ".csv",
                             "Pragma"              => "no-cache",
                             "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
                             "Expires"             => "0"
@@ -539,13 +581,6 @@ class PegawaiResource extends Resource
                     ->modalHeading('Impor Data Pegawai (CSV)')
                     ->modalSubmitActionLabel('Mulai Impor'),
 
-                Tables\Actions\ExportAction::make()
-                    ->exporter(\App\Filament\Exports\PegawaiExporter::class)
-                    ->label('Ekspor')
-                    ->color('primary')
-                    ->icon('heroicon-o-arrow-up-tray')
-                    ->visible(fn () => auth()->user()->peran === 'admin')
-                    ->columnMapping(false),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

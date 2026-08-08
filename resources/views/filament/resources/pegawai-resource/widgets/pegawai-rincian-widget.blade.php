@@ -3,7 +3,7 @@
         <div class="flex items-center gap-2 mb-4">
             <x-filament::icon icon="heroicon-o-users" class="w-5 h-5 text-gray-500" />
             <h3 class="text-base font-semibold leading-6 text-gray-950 dark:text-white">
-                Rincian Pegawai Berdasarkan Jenis Kelamin
+                Rincian Pegawai
             </h3>
         </div>
         
@@ -12,15 +12,14 @@
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-white/5 dark:text-gray-400">
                     <tr>
                         <th scope="col" class="px-6 py-3 font-semibold w-1/2">Kategori Rincian</th>
-                        <th scope="col" class="px-6 py-3 text-center font-semibold text-blue-600 dark:text-blue-400">Laki-laki (L)</th>
-                        <th scope="col" class="px-6 py-3 text-center font-semibold text-pink-600 dark:text-pink-400">Perempuan (P)</th>
+                        <th scope="col" class="px-6 py-3 text-center font-semibold text-blue-600 dark:text-blue-400">Laki-laki</th>
+                        <th scope="col" class="px-6 py-3 text-center font-semibold text-pink-600 dark:text-pink-400">Perempuan</th>
                         <th scope="col" class="px-6 py-3 text-center font-bold text-primary-600 dark:text-primary-400 border-l border-gray-200 dark:border-gray-700">Total</th>
                     </tr>
                 </thead>
                 
                 <tbody class="divide-y divide-gray-200 dark:divide-gray-800">
                     
-                    <!-- KELOMPOK 1: TUGAS UTAMA / JENIS PTK -->
                     <tr class="bg-gray-100/50 dark:bg-gray-800/50">
                         <td colspan="4" class="px-6 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
                             Berdasarkan Tugas (Jenis PTK)
@@ -51,7 +50,6 @@
                         <td class="px-6 py-3 text-center font-bold border-l border-gray-200 dark:border-gray-700">{{ $tendik }}</td>
                     </tr>
 
-                    <!-- KELOMPOK 2: STATUS KEPEGAWAIAN -->
                     <tr class="bg-gray-100/50 dark:bg-gray-800/50 border-t-2 border-gray-200 dark:border-gray-700">
                         <td colspan="4" class="px-6 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
                             Berdasarkan Status Kepegawaian
@@ -91,7 +89,6 @@
                     </tr>
                 </tbody>
 
-                <!-- FOOTER TOTAL KESELURUHAN -->
                 <tfoot class="bg-primary-50 dark:bg-primary-900/20 border-t-2 border-primary-200 dark:border-primary-800">
                     <tr>
                         <th scope="row" class="px-6 py-4 text-base font-bold text-gray-900 dark:text-white uppercase tracking-wider">
