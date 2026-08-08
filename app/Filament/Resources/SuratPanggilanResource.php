@@ -28,23 +28,21 @@ class SuratPanggilanResource extends Resource
     protected static ?string $modelLabel = 'Surat Panggilan';
     protected static ?int $navigationSort = 14;
 
-    // 🌟 BADGE NOTIFIKASI SIDEBAR
+    // 🌟 1. PERBAIKAN BADGE MENGGUNAKAN RELASI DATABASE LANGSUNG (100% AKURAT)
     public static function getNavigationBadge(): ?string
     {
         $user = Auth::user();
         
         if ($user->peran === 'guru') {
-            $pegawaiId = Pegawai::where('user_id', $user->id)->value('id');
-            if ($pegawaiId) {
-                $kelasIds = Kelas::where('wali_kelas_id', $pegawaiId)->pluck('id');
-                $siswaIds = Siswa::whereIn('kelas_id', $kelasIds)->pluck('id');
-                
-                if ($siswaIds->isNotEmpty()) {
-                    $count = static::getModel()::where('status', 'Dibuat')
-                        ->whereIn('siswa_id', $siswaIds)
-                        ->count();
-                    return $count > 0 ? (string) $count : null;
-                }
+            $pegawai = Pegawai::where('user_id', $user->id)->first();
+            if ($pegawai) {
+                // Mencari surat yang Siswanya berada di Kelas binaan Guru (Pegawai) ini
+                $count = static::getModel()::where('status', 'Dibuat')
+                    ->whereHas('siswa.kelas', function ($q) use ($pegawai) {
+                        $q->where('wali_kelas_id', $pegawai->id);
+                    })->count();
+                    
+                return $count > 0 ? (string) $count : null;
             }
             return null;
         }
@@ -62,7 +60,6 @@ class SuratPanggilanResource extends Resource
         return 'danger';
     }
 
-    // 🌟 PENGATURAN HAK AKSES
     public static function canViewAny(): bool
     {
         return in_array(Auth::user()->peran, ['admin', 'staf', 'guru']);
@@ -83,32 +80,27 @@ class SuratPanggilanResource extends Resource
         return in_array(Auth::user()->peran, ['admin', 'staf']);
     }
 
-    // 🌟 FILTER DATA (Hanya Tampilkan Siswa Binaan Wali Kelas ybs)
+    // 🌟 2. PERBAIKAN FILTER DATA WALI KELAS DI TABEL 
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();
         $user = Auth::user();
         
         if ($user->peran === 'guru') {
-            $pegawaiId = Pegawai::where('user_id', $user->id)->value('id');
-            if ($pegawaiId) {
-                $kelasIds = Kelas::where('wali_kelas_id', $pegawaiId)->pluck('id');
-                $siswaIds = Siswa::whereIn('kelas_id', $kelasIds)->pluck('id');
-                
-                if ($siswaIds->isNotEmpty()) {
-                    $query->whereIn('siswa_id', $siswaIds);
-                } else {
-                    $query->where('id', 0); 
-                }
+            $pegawai = Pegawai::where('user_id', $user->id)->first();
+            if ($pegawai) {
+                // Relasi tembus pandang: Surat -> Siswa -> Kelas -> wali_kelas_id
+                $query->whereHas('siswa.kelas', function ($q) use ($pegawai) {
+                    $q->where('wali_kelas_id', $pegawai->id);
+                });
             } else {
-                $query->where('id', 0);
+                $query->where('id', 0); // Kosongkan jika bukan pegawai valid
             }
         }
         
         return $query->orderBy('created_at', 'desc');
     }
 
-    // 🌟 FORM INPUT
     public static function form(Form $form): Form
     {
         $isGuru = Auth::user()->peran === 'guru';
@@ -117,7 +109,6 @@ class SuratPanggilanResource extends Resource
             ->schema([
                 Forms\Components\Section::make('Informasi Surat')
                     ->schema([
-                        // Baris 1: 3 Kolom
                         Forms\Components\Grid::make(3)->schema([
                             Forms\Components\DatePicker::make('tanggal_surat')
                                 ->label('Tanggal Surat Dibuat')
@@ -134,7 +125,7 @@ class SuratPanggilanResource extends Resource
                                     self::generateNomorSurat($get, $set);
                                 })
                                 ->disabled($isGuru)
-                                ->dehydrated(false), // Tidak dimasukkan ke DB
+                                ->dehydrated(false),
 
                             Forms\Components\TextInput::make('nomor_surat')
                                 ->label('Format Lengkap (Otomatis)')
@@ -142,22 +133,24 @@ class SuratPanggilanResource extends Resource
                                 ->unique(ignoreRecord: true)
                                 ->maxLength(255)
                                 ->disabled()
-                                ->dehydrated(), // Wajib disave ke DB
+                                ->dehydrated(),
                         ]),
 
-                        // Baris 2: 3 Kolom (Siswa, Penandatangan, Status)
                         Forms\Components\Grid::make(3)->schema([
+                            // 🌟 3. FORM NAMA SISWA + KELAS (AGAR TIDAK TERTUKAR)
                             Forms\Components\Select::make('siswa_id')
                                 ->label('Nama Siswa')
-                                ->relationship('siswa', 'nama_lengkap')
-                                ->searchable()
+                                ->relationship('siswa', 'nama_lengkap', fn (Builder $query) => $query->with('kelas'))
+                                ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->nama_lengkap} (Kelas {$record->kelas?->nama_kelas})")
+                                ->searchable(['nama_lengkap', 'nis', 'nisn'])
                                 ->preload()
                                 ->required()
                                 ->disabled($isGuru),
 
+                            // 🌟 4. FORM PENANDATANGAN DIFILTER HANYA KEPALA SEKOLAH
                             Forms\Components\Select::make('penandatangan_id')
                                 ->label('Penandatangan Surat')
-                                ->relationship('penandatangan', 'nama')
+                                ->relationship('penandatangan', 'nama', fn (Builder $query) => $query->where('jenis_ptk', 'like', '%Kepala Sekolah%'))
                                 ->searchable()
                                 ->preload()
                                 ->required()
@@ -208,7 +201,6 @@ class SuratPanggilanResource extends Resource
             ]);
     }
 
-    // 🌟 FUNGSI PENOMORAN (Index Statis + Otomatis Tahun)
     public static function generateNomorSurat(Get $get, Set $set)
     {
         $urut = $get('nomor_urut');
@@ -221,7 +213,6 @@ class SuratPanggilanResource extends Resource
         }
     }
 
-    // 🌟 TABEL DATA
     public static function table(Table $table): Table
     {
         return $table
@@ -233,6 +224,11 @@ class SuratPanggilanResource extends Resource
                 Tables\Columns\TextColumn::make('siswa.nama_lengkap')
                     ->label('Siswa')
                     ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('siswa.kelas.nama_kelas')
+                    ->label('Kelas')
+                    ->badge()
+                    ->color('info')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('tanggal_panggilan')
                     ->label('Tgl. Pertemuan')
