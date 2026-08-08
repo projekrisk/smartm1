@@ -161,7 +161,7 @@
                     @foreach($surat->siswa->sortBy('nama_lengkap') as $index => $s)
                     <tr class="avoid-break">
                         <td style="text-align: center;">{{ $index + 1 }}</td>
-                        <td>{{ $s->nis ?? '-' }} / {{ $s->nisn ?? '-' }}</td>
+                        <td style="text-align: center;">{{ $s->nis ?? '-' }} / {{ $s->nisn ?? '-' }}</td>
                         <td style="text-align: left;" class="uppercase font-semibold">{{ $s->nama_lengkap }}</td>
                         <td style="text-align: center; font-weight: bold;">{{ $s->kelas->nama_kelas ?? '-' }}</td>
                     </tr>
@@ -177,7 +177,7 @@
                     a.n. Kepala Sekolah<br>Wakil Kepala Sekolah Bidang Kesiswaan<br>
                 @endif
 
-                <div style="position: relative; margin: 8px auto; display: block; padding: 4px; background: white; border: 1px solid #ddd; border-radius: 4px; width: 105px; height: 105px;">
+                <div style="position: relative; margin: auto; display: block; padding: 4px; width: 105px; height: 105px;">
                     <img src="{{ $qrCodeImage }}" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain;">
                     
                     @if(isset($pengaturan) && $pengaturan->logo_sekolah)

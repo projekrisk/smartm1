@@ -240,36 +240,81 @@
                             </div>
 
                             <div class="mb-6 avoid-break">
-                                <h3 class="font-bold bg-gray-200 px-2 py-1 mb-2 uppercase border border-gray-400">F. Catatan Siswa (Buku Kasus & Prestasi)</h3>
-                                <table class="w-full border-collapse border border-gray-400 text-center">
-                                    <thead>
-                                        <tr class="bg-gray-100">
-                                            <th class="border border-gray-400 p-2 w-32">Tanggal</th>
-                                            <th class="border border-gray-400 p-2 w-28">Jenis</th>
-                                            <th class="border border-gray-400 p-2">Perihal / Keterangan</th>
-                                            <th class="border border-gray-400 p-2 w-40">Pencatat</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @forelse($siswa->catatan->sortByDesc('tanggal') as $catatan)
-                                            <tr>
-                                                <td class="border border-gray-400 p-2 align-top">{{ \Carbon\Carbon::parse($catatan->tanggal)->format('d/m/Y') }}</td>
-                                                <td class="border border-gray-400 p-2 align-top font-bold {{ $catatan->jenis_catatan == 'Positif' ? 'text-green-700' : ($catatan->jenis_catatan == 'Negatif' ? 'text-red-700' : 'text-blue-700') }}">{{ $catatan->jenis_catatan }}</td>
-                                                <td class="border border-gray-400 p-2 text-left align-top">
-                                                    <strong class="block mb-1">{{ $catatan->judul_catatan }}</strong>
-                                                    <span class="text-gray-700">{{ $catatan->isi_catatan }}</span>
-                                                </td>
-                                                <td class="border border-gray-400 p-2 align-top">{{ $catatan->pencatat->name ?? '-' }}</td>
+                                <h3 class="font-bold bg-gray-200 px-2 py-1 mb-2 uppercase border border-gray-400">F. Riwayat Prestasi Siswa</h3>
+                                @php
+                                    // Memfilter catatan yang statusnya "Positif" (Prestasi)
+                                    $prestasi = $siswa->catatan->where('jenis_catatan', 'Positif')->sortByDesc('tanggal');
+                                @endphp
+
+                                @if($prestasi->count() > 0)
+                                    <table class="w-full border-collapse border border-gray-400 text-center">
+                                        <thead>
+                                            <tr class="bg-gray-100">
+                                                <th class="border border-gray-400 p-2 w-32">Tanggal</th>
+                                                <th class="border border-gray-400 p-2">Nama Prestasi / Penghargaan</th>
+                                                <th class="border border-gray-400 p-2 w-40">Pencatat</th>
                                             </tr>
-                                        @empty
-                                            <tr><td colspan="4" class="border border-gray-400 p-3 italic text-gray-500">Siswa belum memiliki catatan pelanggaran maupun prestasi.</td></tr>
-                                        @endforelse
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($prestasi as $pres)
+                                                <tr>
+                                                    <td class="border border-gray-400 p-2 align-top">{{ \Carbon\Carbon::parse($pres->tanggal)->format('d/m/Y') }}</td>
+                                                    <td class="border border-gray-400 p-2 text-left align-top">
+                                                        <strong class="block mb-1 text-green-700">{{ $pres->judul_catatan }}</strong>
+                                                        <span class="text-gray-700">{{ $pres->isi_catatan }}</span>
+                                                    </td>
+                                                    <td class="border border-gray-400 p-2 align-top">{{ $pres->pencatat->name ?? '-' }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                @else
+                                    <div class="border border-gray-400 p-4 text-center italic text-gray-500 bg-gray-50">
+                                        Belum ada riwayat prestasi yang dicatat.
+                                    </div>
+                                @endif
                             </div>
 
                             <div class="mb-6 avoid-break">
-                                <h3 class="font-bold bg-gray-200 px-2 py-1 mb-2 uppercase border border-gray-400">G. Riwayat Surat Panggilan Orang Tua</h3>
+                                <h3 class="font-bold bg-gray-200 px-2 py-1 mb-2 uppercase border border-gray-400">G. Catatan Kasus & Pelanggaran</h3>
+                                @php
+                                    // Memfilter catatan yang statusnya "Negatif" atau "Netral" (Buku Kasus)
+                                    $kasus = $siswa->catatan->whereIn('jenis_catatan', ['Negatif', 'Netral'])->sortByDesc('tanggal');
+                                @endphp
+
+                                @if($kasus->count() > 0)
+                                    <table class="w-full border-collapse border border-gray-400 text-center">
+                                        <thead>
+                                            <tr class="bg-gray-100">
+                                                <th class="border border-gray-400 p-2 w-32">Tanggal</th>
+                                                <th class="border border-gray-400 p-2 w-28">Kategori</th>
+                                                <th class="border border-gray-400 p-2">Perihal / Keterangan</th>
+                                                <th class="border border-gray-400 p-2 w-40">Pencatat</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($kasus as $kas)
+                                                <tr>
+                                                    <td class="border border-gray-400 p-2 align-top">{{ \Carbon\Carbon::parse($kas->tanggal)->format('d/m/Y') }}</td>
+                                                    <td class="border border-gray-400 p-2 align-top font-bold {{ $kas->jenis_catatan == 'Negatif' ? 'text-red-700' : 'text-blue-700' }}">{{ $kas->jenis_catatan }}</td>
+                                                    <td class="border border-gray-400 p-2 text-left align-top">
+                                                        <strong class="block mb-1">{{ $kas->judul_catatan }}</strong>
+                                                        <span class="text-gray-700">{{ $kas->isi_catatan }}</span>
+                                                    </td>
+                                                    <td class="border border-gray-400 p-2 align-top">{{ $kas->pencatat->name ?? '-' }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                @else
+                                    <div class="border border-gray-400 p-4 text-center italic text-gray-500 bg-gray-50">
+                                        Siswa tidak memiliki catatan kasus pelanggaran.
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="mb-6 avoid-break">
+                                <h3 class="font-bold bg-gray-200 px-2 py-1 mb-2 uppercase border border-gray-400">H. Riwayat Surat Panggilan Orang Tua</h3>
                                 <table class="w-full border-collapse border border-gray-400 text-center">
                                     <thead>
                                         <tr class="bg-gray-100">
@@ -299,7 +344,7 @@
 
                             <div class="mb-6 avoid-break">
                                 <h3 class="font-bold bg-gray-200 px-2 py-1 mb-2 uppercase border border-gray-400">
-                                    H. Rekapitulasi Ketidakhadiran 
+                                    I. Rekapitulasi Ketidakhadiran 
                                     <span class="font-normal normal-case">(Tahun Ajaran: {{ $tahunAjaranAktif ? $tahunAjaranAktif->nama_tahun . ' ' . $tahunAjaranAktif->semester : 'Belum Diatur' }})</span>
                                 </h3>
                                 
