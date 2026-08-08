@@ -24,7 +24,7 @@
         @media print {
             .no-print { display: none !important; }
             body { background-color: white !important; padding: 0 !important; margin: 0 !important; }
-            .cetak-kertas { width: 100% !important; max-width: 100% !important; min-height: auto !important; padding: margin: 2cm 2cm !important; margin: margin: 2cm 2cm !important; box-shadow: none !important; border-radius: 0 !important; }
+            .cetak-kertas { width: 100% !important; max-width: 100% !important; min-height: auto !important; padding: 0 !important; margin: 0 !important; box-shadow: none !important; border-radius: 0 !important; }
         }
     </style>
 </head>
@@ -36,7 +36,6 @@
     </div>
 
     @php
-        // 1. PENGATURAN KEPSEK
         $isKepalaSekolah = false;
         if ($surat->penandatangan) {
             $jenis = strtolower((string) $surat->penandatangan->jenis_ptk);
@@ -44,15 +43,12 @@
             if (str_contains($jenis, 'kepala sekolah') || str_contains($tugas, 'kepala sekolah')) { $isKepalaSekolah = true; }
         }
 
-        // 2. PENGATURAN LOGO SEKOLAH
         $pengaturan = null;
         try { if (\Illuminate\Support\Facades\Schema::hasTable('pengaturan')) $pengaturan = \App\Models\Pengaturan::first(); } catch (\Exception $e) {}
 
-        // 3. GENERATE URL DENGAN TOKEN KEAMANAN
         $token = substr(md5($surat->nomor_surat_lengkap . config('app.key')), 0, 10);
         $urlVerifikasi = url('/verifikasi-surat/dispensasi?nomor=' . urlencode($surat->nomor_surat_lengkap) . '&token=' . $token);
         
-        // 4. GENERATE QR CODE MURNI (KODE H: HIGH ERROR CORRECTION AGAR TETAP BISA DI-SCAN WALAUPUN TERTIMPA LOGO)
         $qrData = QrCode::format('png')->size(300)->margin(1)->errorCorrection('H')->generate($urlVerifikasi);
         $qrCodeImage = 'data:image/png;base64,' . base64_encode($qrData);
     @endphp
@@ -69,12 +65,13 @@
                         <img src="{{ url('/uploads/' . $pengaturan->logo_dinas) }}" alt="Logo Dinas" class="max-w-full max-h-full object-contain">
                     @endif
                 </div>
-                <div class="flex-1 text-center px-4">
-                    <h1 class="text-[15pt] font-bold uppercase tracking-wider mb-1">PEMERINTAH PROVINSI BANTEN</h1>
-                    <h1 class="text-[15pt] font-bold uppercase tracking-wider leading-tight mb-2">DINAS PENDIDIKAN DAN KEBUDAYAAN</h1>
-                    <h1 class="text-[18pt] font-bold uppercase tracking-wider mt-1" style="font-family: Arial, sans-serif;">{{ $pengaturan->nama_sekolah ?? 'SMA NEGERI 1 MALINGPING' }}</h1>
-                    <p class="text-[10pt] mt-1" style="font-family: 'Times New Roman', Times, serif;">Jalan Raya Binuangeun Km. 02 Malingping Lebak - Banten 42391</p>
-                    <p class="text-[10pt]" style="font-family: 'Times New Roman', Times, serif;">Email: sman1mlp@yahoo.co.id Website: sman1malingping.sch.id</p>
+                <div class="flex-1 text-center px-4" style="line-height: 1.3;">
+                    <h1 class="text-[14pt] font-bold uppercase">PEMERINTAH PROVINSI BANTEN</h1>
+                    <h1 class="text-[14pt] font-bold uppercase">DINAS PENDIDIKAN DAN KEBUDAYAAN</h1>
+                    <h1 class="text-[22pt] font-bold uppercase">{{ $pengaturan->nama_sekolah ?? 'SMA NEGERI 1 MALINGPING' }}</h1>
+                    <p>NPSN: 20601875 AKREDITASI: A (96)</p>
+                    <p>Jl. Raya Bayah KM. 4 No. 39 Malingping – Lebak, 42391</p>
+                    <p style="position: absolute; justify-self: center;">Website: <u>https://sman1malingping.sch.id</u> – Email: <u>info@sman1malingping.sch.id</u></p>
                 </div>
                 <div class="w-24 h-24 flex-shrink-0 flex items-center justify-center">
                     @if(isset($pengaturan) && $pengaturan->logo_sekolah)
