@@ -399,79 +399,126 @@ class PegawaiResource extends Resource
             ])
             ->headerActions([
                 Tables\Actions\Action::make('cetak_rekap')
-                    ->label('Rekap')
+                    ->label('Rekap Data & Jumlah')
                     ->icon('heroicon-o-document-text')
                     ->color('success')
                     ->visible(fn () => auth()->user()->peran === 'admin')
                     ->action(function () {
                         $pegawais = Pegawai::orderBy('nama', 'asc')->get();
-                        
+
+                        $html = '<html xmlns:x="urn:schemas-microsoft-com:office:excel">';
+                        $html .= '<head><meta charset="utf-8">';
+                        $html .= '<style>';
+                        $html .= 'table { border-collapse: collapse; font-family: Arial, sans-serif; font-size: 11px; } ';
+                        $html .= 'th, td { border: .5pt solid windowtext; padding: 4px; vertical-align: middle; } ';
+                        $html .= 'th { background-color: #f3f4f6; font-weight: bold; text-align: center; } ';
+                        $html .= '.str { mso-number-format:"\@"; } '; // Mencegah angka NIK berubah jadi 1.23E+15
+                        $html .= '.title { font-size: 14px; font-weight: bold; text-align: center; border: none; } ';
+                        $html .= '</style></head>';
+                        $html .= '<body>';
+
                         $headers = [
-                            'No', 'Nama Lengkap', 'NIK', 'Jenis Kelamin', 'Jenis PTK', 
-                            'Status Kepegawaian', 'Tugas Utama', 'Pangkat/Golongan'
+                            'No', 'Nama Lengkap', 'NIK', 'No KK', 'NPWP', 'Jenis Kelamin', 'Tempat Lahir', 'Tanggal Lahir',
+                            'No Telepon', 'Email', 'Jenis PTK', 'Status Kepegawaian', 'Tugas Utama', 'NIP', 'NUPTK',
+                            'Pangkat/Golongan', 'Jabatan', 'TMT CPNS/Honorer', 'TMT PNS/PPPK', 'TMT Golongan Terakhir',
+                            'Ijazah', 'Tahun Lulus', 'Jurusan', 'No Rekening', 'Nama Bank', 'Alamat Lengkap'
                         ];
+                        $cols = count($headers);
+
+                        $html .= '<table>';
+                        $html .= '<tr><td colspan="'.$cols.'" class="title" style="border:none;">DAFTAR DATA LENGKAP PEGAWAI</td></tr>';
+                        $html .= '<tr><td colspan="'.$cols.'" style="border:none; text-align:center;">Per Tanggal: ' . now()->isoFormat('D MMMM YYYY') . '</td></tr>';
+                        $html .= '<tr><td colspan="'.$cols.'" style="border:none;"></td></tr>'; // Baris kosong
                         
-                        $callback = function() use ($pegawais, $headers) {
-                            $file = fopen('php://output', 'w');
-                            
-                            fputcsv($file, ['DAFTAR DATA PEGAWAI']);
-                            fputcsv($file, $headers);
-                            
-                            $no = 1;
-                            foreach ($pegawais as $pegawai) {
-                                fputcsv($file, [
-                                    $no++,
-                                    $pegawai->nama,
-                                    $pegawai->nik ? '="' . $pegawai->nik . '"' : '-',
-                                    $pegawai->jenis_kelamin ?? '-',
-                                    $pegawai->jenis_ptk ?? '-',
-                                    $pegawai->status_kepegawaian ?? '-',
-                                    $pegawai->tugas_utama ?? '-',
-                                    $pegawai->pangkat_golongan ?? '-'
-                                ]);
-                            }
-                            
-                            fputcsv($file, []); fputcsv($file, []); fputcsv($file, []);
+                        $html .= '<tr>';
+                        foreach ($headers as $h) { $html .= '<th>' . $h . '</th>'; }
+                        $html .= '</tr>';
 
-                            fputcsv($file, ['REKAPITULASI JUMLAH PEGAWAI']);
-                            fputcsv($file, ['Kategori / Rincian', 'Laki-laki (L)', 'Perempuan (P)', 'Total']);
-                            
-                            $jenisPtkList = ['Kepala Sekolah', 'Guru', 'Tenaga Kependidikan'];
-                            fputcsv($file, ['BERDASARKAN JENIS PTK']);
-                            
-                            foreach ($jenisPtkList as $ptk) {
-                                $l = $pegawais->where('jenis_ptk', $ptk)->where('jenis_kelamin', 'Laki-laki')->count();
-                                $p = $pegawais->where('jenis_ptk', $ptk)->where('jenis_kelamin', 'Perempuan')->count();
-                                fputcsv($file, ["- $ptk", $l, $p, ($l + $p)]);
-                            }
-                            
-                            fputcsv($file, []);
+                        $no = 1;
+                        foreach($pegawais as $p) {
+                            $html .= '<tr>';
+                            $html .= '<td style="text-align:center;">' . $no++ . '</td>';
+                            $html .= '<td>' . htmlspecialchars($p->nama ?? '-') . '</td>';
+                            $html .= '<td class="str">' . htmlspecialchars($p->nik ?? '-') . '</td>';
+                            $html .= '<td class="str">' . htmlspecialchars($p->no_kk ?? '-') . '</td>';
+                            $html .= '<td class="str">' . htmlspecialchars($p->npwp ?? '-') . '</td>';
+                            $html .= '<td style="text-align:center;">' . htmlspecialchars($p->jenis_kelamin ?? '-') . '</td>';
+                            $html .= '<td>' . htmlspecialchars($p->tempat_lahir ?? '-') . '</td>';
+                            $html .= '<td>' . ($p->tanggal_lahir ? date('d/m/Y', strtotime($p->tanggal_lahir)) : '-') . '</td>';
+                            $html .= '<td class="str">' . htmlspecialchars($p->telepon ?? '-') . '</td>';
+                            $html .= '<td>' . htmlspecialchars($p->email ?? '-') . '</td>';
+                            $html .= '<td style="text-align:center;">' . htmlspecialchars($p->jenis_ptk ?? '-') . '</td>';
+                            $html .= '<td style="text-align:center;">' . htmlspecialchars($p->status_kepegawaian ?? '-') . '</td>';
+                            $html .= '<td>' . htmlspecialchars($p->tugas_utama ?? '-') . '</td>';
+                            $html .= '<td class="str">' . htmlspecialchars($p->nip ?? '-') . '</td>';
+                            $html .= '<td class="str">' . htmlspecialchars($p->nuptk ?? '-') . '</td>';
+                            $html .= '<td>' . htmlspecialchars($p->pangkat_golongan ?? '-') . '</td>';
+                            $html .= '<td>' . htmlspecialchars($p->jabatan ?? '-') . '</td>';
+                            $html .= '<td>' . ($p->tmt_cpns_honorer ? date('d/m/Y', strtotime($p->tmt_cpns_honorer)) : '-') . '</td>';
+                            $html .= '<td>' . ($p->tmt_pns_pppk ? date('d/m/Y', strtotime($p->tmt_pns_pppk)) : '-') . '</td>';
+                            $html .= '<td>' . ($p->tmt_golongan_terakhir ? date('d/m/Y', strtotime($p->tmt_golongan_terakhir)) : '-') . '</td>';
+                            $html .= '<td>' . htmlspecialchars($p->pendidikan_ijazah ?? '-') . '</td>';
+                            $html .= '<td style="text-align:center;">' . htmlspecialchars($p->pendidikan_tahun ?? '-') . '</td>';
+                            $html .= '<td>' . htmlspecialchars($p->pendidikan_jurusan ?? '-') . '</td>';
+                            $html .= '<td class="str">' . htmlspecialchars($p->no_rekening ?? '-') . '</td>';
+                            $html .= '<td>' . htmlspecialchars($p->nama_bank ?? '-') . '</td>';
+                            $html .= '<td>' . htmlspecialchars($p->alamat ?? '-') . '</td>';
+                            $html .= '</tr>';
+                        }
+                        $html .= '</table>';
 
-                            $statusList = ['PNS', 'PPPK', 'Honorer', 'GTY/PTY'];
-                            fputcsv($file, ['BERDASARKAN STATUS KEPEGAWAIAN']);
-                            
-                            foreach ($statusList as $status) {
-                                $l = $pegawais->where('status_kepegawaian', $status)->where('jenis_kelamin', 'Laki-laki')->count();
-                                $p = $pegawais->where('status_kepegawaian', $status)->where('jenis_kelamin', 'Perempuan')->count();
-                                fputcsv($file, ["- $status", $l, $p, ($l + $p)]);
-                            }
+                        $html .= '<br><br>';
 
-                            fputcsv($file, []);
+                        $html .= '<table>';
+                        $html .= '<tr><td colspan="4" class="title" style="border:none; text-align:left;">REKAPITULASI JUMLAH PEGAWAI</td></tr>';
+                        $html .= '<tr>';
+                        $html .= '<th style="width:200px;">Kategori / Rincian</th>';
+                        $html .= '<th style="width:100px;">Laki-laki (L)</th>';
+                        $html .= '<th style="width:100px;">Perempuan (P)</th>';
+                        $html .= '<th style="width:100px;">Total</th>';
+                        $html .= '</tr>';
 
-                            $totalL = $pegawais->where('jenis_kelamin', 'Laki-laki')->count();
-                            $totalP = $pegawais->where('jenis_kelamin', 'Perempuan')->count();
-                            fputcsv($file, ['TOTAL KESELURUHAN', $totalL, $totalP, ($totalL + $totalP)]);
-                            
-                            fclose($file);
-                        };
+                        $html .= '<tr><td colspan="4" style="background-color:#dbeafe; font-weight:bold;">BERDASARKAN JENIS PTK</td></tr>';
+                        $jenisPtkList = ['Kepala Sekolah', 'Guru', 'Tenaga Kependidikan'];
+                        foreach ($jenisPtkList as $ptk) {
+                            $l = $pegawais->where('jenis_ptk', $ptk)->where('jenis_kelamin', 'Laki-laki')->count();
+                            $p = $pegawais->where('jenis_ptk', $ptk)->where('jenis_kelamin', 'Perempuan')->count();
+                            $html .= '<tr>';
+                            $html .= '<td>' . $ptk . '</td>';
+                            $html .= '<td style="text-align:center;">' . $l . '</td>';
+                            $html .= '<td style="text-align:center;">' . $p . '</td>';
+                            $html .= '<td style="text-align:center; font-weight:bold;">' . ($l + $p) . '</td>';
+                            $html .= '</tr>';
+                        }
 
-                        return response()->stream($callback, 200, [
-                            "Content-type"        => "text/csv",
-                            "Content-Disposition" => "attachment; filename=rekap_lengkap_pegawai_" . date('Y-m-d') . ".csv",
-                            "Pragma"              => "no-cache",
-                            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
-                            "Expires"             => "0"
-                        ]);
+                        $html .= '<tr><td colspan="4" style="background-color:#dbeafe; font-weight:bold;">BERDASARKAN STATUS KEPEGAWAIAN</td></tr>';
+                        $statusList = ['PNS', 'PPPK', 'Honorer', 'GTY/PTY'];
+                        foreach ($statusList as $status) {
+                            $l = $pegawais->where('status_kepegawaian', $status)->where('jenis_kelamin', 'Laki-laki')->count();
+                            $p = $pegawais->where('status_kepegawaian', $status)->where('jenis_kelamin', 'Perempuan')->count();
+                            $html .= '<tr>';
+                            $html .= '<td>' . $status . '</td>';
+                            $html .= '<td style="text-align:center;">' . $l . '</td>';
+                            $html .= '<td style="text-align:center;">' . $p . '</td>';
+                            $html .= '<td style="text-align:center; font-weight:bold;">' . ($l + $p) . '</td>';
+                            $html .= '</tr>';
+                        }
+
+                        $totalL = $pegawais->where('jenis_kelamin', 'Laki-laki')->count();
+                        $totalP = $pegawais->where('jenis_kelamin', 'Perempuan')->count();
+                        $html .= '<tr>';
+                        $html .= '<td style="font-weight:bold; background-color:#fef9c3;">TOTAL KESELURUHAN</td>';
+                        $html .= '<td style="text-align:center; font-weight:bold; background-color:#fef9c3;">' . $totalL . '</td>';
+                        $html .= '<td style="text-align:center; font-weight:bold; background-color:#fef9c3;">' . $totalP . '</td>';
+                        $html .= '<td style="text-align:center; font-weight:bold; background-color:#fef9c3;">' . ($totalL + $totalP) . '</td>';
+                        $html .= '</tr>';
+
+                        $html .= '</table>';
+                        $html .= '</body></html>';
+
+                        return response($html)
+                            ->header('Content-Type', 'application/vnd.ms-excel; charset=utf-8')
+                            ->header('Content-Disposition', 'attachment; filename="Rekap_Pegawai_Lengkap_' . date('Y-m-d') . '.xls"');
                     }),
 
                 Tables\Actions\Action::make('unduh_template')
@@ -580,7 +627,6 @@ class PegawaiResource extends Resource
                     })
                     ->modalHeading('Impor Data Pegawai (CSV)')
                     ->modalSubmitActionLabel('Mulai Impor'),
-
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
