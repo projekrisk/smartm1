@@ -168,7 +168,7 @@ class JadwalPelajaranResource extends Resource
                     ->relationship('kelas', 'nama_kelas', fn ($query) => $query->orderByRaw('LENGTH(nama_kelas) ASC')->orderBy('nama_kelas', 'ASC'))
                     ->searchable()
                     ->preload(),
-            ], layout: \Filament\Tables\Enums\FiltersLayout::AboveContent) // Filter tampil lega di atas tabel
+            ], layout: \Filament\Tables\Enums\FiltersLayout::AboveContent)
             ->filtersFormColumns(2)
             ->actions([
                 Tables\Actions\ViewAction::make(),

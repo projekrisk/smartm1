@@ -675,7 +675,7 @@ class SiswaResource extends Resource
                         ->label('Lepas Kelas (Kenaikan/Lulus)')
                         ->icon('heroicon-o-arrow-up-on-square')
                         ->color('warning')
-                        ->visible(fn () => in_array(Auth::user()->peran, ['admin', 'staf']))
+                        ->visible(fn () => auth()->user()->peran === 'admin')
                         ->requiresConfirmation()
                         ->form([
                             Forms\Components\TextInput::make('status_riwayat')

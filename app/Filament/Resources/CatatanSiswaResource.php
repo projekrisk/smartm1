@@ -331,8 +331,8 @@ class CatatanSiswaResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make()
-                        ->visible(fn () => Auth::user()->peran === 'admin'),
-                ]),
+                ])
+                ->visible(fn () => auth()->user()->peran === 'admin'),
             ]);
     }
 
