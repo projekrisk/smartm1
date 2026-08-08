@@ -7,16 +7,15 @@
     <style>
         @page { size: A4 portrait; margin: 2cm 2cm; }
         * { box-sizing: border-box; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; font-family: Arial, Helvetica, sans-serif !important; }
-        body { font-size: 11pt; line-height: 1.5; margin: 0; padding: 0; color: black; background-color: #e5e7eb; }
+        body { font-size: 12pt; line-height: 1.4; margin: 0; padding: 0; color: black; background-color: #e5e7eb; }
         .cetak-kertas { width: 21cm; min-height: 29.7cm; padding: 1.5cm; margin: 0 auto; background-color: white; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border-radius: 8px; display: flex; flex-direction: column; }
-        .tabel-kegiatan { width: 100%; margin: 15px 0; }
-        .tabel-kegiatan td { vertical-align: top; padding: 4px 0; }
+        .tabel-kegiatan { width: 100%; margin: 5px 0 15px 0; }
+        .tabel-kegiatan td { vertical-align: top; }
         .tabel-kegiatan td:first-child { width: 160px; }
         .tabel-siswa { width: 100%; border-collapse: collapse; margin-top: 15px; }
         .tabel-siswa th, .tabel-siswa td { border: 1px solid black; padding: 8px 10px; text-align: left; }
         
-        /* Pengaturan Tanda Tangan: Sebelah Kanan & Teks Rata Tengah */
-        .ttd-area { width: 300px; float: right; text-align: left; margin-top: 40px; line-height: 1.3; margin-left: 500px;}
+        .ttd-area { width: 300px; float: right; text-align: center; margin-top: 40px; margin-left: 360px;}
         .ttd-area b { font-size: 11pt; }
         
         .page-break { page-break-before: always; }
@@ -55,11 +54,9 @@
 
     <div class="flex flex-col items-center py-10 print:py-0 print:block">
         
-        <!-- ================= HALAMAN 1: SURAT PENGANTAR ================= -->
         <div class="cetak-kertas">
             
-            <!-- KOP SURAT -->
-            <div class="border-b-4 border-gray-800 pb-3 mb-5 flex items-center justify-between avoid-break">
+            <div class="border-b-4 border-gray-800 pb-6 mb-5 flex items-center justify-between avoid-break">
                 <div class="w-24 h-24 flex-shrink-0 flex items-center justify-center">
                     @if(isset($pengaturan) && $pengaturan->logo_dinas)
                         <img src="{{ url('/uploads/' . $pengaturan->logo_dinas) }}" alt="Logo Dinas" class="max-w-full max-h-full object-contain">
@@ -80,25 +77,20 @@
                 </div>
             </div>
 
-            <!-- ISI SURAT -->
-            
-            <!-- Format Judul Kiri -->
-            <table style="line-height: 1.5; margin-bottom: 15px;">
+            <table style="margin-bottom: 15px;">
                 <tr><td style="width: 80px; vertical-align: top;">Nomor</td><td style="width: 15px; vertical-align: top;">:</td><td>{{ $surat->nomor_surat_lengkap }}</td></tr>
                 <tr><td style="vertical-align: top;">Lampiran</td><td style="vertical-align: top;">:</td><td>1 (satu) Berkas</td></tr>
                 <tr><td style="vertical-align: top;">Perihal</td><td style="vertical-align: top;">:</td><td><b>Dispensasi Belajar</b></td></tr>
             </table>
 
-            <!-- Tujuan Surat -->
-            <div style="margin-bottom: 20px; line-height: 1.5;">
+            <div style="margin-bottom: 20px;">
                 Kepada Yth.<br>
-                Bapak/Ibu Guru <b>{{ $pengaturan->nama_sekolah ?? 'SMA Negeri 1 Malingping' }}</b><br>
+                Bapak/Ibu Guru {{ $pengaturan->nama_sekolah ?? 'SMA Negeri 1 Malingping' }}<br>
                 Di Tempat
             </div>
 
-            <!-- Paragraf Pembuka -->
             <p style="text-align: justify; margin-bottom: 10px;">Dengan hormat,</p>
-            <p style="text-indent: 1cm; text-align: justify; margin-bottom: 10px;">
+            <p style="text-align: justify; margin-bottom: 10px;">
                 Bersama surat ini, kami memberikan dispensasi belajar kepada peserta didik sebagaimana tercantum dalam Lampiran untuk mengikuti kegiatan sebagai berikut:
             </p>
 
@@ -117,26 +109,22 @@
                 </tr>
             </table>
 
-            <p style="text-indent: 1cm; text-align: justify; margin-bottom: 10px;">
+            <p style="text-align: justify; margin-bottom: 10px;">
                 Selama mengikuti kegiatan tersebut, peserta didik diberikan dispensasi dari kegiatan pembelajaran di sekolah sesuai waktu pelaksanaan kegiatan. Peserta didik tetap berkewajiban mengikuti ketentuan yang berlaku di sekolah serta menyelesaikan tugas pembelajaran yang ditinggalkan sesuai arahan guru mata pelajaran.
             </p>
-            <p style="text-indent: 1cm; text-align: justify;">Demikian surat dispensasi belajar ini dibuat untuk dipergunakan sebagaimana mestinya.</p>
+            <p style="text-align: justify;">Demikian surat dispensasi belajar ini dibuat untuk dipergunakan sebagaimana mestinya.</p>
 
-            <!-- BLOK TANDA TANGAN 1 DENGAN LOGO BACKGROUND PUTIH -->
             <div class="ttd-area avoid-break">
-                Malingping, {{ \Carbon\Carbon::parse($surat->tanggal_surat)->isoFormat('D MMMM Y') }}<br><br>
+                Malingping, {{ \Carbon\Carbon::parse($surat->tanggal_surat)->isoFormat('D MMMM Y') }}<br>
                 @if($isKepalaSekolah)
                     Kepala {{ $pengaturan->nama_sekolah ?? 'SMA Negeri 1 Malingping' }}<br>
                 @else
                     a.n. Kepala Sekolah<br>Wakil Kepala Sekolah Bidang Kesiswaan<br>
                 @endif
 
-                <!-- WADAH QR CODE -->
-                <div style="position: relative; margin: 8px 0; display: block; padding: 4px; background: white; border: 1px solid #ddd; width: 105px; height: 105px;">
-                    <!-- GAMBAR QR -->
+                <div style="position: relative; margin: auto; display: block; padding: 4px; width: 105px; height: 105px;">
                     <img src="{{ $qrCodeImage }}" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain;">
                     
-                    <!-- 🌟 OVERLAY LOGO DENGAN BACKGROUND PUTIH (Ukuran Besar & Rapi) -->
                     @if(isset($pengaturan) && $pengaturan->logo_sekolah)
                         <div style="position: absolute; top: 50%; left: 50%; width: 38px; height: 38px; margin-top: -19px; margin-left: -19px; background: white; padding: 3px; border-radius: 10px; border:1px solid #d7cccc;">
                             <img src="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
@@ -151,11 +139,9 @@
             <div style="clear: both;"></div>
         </div>
 
-
-        <!-- ================= HALAMAN 2: LAMPIRAN SISWA ================= -->
         <div class="cetak-kertas page-break print:mt-0 mt-10">
             
-            <h3 style="text-align: left; margin-bottom: 15px; text-decoration: underline; font-size: 12pt;">LAMPIRAN SURAT DISPENSASI</h3>
+            <h3 style="text-align: left; margin-bottom: 10px; text-decoration: underline; font-size: 14pt;">LAMPIRAN SURAT DISPENSASI</h3>
             
             <table style="width: 100%; margin-bottom: 20px;">
                 <tr><td style="width: 120px;">Nomor Surat</td><td style="width: 15px;">:</td><td class="font-bold">{{ $surat->nomor_surat_lengkap }}</td></tr>
@@ -166,9 +152,9 @@
                 <thead>
                     <tr style="background-color: #f3f4f6;">
                         <th style="width: 5%; text-align: center;">No</th>
-                        <th style="width: 25%;">NISN / NIS</th>
-                        <th style="width: 50%;">Nama Peserta Didik</th>
-                        <th style="width: 20%; text-align: center;">Kelas</th>
+                        <th style="width: 30%;">NISN / NIS</th>
+                        <th style="width: 60%;">Nama Peserta Didik</th>
+                        <th style="width: 15%; text-align: center;">Kelas</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -176,14 +162,13 @@
                     <tr class="avoid-break">
                         <td style="text-align: center;">{{ $index + 1 }}</td>
                         <td>{{ $s->nisn ?? '-' }} / {{ $s->nis ?? '-' }}</td>
-                        <td class="uppercase font-semibold">{{ $s->nama_lengkap }}</td>
+                        <td style="text-align: left;" class="uppercase font-semibold">{{ $s->nama_lengkap }}</td>
                         <td style="text-align: center; font-weight: bold;">{{ $s->kelas->nama_kelas ?? '-' }}</td>
                     </tr>
                     @endforeach
                 </tbody>
             </table>
 
-            <!-- BLOK TANDA TANGAN 2 DENGAN LOGO BACKGROUND PUTIH (DI HALAMAN LAMPIRAN) -->
             <div class="ttd-area avoid-break" style="margin-top: 40px;">
                 Malingping, {{ \Carbon\Carbon::parse($surat->tanggal_surat)->isoFormat('D MMMM Y') }}<br>
                 @if($isKepalaSekolah)
@@ -192,12 +177,9 @@
                     a.n. Kepala Sekolah<br>Wakil Kepala Sekolah Bidang Kesiswaan<br>
                 @endif
 
-                <!-- WADAH QR CODE -->
                 <div style="position: relative; margin: 8px auto; display: block; padding: 4px; background: white; border: 1px solid #ddd; border-radius: 4px; width: 105px; height: 105px;">
-                    <!-- GAMBAR QR -->
                     <img src="{{ $qrCodeImage }}" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain;">
                     
-                    <!-- 🌟 OVERLAY LOGO DENGAN BACKGROUND PUTIH -->
                     @if(isset($pengaturan) && $pengaturan->logo_sekolah)
                         <div style="position: absolute; top: 50%; left: 50%; width: 38px; height: 38px; margin-top: -19px; margin-left: -19px; background: white; padding: 3px; border-radius: 5px;">
                             <img src="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">

@@ -36,8 +36,9 @@ class RekapKehadiranSiswa extends Page
         $listAbsen = collect();
 
         if ($siswa && $ta) {
+            
             $absenSemester = KehadiranHarian::where('siswa_id', $siswa->id)
-                ->whereIn('status', ['Sakit', 'Izin', 'Alpa', 'Dispensasi']) 
+                ->whereIn('status', ['Sakit', 'Izin', 'Alpa']) 
                 ->whereHas('rekapKehadiran', function($q) use ($ta) {
                     $q->where('tahun_ajaran_id', $ta->id);
                 })->count();
@@ -50,8 +51,9 @@ class RekapKehadiranSiswa extends Page
                       ->whereYear('tanggal', now()->year);
                 });
             
-            $absenBulan = $queryBulan->count();
             $listAbsen = $queryBulan->get()->sortByDesc('rekapKehadiran.tanggal');
+            
+            $absenBulan = $listAbsen->where('status', '!=', 'Dispensasi')->count();
         }
 
         return [

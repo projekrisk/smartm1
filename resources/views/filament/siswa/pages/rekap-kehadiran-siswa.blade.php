@@ -40,12 +40,16 @@
             .android-content::-webkit-scrollbar { display: none; }
             
             .badge-status { min-width: 65px; text-align: center; padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: inline-block; }
+            
             .badge-sakit { background-color: #fef3c7; color: #d97706; border: 1px solid #fde68a; }
             .badge-izin { background-color: #e0e7ff; color: #4f46e5; border: 1px solid #c7d2fe; }
             .badge-alpa { background-color: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
+            .badge-dispensasi { background-color: #d1fae5; color: #059669; border: 1px solid #a7f3d0; }
+            
             .dark .badge-sakit { background-color: rgba(217, 119, 6, 0.2); color: #fcd34d; border-color: rgba(253, 230, 138, 0.2); }
             .dark .badge-izin { background-color: rgba(79, 70, 229, 0.2); color: #a5b4fc; border-color: rgba(199, 210, 254, 0.2); }
             .dark .badge-alpa { background-color: rgba(220, 38, 38, 0.2); color: #fca5a5; border-color: rgba(254, 202, 202, 0.2); }
+            .dark .badge-dispensasi { background-color: rgba(16, 185, 129, 0.2); color: #6ee7b7; border-color: rgba(5, 150, 105, 0.2); }
         </style>
     </div>
 
@@ -102,7 +106,7 @@
                         </div>
 
                         <div style="flex-shrink: 0; margin-left: 12px;">
-                            <div class="badge-status @if($absen->status == 'Sakit') badge-sakit @elseif($absen->status == 'Izin') badge-izin @else badge-alpa @endif">
+                            <div class="badge-status @if($absen->status == 'Sakit') badge-sakit @elseif($absen->status == 'Izin') badge-izin @elseif($absen->status == 'Dispensasi') badge-dispensasi @else badge-alpa @endif">
                                 {{ $absen->status }}
                             </div>
                         </div>
