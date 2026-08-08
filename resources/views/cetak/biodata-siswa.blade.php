@@ -41,8 +41,16 @@
             background-repeat: repeat;
         }
 
+        .cetak-kertas {
+            position: relative;
+            padding-bottom: 2.5cm !important;
+        }
+        
         .print-footer {
-            margin-top: 20px;
+            position: absolute;
+            bottom: 1cm;
+            left: 1cm;
+            right: 1cm;
             border-top: 1px solid #1f2937;
             padding-top: 10px;
         }
@@ -56,25 +64,23 @@
             }
             .cetak-kertas {
                 display: block !important;
+                position: static !important;
                 width: 100% !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 box-shadow: none !important;
                 min-height: auto !important;
-                overflow: visible !important;
             }
             
             .print-footer {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                margin-top: 0;
-                background-color: white;
+                position: fixed !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
             }
             
             .footer-space {
-                height: 70px;
+                height: 60px;
             }
         }
     </style>
@@ -112,7 +118,7 @@
 
     <div class="flex justify-center py-10 print:py-0 print:block">
         
-        <div class="cetak-kertas bg-white shadow-2xl w-[21cm] p-[1cm] mx-auto relative block">
+        <div class="cetak-kertas bg-white shadow-2xl w-[21cm] min-h-[29.7cm] p-[1cm] mx-auto relative block">
             
             <div class="watermark-bg" style="background-image: url('data:image/svg+xml;base64,{{ $base64Svg }}');"></div>
 
@@ -346,7 +352,7 @@
             </table>
 
             <div class="print-footer relative z-20">
-                <div class="text-gray-700 italic text-[10pt]">
+                <div class="text-gray-700 text-[10pt]">
                     Dicetak pada Smart-M1 {{ $pengaturan->nama_sekolah ?? 'Sekolah' }} | Waktu Cetak: {{ now()->isoFormat('D MMMM Y - HH:mm') }} WIB
                 </div>
             </div>
