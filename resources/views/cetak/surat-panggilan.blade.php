@@ -9,9 +9,11 @@
         * { box-sizing: border-box; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; font-family: Arial, Helvetica, sans-serif !important; }
         body { font-size: 11pt; line-height: 1.5; margin: 0; padding: 0; color: black; background-color: #e5e7eb; }
         .cetak-kertas { width: 21cm; min-height: 29.7cm; padding: 1.5cm; margin: 0 auto; background-color: white; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border-radius: 8px; display: flex; flex-direction: column; }
-        .tabel-kegiatan { width: 100%; margin: 15px 0; }
-        .tabel-kegiatan td { vertical-align: top; padding: 4px 0; }
-        .tabel-kegiatan td:first-child { width: 180px; }
+        
+        .tabel-data { width: 100%; margin: 10px 0 10px 1cm; }
+        .tabel-data td { vertical-align: top; padding: 4px 0; }
+        .tabel-data td:first-child { width: 180px; }
+
         .ttd-area { width: 300px; float: right; text-align: center; margin-top: 20px; line-height: 1.3; }
         .ttd-area b { font-size: 11pt; }
         @media print {
@@ -38,6 +40,14 @@
         
         $qrData = QrCode::format('png')->size(300)->margin(1)->errorCorrection('H')->generate($urlVerifikasi);
         $qrCodeImage = 'data:image/png;base64,' . base64_encode($qrData);
+
+        // 🌟 LOGIKA TANDA TANGAN DINAMIS (SEPERTI DISPENSASI)
+        $isKepalaSekolah = false;
+        if ($surat->penandatangan) {
+            $jenis = strtolower((string) $surat->penandatangan->jenis_ptk);
+            $tugas = strtolower(json_encode($surat->penandatangan->tugas_tambahan));
+            if (str_contains($jenis, 'kepala sekolah') || str_contains($tugas, 'kepala sekolah')) { $isKepalaSekolah = true; }
+        }
     @endphp
 
     <div class="flex flex-col items-center py-10 print:py-0 print:block">
@@ -73,16 +83,29 @@
             <div style="margin-bottom: 20px; line-height: 1.5;">
                 Kepada Yth.<br>
                 Bapak/Ibu Orang Tua / Wali Murid dari:<br>
-                Siswa bernama <b>{{ $surat->siswa->nama_lengkap ?? '-' }}</b> (Kelas {{ $surat->siswa->kelas->nama_kelas ?? '-' }})<br>
+                Siswa bernama <b>{{ $surat->siswa->nama_lengkap ?? '-' }}</b><br>
                 Di Tempat
             </div>
 
             <p style="text-align: justify; margin-bottom: 10px;">Dengan hormat,</p>
             <p style="text-indent: 1cm; text-align: justify; margin-bottom: 10px;">
-                Sehubungan dengan adanya hal penting yang perlu kami sampaikan terkait perkembangan dan evaluasi belajar putra/putri Bapak/Ibu di sekolah, maka bersama surat ini kami mengharap kehadiran Bapak/Ibu pada:
+                Sehubungan dengan adanya hal penting yang perlu kami sampaikan terkait perkembangan dan evaluasi belajar putra/putri Bapak/Ibu di sekolah, maka dengan ini kami memanggil Orang Tua/Wali Murid dari siswa:
             </p>
 
-            <table class="tabel-kegiatan" style="margin-left: 1cm;">
+            <!-- 🌟 IDENTITAS SISWA LENGKAP -->
+            <table class="tabel-data">
+                <tr><td>Nama</td><td>:</td><td class="font-bold uppercase">{{ $surat->siswa->nama_lengkap ?? '-' }}</td></tr>
+                <tr><td>Tempat, Tanggal Lahir</td><td>:</td><td>{{ $surat->siswa->tempat_lahir ?? '-' }}, {{ $surat->siswa->tanggal_lahir ? \Carbon\Carbon::parse($surat->siswa->tanggal_lahir)->isoFormat('D MMMM Y') : '-' }}</td></tr>
+                <tr><td>NIS / NISN</td><td>:</td><td>{{ $surat->siswa->nis ?? '-' }} / {{ $surat->siswa->nisn ?? '-' }}</td></tr>
+                <tr><td>Kelas</td><td>:</td><td class="font-bold">{{ $surat->siswa->kelas->nama_kelas ?? '-' }}</td></tr>
+            </table>
+
+            <p style="text-indent: 1cm; text-align: justify; margin-bottom: 10px;">
+                Untuk dapat hadir pada:
+            </p>
+
+            <!-- JADWAL PERTEMUAN -->
+            <table class="tabel-data">
                 <tr><td>Hari/Tanggal</td><td>:</td><td class="font-bold">{{ \Carbon\Carbon::parse($surat->tanggal_panggilan)->isoFormat('dddd, D MMMM Y') }}</td></tr>
                 <tr><td>Pukul</td><td>:</td><td>{{ date('H:i', strtotime($surat->waktu_panggilan)) }} WIB s.d Selesai</td></tr>
                 <tr><td>Tempat</td><td>:</td><td class="font-bold">{{ $surat->tempat_pertemuan }}</td></tr>
@@ -94,10 +117,14 @@
             </p>
             <p style="text-indent: 1cm; text-align: justify;">Demikian surat panggilan ini kami sampaikan. Atas perhatian dan kerja samanya, kami ucapkan terima kasih.</p>
 
-            <!-- TANDA TANGAN DENGAN QR CODE BERLOGO -->
+            <!-- 🌟 TANDA TANGAN (DINAMIS SEPERTI DISPENSASI) -->
             <div class="ttd-area">
                 Malingping, {{ \Carbon\Carbon::parse($surat->tanggal_surat)->isoFormat('D MMMM Y') }}<br>
-                a.n. Kepala Sekolah<br>Wakil Kepala Sekolah Bidang Kesiswaan<br>
+                @if($isKepalaSekolah)
+                    Kepala {{ $pengaturan->nama_sekolah ?? 'SMA Negeri 1 Malingping' }}<br>
+                @else
+                    a.n. Kepala Sekolah<br>Wakil Kepala Sekolah Bidang Kesiswaan<br>
+                @endif
 
                 <div style="position: relative; margin: 8px auto; display: block; padding: 4px; background: white; border: 1px solid #ddd; border-radius: 4px; width: 105px; height: 105px;">
                     <img src="{{ $qrCodeImage }}" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain;">
@@ -109,8 +136,8 @@
                 </div>
                 <div style="font-size: 7.5pt; color: #666; margin-bottom: 5px;">Dokumen TTE Valid</div>
 
-                <b><u>M. Staf Kesiswaan, S.Pd</u></b><br>
-                NIP. 19800101 200501 1 001
+                <b><u>{{ $surat->penandatangan->nama ?? '........................................' }}</u></b><br>
+                NIP. {{ $surat->penandatangan->nip ?? '-' }}
             </div>
             <div style="clear: both;"></div>
 

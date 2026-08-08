@@ -19,4 +19,9 @@ class SuratPanggilan extends Model
     {
         return $this->belongsTo(User::class, 'dibuat_oleh');
     }
+
+    public function penandatangan()
+    {
+        return $this->belongsTo(Pegawai::class, 'penandatangan_id');
+    }
 }

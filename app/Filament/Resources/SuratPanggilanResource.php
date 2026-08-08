@@ -6,6 +6,7 @@ use App\Filament\Resources\SuratPanggilanResource\Pages;
 use App\Models\SuratPanggilan;
 use App\Models\Pegawai;
 use App\Models\Kelas;
+use App\Models\Siswa;
 use Filament\Forms;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
@@ -27,21 +28,21 @@ class SuratPanggilanResource extends Resource
     protected static ?string $modelLabel = 'Surat Panggilan';
     protected static ?int $navigationSort = 14;
 
-    // 🌟 1. FITUR BADGE NOTIFIKASI DI SIDEBAR MENU
+    // 🌟 BADGE NOTIFIKASI SIDEBAR
     public static function getNavigationBadge(): ?string
     {
         $user = Auth::user();
         
-        // Menghitung jumlah surat yang berstatus "Dibuat" (Belum Selesai)
         if ($user->peran === 'guru') {
-            $pegawai = Pegawai::where('user_id', $user->id)->first();
-            if ($pegawai) {
-                $kelasIds = Kelas::where('wali_kelas_id', $pegawai->id)->pluck('id')->toArray();
-                if (!empty($kelasIds)) {
+            $pegawaiId = Pegawai::where('user_id', $user->id)->value('id');
+            if ($pegawaiId) {
+                $kelasIds = Kelas::where('wali_kelas_id', $pegawaiId)->pluck('id');
+                $siswaIds = Siswa::whereIn('kelas_id', $kelasIds)->pluck('id');
+                
+                if ($siswaIds->isNotEmpty()) {
                     $count = static::getModel()::where('status', 'Dibuat')
-                        ->whereHas('siswa', function ($q) use ($kelasIds) {
-                            $q->whereIn('kelas_id', $kelasIds);
-                        })->count();
+                        ->whereIn('siswa_id', $siswaIds)
+                        ->count();
                     return $count > 0 ? (string) $count : null;
                 }
             }
@@ -56,12 +57,12 @@ class SuratPanggilanResource extends Resource
         return null;
     }
 
-    // Memberikan warna merah menyala pada badge notifikasi
     public static function getNavigationBadgeColor(): ?string
     {
         return 'danger';
     }
 
+    // 🌟 PENGATURAN HAK AKSES
     public static function canViewAny(): bool
     {
         return in_array(Auth::user()->peran, ['admin', 'staf', 'guru']);
@@ -82,23 +83,22 @@ class SuratPanggilanResource extends Resource
         return in_array(Auth::user()->peran, ['admin', 'staf']);
     }
 
+    // 🌟 FILTER DATA (Hanya Tampilkan Siswa Binaan Wali Kelas ybs)
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();
         $user = Auth::user();
         
-        // 🌟 2. PERBAIKAN QUERY (Wajib menggunakan toArray())
         if ($user->peran === 'guru') {
-            $pegawai = Pegawai::where('user_id', $user->id)->first();
-            if ($pegawai) {
-                $kelasIds = Kelas::where('wali_kelas_id', $pegawai->id)->pluck('id')->toArray();
+            $pegawaiId = Pegawai::where('user_id', $user->id)->value('id');
+            if ($pegawaiId) {
+                $kelasIds = Kelas::where('wali_kelas_id', $pegawaiId)->pluck('id');
+                $siswaIds = Siswa::whereIn('kelas_id', $kelasIds)->pluck('id');
                 
-                if (!empty($kelasIds)) {
-                    $query->whereHas('siswa', function ($q) use ($kelasIds) {
-                        $q->whereIn('kelas_id', $kelasIds);
-                    });
+                if ($siswaIds->isNotEmpty()) {
+                    $query->whereIn('siswa_id', $siswaIds);
                 } else {
-                    $query->where('id', 0); // Jika tidak punya kelas binaan, tabel kosong.
+                    $query->where('id', 0); 
                 }
             } else {
                 $query->where('id', 0);
@@ -108,6 +108,7 @@ class SuratPanggilanResource extends Resource
         return $query->orderBy('created_at', 'desc');
     }
 
+    // 🌟 FORM INPUT
     public static function form(Form $form): Form
     {
         $isGuru = Auth::user()->peran === 'guru';
@@ -116,6 +117,7 @@ class SuratPanggilanResource extends Resource
             ->schema([
                 Forms\Components\Section::make('Informasi Surat')
                     ->schema([
+                        // Baris 1: 3 Kolom
                         Forms\Components\Grid::make(3)->schema([
                             Forms\Components\DatePicker::make('tanggal_surat')
                                 ->label('Tanggal Surat Dibuat')
@@ -132,7 +134,7 @@ class SuratPanggilanResource extends Resource
                                     self::generateNomorSurat($get, $set);
                                 })
                                 ->disabled($isGuru)
-                                ->dehydrated(false),
+                                ->dehydrated(false), // Tidak dimasukkan ke DB
 
                             Forms\Components\TextInput::make('nomor_surat')
                                 ->label('Format Lengkap (Otomatis)')
@@ -140,13 +142,22 @@ class SuratPanggilanResource extends Resource
                                 ->unique(ignoreRecord: true)
                                 ->maxLength(255)
                                 ->disabled()
-                                ->dehydrated(),
+                                ->dehydrated(), // Wajib disave ke DB
                         ]),
 
-                        Forms\Components\Grid::make(2)->schema([
+                        // Baris 2: 3 Kolom (Siswa, Penandatangan, Status)
+                        Forms\Components\Grid::make(3)->schema([
                             Forms\Components\Select::make('siswa_id')
                                 ->label('Nama Siswa')
                                 ->relationship('siswa', 'nama_lengkap')
+                                ->searchable()
+                                ->preload()
+                                ->required()
+                                ->disabled($isGuru),
+
+                            Forms\Components\Select::make('penandatangan_id')
+                                ->label('Penandatangan Surat')
+                                ->relationship('penandatangan', 'nama')
                                 ->searchable()
                                 ->preload()
                                 ->required()
@@ -197,16 +208,20 @@ class SuratPanggilanResource extends Resource
             ]);
     }
 
+    // 🌟 FUNGSI PENOMORAN (Index Statis + Otomatis Tahun)
     public static function generateNomorSurat(Get $get, Set $set)
     {
         $urut = $get('nomor_urut');
         
         if ($urut) {
+            $indexStatis = '421.3'; 
             $tahun = date('Y');
-            $set('nomor_surat', "{$urut}/SMAN.01-MLP/{$tahun}");
+            // Hasil: 421.3/123/SMA.01-MLP/2026
+            $set('nomor_surat', "{$indexStatis}/{$urut}/SMA.01-MLP/{$tahun}");
         }
     }
 
+    // 🌟 TABEL DATA
     public static function table(Table $table): Table
     {
         return $table
@@ -214,8 +229,7 @@ class SuratPanggilanResource extends Resource
                 Tables\Columns\TextColumn::make('nomor_surat')
                     ->label('No. Surat')
                     ->searchable()
-                    ->sortable()
-                    ->formatStateUsing(fn ($state) => "421.3/{$state}"),
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('siswa.nama_lengkap')
                     ->label('Siswa')
                     ->searchable()
