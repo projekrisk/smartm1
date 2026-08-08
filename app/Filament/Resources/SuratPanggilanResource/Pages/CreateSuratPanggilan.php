@@ -9,4 +9,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateSuratPanggilan extends CreateRecord
 {
     protected static string $resource = SuratPanggilanResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }

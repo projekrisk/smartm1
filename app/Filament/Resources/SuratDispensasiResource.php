@@ -20,13 +20,11 @@ class SuratDispensasiResource extends Resource
 
     protected static ?string $slug = 'surat-dispensasi';
 
-    // Hak Akses Global Resource (Hanya Admin & Staf)
     public static function canViewAny(): bool
     {
         return in_array(auth()->user()->peran, ['admin', 'staf']);
     }
 
-    // 🌟 KUNCI UTAMA: MEMBUAT 2 MENU CUSTOM DI SIDEBAR
     public static function getNavigationItems(): array
     {
         return [
@@ -117,7 +115,6 @@ class SuratDispensasiResource extends Resource
             ]);
     }
 
-    // 🌟 FUNGSI NOMOR SURAT DISEDERHANAKAN (Tanpa Kategori)
     public static function generateNomorSurat(Get $get, Set $set)
     {
         $nomor = $get('nomor_urut');
@@ -127,7 +124,6 @@ class SuratDispensasiResource extends Resource
             $kodePrefix = '400.03.08'; 
             $kodeSuffix = 'SMA.01-MLP';
 
-            // Hasil: 400.03.08/123/SMA.01-MLP/2026
             $nomorLengkap = "{$kodePrefix}/{$nomor}/{$kodeSuffix}/{$tahun}";
             $set('nomor_surat_lengkap', $nomorLengkap);
         }

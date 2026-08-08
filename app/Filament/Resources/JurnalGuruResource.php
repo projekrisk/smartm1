@@ -85,48 +85,51 @@ class JurnalGuruResource extends Resource
                             ->searchable()
                             ->live()
                             ->afterStateUpdated(function ($state, callable $set) {
-                                $set('kelas_id', null);
                                 $set('mata_pelajaran_id', null);
+                                $set('kelas_id', null);
                                 $set('waktu_jadwal', null);
+                                $set('jam_mulai', null);
+                                $set('jam_selesai', null);
                             })
                             ->required()
                             ->columnSpanFull()
                             ->visible(fn () => in_array(Auth::user()->peran, ['admin', 'staf'])),
 
-                        Forms\Components\Select::make('kelas_id')
-                            ->label('1. Pilih Kelas')
+                        Forms\Components\Select::make('mata_pelajaran_id')
+                            ->label('1. Pilih Mata Pelajaran')
                             ->options(function (callable $get) {
                                 $guruId = Auth::user()->peran === 'guru' ? Auth::id() : $get('guru_id');
                                 if (!$guruId) return [];
                                 
-                                return JadwalPelajaran::with('kelas')
+                                return JadwalPelajaran::with('mataPelajaran')
                                     ->where('guru_id', $guruId)
                                     ->get()
-                                    ->pluck('kelas.nama_kelas', 'kelas_id')
+                                    ->pluck('mataPelajaran.nama_pelajaran', 'mata_pelajaran_id')
                                     ->unique();
                             })
                             ->live()
                             ->afterStateUpdated(function ($state, callable $set) {
-                                $set('mata_pelajaran_id', null);
+                                $set('kelas_id', null);
                                 $set('waktu_jadwal', null);
                                 $set('jam_mulai', null);
                                 $set('jam_selesai', null);
                             })
                             ->required(),
 
-                        Forms\Components\Select::make('mata_pelajaran_id')
-                            ->label('2. Pilih Mata Pelajaran')
+                        Forms\Components\Select::make('kelas_id')
+                            ->label('2. Pilih Kelas')
                             ->options(function (callable $get) {
                                 $guruId = Auth::user()->peran === 'guru' ? Auth::id() : $get('guru_id');
-                                $kelasId = $get('kelas_id');
+                                $mapelId = $get('mata_pelajaran_id');
                                 
-                                if (!$guruId || !$kelasId) return [];
+                                if (!$guruId || !$mapelId) return [];
                                 
-                                return JadwalPelajaran::with('mataPelajaran')
+                                return JadwalPelajaran::with('kelas')
                                     ->where('guru_id', $guruId)
-                                    ->where('kelas_id', $kelasId)
+                                    ->where('mata_pelajaran_id', $mapelId)
                                     ->get()
-                                    ->pluck('mataPelajaran.nama_pelajaran', 'mata_pelajaran_id')
+                                    ->sortBy('kelas.nama_kelas')
+                                    ->pluck('kelas.nama_kelas', 'kelas_id')
                                     ->unique();
                             })
                             ->live()
@@ -178,10 +181,14 @@ class JurnalGuruResource extends Resource
 
                         Forms\Components\TimePicker::make('jam_mulai')
                             ->label('Jam Masuk')
+                            ->disabled()
+                            ->dehydrated()
                             ->required(),
 
                         Forms\Components\TimePicker::make('jam_selesai')
                             ->label('Jam Keluar')
+                            ->disabled()
+                            ->dehydrated()
                             ->required(),
                             
                     ])->columns(3),

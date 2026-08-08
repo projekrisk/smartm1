@@ -26,7 +26,7 @@
 
             .theme-bg-smt { background-color: #fafafa; }
             .dark .theme-bg-smt { background-color: #253145; }
-            .theme-bg-mpl { background-color: #ffffff; }
+            .theme-bg-mpl { background-color: #f8fafc; }
             .dark .theme-bg-mpl { background-color: #131c31; }
 
             .theme-menu-tab { background-color:  #ffffff; }
