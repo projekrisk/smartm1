@@ -27,7 +27,6 @@ class SuratPanggilanResource extends Resource
     protected static ?string $modelLabel = 'Surat Panggilan';
     protected static ?int $navigationSort = 14;
 
-    // 🌟 1. ATUR HAK AKSES (Guru/Wali Kelas bisa melihat & mengedit)
     public static function canViewAny(): bool
     {
         return in_array(Auth::user()->peran, ['admin', 'staf', 'guru']);
@@ -48,7 +47,6 @@ class SuratPanggilanResource extends Resource
         return in_array(Auth::user()->peran, ['admin', 'staf']);
     }
 
-    // 🌟 2. FILTER DATA (Wali Kelas HANYA melihat siswa kelasnya)
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();
@@ -57,14 +55,12 @@ class SuratPanggilanResource extends Resource
         if ($user->peran === 'guru') {
             $pegawai = Pegawai::where('user_id', $user->id)->first();
             if ($pegawai) {
-                // Cari kelas dimana pegawai ini menjadi wali kelas
                 $kelasIds = Kelas::where('wali_kelas_id', $pegawai->id)->pluck('id');
-                
                 $query->whereHas('siswa', function ($q) use ($kelasIds) {
                     $q->whereIn('kelas_id', $kelasIds);
                 });
             } else {
-                $query->where('id', 0); // Sembunyikan jika bukan wali kelas
+                $query->where('id', 0);
             }
         }
         
@@ -73,23 +69,35 @@ class SuratPanggilanResource extends Resource
 
     public static function form(Form $form): Form
     {
-        // Pengecekan apakah user adalah guru
         $isGuru = Auth::user()->peran === 'guru';
 
         return $form
             ->schema([
                 Forms\Components\Section::make('Informasi Surat')
                     ->schema([
-                        // 🌟 3. FITUR PENOMORAN OTOMATIS
-                        Forms\Components\TextInput::make('nomor_urut')
-                            ->label('Nomor Surat (Input Angka Saja)')
-                            ->numeric()
-                            ->dehydrated(false) // Tidak disimpan ke database
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(function (Get $get, Set $set) {
-                                self::generateNomorSurat($get, $set);
-                            })
-                            ->disabled($isGuru),
+                        Forms\Components\Grid::make(2)->schema([
+                            Forms\Components\TextInput::make('nomor_index')
+                                ->label('Kode Index Surat')
+                                ->default('421.3')
+                                ->placeholder('Contoh: 421.3')
+                                ->live(onBlur: true)
+                                ->afterStateUpdated(function (Get $get, Set $set) {
+                                    self::generateNomorSurat($get, $set);
+                                })
+                                ->disabled($isGuru)
+                                ->dehydrated(false),
+
+                            Forms\Components\TextInput::make('nomor_urut')
+                                ->label('Nomor Urut Surat')
+                                ->numeric()
+                                ->placeholder('Contoh: 001')
+                                ->live(onBlur: true)
+                                ->afterStateUpdated(function (Get $get, Set $set) {
+                                    self::generateNomorSurat($get, $set);
+                                })
+                                ->disabled($isGuru)
+                                ->dehydrated(false),
+                        ])->columnSpanFull(),
 
                         Forms\Components\TextInput::make('nomor_surat')
                             ->label('Format Lengkap (Otomatis)')
@@ -97,7 +105,8 @@ class SuratPanggilanResource extends Resource
                             ->unique(ignoreRecord: true)
                             ->maxLength(255)
                             ->disabled()
-                            ->dehydrated(),
+                            ->dehydrated()
+                            ->columnSpanFull(),
 
                         Forms\Components\Select::make('siswa_id')
                             ->label('Nama Siswa')
@@ -159,10 +168,12 @@ class SuratPanggilanResource extends Resource
 
     public static function generateNomorSurat(Get $get, Set $set)
     {
-        $nomor = $get('nomor_urut');
-        if ($nomor) {
+        $index = $get('nomor_index') ?? '421.3';
+        $urut = $get('nomor_urut');
+        
+        if ($urut) {
             $tahun = date('Y');
-            $set('nomor_surat', "{$nomor}/SP/SMA.01-MLP/{$tahun}");
+            $set('nomor_surat', "{$index}/{$urut}/SMAN.01-MLP/{$tahun}");
         }
     }
 
