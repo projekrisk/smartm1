@@ -9,15 +9,16 @@
         * { box-sizing: border-box; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; font-family: Arial, Helvetica, sans-serif !important; }
         body { font-size: 11pt; line-height: 1.5; margin: 0; padding: 0; color: black; background-color: #e5e7eb; }
         .cetak-kertas { width: 21cm; min-height: 29.7cm; padding: 1.5cm; margin: 0 auto; background-color: white; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border-radius: 8px; display: flex; flex-direction: column; }
-        .judul-surat { text-align: center; font-weight: bold; text-decoration: underline; margin-bottom: 0; font-size: 14pt;}
-        .nomor-surat { text-align: center; margin-top: 0; margin-bottom: 25px; }
         .tabel-kegiatan { width: 100%; margin: 15px 0; }
         .tabel-kegiatan td { vertical-align: top; padding: 4px 0; }
         .tabel-kegiatan td:first-child { width: 160px; }
         .tabel-siswa { width: 100%; border-collapse: collapse; margin-top: 15px; }
         .tabel-siswa th, .tabel-siswa td { border: 1px solid black; padding: 8px 10px; text-align: left; }
-        .ttd-area { width: 300px; float: right; text-align: center; margin-top: 30px; line-height: 1.3; }
+        
+        /* Pengaturan Tanda Tangan: Sebelah Kanan & Teks Rata Tengah */
+        .ttd-area { width: 300px; float: right; text-align: center; margin-top: 20px; line-height: 1.3; }
         .ttd-area b { font-size: 11pt; }
+        
         .page-break { page-break-before: always; }
         .avoid-break { page-break-inside: avoid; }
         @media print {
@@ -52,15 +53,12 @@
         $token = substr(md5($surat->nomor_surat_lengkap . config('app.key')), 0, 10);
         $urlVerifikasi = url('/verifikasi-surat/dispensasi?nomor=' . urlencode($surat->nomor_surat_lengkap) . '&token=' . $token);
         
-        // 4. 🌟 GENERATE QR CODE (FORMAT PNG + BASE64 AGAR LOGO MUNCUL SEMPURNA)
+        // 4. GENERATE QR CODE (FORMAT PNG + BASE64 AGAR LOGO MUNCUL SEMPURNA)
         if($logoSekolahPath && file_exists($logoSekolahPath)) {
-            // Dibuat resolusi 300 agar tajam saat dicetak, lalu dimerge dengan logo (skala 0.3)
             $qrData = QrCode::format('png')->size(300)->errorCorrection('H')->merge($logoSekolahPath, 0.3, true)->generate($urlVerifikasi);
         } else {
             $qrData = QrCode::format('png')->size(300)->errorCorrection('H')->generate($urlVerifikasi);
         }
-        
-        // Ubah menjadi HTML Image tag
         $qrCodeImage = '<img src="data:image/png;base64,' . base64_encode($qrData) . '" alt="QR Code" style="width: 95px; height: 95px; object-fit: contain;">';
     @endphp
 
@@ -70,18 +68,19 @@
         <div class="cetak-kertas">
             
             <!-- KOP SURAT -->
-            <div class="border-b-4 border-gray-800 pb-3 mb-6 flex items-center justify-between avoid-break">
+            <div class="border-b-4 border-gray-800 pb-3 mb-5 flex items-center justify-between avoid-break">
                 <div class="w-24 h-24 flex-shrink-0 flex items-center justify-center">
                     @if(isset($pengaturan) && $pengaturan->logo_dinas)
                         <img src="{{ url('/uploads/' . $pengaturan->logo_dinas) }}" alt="Logo Dinas" class="max-w-full max-h-full object-contain">
                     @endif
                 </div>
-                <div class="flex-1 text-center px-4">
-                    <h1 class="text-[15pt] font-bold uppercase tracking-wider mb-1">PEMERINTAH PROVINSI BANTEN</h1>
-                    <h1 class="text-[15pt] font-bold uppercase tracking-wider leading-tight mb-2">DINAS PENDIDIKAN DAN KEBUDAYAAN</h1>
-                    <h1 class="text-[18pt] font-bold uppercase tracking-wider mt-1" style="font-family: Arial, sans-serif;">{{ $pengaturan->nama_sekolah ?? 'SMA NEGERI 1 MALINGPING' }}</h1>
-                    <p class="text-[10pt] mt-1" style="font-family: 'Times New Roman', Times, serif;">Jalan Raya Binuangeun Km. 02 Malingping Lebak - Banten 42391</p>
-                    <p class="text-[10pt]" style="font-family: 'Times New Roman', Times, serif;">Email: sman1mlp@yahoo.co.id Website: sman1malingping.sch.id</p>
+                <div class="flex-1 text-center px-4" style="line-height: 1.3;">
+                    <h1 class="text-[14pt] font-bold uppercase">PEMERINTAH PROVINSI BANTEN</h1>
+                    <h1 class="text-[14pt] font-bold uppercase">DINAS PENDIDIKAN DAN KEBUDAYAAN</h1>
+                    <h1 class="text-[22pt] font-bold uppercase">{{ $pengaturan->nama_sekolah ?? 'SMA NEGERI 1 MALINGPING' }}</h1>
+                    <p>NPSN: 20601875 AKREDITASI: A (96)</p>
+                    <p>Jl. Raya Bayah KM. 4 No. 39 Malingping – Lebak, 42391</p>
+                    <p style="position: absolute; justify-self: center;">Website: <u>https://sman1malingping.sch.id</u> – Email: <u>info@sman1malingping.sch.id</u></p>
                 </div>
                 <div class="w-24 h-24 flex-shrink-0 flex items-center justify-center">
                     @if(isset($pengaturan) && $pengaturan->logo_sekolah)
@@ -91,11 +90,25 @@
             </div>
 
             <!-- ISI SURAT -->
-            <div class="judul-surat uppercase">SURAT DISPENSASI BELAJAR</div>
-            <div class="nomor-surat">Nomor: {{ $surat->nomor_surat_lengkap }}</div>
+            
+            <!-- Format Judul Kiri -->
+            <table style="line-height: 1.5; font-size: 11pt; margin-bottom: 15px;">
+                <tr><td style="width: 80px; vertical-align: top;">Nomor</td><td style="width: 15px; vertical-align: top;">:</td><td>{{ $surat->nomor_surat_lengkap }}</td></tr>
+                <tr><td style="vertical-align: top;">Lampiran</td><td style="vertical-align: top;">:</td><td>1 (satu) Berkas</td></tr>
+                <tr><td style="vertical-align: top;">Perihal</td><td style="vertical-align: top;">:</td><td><b>Dispensasi Belajar</b></td></tr>
+            </table>
 
+            <!-- Tujuan Surat -->
+            <div style="margin-bottom: 20px; line-height: 1.5;">
+                Kepada Yth.<br>
+                Bapak/Ibu Guru <b>{{ $pengaturan->nama_sekolah ?? 'SMA Negeri 1 Malingping' }}</b><br>
+                Di Tempat
+            </div>
+
+            <!-- Paragraf Pembuka -->
+            <p style="text-align: justify; margin-bottom: 10px;">Dengan hormat,</p>
             <p style="text-indent: 1cm; text-align: justify; margin-bottom: 10px;">
-                Dengan ini diberikan dispensasi belajar kepada peserta didik sebagaimana tercantum dalam Lampiran Surat Dispensasi Belajar untuk mengikuti kegiatan sebagai berikut:
+                Bersama surat ini, kami memberikan dispensasi belajar kepada peserta didik sebagaimana tercantum dalam Lampiran untuk mengikuti kegiatan sebagai berikut:
             </p>
 
             <table class="tabel-kegiatan avoid-break">
@@ -128,7 +141,7 @@
                 @endif
 
                 <div style="margin: 8px auto; display: inline-block; padding: 4px; background: white; border: 1px solid #ddd; border-radius: 4px; width: 105px; height: 105px;">
-                    <!-- 🌟 TAMPILKAN QR CODE DISINI -->
+                    <!-- TAMPILKAN QR CODE DISINI -->
                     {!! $qrCodeImage !!}
                 </div>
                 <div style="font-size: 7.5pt; color: #666; margin-bottom: 5px;">Dokumen TTE Valid</div>
@@ -181,7 +194,7 @@
                 @endif
 
                 <div style="margin: 8px auto; display: inline-block; padding: 4px; background: white; border: 1px solid #ddd; border-radius: 4px; width: 105px; height: 105px;">
-                    <!-- 🌟 TAMPILKAN QR CODE DISINI -->
+                    <!-- TAMPILKAN QR CODE DISINI -->
                     {!! $qrCodeImage !!}
                 </div>
                 <div style="font-size: 7.5pt; color: #666; margin-bottom: 5px;">Dokumen TTE Valid</div>
