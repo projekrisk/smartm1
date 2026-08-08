@@ -438,6 +438,17 @@ class PegawaiResource extends Resource
 
                         $no = 1;
                         foreach($pegawais as $p) {
+                            // 🌟 LOGIKA MENGGABUNGKAN ALAMAT LENGKAP
+                            $alamatLengkap = $p->alamat ?? '';
+                            if ($p->rt || $p->rw) {
+                                $alamatLengkap .= ' RT ' . ($p->rt ?? '-') . '/RW ' . ($p->rw ?? '-');
+                            }
+                            if ($p->kelurahan) $alamatLengkap .= ', ' . $p->kelurahan;
+                            if ($p->kecamatan) $alamatLengkap .= ', Kec. ' . $p->kecamatan;
+                            if ($p->kabupaten) $alamatLengkap .= ', ' . $p->kabupaten;
+                            
+                            $alamatLengkap = trim($alamatLengkap, ', ') ?: '-';
+
                             $html .= '<tr>';
                             $html .= '<td style="text-align:center;">' . $no++ . '</td>';
                             $html .= '<td>' . htmlspecialchars($p->nama ?? '-') . '</td>';
@@ -446,7 +457,9 @@ class PegawaiResource extends Resource
                             $html .= '<td class="str">' . htmlspecialchars($p->npwp ?? '-') . '</td>';
                             $html .= '<td style="text-align:center;">' . htmlspecialchars($p->jenis_kelamin ?? '-') . '</td>';
                             $html .= '<td>' . htmlspecialchars($p->tempat_lahir ?? '-') . '</td>';
-                            $html .= '<td>' . ($p->tanggal_lahir ? date('d/m/Y', strtotime($p->tanggal_lahir)) : '-') . '</td>';
+                            
+                            // 🌟 UBAH FORMAT TANGGAL KE MM/DD/YYYY (m/d/Y)
+                            $html .= '<td>' . ($p->tanggal_lahir ? date('m/d/Y', strtotime($p->tanggal_lahir)) : '-') . '</td>';
                             $html .= '<td class="str">' . htmlspecialchars($p->telepon ?? '-') . '</td>';
                             $html .= '<td>' . htmlspecialchars($p->email ?? '-') . '</td>';
                             $html .= '<td style="text-align:center;">' . htmlspecialchars($p->jenis_ptk ?? '-') . '</td>';
@@ -456,15 +469,18 @@ class PegawaiResource extends Resource
                             $html .= '<td class="str">' . htmlspecialchars($p->nuptk ?? '-') . '</td>';
                             $html .= '<td>' . htmlspecialchars($p->pangkat_golongan ?? '-') . '</td>';
                             $html .= '<td>' . htmlspecialchars($p->jabatan ?? '-') . '</td>';
-                            $html .= '<td>' . ($p->tmt_cpns_honorer ? date('d/m/Y', strtotime($p->tmt_cpns_honorer)) : '-') . '</td>';
-                            $html .= '<td>' . ($p->tmt_pns_pppk ? date('d/m/Y', strtotime($p->tmt_pns_pppk)) : '-') . '</td>';
-                            $html .= '<td>' . ($p->tmt_golongan_terakhir ? date('d/m/Y', strtotime($p->tmt_golongan_terakhir)) : '-') . '</td>';
+                            
+                            // 🌟 UBAH FORMAT TANGGAL KE MM/DD/YYYY (m/d/Y)
+                            $html .= '<td>' . ($p->tmt_cpns_honorer ? date('m/d/Y', strtotime($p->tmt_cpns_honorer)) : '-') . '</td>';
+                            $html .= '<td>' . ($p->tmt_pns_pppk ? date('m/d/Y', strtotime($p->tmt_pns_pppk)) : '-') . '</td>';
+                            $html .= '<td>' . ($p->tmt_golongan_terakhir ? date('m/d/Y', strtotime($p->tmt_golongan_terakhir)) : '-') . '</td>';
+                            
                             $html .= '<td>' . htmlspecialchars($p->pendidikan_ijazah ?? '-') . '</td>';
                             $html .= '<td style="text-align:center;">' . htmlspecialchars($p->pendidikan_tahun ?? '-') . '</td>';
                             $html .= '<td>' . htmlspecialchars($p->pendidikan_jurusan ?? '-') . '</td>';
                             $html .= '<td class="str">' . htmlspecialchars($p->no_rekening ?? '-') . '</td>';
                             $html .= '<td>' . htmlspecialchars($p->nama_bank ?? '-') . '</td>';
-                            $html .= '<td>' . htmlspecialchars($p->alamat ?? '-') . '</td>';
+                            $html .= '<td>' . htmlspecialchars($alamatLengkap) . '</td>'; // 🌟 CETAK ALAMAT GABUNGAN
                             $html .= '</tr>';
                         }
                         $html .= '</table>';
@@ -519,7 +535,6 @@ class PegawaiResource extends Resource
                         $html .= '</table>';
                         $html .= '</body></html>';
 
-                        // 🌟 MENGGUNAKAN STREAM DOWNLOAD AGAR DITANGKAP OLEH BROWSER
                         return response()->streamDownload(function () use ($html) {
                             echo $html;
                         }, 'Rekap_Pegawai_Lengkap_' . date('Y-m-d') . '.xls', [
