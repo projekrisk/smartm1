@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use App\Models\Siswa;
 use App\Models\MataPelajaran;
 use App\Models\NilaiRapor;
@@ -710,7 +711,24 @@ Route::get('/cetak-dispensasi/{id}', function ($id) {
     return view('cetak.surat-dispensasi', compact('surat'));
 })->name('cetak.dispensasi');
 
-Route::get('/verifikasi/surat-dispensasi/{id}', function ($id) {
-    $surat = SuratDispensasi::with(['penandatangan', 'siswa.kelas'])->findOrFail($id);
+Route::get('/verifikasi-surat/dispensasi', function (Request $request) {
+    $nomor = $request->query('nomor');
+    $token = $request->query('token');
+
+    if (!$nomor || !$token) {
+        return abort(404, 'Parameter URL tidak lengkap.');
+    }
+
+    // 🌟 SISTEM KEAMANAN: Mencocokkan Token Unik (MD5 dari Nomor Surat + Kunci Aplikasi)
+    $expectedToken = substr(md5($nomor . config('app.key')), 0, 10);
+
+    if ($token !== $expectedToken) {
+        return abort(403, 'AKSES DITOLAK: Token tidak valid atau URL telah dimanipulasi. Harap lakukan pemindaian (scan) langsung dari QR Code resmi.');
+    }
+
+    $surat = SuratDispensasi::with(['penandatangan', 'siswa.kelas'])
+                ->where('nomor_surat_lengkap', $nomor)
+                ->firstOrFail();
+
     return view('cetak.verifikasi-surat', compact('surat'));
 })->name('verifikasi.dispensasi');

@@ -8,46 +8,67 @@
 </head>
 <body class="bg-gray-100 text-gray-900 flex items-center justify-center min-h-screen p-4">
 
-    <div class="max-w-md w-full bg-white shadow-xl rounded-2xl p-6 text-center border-t-8 border-green-600">
+    <div class="max-w-md w-full bg-white shadow-xl rounded-2xl p-6 border-t-8 border-green-600 relative overflow-hidden">
+        
         <!-- Ikon Sukses -->
-        <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl font-bold">
+        <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-3 text-3xl font-bold">
             ✓
         </div>
 
-        <h1 class="text-xl font-bold text-gray-900 uppercase">Dokumen Resmi & Valid</h1>
-        <p class="text-xs text-gray-500 mt-1">Sistem Penjaminan Keaslian Dokumen Elektronik</p>
+        <div class="text-center">
+            <h1 class="text-xl font-bold text-gray-900 uppercase">Dokumen Resmi & Valid</h1>
+            <p class="text-xs text-gray-500 mt-1">Sistem Penjaminan Keaslian Dokumen Elektronik</p>
+        </div>
 
-        <div class="mt-6 text-left border-t border-gray-200 pt-4 space-y-3 text-sm">
-            <div class="flex justify-between">
-                <span class="text-gray-500">Nomor Surat:</span>
-                <span class="font-bold text-right">{{ $surat->nomor_surat_lengkap }}</span>
+        <!-- 🌟 LAYOUT BARU: Atas-Bawah -->
+        <div class="mt-6 border-t border-gray-200 pt-5 space-y-4">
+            
+            <div class="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                <span class="block text-[11px] text-gray-500 uppercase tracking-wider font-bold mb-1">Nomor Surat</span>
+                <span class="block font-bold text-gray-900 text-sm">{{ $surat->nomor_surat_lengkap }}</span>
             </div>
-            <div class="flex justify-between">
-                <span class="text-gray-500">Nama Kegiatan:</span>
-                <span class="font-semibold text-right">{{ $surat->nama_kegiatan }}</span>
+
+            <div class="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                <span class="block text-[11px] text-gray-500 uppercase tracking-wider font-bold mb-1">Perihal / Nama Kegiatan</span>
+                <span class="block font-semibold text-gray-900 text-sm leading-snug">{{ $surat->nama_kegiatan }}</span>
             </div>
-            <div class="flex justify-between">
-                <span class="text-gray-500">Penyelenggara:</span>
-                <span class="font-medium text-right">{{ $surat->penyelenggara }}</span>
+
+            <div class="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                <span class="block text-[11px] text-gray-500 uppercase tracking-wider font-bold mb-1">Penyelenggara</span>
+                <span class="block font-medium text-gray-900 text-sm">{{ $surat->penyelenggara }}</span>
             </div>
-            <div class="flex justify-between">
-                <span class="text-gray-500">Penandatangan:</span>
-                <span class="font-semibold text-right">{{ $surat->penandatangan->nama ?? '-' }}</span>
+
+            <div class="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                <span class="block text-[11px] text-gray-500 uppercase tracking-wider font-bold mb-1">Ditandatangani Secara Elektronik Oleh:</span>
+                <span class="block font-bold text-blue-700 text-sm uppercase">{{ $surat->penandatangan->nama ?? '-' }}</span>
             </div>
         </div>
 
-        <!-- Daftar Siswa Terlampir -->
-        <div class="mt-6 text-left border-t border-gray-200 pt-4">
-            <h3 class="font-bold text-xs uppercase text-gray-500 mb-2">Peserta Didik yang Diberi Dispensasi:</h3>
-            <ul class="text-xs space-y-1 bg-gray-50 p-3 rounded-lg max-h-40 overflow-y-auto">
-                @foreach($surat->siswa as $s)
-                    <li class="font-medium">• {{ $s->nama_lengkap }} <span class="text-gray-500">({{ $s->kelas->nama_kelas ?? '-' }})</span></li>
+        <!-- Daftar Siswa -->
+        <div class="mt-5 border-t border-gray-200 pt-5">
+            <span class="block text-[11px] text-gray-500 uppercase tracking-wider font-bold mb-2">Peserta Didik yang Diberi Dispensasi ({{ $surat->siswa->count() }} Orang):</span>
+            <ul class="text-xs space-y-1.5 bg-gray-50 p-3 rounded-lg border border-gray-100 max-h-40 overflow-y-auto">
+                @foreach($surat->siswa->sortBy('nama_lengkap') as $s)
+                    <li class="font-semibold flex justify-between border-b border-gray-200 pb-1 last:border-0 last:pb-0">
+                        <span>• {{ $s->nama_lengkap }}</span> 
+                        <span class="text-gray-500 font-normal">Kelas {{ $s->kelas->nama_kelas ?? '-' }}</span>
+                    </li>
                 @endforeach
             </ul>
         </div>
 
-        <div class="mt-8 text-center text-[11px] text-gray-400">
-            &copy; {{ date('Y') }} SMAN 1 Malingping. Dokumen ini sah dan diterbitkan secara elektronik melalui SMART-M1.
+        <!-- 🌟 TOMBOL HOME -->
+        <div class="mt-8 mb-2">
+            <a href="{{ url('/') }}" class="w-full flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-900 text-white py-2.5 rounded-lg font-semibold text-sm transition-colors shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                </svg>
+                Kembali ke Beranda
+            </a>
+        </div>
+
+        <div class="mt-4 text-center text-[10px] text-gray-400 leading-tight">
+            &copy; {{ date('Y') }} {{ $surat->pengaturan->nama_sekolah ?? 'SMAN 1 Malingping' }}. <br>Dokumen ini sah dan diterbitkan secara elektronik.
         </div>
     </div>
 
