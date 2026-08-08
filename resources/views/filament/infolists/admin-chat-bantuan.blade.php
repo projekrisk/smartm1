@@ -9,28 +9,28 @@
     @foreach($getRecord()->details as $chat)
         @if($chat->pengirim === 'Siswa')
             <div class="flex justify-start">
-                <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl rounded-tl-sm px-4 pt-2.5 pb-2 max-w-[85%] md:max-w-md shadow-sm min-w-[150px]">
-                    <div class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1">
+                <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl rounded-tl-sm p-4 pt-2.5 pb-2 max-w-[85%] md:max-w-md shadow-sm min-w-[150px]" style="border-radius:12px">
+                    <div class="text-[13px] font-semibold text-blue-600 dark:text-blue-400 mb-1">
                         {{ $getRecord()->siswa->nama_lengkap }}
                     </div>
                     <div class="text-[13px] text-gray-800 dark:text-gray-200 leading-snug break-words">
                         {{ $chat->pesan }}
                     </div>
-                    <div class="text-[10px] text-gray-400 dark:text-gray-500 mt-1.5 text-right font-medium">
+                    <div class="text-xs pt-4 text-gray-400 dark:text-gray-500 mt-1.5 text-right font-medium">
                         {{ $chat->created_at->format('H:i') }}
                     </div>
                 </div>
             </div>
         @else
             <div class="flex justify-end">
-                <div class="bg-emerald-50 dark:bg-emerald-900/50 border border-emerald-200 dark:border-emerald-800/60 rounded-2xl rounded-tr-sm px-4 pt-2.5 pb-2 max-w-[85%] md:max-w-md shadow-sm min-w-[150px]">
-                    <div class="text-xs font-semibold text-emerald-700 dark:text-emerald-400 mb-1">
+                <div class="bg-emerald-50 dark:bg-emerald-900/50 border border-emerald-200 dark:border-emerald-800/60 rounded-2xl rounded-tr-sm p-4 pt-2.5 pb-2 max-w-[85%] md:max-w-md shadow-sm min-w-[150px]" style="border-radius:12px">
+                    <div class="[13px] font-semibold text-emerald-700 dark:text-emerald-400 mb-1">
                         Admin ({{ $chat->user->name ?? '-' }})
                     </div>
                     <div class="text-[13px] text-gray-800 dark:text-gray-100 leading-snug break-words">
                         {{ $chat->pesan }}
                     </div>
-                    <div class="text-[10px] text-emerald-600/70 dark:text-emerald-400/70 mt-1.5 text-right font-medium">
+                    <div class="text-xs pt-4 text-emerald-600/70 dark:text-emerald-400/70 mt-1.5 text-right font-medium">
                         {{ $chat->created_at->format('H:i') }}
                     </div>
                 </div>

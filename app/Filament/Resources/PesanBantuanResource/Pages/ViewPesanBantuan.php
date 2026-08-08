@@ -29,11 +29,11 @@ class ViewPesanBantuan extends ViewRecord
     {
         return [
             Actions\Action::make('lihat_profil')
-                ->label('Lihat Profil Siswa')
+                ->label('Profil Siswa')
                 ->icon('heroicon-o-identification')
                 ->color('info')
                 ->url(fn () => SiswaResource::getUrl('edit', ['record' => $this->record->siswa_id]))
-                ->openUrlInNewTab() // Membuka URL di tab baru
+                ->openUrlInNewTab()
                 ->visible(fn () => filled($this->record->siswa_id)),
 
             Actions\Action::make('balas')
@@ -62,7 +62,7 @@ class ViewPesanBantuan extends ViewRecord
                 ->hidden(fn () => $this->record->status === 'Selesai'),
 
             Actions\Action::make('selesai')
-                ->label('Tandai Kasus Selesai')
+                ->label('Tandai Selesai')
                 ->icon('heroicon-o-check-circle')
                 ->color('success')
                 ->requiresConfirmation()
