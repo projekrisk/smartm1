@@ -20,6 +20,11 @@
             page-break-inside: avoid;
         }
 
+        /* 🌟 Pengaturan khusus agar seluruh cetakan menggunakan Font Arial */
+        body {
+            font-family: Arial, Helvetica, sans-serif !important;
+        }
+
         /* Mode Cetak */
         @media print {
             .no-print {
@@ -38,7 +43,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-200 text-gray-900 font-serif">
+<body class="bg-gray-200 text-gray-900">
 
     <div class="no-print fixed top-5 left-5 z-50">
         <button onclick="window.close()" class="bg-gray-800 text-white px-4 py-2 rounded shadow hover:bg-gray-700 transition">
@@ -52,9 +57,15 @@
         </button>
     </div>
 
+    @php
+        // Mengambil data Kop Surat dinamis jika ada
+        $pengaturan = null;
+        try { if (\Illuminate\Support\Facades\Schema::hasTable('pengaturan')) $pengaturan = \App\Models\Pengaturan::first(); } catch (\Exception $e) {}
+    @endphp
+
     <div class="flex justify-center py-10 print:py-0 print:block">
         
-        <div class="cetak-kertas bg-white shadow-2xl rounded w-[21cm] min-h-[29.7cm] p-[1cm] mx-auto relative flex flex-col overflow-hidden">
+        <div class="cetak-kertas bg-white shadow-2xl w-[21cm] min-h-[29.7cm] p-[1cm] mx-auto relative flex flex-col overflow-hidden">
             
             <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0 overflow-hidden">
                 <div class="text-[110px] font-bold text-gray-200 transform -rotate-45 tracking-widest text-center leading-none opacity-60">
@@ -64,10 +75,24 @@
 
             <div class="relative z-10 flex-1 flex flex-col">
                 
-                <div class="border-b-4 border-gray-800 pb-3 mb-6 text-center avoid-break">
-                    <h1 class="text-2xl font-bold uppercase tracking-wider font-sans">SMAN 1 MALINGPING</h1>
-                    <p class="text-xs mt-1">Jl. Pendidikan No. 1, Kec. Pintar, Kota Cerdas, 12345</p>
-                    <p class="text-xs">Telepon: (021) 888-9999 | Email: info@smart-m1.com</p>
+                <!-- 🌟 KOP SEKOLAH DIPERBARUI -->
+                <div class="border-b-4 border-gray-800 pb-3 mb-6 flex items-center justify-between avoid-break">
+                    <div class="w-20 h-20 flex-shrink-0 flex items-center justify-center">
+                        @if(isset($pengaturan) && $pengaturan->logo_dinas)
+                            <img src="{{ url('/uploads/' . $pengaturan->logo_dinas) }}" alt="Logo Dinas" class="max-w-full max-h-full object-contain">
+                        @endif
+                    </div>
+                    <div class="flex-1 text-center px-4">
+                        <h1 class="text-[12pt] font-bold uppercase tracking-wider mb-1">PEMERINTAH PROVINSI BANTEN</h1>
+                        <h1 class="text-[12pt] font-bold uppercase tracking-wider leading-tight mb-2">DINAS PENDIDIKAN DAN KEBUDAYAAN</h1>
+                        <h1 class="text-[16pt] font-bold uppercase tracking-wider mt-1">{{ $pengaturan->nama_sekolah ?? 'SMA NEGERI 1 MALINGPING' }}</h1>
+                        <p class="text-[9pt] mt-1">Jalan Raya Binuangeun Km. 02 Malingping Lebak - Banten 42391</p>
+                    </div>
+                    <div class="w-20 h-20 flex-shrink-0 flex items-center justify-center">
+                        @if(isset($pengaturan) && $pengaturan->logo_sekolah)
+                            <img src="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}" alt="Logo Sekolah" class="max-w-full max-h-full object-contain">
+                        @endif
+                    </div>
                 </div>
 
                 <div class="text-center mb-6 avoid-break">
@@ -193,9 +218,38 @@
                     </table>
                 </div>
 
+                <!-- 🌟 TAMBAHAN RIWAYAT SURAT PANGGILAN -->
+                <div class="mb-6 text-[13px] avoid-break">
+                    <h3 class="font-bold bg-gray-200 px-2 py-1 mb-2 uppercase text-xs border border-gray-400">G. Riwayat Surat Panggilan Orang Tua</h3>
+                    <table class="w-full border-collapse border border-gray-400 text-center">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="border border-gray-400 p-1 w-10">No</th>
+                                <th class="border border-gray-400 p-1 w-28">Tgl Pemanggilan</th>
+                                <th class="border border-gray-400 p-1 w-32">No. Surat</th>
+                                <th class="border border-gray-400 p-1">Keperluan / Keterangan</th>
+                                <th class="border border-gray-400 p-1 w-24">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($siswa->suratPanggilan->sortByDesc('tanggal_surat') as $index => $sp)
+                                <tr>
+                                    <td class="border border-gray-400 p-2 align-top">{{ $index + 1 }}</td>
+                                    <td class="border border-gray-400 p-2 align-top whitespace-nowrap">{{ \Carbon\Carbon::parse($sp->tanggal_panggilan)->format('d/m/Y') }}<br><span class="text-[10px] text-gray-500">{{ date('H:i', strtotime($sp->waktu_panggilan)) }} WIB</span></td>
+                                    <td class="border border-gray-400 p-2 align-top text-[10px] font-bold">{{ $sp->nomor_surat }}</td>
+                                    <td class="border border-gray-400 p-2 text-left text-xs">{{ $sp->alasan_panggilan }}</td>
+                                    <td class="border border-gray-400 p-2 align-top font-bold text-xs uppercase {{ $sp->status == 'Selesai' ? 'text-green-700' : ($sp->status == 'Dibuat' ? 'text-yellow-600' : 'text-red-700') }}">{{ $sp->status }}</td>
+                                </tr>
+                            @empty
+                                <tr><td colspan="5" class="border border-gray-400 p-2 italic text-gray-500">Siswa belum memiliki riwayat panggilan orang tua.</td></tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+
                 <div class="mb-6 text-[13px] avoid-break">
                     <h3 class="font-bold bg-gray-200 px-2 py-1 mb-2 uppercase text-xs border border-gray-400">
-                        G. Rekapitulasi Ketidakhadiran 
+                        H. Rekapitulasi Ketidakhadiran 
                         <span class="font-normal normal-case">(Tahun Ajaran: {{ $tahunAjaranAktif ? $tahunAjaranAktif->nama_tahun . ' ' . $tahunAjaranAktif->semester : 'Belum Diatur' }})</span>
                     </h3>
                     
@@ -237,7 +291,7 @@
                 </div>
 
                 <div class="mt-auto border-t-2 border-gray-800 pt-3 text-center text-xs text-gray-700 italic avoid-break">
-                    Dicetak pada Smart-M1 SMAN 1 Malingping | Waktu Cetak: {{ now()->isoFormat('D MMMM Y - HH:mm') }} WIB
+                    Dicetak pada Smart-M1 {{ $pengaturan->nama_sekolah ?? 'SMAN 1 Malingping' }} | Waktu Cetak: {{ now()->isoFormat('D MMMM Y - HH:mm') }} WIB
                 </div>
 
             </div>
