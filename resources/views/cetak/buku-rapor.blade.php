@@ -70,7 +70,7 @@
                     <h1 class="text-2xl font-bold uppercase tracking-wider mt-1">{{ $pengaturan->nama_sekolah ?? 'NAMA SEKOLAH' }}</h1>
                     <p class="text-[11px] mt-1 font-bold">NPSN: 20601875 AKREDITASI: A (96)</p>
                     <p class="text-[11px]">Jl. Raya Bayah KM. 4 No. 39 Malingping – Lebak, 42391</p>
-                    <p class="text-[11px]">Website: https://sman1malingping.sch.id – Email: sman1malingping@ymail.com</p>
+                    <p class="text-[11px]">Website: https://sman1malingping.sch.id – Email: info@sman1malingping.sch.id</p>
                 </div>
 
                 <div class="w-24 h-24 flex-shrink-0 flex items-center justify-center">
