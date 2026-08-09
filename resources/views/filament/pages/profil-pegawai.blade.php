@@ -1,6 +1,6 @@
 <x-filament-panels::page>
     @if($pegawai)
-        <!-- 🌟 PROFIL HEADER CARD -->
+        <!-- 🌟 PROFIL HEADER CARD (TETAP DIPERTAHANKAN KARENA SUDAH RAPI) -->
         <div class="bg-white dark:bg-gray-900 rounded-xl shadow-sm ring-1 ring-gray-950/5 dark:ring-white/10 overflow-hidden mb-6">
             <!-- Banner Background -->
             <div class="h-32 bg-gradient-to-r from-primary-500 to-primary-700 dark:from-primary-600 dark:to-primary-900"></div>
@@ -66,45 +66,70 @@
             </x-filament::tabs>
 
             <!-- KONTEN TAB 1: INFORMASI PROFIL -->
-            <div x-show="activeTab === 'informasi'" x-cloak class="space-y-6">
-                <!-- Tidak perlu section tambahan di sini karena infolist di class PHP sudah kita buat menggunakan Infolist Sections -->
+            <div x-show="activeTab === 'informasi'" x-cloak class="space-y-6 animate-fade-in">
                 {{ $this->infolist }}
             </div>
 
-            <!-- KONTEN TAB 2: UBAH FOTO PROFIL -->
-            <div x-show="activeTab === 'foto'" x-cloak class="space-y-6">
-                <x-filament::section class="max-w-xl mx-auto">
-                    <x-slot name="heading">Foto Profil</x-slot>
-                    <x-slot name="description">Foto ini akan tampil di menu pojok kanan atas, dokumen cetak, dan dashboard Anda.</x-slot>
+            <!-- 🌟 KONTEN TAB 2: UBAH FOTO PROFIL (LAYOUT BARU) -->
+            <div x-show="activeTab === 'foto'" x-cloak class="animate-fade-in pt-4">
+                <div class="md:flex md:gap-8">
+                    <!-- Penjelasan Kiri -->
+                    <div class="md:w-1/3 mb-6 md:mb-0">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white">Foto Profil Akun</h3>
+                        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                            Pilih foto terbaik Anda. Disarankan menggunakan foto dengan rasio 1:1 (persegi) agar tidak terpotong. Foto ini akan muncul di pojok kanan atas dasbor dan dokumen resmi cetakan sekolah.
+                        </p>
+                    </div>
                     
-                    <form wire:submit="simpanFoto" class="mt-4">
-                        <div class="flex justify-center w-full mb-6 [&_.fi-fo-field-wrp]:mx-auto [&_.fi-fo-field-wrp]:text-center [&_.fi-fo-file-upload]:mx-auto">
-                            {{ $this->fotoForm }}
-                        </div>
-                        <div class="text-center">
-                            <x-filament::button type="submit" color="primary" size="md" icon="heroicon-o-arrow-up-tray" class="w-full">
-                                Simpan Foto Baru
-                            </x-filament::button>
-                        </div>
-                    </form>
-                </x-filament::section>
+                    <!-- Kartu Form Kanan -->
+                    <div class="md:w-2/3">
+                        <x-filament::section>
+                            <form wire:submit="simpanFoto" class="space-y-6">
+                                <!-- Layout natural bawaan Filament (tanpa paksaan CSS) -->
+                                <div class="w-full">
+                                    {{ $this->fotoForm }}
+                                </div>
+                                
+                                <div class="flex justify-end pt-5 border-t border-gray-200 dark:border-white/10 mt-6">
+                                    <x-filament::button type="submit" color="primary" icon="heroicon-o-arrow-up-tray">
+                                        Simpan Perubahan Foto
+                                    </x-filament::button>
+                                </div>
+                            </form>
+                        </x-filament::section>
+                    </div>
+                </div>
             </div>
 
-            <!-- KONTEN TAB 3: GANTI PASSWORD -->
-            <div x-show="activeTab === 'password'" x-cloak class="space-y-6">
-                <x-filament::section class="max-w-xl mx-auto border-t-4 border-t-danger-500">
-                    <x-slot name="heading">Keamanan Akun</x-slot>
-                    <x-slot name="description">Pastikan menggunakan kombinasi angka dan huruf yang kuat dan unik.</x-slot>
+            <!-- 🌟 KONTEN TAB 3: GANTI PASSWORD (LAYOUT BARU) -->
+            <div x-show="activeTab === 'password'" x-cloak class="animate-fade-in pt-4">
+                <div class="md:flex md:gap-8">
+                    <!-- Penjelasan Kiri -->
+                    <div class="md:w-1/3 mb-6 md:mb-0">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white">Keamanan & Sandi</h3>
+                        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                            Pastikan akun Anda tetap aman dengan menggunakan kata sandi yang panjang dan acak. <br><br>
+                            Sangat disarankan untuk <b>tidak</b> menggunakan NIP, NIK, atau Tanggal Lahir sebagai kata sandi demi menghindari akses yang tidak sah.
+                        </p>
+                    </div>
                     
-                    <form wire:submit="simpanPassword" class="mt-4 space-y-4">
-                        {{ $this->passwordForm }}
-                        <div class="pt-4 text-right">
-                            <x-filament::button type="submit" color="danger" icon="heroicon-o-key" class="w-full">
-                                Update Password
-                            </x-filament::button>
-                        </div>
-                    </form>
-                </x-filament::section>
+                    <!-- Kartu Form Kanan -->
+                    <div class="md:w-2/3">
+                        <x-filament::section>
+                            <form wire:submit="simpanPassword" class="space-y-6">
+                                <div class="w-full">
+                                    {{ $this->passwordForm }}
+                                </div>
+                                
+                                <div class="flex justify-end pt-5 border-t border-gray-200 dark:border-white/10 mt-6">
+                                    <x-filament::button type="submit" color="danger" icon="heroicon-o-lock-closed">
+                                        Perbarui Kata Sandi
+                                    </x-filament::button>
+                                </div>
+                            </form>
+                        </x-filament::section>
+                    </div>
+                </div>
             </div>
             
         </div>
@@ -113,19 +138,44 @@
         <x-filament::section>
             <div class="text-center text-gray-500 py-10">
                 <x-filament::icon icon="heroicon-o-shield-exclamation" class="w-16 h-16 mx-auto text-warning-500 mb-4" />
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Akses Super Admin</h2>
-                <p class="mt-2">Akun tingkat atas ini tidak tertaut dengan buku induk Pegawai manapun di sistem.</p>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Akses Super Admin Tingkat Atas</h2>
+                <p class="mt-2">Akun ini adalah Master System dan tidak tertaut dengan data Profil Pegawai manapun di sekolah.</p>
             </div>
         </x-filament::section>
         
-        <x-filament::section class="max-w-xl mx-auto mt-6 border-t-4 border-t-danger-500">
-            <x-slot name="heading">Keamanan Akun Admin</x-slot>
-            <form wire:submit="simpanPassword" class="mt-4 space-y-4">
-                {{ $this->passwordForm }}
-                <div class="pt-4 text-right">
-                    <x-filament::button type="submit" color="danger" icon="heroicon-o-key" class="w-full">Update Password</x-filament::button>
-                </div>
-            </form>
-        </x-filament::section>
+        <!-- Form Keamanan Super Admin Menggunakan Aside Layout -->
+        <div class="md:flex md:gap-8 mt-10">
+            <div class="md:w-1/3 mb-6 md:mb-0">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white">Keamanan Akun Admin</h3>
+                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                    Jaga kerahasiaan kata sandi Super Admin. Akun ini memegang kendali penuh atas seluruh data siswa, guru, dan staf sekolah.
+                </p>
+            </div>
+            <div class="md:w-2/3">
+                <x-filament::section>
+                    <form wire:submit="simpanPassword" class="space-y-6">
+                        <div class="w-full">
+                            {{ $this->passwordForm }}
+                        </div>
+                        <div class="flex justify-end pt-5 border-t border-gray-200 dark:border-white/10 mt-6">
+                            <x-filament::button type="submit" color="danger" icon="heroicon-o-shield-check">
+                                Update Password Admin
+                            </x-filament::button>
+                        </div>
+                    </form>
+                </x-filament::section>
+            </div>
+        </div>
     @endif
+
+    <!-- Animasi transisi halus saat pindah tab -->
+    <style>
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </x-filament-panels::page>
