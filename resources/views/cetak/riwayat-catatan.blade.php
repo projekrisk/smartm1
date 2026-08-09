@@ -154,10 +154,11 @@
                             <div class="flex items-start gap-4 mb-6 avoid-break p-3 border border-gray-400 bg-gray-50 rounded">                                
                                 <div class="flex-1">
                                     <table class="w-full">
-                                        <tr><td class="py-1 w-32 font-bold">Nama Lengkap</td><td class="w-2">:</td><td class="py-1 uppercase font-bold">{{ $siswa->nama_lengkap }}</td></tr>
-                                        <tr><td class="py-1 font-bold">NIS / NISN</td><td>:</td><td class="py-1">{{ $siswa->nis }} / {{ $siswa->nisn ?? '-' }}</td></tr>
-                                        <tr><td class="py-1 font-bold">Kelas Saat Ini</td><td>:</td><td class="py-1 font-bold">{{ $siswa->kelas->nama_kelas ?? 'Belum ada kelas' }}</td></tr>
-                                        <tr><td class="py-1 font-bold">Status</td><td>:</td><td class="py-1 uppercase">{{ $siswa->status_siswa }} ({{ $siswa->jalur_masuk ?? 'Siswa Baru' }})</td></tr>
+                                        <tr><td class="py-1 w-32">Nama Lengkap</td><td class="w-2">:</td><td class="py-1 uppercase font-bold">{{ $siswa->nama_lengkap }}</td></tr>
+                                        <tr><td class="py-1">NIS</td><td>:</td><td class="py-1 font-bold">{{ $siswa->nis }}</td></tr>
+                                        <tr><td class="py-1">NISN</td><td>:</td><td class="py-1 font-bold">{{ $siswa->nisn ?? '-' }}</td></tr>
+                                        <tr><td class="py-1">Kelas Saat Ini</td><td>:</td><td class="py-1 font-bold">{{ $siswa->kelas->nama_kelas ?? 'Belum ada kelas' }}</td></tr>
+                                        <tr><td class="py-1">Status</td><td>:</td><td class="py-1 font-bold uppercase">{{ $siswa->status_siswa }} ({{ $siswa->jalur_masuk ?? 'Siswa Baru' }})</td></tr>
                                     </table>
                                 </div>      
                                 <div class="w-[3.5cm] h-[4.5cm] border-2 border-gray-800 p-1 flex items-center justify-center overflow-hidden bg-white flex-shrink-0 relative z-20">

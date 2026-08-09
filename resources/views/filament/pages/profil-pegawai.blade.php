@@ -88,7 +88,7 @@
                     
                     <div class="flex justify-end pt-4">
                         <x-filament::button type="submit" color="danger" icon="heroicon-o-shield-check">
-                            Update Password Admin
+                            Update
                         </x-filament::button>
                     </div>
                 </form>
