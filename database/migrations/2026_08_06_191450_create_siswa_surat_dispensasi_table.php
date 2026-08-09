@@ -14,9 +14,15 @@ return new class extends Migration
             $table->unsignedBigInteger('surat_dispensasi_id');
             $table->unsignedBigInteger('siswa_id');
 
-            $table->foreign('surat_dispensasi_id')->references('id')->on('surat_dispensasis')->onDelete('cascade');
+            $table->foreign('surat_dispensasi_id')
+                  ->references('id')
+                  ->on('surat_dispensasi')
+                  ->onDelete('cascade');
             
-            $table->foreign('siswa_id')->references('id')->on('siswa')->onDelete('cascade');
+            $table->foreign('siswa_id')
+                  ->references('id')
+                  ->on('siswa') 
+                  ->onDelete('cascade');
         });
     }
 

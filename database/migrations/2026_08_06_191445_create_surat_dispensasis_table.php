@@ -8,21 +8,27 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('siswa_surat_dispensasi', function (Blueprint $table) {
+        Schema::create('surat_dispensasi', function (Blueprint $table) {
             $table->id();
             
-            $table->foreignId('surat_dispensasi_id')
-                  ->constrained('surat_dispensasi')
-                  ->cascadeOnDelete();
-                  
-            $table->foreignId('siswa_id')
-                  ->constrained('siswa')
-                  ->cascadeOnDelete();
+            $table->string('nomor_urut')->nullable();
+            $table->string('nomor_surat_lengkap')->nullable();
+            $table->string('nama_kegiatan')->nullable();
+            $table->string('penyelenggara')->nullable();
+            $table->string('tempat')->nullable();
+            $table->dateTime('tanggal_mulai')->nullable();
+            $table->dateTime('tanggal_selesai')->nullable();
+            $table->dateTime('tanggal_surat')->nullable();
+            $table->unsignedBigInteger('penandatangan_id')->nullable();
+            
+            $table->string('token')->nullable(); 
+            
+            $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('siswa_surat_dispensasi');
+        Schema::dropIfExists('surat_dispensasi');
     }
 };
