@@ -105,13 +105,56 @@ class ProfilPegawai extends Page implements HasForms, HasInfolists
         return $infolist
             ->record($this->pegawai)
             ->schema([
+                // 🌟 BAGIAN PROFIL & FOTO DI PINDAH KE SINI
+                Section::make('Profil Pegawai')
+                    ->schema([
+                        Split::make([
+                            Grid::make(1)->schema([
+                                ImageEntry::make('foto')
+                                    ->hiddenLabel()
+                                    ->circular()
+                                    ->size(130)
+                                    ->defaultImageUrl(url('/images/default-avatar.png')),
+                            ])->grow(false),
+
+                            Grid::make(2)->schema([
+                                TextEntry::make('nama_lengkap')
+                                    ->label('Nama Lengkap & Gelar')
+                                    ->size(TextEntry\TextEntrySize::Large)
+                                    ->weight('bold')
+                                    ->columnSpanFull(),
+                                TextEntry::make('nip')
+                                    ->label('NIP / NUPTK')
+                                    ->copyable()
+                                    ->default('-')
+                                    ->icon('heroicon-m-identification'),
+                                TextEntry::make('jabatan')
+                                    ->label('Jabatan')
+                                    ->default('-')
+                                    ->icon('heroicon-m-briefcase'),
+                                TextEntry::make('status_pegawai')
+                                    ->label('Status Pegawai')
+                                    ->badge()
+                                    ->color(fn (string $state): string => match ($state) {
+                                        'Aktif' => 'success',
+                                        'Pensiun' => 'warning',
+                                        'Pindah/Mutasi' => 'danger',
+                                        default => 'primary',
+                                    })
+                                    ->default('Aktif'),
+                                TextEntry::make('jenis_ptk')
+                                    ->label('Jenis PTK')
+                                    ->badge()
+                                    ->color('info')
+                                    ->default('-'),
+                            ]),
+                        ])->from('md'),
+                    ]),
+
                 Section::make('Identitas Diri')
                     ->icon('heroicon-o-identification')
                     ->schema([
                         Grid::make(3)->schema([
-                            TextEntry::make('nama_lengkap')
-                                ->label('Nama Lengkap & Gelar')
-                                ->weight('bold'),
                             TextEntry::make('nik')
                                 ->label('NIK (No. KTP)')
                                 ->copyable()
@@ -119,71 +162,26 @@ class ProfilPegawai extends Page implements HasForms, HasInfolists
                             TextEntry::make('jenis_kelamin')
                                 ->label('Jenis Kelamin')
                                 ->default('-'),
-                                
-                            // 🌟 PERBAIKAN: Menggunakan try-catch agar kebal error dari karakter '-'
                             TextEntry::make('tempat_lahir')
                                 ->label('Tempat, Tanggal Lahir')
                                 ->formatStateUsing(function ($record) {
                                     $tempat = $record->tempat_lahir ?? '-';
                                     $tgl = $record->tanggal_lahir;
-                                    
                                     if (empty($tgl) || $tgl === '-') return $tempat . ', -';
-                                    
-                                    try {
-                                        return $tempat . ', ' . \Carbon\Carbon::parse($tgl)->translatedFormat('d F Y');
-                                    } catch (\Exception $e) {
-                                        return $tempat . ', -';
-                                    }
+                                    try { return $tempat . ', ' . \Carbon\Carbon::parse($tgl)->translatedFormat('d F Y'); } catch (\Exception $e) { return $tempat . ', -'; }
                                 }),
-                                
                             TextEntry::make('agama')
                                 ->label('Agama')
                                 ->default('-'),
-                        ]),
-                    ]),
-
-                Section::make('Informasi Kepegawaian & Akademik')
-                    ->icon('heroicon-o-academic-cap')
-                    ->schema([
-                        Grid::make(3)->schema([
-                            TextEntry::make('nip')
-                                ->label('NIP / NUPTK')
-                                ->copyable()
-                                ->default('-'),
-                            TextEntry::make('jenis_ptk')
-                                ->label('Jenis PTK')
-                                ->badge()
-                                ->color('info')
-                                ->default('-'),
-                            TextEntry::make('jabatan')
-                                ->label('Jabatan')
-                                ->default('-'),
-                            TextEntry::make('status_pegawai')
-                                ->label('Status Pegawai')
-                                ->badge()
-                                ->color(fn (string $state): string => match ($state) {
-                                    'Aktif' => 'success',
-                                    'Pensiun' => 'warning',
-                                    'Pindah/Mutasi' => 'danger',
-                                    default => 'primary',
-                                })
-                                ->default('Aktif'),
-                                
-                            // 🌟 PERBAIKAN: Menggunakan try-catch untuk tanggal TMT
+                            TextEntry::make('pendidikan_terakhir')
+                                ->label('Pendidikan Terakhir')
+                                ->formatStateUsing(fn ($record) => ($record->pendidikan_terakhir ?? '-') . ' - ' . ($record->jurusan ?? '-')),
                             TextEntry::make('tmt_kerja')
                                 ->label('Terhitung Mulai Tanggal (TMT)')
                                 ->formatStateUsing(function ($state) {
                                     if (empty($state) || $state === '-') return '-';
-                                    try {
-                                        return \Carbon\Carbon::parse($state)->translatedFormat('d F Y');
-                                    } catch (\Exception $e) {
-                                        return '-';
-                                    }
+                                    try { return \Carbon\Carbon::parse($state)->translatedFormat('d F Y'); } catch (\Exception $e) { return '-'; }
                                 }),
-                                
-                            TextEntry::make('pendidikan_terakhir')
-                                ->label('Pendidikan Terakhir')
-                                ->formatStateUsing(fn ($record) => ($record->pendidikan_terakhir ?? '-') . ' - ' . ($record->jurusan ?? '-')),
                         ]),
                     ]),
 
