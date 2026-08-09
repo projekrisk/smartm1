@@ -62,7 +62,7 @@ class ViewPesanBantuan extends ViewRecord
                 ->hidden(fn () => $this->record->status === 'Selesai'),
 
             Actions\Action::make('selesai')
-                ->label('Tandai Selesai')
+                ->label('Selesai')
                 ->icon('heroicon-o-check-circle')
                 ->color('success')
                 ->requiresConfirmation()
