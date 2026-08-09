@@ -211,10 +211,6 @@ class SuratPanggilanResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nomor_surat')
-                    ->label('No. Surat')
-                    ->searchable()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('siswa.nama_lengkap')
                     ->label('Siswa')
                     ->searchable()

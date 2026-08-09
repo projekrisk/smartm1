@@ -752,16 +752,29 @@ Route::get('/verifikasi-surat/panggilan', function (Request $request) {
     return view('cetak.verifikasi-panggilan', compact('surat'));
 })->name('verifikasi.panggilan');
 
+// Short URL Verification Route
 Route::get('/v/{token}', function ($token) {
-    $surat = SuratDispensasi::get()->first(function($s) use ($token) {
+    
+    $suratDispensasi = SuratDispensasi::get()->first(function($s) use ($token) {
         $hash = strtoupper(substr(md5($s->nomor_surat_lengkap . config('app.key')), 0, 6));
         return $hash === $token || $s->token === $token;
     });
 
-    if (!$surat) {
-        return abort(404, 'Dokumen Tidak Ditemukan atau Token Tidak Valid.');
+    if ($suratDispensasi) {
+        $tokenLama = substr(md5($suratDispensasi->nomor_surat_lengkap . config('app.key')), 0, 10);
+        return redirect('/verifikasi-surat/dispensasi?nomor=' . urlencode($suratDispensasi->nomor_surat_lengkap) . '&token=' . $tokenLama);
     }
 
-    $tokenLama = substr(md5($surat->nomor_surat_lengkap . config('app.key')), 0, 10);
-    return redirect('/verifikasi-surat/dispensasi?nomor=' . urlencode($surat->nomor_surat_lengkap) . '&token=' . $tokenLama);
+    $suratPanggilan = SuratPanggilan::get()->first(function($s) use ($token) {
+        $hash = strtoupper(substr(md5($s->nomor_surat . config('app.key')), 0, 6));
+        return $hash === $token || $s->token === $token;
+    });
+
+    if ($suratPanggilan) {
+        $tokenLama = substr(md5($suratPanggilan->nomor_surat . config('app.key')), 0, 10);
+        return redirect('/verifikasi-surat/panggilan?nomor=' . urlencode($suratPanggilan->nomor_surat) . '&token=' . $tokenLama);
+    }
+
+    return abort(404, 'Dokumen Surat Tidak Ditemukan atau Token Verifikasi Tidak Valid.');
+    
 })->name('verifikasi.short');
