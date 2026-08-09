@@ -8,6 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // 🌟 KUNCI PENYELESAIAN OTOMATIS: 
+        // Hapus sisa tabel yang "nyangkut" dari error sebelumnya sebelum membuat yang baru
+        Schema::dropIfExists('siswa_surat_dispensasi');
+
         Schema::create('siswa_surat_dispensasi', function (Blueprint $table) {
             $table->id();
             
