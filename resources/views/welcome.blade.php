@@ -10,10 +10,7 @@
     $appTitle = "Smart-M1 - " . $namaSekolah . " | Aplikasi Digitalisasi Sistem Administrasi & Akademik Siswa";
     $metaDescription = "Smart-M1 " . $namaSekolah . " adalah platform terpadu digitalisasi sistem administrasi dan akademik siswa. Akses nilai, e-rapor, absensi harian, dan portofolio prestasi sekolah secara real-time.";
     
-    $ogImageUrl = asset('images/og-image.jpg');
-    if ($pengaturan && $pengaturan->logo_sekolah) {
-        $ogImageUrl = url('/uploads/' . $pengaturan->logo_sekolah);
-    }
+    $ogImageUrl = url('images/og-image.jpg');
 @endphp
 
 <!DOCTYPE html>
