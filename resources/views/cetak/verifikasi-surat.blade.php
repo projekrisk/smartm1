@@ -38,7 +38,7 @@
 
             <div class="bg-gray-50 p-3 rounded-lg border border-gray-100">
                 <span class="block text-[11px] text-gray-500 uppercase tracking-wider font-bold mb-1">Ditandatangani Secara Elektronik Oleh:</span>
-                <span class="block font-bold text-blue-700 text-sm uppercase">{{ $surat->penandatangan->nama ?? '-' }}</span>
+                <span class="block font-bold text-blue-700 text-sm">{{ $surat->penandatangan->nama ?? '-' }}</span>
             </div>
         </div>
 

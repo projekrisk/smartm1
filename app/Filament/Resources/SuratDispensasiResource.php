@@ -65,7 +65,7 @@ class SuratDispensasiResource extends Resource
                 Forms\Components\Section::make('Informasi Surat')
                     ->schema([
                         Forms\Components\TextInput::make('nomor_urut')
-                            ->label('Nomor Surat (Input Manual)')
+                            ->label('Nomor Surat')
                             ->required()
                             ->numeric()
                             ->live(onBlur: true)
@@ -90,7 +90,7 @@ class SuratDispensasiResource extends Resource
                         Forms\Components\DatePicker::make('tanggal_surat')->default(now())->required(),
                         
                         Forms\Components\Select::make('penandatangan_id')
-                            ->label('Ditandatangani Oleh (Kepala Sekolah / Wakasek)')
+                            ->label('Ditandatangani Oleh')
                             ->options(function () use ($getPenandatangan) {
                                 return $getPenandatangan()->pluck('nama', 'id');
                             })

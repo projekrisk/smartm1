@@ -27,13 +27,4 @@ class SuratDispensasi extends Model
     {
         return $this->belongsToMany(Siswa::class, 'siswa_surat_dispensasi', 'surat_dispensasi_id', 'siswa_id');
     }
-
-    protected static function booted()
-    {
-        static::creating(function ($surat) {
-            if (empty($surat->token)) {
-                $surat->token = strtoupper(Str::random(6));
-            }
-        });
-    }
 }
