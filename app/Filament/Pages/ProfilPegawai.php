@@ -119,9 +119,23 @@ class ProfilPegawai extends Page implements HasForms, HasInfolists
                             TextEntry::make('jenis_kelamin')
                                 ->label('Jenis Kelamin')
                                 ->default('-'),
+                                
+                            // 🌟 PERBAIKAN: Menggunakan try-catch agar kebal error dari karakter '-'
                             TextEntry::make('tempat_lahir')
                                 ->label('Tempat, Tanggal Lahir')
-                                ->formatStateUsing(fn ($record) => ($record->tempat_lahir ?? '-') . ', ' . ($record->tanggal_lahir ? \Carbon\Carbon::parse($record->tanggal_lahir)->translatedFormat('d F Y') : '-')),
+                                ->formatStateUsing(function ($record) {
+                                    $tempat = $record->tempat_lahir ?? '-';
+                                    $tgl = $record->tanggal_lahir;
+                                    
+                                    if (empty($tgl) || $tgl === '-') return $tempat . ', -';
+                                    
+                                    try {
+                                        return $tempat . ', ' . \Carbon\Carbon::parse($tgl)->translatedFormat('d F Y');
+                                    } catch (\Exception $e) {
+                                        return $tempat . ', -';
+                                    }
+                                }),
+                                
                             TextEntry::make('agama')
                                 ->label('Agama')
                                 ->default('-'),
@@ -154,10 +168,19 @@ class ProfilPegawai extends Page implements HasForms, HasInfolists
                                     default => 'primary',
                                 })
                                 ->default('Aktif'),
+                                
+                            // 🌟 PERBAIKAN: Menggunakan try-catch untuk tanggal TMT
                             TextEntry::make('tmt_kerja')
                                 ->label('Terhitung Mulai Tanggal (TMT)')
-                                ->date('d F Y')
-                                ->default('-'),
+                                ->formatStateUsing(function ($state) {
+                                    if (empty($state) || $state === '-') return '-';
+                                    try {
+                                        return \Carbon\Carbon::parse($state)->translatedFormat('d F Y');
+                                    } catch (\Exception $e) {
+                                        return '-';
+                                    }
+                                }),
+                                
                             TextEntry::make('pendidikan_terakhir')
                                 ->label('Pendidikan Terakhir')
                                 ->formatStateUsing(fn ($record) => ($record->pendidikan_terakhir ?? '-') . ' - ' . ($record->jurusan ?? '-')),
