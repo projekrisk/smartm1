@@ -6,21 +6,20 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up()
+    public function up(): void
     {
         Schema::create('siswa_surat_dispensasi', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('surat_dispensasi_id')->constrained('surat_dispensasi')->cascadeOnDelete();
-            $table->foreignId('siswa_id')->constrained('siswa')->cascadeOnDelete();
+            
+            $table->unsignedBigInteger('surat_dispensasi_id');
+            $table->unsignedBigInteger('siswa_id');
+
+            $table->foreign('surat_dispensasi_id')->references('id')->on('surat_dispensasis')->onDelete('cascade');
+            
+            $table->foreign('siswa_id')->references('id')->on('siswa')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('siswa_surat_dispensasi');
