@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\SuratDispensasiResource\Pages;
 use App\Models\SuratDispensasi;
 use App\Models\Pegawai;
+use App\Models\Siswa;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Forms;
@@ -107,6 +108,10 @@ class SuratDispensasiResource extends Resource
                         Forms\Components\Select::make('siswa')
                             ->multiple()
                             ->relationship('siswa', 'nama_lengkap')
+                            ->getOptionLabelFromRecordUsing(function ($record) {
+                                $kelas = $record->kelas ? $record->kelas->nama_kelas : 'Tanpa Kelas';
+                                return "{$record->nama_lengkap} - (Kelas: {$kelas})";
+                            })
                             ->preload()
                             ->searchable()
                             ->label('Pilih Siswa yang Diberi Dispensasi')
