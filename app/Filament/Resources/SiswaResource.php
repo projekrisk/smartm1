@@ -329,7 +329,7 @@ class SiswaResource extends Resource
                                     ->hiddenLabel()
                                     ->disk('publik_upload')
                                     ->circular()
-                                    ->defaultImageUrl(url('/images/default-avatar.png'))
+                                    ->defaultImageUrl(url('/images/default-avatar.png'))   
                                     ->size(150),
                             ])->grow(false),
 

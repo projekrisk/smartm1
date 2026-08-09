@@ -17,8 +17,10 @@ use Filament\Notifications\Notification;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\Grid;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Infolists\Components\ImageEntry; // 🌟 PENTING: Import ImageEntry
+use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\Split;
+use Filament\Infolists\Components\Tabs;
+use Filament\Infolists\Components\Tabs\Tab;
 use Carbon\Carbon;
 
 class ProfilPegawai extends Page implements HasForms, HasInfolists
@@ -105,106 +107,130 @@ class ProfilPegawai extends Page implements HasForms, HasInfolists
         return $infolist
             ->record($this->pegawai)
             ->schema([
-                // 🌟 BAGIAN PROFIL & FOTO
-                Section::make('Profil Pegawai')
-                    ->schema([
-                        Split::make([
-                            Grid::make(1)->schema([
-                                // Logika Fallback Gambar: Jika foto ada -> url(/uploads/namafoto), Jika tidak -> api.ui-avatars
-                                ImageEntry::make('foto')
-                                    ->hiddenLabel()
-                                    ->circular()
-                                    ->size(130)
-                                    ->state(fn ($record) => $record->foto ? url('/uploads/' . $record->foto) : null)
-                                    ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name=' . urlencode($record->nama_lengkap ?? 'Pegawai') . '&color=FFFFFF&background=0f172a&size=256'),
-                            ])->grow(false),
-
-                            Grid::make(2)->schema([
-                                TextEntry::make('nama_lengkap')
-                                    ->label('Nama Lengkap & Gelar')
-                                    ->size(TextEntry\TextEntrySize::Large)
-                                    ->weight('bold')
-                                    ->columnSpanFull(),
-                                TextEntry::make('nip')
-                                    ->label('NIP / NUPTK')
-                                    ->copyable()
-                                    ->default('-')
-                                    ->icon('heroicon-m-identification'),
-                                TextEntry::make('jabatan')
-                                    ->label('Jabatan')
-                                    ->default('-')
-                                    ->icon('heroicon-m-briefcase'),
-                                TextEntry::make('status_pegawai')
-                                    ->label('Status Pegawai')
-                                    ->badge()
-                                    ->color(fn (string $state): string => match ($state) {
-                                        'Aktif' => 'success',
-                                        'Pensiun' => 'warning',
-                                        'Pindah/Mutasi' => 'danger',
-                                        default => 'primary',
-                                    })
-                                    ->default('Aktif'),
-                                TextEntry::make('jenis_ptk')
-                                    ->label('Jenis PTK')
-                                    ->badge()
-                                    ->color('info')
-                                    ->default('-'),
+                Tabs::make('Data Pegawai')
+                    ->tabs([
+                        Tab::make('Identitas')
+                            ->icon('heroicon-o-user')
+                            ->schema([
+                                Grid::make(2)->schema([
+                                    ImageEntry::make('foto')
+                                        ->label('Foto Profil')
+                                        ->disk('publik_upload')
+                                        ->circular()
+                                        ->width(120)
+                                        ->height(120)
+                                        ->state(fn ($record) => $record->foto ? url('/uploads/' . $record->foto) : null)
+                                        ->defaultImageUrl(asset('images/default-avatar.png'))
+                                        ->columnSpanFull(),
+                                    
+                                    TextEntry::make('nama')
+                                        ->label('Nama Lengkap')
+                                        ->weight('bold')
+                                        ->size(TextEntry\TextEntrySize::Large)
+                                        ->columnSpanFull(),
+                                    TextEntry::make('nik')->label('NIK (Nomor Kependudukan)'),
+                                    TextEntry::make('no_kk')->label('Nomor KK')->default('-'),
+                                    TextEntry::make('npwp')->label('NPWP')->default('-'),
+                                    TextEntry::make('jenis_kelamin')->label('Jenis Kelamin')->default('-'),
+                                    TextEntry::make('tempat_lahir')->label('Tempat Lahir')->default('-'),
+                                    
+                                    // 🌟 FORMAT TANGGAL YANG AMAN DARI ERROR
+                                    TextEntry::make('tanggal_lahir')
+                                        ->label('Tanggal Lahir')
+                                        ->formatStateUsing(function ($state) {
+                                            if (empty($state) || $state === '-') return '-';
+                                            try { return Carbon::parse($state)->isoFormat('D MMMM Y'); } catch (\Exception $e) { return '-'; }
+                                        }),
+                                        
+                                    TextEntry::make('telepon')->label('Nomor Telepon')->default('-'),
+                                    TextEntry::make('email')->label('Email Aktif')->default('-'),
+                                ]),
+                                Grid::make(2)->schema([
+                                    TextEntry::make('no_rekening')->label('Nomor Rekening')->default('-'),
+                                    TextEntry::make('nama_bank')->label('Bank')->default('-'),
+                                    TextEntry::make('alamat')
+                                        ->label('Alamat Lengkap')
+                                        ->getStateUsing(fn ($record) => $record->alamat ? $record->alamat . ' RT ' . ($record->rt ?? '-') . '/RW ' . ($record->rw ?? '-') . ', ' . ($record->kelurahan ?? '-') . ', Kec. ' . ($record->kecamatan ?? '-') . ', ' . ($record->kabupaten ?? '-') : '-')
+                                        ->columnSpanFull(),
+                                ])->extraAttributes(['class' => 'mt-4 border-t pt-4 border-gray-200 dark:border-white/10']),
                             ]),
-                        ])->from('md'),
-                    ]),
-
-                Section::make('Identitas Diri')
-                    ->icon('heroicon-o-identification')
-                    ->schema([
-                        Grid::make(3)->schema([
-                            TextEntry::make('nik')
-                                ->label('NIK (No. KTP)')
-                                ->copyable()
-                                ->default('-'),
-                            TextEntry::make('jenis_kelamin')
-                                ->label('Jenis Kelamin')
-                                ->default('-'),
-                            TextEntry::make('tempat_lahir')
-                                ->label('Tempat, Tanggal Lahir')
-                                ->formatStateUsing(function ($record) {
-                                    $tempat = $record->tempat_lahir ?? '-';
-                                    $tgl = $record->tanggal_lahir;
-                                    if (empty($tgl) || $tgl === '-') return $tempat . ', -';
-                                    try { return $tempat . ', ' . Carbon::parse($tgl)->translatedFormat('d F Y'); } catch (\Exception $e) { return $tempat . ', -'; }
-                                }),
-                            TextEntry::make('agama')
-                                ->label('Agama')
-                                ->default('-'),
-                            TextEntry::make('pendidikan_terakhir')
-                                ->label('Pendidikan Terakhir')
-                                ->formatStateUsing(fn ($record) => ($record->pendidikan_terakhir ?? '-') . ' - ' . ($record->jurusan ?? '-')),
-                            TextEntry::make('tmt_kerja')
-                                ->label('Terhitung Mulai Tanggal (TMT)')
-                                ->formatStateUsing(function ($state) {
-                                    if (empty($state) || $state === '-') return '-';
-                                    try { return Carbon::parse($state)->translatedFormat('d F Y'); } catch (\Exception $e) { return '-'; }
-                                }),
-                        ]),
-                    ]),
-
-                Section::make('Kontak & Alamat')
-                    ->icon('heroicon-o-map-pin')
-                    ->schema([
-                        Grid::make(2)->schema([
-                            TextEntry::make('telepon')
-                                ->label('Nomor WhatsApp / Telepon')
-                                ->icon('heroicon-m-phone')
-                                ->default('-'),
-                            TextEntry::make('email')
-                                ->label('Alamat Email')
-                                ->icon('heroicon-m-envelope')
-                                ->default('-'),
-                            TextEntry::make('alamat')
-                                ->label('Alamat Lengkap Rumah')
-                                ->columnSpanFull()
-                                ->default('-'),
-                        ]),
-                    ]),
+                            
+                        Tab::make('Kepegawaian')
+                            ->icon('heroicon-o-briefcase')
+                            ->schema([
+                                Grid::make(2)->schema([
+                                    TextEntry::make('jenis_ptk')
+                                        ->label('Jenis PTK')
+                                        ->weight('bold')
+                                        ->default('-'),
+                                    TextEntry::make('status_kepegawaian')
+                                        ->label('Status Kepegawaian')
+                                        ->badge()
+                                        ->color(fn (string $state): string => match ($state) {
+                                            'PNS' => 'success',
+                                            'PPPK' => 'info',
+                                            'GTY/PTY' => 'primary',
+                                            'Honorer' => 'warning',
+                                            default => 'gray',
+                                        })
+                                        ->default('-'),
+                                    TextEntry::make('tugas_utama')->label('Tugas Utama')->default('-'),
+                                    TextEntry::make('nip')->label('NIP')->default('-'),
+                                    TextEntry::make('nuptk')->label('NUPTK')->default('-'),
+                                    TextEntry::make('pangkat_golongan')->label('Pangkat / Gol. Ruang')->default('-'),
+                                    TextEntry::make('jabatan')->label('Jabatan')->default('-'),
+                                    TextEntry::make('status_tugas_saat_ini')
+                                        ->label('Status Tugas Saat Ini (Termasuk Wali Kelas & Tambahan)')
+                                        ->getStateUsing(function ($record) {
+                                            $tugas = $record->daftar_tugas_tambahan;
+                                            return empty($tugas) ? 'Tidak ada tugas tambahan.' : implode(', ', (array) $tugas);
+                                        })
+                                        ->columnSpanFull(),
+                                ]),
+                            ]),
+                            
+                        Tab::make('Riwayat & Masa Kerja')
+                            ->icon('heroicon-o-calendar-days')
+                            ->schema([
+                                Grid::make(2)->schema([
+                                    // 🌟 FORMAT TANGGAL YANG AMAN DARI ERROR
+                                    TextEntry::make('tmt_cpns_honorer')
+                                        ->label('TMT CPNS / Honorer Awal')
+                                        ->formatStateUsing(function ($state) {
+                                            if (empty($state) || $state === '-') return '-';
+                                            try { return Carbon::parse($state)->isoFormat('D MMMM Y'); } catch (\Exception $e) { return '-'; }
+                                        }),
+                                    TextEntry::make('tmt_pns_pppk')
+                                        ->label('TMT PNS / PPPK')
+                                        ->formatStateUsing(function ($state) {
+                                            if (empty($state) || $state === '-') return '-';
+                                            try { return Carbon::parse($state)->isoFormat('D MMMM Y'); } catch (\Exception $e) { return '-'; }
+                                        }),
+                                    TextEntry::make('tmt_golongan_terakhir')
+                                        ->label('TMT Golongan Terakhir')
+                                        ->formatStateUsing(function ($state) {
+                                            if (empty($state) || $state === '-') return '-';
+                                            try { return Carbon::parse($state)->isoFormat('D MMMM Y'); } catch (\Exception $e) { return '-'; }
+                                        }),
+                                ]),
+                                TextEntry::make('kalkulasi_masa_kerja')
+                                    ->label('Masa Kerja Terhitung (Otomatis)')
+                                    ->getStateUsing(fn ($record) => "Masa Kerja Golongan: " . intval($record->masa_kerja_golongan) . " Tahun | Keseluruhan: " . intval($record->masa_kerja_keseluruhan) . " Tahun")
+                                    ->columnSpanFull()
+                                    ->extraAttributes(['class' => 'mt-4 font-semibold text-primary-600']),
+                            ]),
+                            
+                        Tab::make('Pendidikan')
+                            ->icon('heroicon-o-academic-cap')
+                            ->schema([
+                                Grid::make(2)->schema([
+                                    TextEntry::make('pendidikan_ijazah')->label('Tingkat Ijazah')->default('-'),
+                                    TextEntry::make('pendidikan_tahun')->label('Tahun Lulus')->default('-'),
+                                    TextEntry::make('pendidikan_jurusan')->label('Fakultas / Jurusan')->columnSpanFull()->default('-'),
+                                ]),
+                            ]),
+                    ])
+                    ->columnSpanFull()
             ]);
     }
 
