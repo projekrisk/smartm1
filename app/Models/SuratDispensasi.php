@@ -1,6 +1,7 @@
 <?php
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class SuratDispensasi extends Model
 {
@@ -25,5 +26,14 @@ class SuratDispensasi extends Model
     public function siswa()
     {
         return $this->belongsToMany(Siswa::class, 'siswa_surat_dispensasi', 'surat_dispensasi_id', 'siswa_id');
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($surat) {
+            if (empty($surat->token)) {
+                $surat->token = strtoupper(Str::random(6));
+            }
+        });
     }
 }

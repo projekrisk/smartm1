@@ -9,6 +9,7 @@ use App\Models\Kelas;
 use App\Models\TahunAjaran;
 use App\Models\SuratDispensasi;
 use App\Models\SuratPanggilan;
+use App\Http\Controllers\VerifikasiSuratController;
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -750,3 +751,17 @@ Route::get('/verifikasi-surat/panggilan', function (Request $request) {
     $surat = SuratPanggilan::with('siswa.kelas')->where('nomor_surat', $nomor)->firstOrFail();
     return view('cetak.verifikasi-panggilan', compact('surat'));
 })->name('verifikasi.panggilan');
+
+Route::get('/v/{token}', function ($token) {
+    $surat = SuratDispensasi::get()->first(function($s) use ($token) {
+        $hash = strtoupper(substr(md5($s->nomor_surat_lengkap . config('app.key')), 0, 6));
+        return $hash === $token || $s->token === $token;
+    });
+
+    if (!$surat) {
+        return abort(404, 'Dokumen Tidak Ditemukan atau Token Tidak Valid.');
+    }
+
+    $tokenLama = substr(md5($surat->nomor_surat_lengkap . config('app.key')), 0, 10);
+    return redirect('/verifikasi-surat/dispensasi?nomor=' . urlencode($surat->nomor_surat_lengkap) . '&token=' . $tokenLama);
+})->name('verifikasi.short');

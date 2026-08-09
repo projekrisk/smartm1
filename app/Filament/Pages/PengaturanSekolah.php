@@ -46,7 +46,7 @@ class PengaturanSekolah extends Page implements HasForms
                             ->icon('heroicon-o-building-library')
                             ->schema([
                                 Forms\Components\TextInput::make('nama_sekolah')
-                                    ->label('Nama Sekolah (Ditampilkan di Kop Surat & Cetak)')
+                                    ->label('Nama Sekolah')
                                     ->required()
                                     ->columnSpanFull(),
                                 Forms\Components\Grid::make(2)->schema([
@@ -89,7 +89,7 @@ class PengaturanSekolah extends Page implements HasForms
                                 ]),
                             ]),
                             
-                        Forms\Components\Tabs\Tab::make('Keamanan & Filter')
+                        Forms\Components\Tabs\Tab::make('Filter')
                             ->icon('heroicon-o-shield-check')
                             ->schema([
                                 Forms\Components\Textarea::make('filter_kata_kasar')
@@ -121,7 +121,7 @@ class PengaturanSekolah extends Page implements HasForms
     {
         return [
             Action::make('reset_data')
-                ->label('Reset Data Sistem')
+                ->label('Reset Data')
                 ->icon('heroicon-o-exclamation-triangle')
                 ->color('danger')
                 ->requiresConfirmation()

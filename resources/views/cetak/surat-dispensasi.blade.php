@@ -45,10 +45,15 @@
         $pengaturan = null;
         try { if (\Illuminate\Support\Facades\Schema::hasTable('pengaturan')) $pengaturan = \App\Models\Pengaturan::first(); } catch (\Exception $e) {}
 
-        $token = substr(md5($surat->nomor_surat_lengkap . config('app.key')), 0, 10);
-        $urlVerifikasi = url('/verifikasi-surat/dispensasi?nomor=' . urlencode($surat->nomor_surat_lengkap) . '&token=' . $token);
+        // 🌟 PERBAIKAN QR CODE (URL PENDEK + POLA LONGGAR)
+        // Jika kolom token di database kosong/belum ada, otomatis buatkan 6 karakter acak
+        $token = $surat->token ?? strtoupper(substr(md5($surat->nomor_surat_lengkap . config('app.key')), 0, 6));
         
-        $qrData = QrCode::format('png')->size(300)->margin(1)->errorCorrection('H')->generate($urlVerifikasi);
+        // URL diubah menjadi format sangat pendek: domain.com/v/TOKEN
+        $urlVerifikasi = url('/v/' . $token);
+        
+        // Error Correction diubah dari 'H' menjadi 'Q' (Optimal menampung logo tengah tapi titik tidak padat)
+        $qrData = QrCode::format('png')->size(200)->margin(0)->errorCorrection('Q')->generate($urlVerifikasi);
         $qrCodeImage = 'data:image/png;base64,' . base64_encode($qrData);
     @endphp
 
@@ -126,7 +131,7 @@
                     <img src="{{ $qrCodeImage }}" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain;">
                     
                     @if(isset($pengaturan) && $pengaturan->logo_sekolah)
-                        <div style="position: absolute; top: 50%; left: 50%; width: 38px; height: 38px; margin-top: -19px; margin-left: -19px; background: white; padding: 3px; border-radius: 10px; border:1px solid #d7cccc;">
+                        <div style="position: absolute; top: 50%; left: 50%; width: 34px; height: 34px; margin-top: -17px; margin-left: -17px; background: white; padding: 2px; border-radius: 8px; border:1px solid #d7cccc;">
                             <img src="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
                         </div>
                     @endif
@@ -181,7 +186,7 @@
                     <img src="{{ $qrCodeImage }}" alt="QR Code" style="width: 100%; height: 100%; object-fit: contain;">
                     
                     @if(isset($pengaturan) && $pengaturan->logo_sekolah)
-                        <div style="position: absolute; top: 50%; left: 50%; width: 38px; height: 38px; margin-top: -19px; margin-left: -19px; background: white; padding: 3px; border-radius: 5px;">
+                        <div style="position: absolute; top: 50%; left: 50%; width: 34px; height: 34px; margin-top: -17px; margin-left: -17px; background: white; padding: 2px; border-radius: 8px; border:1px solid #d7cccc;">
                             <img src="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
                         </div>
                     @endif
