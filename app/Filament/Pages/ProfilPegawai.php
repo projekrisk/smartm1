@@ -10,7 +10,6 @@ use Filament\Forms;
 use Filament\Infolists\Contracts\HasInfolists;
 use Filament\Infolists\Concerns\InteractsWithInfolists;
 use Filament\Infolists\Infolist;
-use Filament\Infolists;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Pegawai;
@@ -18,7 +17,9 @@ use Filament\Notifications\Notification;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\Grid;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\ImageEntry; // 🌟 PENTING: Import ImageEntry
 use Filament\Infolists\Components\Split;
+use Carbon\Carbon;
 
 class ProfilPegawai extends Page implements HasForms, HasInfolists
 {
@@ -68,7 +69,6 @@ class ProfilPegawai extends Page implements HasForms, HasInfolists
                     ->directory('foto-pegawai')
                     ->maxSize(2048)
                     ->helperText('Format JPG/PNG. Maksimal 2MB.')
-                    // TRIK KHUSUS: Memaksa Filament untuk meratakan kolom ini ke tengah
                     ->extraAttributes([
                         'class' => 'mx-auto flex justify-center text-center',
                         'style' => 'display: flex; justify-content: center; align-items: center; text-align: center;'
@@ -105,16 +105,18 @@ class ProfilPegawai extends Page implements HasForms, HasInfolists
         return $infolist
             ->record($this->pegawai)
             ->schema([
-                // 🌟 BAGIAN PROFIL & FOTO DI PINDAH KE SINI
+                // 🌟 BAGIAN PROFIL & FOTO
                 Section::make('Profil Pegawai')
                     ->schema([
                         Split::make([
                             Grid::make(1)->schema([
+                                // Logika Fallback Gambar: Jika foto ada -> url(/uploads/namafoto), Jika tidak -> api.ui-avatars
                                 ImageEntry::make('foto')
                                     ->hiddenLabel()
                                     ->circular()
                                     ->size(130)
-                                    ->defaultImageUrl(url('/images/default-avatar.png')),
+                                    ->state(fn ($record) => $record->foto ? url('/uploads/' . $record->foto) : null)
+                                    ->defaultImageUrl(fn ($record) => 'https://ui-avatars.com/api/?name=' . urlencode($record->nama_lengkap ?? 'Pegawai') . '&color=FFFFFF&background=0f172a&size=256'),
                             ])->grow(false),
 
                             Grid::make(2)->schema([
@@ -168,7 +170,7 @@ class ProfilPegawai extends Page implements HasForms, HasInfolists
                                     $tempat = $record->tempat_lahir ?? '-';
                                     $tgl = $record->tanggal_lahir;
                                     if (empty($tgl) || $tgl === '-') return $tempat . ', -';
-                                    try { return $tempat . ', ' . \Carbon\Carbon::parse($tgl)->translatedFormat('d F Y'); } catch (\Exception $e) { return $tempat . ', -'; }
+                                    try { return $tempat . ', ' . Carbon::parse($tgl)->translatedFormat('d F Y'); } catch (\Exception $e) { return $tempat . ', -'; }
                                 }),
                             TextEntry::make('agama')
                                 ->label('Agama')
@@ -180,7 +182,7 @@ class ProfilPegawai extends Page implements HasForms, HasInfolists
                                 ->label('Terhitung Mulai Tanggal (TMT)')
                                 ->formatStateUsing(function ($state) {
                                     if (empty($state) || $state === '-') return '-';
-                                    try { return \Carbon\Carbon::parse($state)->translatedFormat('d F Y'); } catch (\Exception $e) { return '-'; }
+                                    try { return Carbon::parse($state)->translatedFormat('d F Y'); } catch (\Exception $e) { return '-'; }
                                 }),
                         ]),
                     ]),
