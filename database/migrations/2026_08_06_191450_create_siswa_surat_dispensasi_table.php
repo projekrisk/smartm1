@@ -8,25 +8,22 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // 🌟 KUNCI PENYELESAIAN OTOMATIS: 
-        // Hapus sisa tabel yang "nyangkut" dari error sebelumnya sebelum membuat yang baru
+        // 1. Bersihkan sisa tabel jika menyangkut
         Schema::dropIfExists('siswa_surat_dispensasi');
 
+        // 2. Buat tabel murni (tanpa ikatan paksa MySQL)
         Schema::create('siswa_surat_dispensasi', function (Blueprint $table) {
             $table->id();
             
-            $table->unsignedBigInteger('surat_dispensasi_id');
-            $table->unsignedBigInteger('siswa_id');
-
-            $table->foreign('surat_dispensasi_id')
-                  ->references('id')
-                  ->on('surat_dispensasi')
-                  ->onDelete('cascade');
+            // Kolom relasi biasa
+            $table->unsignedBigInteger('surat_dispensasi_id')->index();
+            $table->unsignedBigInteger('siswa_id')->index();
             
-            $table->foreign('siswa_id')
-                  ->references('id')
-                  ->on('siswa') 
-                  ->onDelete('cascade');
+            // Kita sengaja TIDAK menggunakan $table->foreign() di sini
+            // Agar MySQL di hosting tidak memprotes/membentrokkan tipe data & nama tabel.
+            // Relasi tetap akan berjalan lancar lewat Model Laravel.
+
+            $table->timestamps();
         });
     }
 
