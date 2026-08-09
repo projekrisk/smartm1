@@ -15,6 +15,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Pegawai;
 use Filament\Notifications\Notification;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\Grid;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\Split;
 
 class ProfilPegawai extends Page implements HasForms, HasInfolists
 {
@@ -101,27 +105,83 @@ class ProfilPegawai extends Page implements HasForms, HasInfolists
         return $infolist
             ->record($this->pegawai)
             ->schema([
-                Infolists\Components\Grid::make(2)->schema([
-                    Infolists\Components\TextEntry::make('nama')
-                        ->label('Nama Lengkap')
-                        ->weight('bold')
-                        ->size(Infolists\Components\TextEntry\TextEntrySize::Large)
-                        ->columnSpanFull(),
-                    Infolists\Components\TextEntry::make('nik')->label('NIK / No. KTP'),
-                    Infolists\Components\TextEntry::make('nip')->label('NIP (Pegawai)')->default('-'),
-                    Infolists\Components\TextEntry::make('status_kepegawaian')
-                        ->label('Status')
-                        ->badge()
-                        ->color(fn (string $state): string => match ($state) {
-                            'Guru' => 'success',
-                            'Staf' => 'info',
-                            'Keamanan' => 'warning',
-                            default => 'gray',
-                        }),
-                    Infolists\Components\TextEntry::make('tugas_utama')->label('Tugas Utama'),
-                    Infolists\Components\TextEntry::make('email')->label('Alamat Email')->icon('heroicon-m-envelope'),
-                    Infolists\Components\TextEntry::make('telepon')->label('Nomor Telepon')->icon('heroicon-m-phone')->default('-'),
-                ]),
+                Section::make('Identitas Diri')
+                    ->icon('heroicon-o-identification')
+                    ->schema([
+                        Grid::make(3)->schema([
+                            TextEntry::make('nama_lengkap')
+                                ->label('Nama Lengkap & Gelar')
+                                ->weight('bold'),
+                            TextEntry::make('nik')
+                                ->label('NIK (No. KTP)')
+                                ->copyable()
+                                ->default('-'),
+                            TextEntry::make('jenis_kelamin')
+                                ->label('Jenis Kelamin')
+                                ->default('-'),
+                            TextEntry::make('tempat_lahir')
+                                ->label('Tempat, Tanggal Lahir')
+                                ->formatStateUsing(fn ($record) => ($record->tempat_lahir ?? '-') . ', ' . ($record->tanggal_lahir ? \Carbon\Carbon::parse($record->tanggal_lahir)->translatedFormat('d F Y') : '-')),
+                            TextEntry::make('agama')
+                                ->label('Agama')
+                                ->default('-'),
+                        ]),
+                    ]),
+
+                Section::make('Informasi Kepegawaian & Akademik')
+                    ->icon('heroicon-o-academic-cap')
+                    ->schema([
+                        Grid::make(3)->schema([
+                            TextEntry::make('nip')
+                                ->label('NIP / NUPTK')
+                                ->copyable()
+                                ->default('-'),
+                            TextEntry::make('jenis_ptk')
+                                ->label('Jenis PTK')
+                                ->badge()
+                                ->color('info')
+                                ->default('-'),
+                            TextEntry::make('jabatan')
+                                ->label('Jabatan')
+                                ->default('-'),
+                            TextEntry::make('status_pegawai')
+                                ->label('Status Pegawai')
+                                ->badge()
+                                ->color(fn (string $state): string => match ($state) {
+                                    'Aktif' => 'success',
+                                    'Pensiun' => 'warning',
+                                    'Pindah/Mutasi' => 'danger',
+                                    default => 'primary',
+                                })
+                                ->default('Aktif'),
+                            TextEntry::make('tmt_kerja')
+                                ->label('Terhitung Mulai Tanggal (TMT)')
+                                ->date('d F Y')
+                                ->default('-'),
+                            TextEntry::make('pendidikan_terakhir')
+                                ->label('Pendidikan Terakhir')
+                                ->formatStateUsing(fn ($record) => ($record->pendidikan_terakhir ?? '-') . ' - ' . ($record->jurusan ?? '-')),
+                        ]),
+                    ]),
+
+                Section::make('Kontak & Alamat')
+                    ->icon('heroicon-o-map-pin')
+                    ->schema([
+                        Grid::make(2)->schema([
+                            TextEntry::make('telepon')
+                                ->label('Nomor WhatsApp / Telepon')
+                                ->icon('heroicon-m-phone')
+                                ->default('-'),
+                            TextEntry::make('email')
+                                ->label('Alamat Email')
+                                ->icon('heroicon-m-envelope')
+                                ->default('-'),
+                            TextEntry::make('alamat')
+                                ->label('Alamat Lengkap Rumah')
+                                ->columnSpanFull()
+                                ->default('-'),
+                        ]),
+                    ]),
             ]);
     }
 
