@@ -57,7 +57,6 @@
                         <td class="text-left" style="text-transform: uppercase; font-size:11px;">{{ $data['siswa']->nama_lengkap }}</td>
                         @foreach($penilaians as $p)
                             @php $nilai = $data['nilai'][$p->id]; @endphp
-                            <!-- Jika nilai kosong, beri warna merah agar wali kelas cepat tahu -->
                             <td class="{{ is_null($nilai) ? 'kosong' : '' }}">
                                 {{ is_null($nilai) ? '-' : $nilai }}
                             </td>

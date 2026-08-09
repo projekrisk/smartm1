@@ -198,7 +198,6 @@
                                 <th class="border border-gray-600 p-1 w-20">NIS</th>
                                 <th class="border border-gray-600 p-1 text-left">Nama Lengkap Siswa</th>
                                 <th class="border border-gray-600 p-1 w-24">Kelas</th>
-                                <!-- 🌟 URUTAN KOLOM BARU: A - I - S - T - D -->
                                 <th class="border border-gray-600 p-1 w-10 text-red-700" title="Alpa">A</th>
                                 <th class="border border-gray-600 p-1 w-10 text-blue-700" title="Izin">I</th>
                                 <th class="border border-gray-600 p-1 w-10 text-yellow-700" title="Sakit">S</th>
@@ -214,7 +213,6 @@
                                     <td class="border border-gray-600 p-1 text-center">{{ $siswa['nis'] }}</td>
                                     <td class="border border-gray-600 p-1 font-bold uppercase">{{ $siswa['nama'] }}</td>
                                     <td class="border border-gray-600 p-1 text-center">{{ $siswa['kelas'] }}</td>
-                                    <!-- 🌟 URUTAN DATA BARU MENYESUAIKAN HEADER -->
                                     <td class="border border-gray-600 p-1 text-center {{ $siswa['Alpa'] > 0 ? 'font-bold text-red-600' : 'text-gray-400' }}">{{ $siswa['Alpa'] ?: '-' }}</td>
                                     <td class="border border-gray-600 p-1 text-center {{ $siswa['Izin'] > 0 ? 'font-bold' : 'text-gray-400' }}">{{ $siswa['Izin'] ?: '-' }}</td>
                                     <td class="border border-gray-600 p-1 text-center {{ $siswa['Sakit'] > 0 ? 'font-bold' : 'text-gray-400' }}">{{ $siswa['Sakit'] ?: '-' }}</td>
@@ -232,7 +230,6 @@
             <div class="mt-4 flex justify-between text-[11px] avoid-break">
                 <div>
                     <strong>Keterangan Status:</strong><br>
-                    <!-- 🌟 URUTAN KETERANGAN BARU -->
                     A = Alpa &nbsp; | &nbsp; I = Izin &nbsp; | &nbsp; S = Sakit &nbsp; | &nbsp; T = Terlambat &nbsp; | &nbsp; D = Dispensasi
                 </div>
                 <div class="text-center w-64 pr-10">

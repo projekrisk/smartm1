@@ -165,19 +165,17 @@ Route::get('/cetak/laporan-absensi', function (\Illuminate\Http\Request $request
 
     $semuaSiswaIds = $siswasGrouped->flatten()->pluck('id');
 
-    // 🌟 PERBAIKAN: Menambahkan 'Dispensasi' ke dalam daftar pencarian absen
     $absensiData = \App\Models\KehadiranHarian::with('rekapKehadiran')
         ->whereIn('siswa_id', $semuaSiswaIds)
         ->whereHas('rekapKehadiran', function ($q) use ($start, $end) {
             $q->whereBetween('tanggal', [$start, $end]);
         })
-        ->whereIn('status', ['Sakit', 'Izin', 'Alpa', 'Dispensasi']) // <-- DISINI DITAMBAHKAN
+        ->whereIn('status', ['Sakit', 'Izin', 'Alpa', 'Dispensasi']) 
         ->get();
 
     $dataRekap = [];
     foreach ($semuaSiswaIds as $sId) {
         foreach ($months as $m) {
-            // 🌟 PERBAIKAN: Menyiapkan wadah hitungan untuk Dispensasi
             $dataRekap[$sId][$m['key']] = ['Sakit' => 0, 'Izin' => 0, 'Alpa' => 0, 'Dispensasi' => 0];
         }
         $dataRekap[$sId]['total'] = ['Sakit' => 0, 'Izin' => 0, 'Alpa' => 0, 'Dispensasi' => 0];
@@ -720,7 +718,6 @@ Route::get('/verifikasi-surat/dispensasi', function (Request $request) {
         return abort(404, 'Parameter URL tidak lengkap.');
     }
 
-    // 🌟 SISTEM KEAMANAN: Mencocokkan Token Unik (MD5 dari Nomor Surat + Kunci Aplikasi)
     $expectedToken = substr(md5($nomor . config('app.key')), 0, 10);
 
     if ($token !== $expectedToken) {
@@ -739,7 +736,6 @@ Route::get('/cetak/surat-panggilan/{id}', function ($id) {
     return view('cetak.surat-panggilan', compact('surat'));
 })->name('cetak.panggilan');
 
-// 🌟 RUTE VERIFIKASI QR CODE SURAT PANGGILAN
 Route::get('/verifikasi-surat/panggilan', function (Request $request) {
     $nomor = $request->query('nomor');
     $token = $request->query('token');

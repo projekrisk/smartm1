@@ -10,7 +10,6 @@ return new class extends Migration
     {
         Schema::create('kelas', function (Blueprint $table) {
             $table->id();
-            // Baris ini wajib ada dan diletakkan di atas wali_kelas_id
             $table->foreignId('tingkat_id')->constrained('tingkat')->cascadeOnDelete();
             
             $table->string('nama_kelas');

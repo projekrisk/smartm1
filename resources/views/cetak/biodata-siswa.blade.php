@@ -242,7 +242,6 @@
                             <div class="mb-6 avoid-break">
                                 <h3 class="font-bold bg-gray-200 px-2 py-1 mb-2 uppercase border border-gray-400">F. Riwayat Prestasi Siswa</h3>
                                 @php
-                                    // Memfilter catatan yang statusnya "Positif" (Prestasi)
                                     $prestasi = $siswa->catatan->where('jenis_catatan', 'Positif')->sortByDesc('tanggal');
                                 @endphp
 
@@ -278,7 +277,6 @@
                             <div class="mb-6 avoid-break">
                                 <h3 class="font-bold bg-gray-200 px-2 py-1 mb-2 uppercase border border-gray-400">G. Catatan Kasus & Pelanggaran</h3>
                                 @php
-                                    // Memfilter catatan yang statusnya "Negatif" atau "Netral" (Buku Kasus)
                                     $kasus = $siswa->catatan->whereIn('jenis_catatan', ['Negatif', 'Netral'])->sortByDesc('tanggal');
                                 @endphp
 

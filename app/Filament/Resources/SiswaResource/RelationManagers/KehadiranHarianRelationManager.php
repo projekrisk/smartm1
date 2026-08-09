@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 class KehadiranHarianRelationManager extends RelationManager
 {
     protected static string $relationship = 'kehadiranHarian';
-    protected static ?string $title = 'Riwayat Absensi';
+    protected static ?string $title = 'Absensi';
 
     public static function canViewForRecord(\Illuminate\Database\Eloquent\Model $ownerRecord, string $pageClass): bool
     {

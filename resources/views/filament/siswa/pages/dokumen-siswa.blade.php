@@ -47,7 +47,6 @@
                 @forelse($dokumens as $dokumen)
                     <div class="theme-card" style="border-radius: 20px; padding: 20px; position: relative;">
                         <div style="display: flex; gap: 16px;">
-                            <!-- Ikon Status -->
                             <div style="width: 48px; height: 48px; border-radius: 14px; background-color: rgba(6, 182, 212, 0.1); color: #06b6d4; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" class="dark:bg-cyan-900/30 dark:text-cyan-400">
                                 @if($dokumen->jenis_sumber === 'File')
                                     <x-filament::icon icon="heroicon-s-document-arrow-down" style="width: 24px; height: 24px;" />

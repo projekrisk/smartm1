@@ -13,7 +13,6 @@ class SiswaExporter extends Exporter
 
     public static function getColumns(): array
     {
-        // Mendefinisikan semua data yang akan dimasukkan ke dalam file Excel
         return [
             ExportColumn::make('nis')->label('NIS'),
             ExportColumn::make('nisn')->label('NISN'),

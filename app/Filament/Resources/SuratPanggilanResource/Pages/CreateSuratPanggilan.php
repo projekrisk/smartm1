@@ -16,18 +16,15 @@ class CreateSuratPanggilan extends CreateRecord
         return $this->getResource()::getUrl('index');
     }
 
-    // 🌟 PERBAIKAN NOTIFIKASI KE USER WALI KELAS
     protected function afterCreate(): void
     {
         $surat = $this->record;
         $siswa = $surat->siswa;
         
         if ($siswa && $siswa->kelas) {
-            // Karena sistem Anda menyimpan ID User sebagai Wali Kelas
             $waliKelasId = $siswa->kelas->wali_kelas_id; 
             
             if ($waliKelasId) {
-                // Langsung temukan User-nya
                 $userWaliKelas = User::find($waliKelasId);
                 
                 if ($userWaliKelas) {

@@ -10,7 +10,6 @@ class BerkasPegawai extends Model
 {
     use HasFactory;
     
-    // Asumsi: Pastikan nama tabelnya sesuai
     protected $table = 'berkas_pegawai';
     protected $guarded = [];
 

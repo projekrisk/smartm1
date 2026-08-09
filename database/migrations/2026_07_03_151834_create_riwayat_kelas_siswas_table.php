@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignId('kelas_id')->constrained('kelas')->cascadeOnDelete();
             $table->foreignId('tahun_ajaran_id')->constrained('tahun_ajaran')->cascadeOnDelete();
             
-            // Mencatat: 'Siswa Baru', 'Naik Kelas', 'Tinggal Kelas', atau 'Mutasi Masuk'
             $table->string('status_riwayat'); 
             
             $table->timestamps();

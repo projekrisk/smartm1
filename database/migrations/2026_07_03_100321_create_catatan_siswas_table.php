@@ -11,11 +11,11 @@ return new class extends Migration
         Schema::create('catatan_siswa', function (Blueprint $table) {
             $table->id();
             $table->foreignId('siswa_id')->constrained('siswa')->cascadeOnDelete();
-            $table->foreignId('guru_id')->constrained('users')->cascadeOnDelete(); // Guru/Staf yang mencatat
+            $table->foreignId('guru_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('tahun_ajaran_id')->constrained('tahun_ajaran')->cascadeOnDelete();
             
             $table->enum('jenis_catatan', ['Positif', 'Negatif', 'Biasa']);
-            $table->string('judul_catatan'); // Contoh: "Juara 1 Lomba Pidato" atau "Terlambat Upacara"
+            $table->string('judul_catatan');
             $table->text('isi_catatan');
             $table->date('tanggal');
             

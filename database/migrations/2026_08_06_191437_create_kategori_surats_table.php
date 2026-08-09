@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('kategori_surat', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_kategori'); // Cth: Surat Kesiswaan
-            $table->string('kode_prefix');   // Cth: 400.03.08
-            $table->string('kode_suffix')->default('SMA.01-MLP'); // Cth: SMA.01-MLP
+            $table->string('nama_kategori');
+            $table->string('kode_prefix');
+            $table->string('kode_suffix')->default('SMA.01-MLP');
             $table->timestamps();
         });
     }

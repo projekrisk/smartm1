@@ -91,7 +91,6 @@
                     
                     @foreach($raporGrouped as $semester => $nilais)
                         @php
-                            // Hitung Rata-rata Semester ini
                             $totalNilai = $nilais->sum('nilai_akhir');
                             $rataRata = $nilais->count() > 0 ? round($totalNilai / $nilais->count(), 1) : 0;
                             $rataColor = $rataRata >= 75 ? 'text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-900/30 border-green-200 dark:border-green-800' : 'text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-900/30 border-red-200 dark:border-red-800';

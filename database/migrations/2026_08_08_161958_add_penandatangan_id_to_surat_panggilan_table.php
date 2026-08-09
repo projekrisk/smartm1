@@ -9,7 +9,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('surat_panggilan', function (Blueprint $table) {
-            // Menambahkan kolom penandatangan_id setelah siswa_id
             $table->unsignedBigInteger('penandatangan_id')->nullable()->after('siswa_id');
         });
     }

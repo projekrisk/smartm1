@@ -30,7 +30,6 @@ class ProfilPegawai extends Page implements HasForms, HasInfolists
     protected static ?string $title = 'Profil Saya';
     protected static string $view = 'filament.pages.profil-pegawai';
     
-    // Menyembunyikan dari Sidebar kiri, karena akan kita taruh di Menu Kanan Atas
     protected static bool $shouldRegisterNavigation = false;
 
     public ?array $passwordData = [];
@@ -40,8 +39,7 @@ class ProfilPegawai extends Page implements HasForms, HasInfolists
 
     public function mount(): void
     {
-        // Cari data pegawai yang terhubung dengan user yang sedang login
-        $this->pegawai = Pegawai::where('user_id', Auth::id())->first();
+                $this->pegawai = Pegawai::where('user_id', Auth::id())->first();
         
         if ($this->pegawai) {
             $this->fotoForm->fill([
@@ -134,7 +132,6 @@ class ProfilPegawai extends Page implements HasForms, HasInfolists
                                     TextEntry::make('jenis_kelamin')->label('Jenis Kelamin')->default('-'),
                                     TextEntry::make('tempat_lahir')->label('Tempat Lahir')->default('-'),
                                     
-                                    // 🌟 FORMAT TANGGAL YANG AMAN DARI ERROR
                                     TextEntry::make('tanggal_lahir')
                                         ->label('Tanggal Lahir')
                                         ->formatStateUsing(function ($state) {
@@ -189,11 +186,10 @@ class ProfilPegawai extends Page implements HasForms, HasInfolists
                                 ]),
                             ]),
                             
-                        Tab::make('Riwayat & Masa Kerja')
+                        Tab::make('Riwayat')
                             ->icon('heroicon-o-calendar-days')
                             ->schema([
                                 Grid::make(2)->schema([
-                                    // 🌟 FORMAT TANGGAL YANG AMAN DARI ERROR
                                     TextEntry::make('tmt_cpns_honorer')
                                         ->label('TMT CPNS / Honorer Awal')
                                         ->formatStateUsing(function ($state) {
@@ -254,7 +250,6 @@ class ProfilPegawai extends Page implements HasForms, HasInfolists
             'password' => Hash::make($data['new_password']),
         ]);
         
-        // Kosongkan kembali form password setelah sukses
         $this->passwordForm->fill();
         Notification::make()->title('Password Berhasil Diubah')->success()->send();
     }

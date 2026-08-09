@@ -10,7 +10,6 @@ class CreateBukuNilai extends CreateRecord
 {
     protected static string $resource = BukuNilaiResource::class;
 
-    // Mengarahkan ke halaman Daftar Penilaian (Tabel Index) setelah berhasil simpan
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');

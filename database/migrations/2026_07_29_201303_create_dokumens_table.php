@@ -13,12 +13,10 @@ return new class extends Migration
             $table->string('judul');
             $table->text('keterangan')->nullable();
             
-            // Pilihan Sumber: File Upload langsung ATAU sekadar URL/Link eksternal
             $table->enum('jenis_sumber', ['File', 'Link'])->default('File');
             $table->string('file_path')->nullable();
             $table->string('url_link')->nullable();
             
-            // Target Audiens Dokumen
             $table->enum('target_audience', ['Semua', 'Guru & Staf', 'Siswa'])->default('Semua');
             
             $table->foreignId('dibuat_oleh')->constrained('users')->cascadeOnDelete();

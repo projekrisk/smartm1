@@ -40,12 +40,10 @@ return new class extends Migration
             $table->string('foto')->nullable();
             $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
 
-            // --- 4 KOLOM BARU ---
             $table->enum('status_siswa', ['Aktif', 'Lulus', 'Pindah', 'Dikeluarkan', 'Wafat'])->default('Aktif');
             $table->enum('jalur_masuk', ['Siswa Baru', 'Mutasi Masuk'])->default('Siswa Baru');
             $table->date('tanggal_masuk')->nullable();
             $table->date('tanggal_keluar')->nullable();
-            // ---------------------
 
             $table->timestamps();
         });

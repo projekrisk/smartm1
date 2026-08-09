@@ -12,7 +12,6 @@ return new class extends Migration
             $table->id();
             $table->string('judul');
             $table->text('isi');
-            // Menghubungkan pengumuman dengan siapa penulisnya (Admin)
             $table->foreignId('dibuat_oleh')->constrained('users')->cascadeOnDelete();
             $table->boolean('is_aktif')->default(true);
             $table->timestamps();

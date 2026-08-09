@@ -39,17 +39,16 @@
                         
                         <div class="flex justify-end pt-4">
                             <x-filament::button type="submit" color="primary" icon="heroicon-o-arrow-up-tray">
-                                Simpan Foto
+                                Simpan
                             </x-filament::button>
                         </div>
                     </form>
                 </x-filament::section>
             </div>
 
-            <!-- KONTEN TAB 3: GANTI PASSWORD -->
             <div x-show="activeTab === 'password'" x-cloak class="animate-fade-in pt-2">
                 <x-filament::section aside>
-                    <x-slot name="heading">Keamanan & Sandi</x-slot>
+                    <x-slot name="heading">Keamanan</x-slot>
                     <x-slot name="description">
                         Pastikan akun Anda tetap aman dengan menggunakan kata sandi yang panjang dan unik. <br><br>
                         Sangat disarankan untuk <b>tidak</b> menggunakan NIP, NIK, atau Tanggal Lahir sebagai kata sandi demi menghindari akses yang tidak sah.
@@ -60,7 +59,7 @@
                         
                         <div class="flex justify-end pt-4">
                             <x-filament::button type="submit" color="danger" icon="heroicon-o-lock-closed">
-                                Perbarui Kata Sandi
+                                Simpan
                             </x-filament::button>
                         </div>
                     </form>
@@ -69,7 +68,6 @@
             
         </div>
     @else
-        <!-- TAMPILAN KHUSUS UNTUK SUPER ADMIN -->
         <x-filament::section>
             <div class="text-center text-gray-500 py-10">
                 <x-filament::icon icon="heroicon-o-shield-exclamation" class="w-16 h-16 mx-auto text-warning-500 mb-4" />

@@ -118,7 +118,6 @@
                                 
                                 <div style="display: flex; align-items: center; gap: 14px; overflow: hidden; flex: 1; min-width: 0;">
                                     
-                                    <!-- 🌟 FOTO PROFIL SISWA (LIST) -->
                                     @if(!empty($item['foto']))
                                         <img src="{{ url('/uploads/' . $item['foto']) }}" 
                                              style="flex-shrink: 0; width: 46px; height: 46px; border-radius: 14px; object-fit: cover; border: 1px solid #e2e8f0;" 
@@ -176,7 +175,6 @@
 
                                      <div style="text-align: center; margin-bottom: 24px;">
                                         
-                                        <!-- 🌟 FOTO PROFIL SISWA (MODAL) -->
                                         @if(!empty($item['foto']))
                                             <img src="{{ url('/uploads/' . $item['foto']) }}" 
                                                  style="width: 56px; height: 56px; border-radius: 16px; object-fit: cover; display: block; margin: 0 auto 12px auto; border: 2px solid #e2e8f0;" 

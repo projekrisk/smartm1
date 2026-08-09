@@ -16,7 +16,6 @@ return new class extends Migration
             $table->enum('status', ['Hadir', 'Sakit', 'Izin', 'Alpa']);
             $table->text('keterangan')->nullable();
             
-            // Kolom untuk validasi staf TU
             $table->boolean('is_valid')->default(false);
             $table->foreignId('divalidasi_oleh')->nullable()->constrained('users')->nullOnDelete();
             

@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('jenis_nilai', function (Blueprint $table) {
             $table->id();
-            $table->string('nama', 50)->unique(); // Contoh: 'Sumatif 1', 'Sikap', 'Proyek'
+            $table->string('nama', 50)->unique();
             $table->timestamps();
         });
     }

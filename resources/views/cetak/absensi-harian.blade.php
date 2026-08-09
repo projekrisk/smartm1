@@ -140,7 +140,6 @@
                                     <span style="font-weight: bold;">Izin</span>
                                 @elseif($hadir->status === 'Alpa')
                                     <span style="font-weight: bold; color: red;">Alpa</span>
-                                <!-- 🌟 TAMBAHAN: Kondisi Dispensasi -->
                                 @elseif($hadir->status === 'Dispensasi')
                                     <span style="font-weight: bold; color: #4b5563;">Dispensasi</span>
                                 @else
@@ -163,7 +162,6 @@
                 $totalSakit = $rekap->kehadiranHarian->where('status', 'Sakit')->count();
                 $totalIzin  = $rekap->kehadiranHarian->where('status', 'Izin')->count();
                 $totalAlpa  = $rekap->kehadiranHarian->where('status', 'Alpa')->count();
-                // 🌟 TAMBAHAN: Variabel Total Dispensasi
                 $totalDispensasi = $rekap->kehadiranHarian->where('status', 'Dispensasi')->count();
                 $totalSiswa = $rekap->kehadiranHarian->count();
             @endphp
@@ -177,7 +175,6 @@
                         <tr><td>Sakit</td><td>: <strong>{{ $totalSakit }}</strong> Orang</td></tr>
                         <tr><td>Izin</td><td>: <strong>{{ $totalIzin }}</strong> Orang</td></tr>
                         <tr><td>Alpa</td><td>: <strong style="color: red;">{{ $totalAlpa }}</strong> Orang</td></tr>
-                        <!-- 🌟 TAMBAHAN: Baris Tabel Dispensasi -->
                         <tr><td>Dispensasi</td><td>: <strong>{{ $totalDispensasi }}</strong> Orang</td></tr>
                     </table>
                 </div>

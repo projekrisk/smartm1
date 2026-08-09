@@ -58,7 +58,6 @@
         <div class="cetak-kertas">
             
             <div class="border-b-4 border-gray-800 pb-3 mb-6 flex items-center justify-between">
-                <!-- Logo Dinas (Kiri) -->
                 <div class="w-24 h-24 flex-shrink-0 flex items-center justify-center">
                     @if(isset($pengaturan) && $pengaturan->logo_dinas)
                         <img src="{{ url('/uploads/' . $pengaturan->logo_dinas) }}" alt="Logo Dinas" class="max-w-full max-h-full object-contain">

@@ -12,6 +12,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        // Tidak perlu fungsi mundur
+        // 
     }
 };

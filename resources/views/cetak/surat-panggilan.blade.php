@@ -91,7 +91,6 @@
                 Sehubungan dengan adanya hal penting yang perlu kami sampaikan terkait perkembangan dan evaluasi belajar putra/putri Bapak/Ibu di sekolah, maka dengan ini kami memanggil Orang Tua/Wali Murid dari siswa:
             </p>
 
-            <!-- 🌟 IDENTITAS SISWA LENGKAP -->
             <table class="tabel-data">
                 <tr><td>Nama</td><td>:</td><td class="font-bold uppercase">{{ $surat->siswa->nama_lengkap ?? '-' }}</td></tr>
                 <tr><td>Tempat, Tanggal Lahir</td><td>:</td><td class="font-bold uppercase">{{ $surat->siswa->tempat_lahir ?? '-' }}, {{ $surat->siswa->tanggal_lahir ? \Carbon\Carbon::parse($surat->siswa->tanggal_lahir)->isoFormat('D MMMM Y') : '-' }}</td></tr>
@@ -103,7 +102,6 @@
                 Untuk dapat hadir pada:
             </p>
 
-            <!-- JADWAL PERTEMUAN -->
             <table class="tabel-data">
                 <tr><td>Hari/Tanggal</td><td>:</td><td class="font-bold">{{ \Carbon\Carbon::parse($surat->tanggal_panggilan)->isoFormat('dddd, D MMMM Y') }}</td></tr>
                 <tr><td>Pukul</td><td>:</td><td class="font-bold">{{ date('H:i', strtotime($surat->waktu_panggilan)) }} WIB s.d Selesai</td></tr>
@@ -116,7 +114,6 @@
             </p>
             <p style="text-indent: 1cm; text-align: justify;">Demikian surat panggilan ini kami sampaikan. Atas perhatian dan kerja samanya, kami ucapkan terima kasih.</p>
 
-            <!-- 🌟 TANDA TANGAN (DINAMIS SEPERTI DISPENSASI) -->
             <div class="ttd-area">
                 Malingping, {{ \Carbon\Carbon::parse($surat->tanggal_surat)->isoFormat('D MMMM Y') }}<br>
                 @if($isKepalaSekolah)

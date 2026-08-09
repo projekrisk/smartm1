@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('nomor_surat')->unique();
             $table->foreignId('siswa_id')->constrained('siswa')->cascadeOnDelete();
-            $table->foreignId('dibuat_oleh')->constrained('users')->cascadeOnDelete(); // Staf TU
+            $table->foreignId('dibuat_oleh')->constrained('users')->cascadeOnDelete();
             
             $table->date('tanggal_surat');
             $table->date('tanggal_panggilan');

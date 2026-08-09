@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Tambahkan baris ini untuk menghapus paksa tabel yang "nyangkut"
         Schema::dropIfExists('berkas_pegawai');
 
         Schema::create('berkas_pegawai', function (Blueprint $table) {
             $table->id();
-            // Sesuaikan dengan nama tabel pegawai Anda, misalnya 'pegawai' atau 'pegawais'
             $table->foreignId('pegawai_id')->constrained('pegawai')->cascadeOnDelete();
             $table->string('nama_berkas');
             $table->string('jenis_berkas');

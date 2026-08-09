@@ -8,7 +8,6 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // 1. Melepaskan ikatan guru tunggal dari Master Mata Pelajaran
         Schema::table('mata_pelajaran', function (Blueprint $table) {
             if (Schema::hasColumn('mata_pelajaran', 'guru_id')) {
                 $table->dropForeign(['guru_id']);
@@ -16,7 +15,6 @@ return new class extends Migration
             }
         });
 
-        // 2. Menambahkan kolom guru_id ke tabel pivot agar menjadi tabel Pembagian Tugas
         Schema::table('kelas_mata_pelajaran', function (Blueprint $table) {
             if (!Schema::hasColumn('kelas_mata_pelajaran', 'guru_id')) {
                 $table->foreignId('guru_id')->nullable()->constrained('users')->cascadeOnDelete();
@@ -26,6 +24,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        // ... (Fungsi mundur jika diperlukan)
+        // 
     }
 };

@@ -28,13 +28,11 @@ class SuratPanggilanResource extends Resource
     protected static ?string $modelLabel = 'Surat Panggilan';
     protected static ?int $navigationSort = 14;
 
-    // 🌟 1. PERBAIKAN BADGE MENGGUNAKAN RELASI DATABASE LANGSUNG (100% AKURAT)
     public static function getNavigationBadge(): ?string
     {
         $user = Auth::user();
         
         if ($user->peran === 'guru') {
-            // Mencari Kelas yang wali_kelas_id-nya sama dengan ID User ini
             $kelasIds = Kelas::where('wali_kelas_id', $user->id)->pluck('id')->toArray();
             
             if (!empty($kelasIds)) {
@@ -80,14 +78,12 @@ class SuratPanggilanResource extends Resource
         return in_array(Auth::user()->peran, ['admin', 'staf']);
     }
 
-    // 🌟 2. PERBAIKAN FILTER DATA WALI KELAS DI TABEL 
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery();
         $user = Auth::user();
         
         if ($user->peran === 'guru') {
-            // Mencari Kelas yang wali_kelas_id-nya sama dengan ID User ini
             $kelasIds = Kelas::where('wali_kelas_id', $user->id)->pluck('id')->toArray();
             
             if (!empty($kelasIds)) {
@@ -95,7 +91,7 @@ class SuratPanggilanResource extends Resource
                     $q->whereIn('kelas_id', $kelasIds);
                 });
             } else {
-                $query->where('id', 0); // Sembunyikan tabel jika bukan wali kelas manapun
+                $query->where('id', 0);
             }
         }
         
@@ -138,7 +134,6 @@ class SuratPanggilanResource extends Resource
                         ]),
 
                         Forms\Components\Grid::make(3)->schema([
-                            // 🌟 3. FORM NAMA SISWA + KELAS (AGAR TIDAK TERTUKAR)
                             Forms\Components\Select::make('siswa_id')
                                 ->label('Nama Siswa')
                                 ->relationship('siswa', 'nama_lengkap', fn (Builder $query) => $query->with('kelas'))
@@ -148,7 +143,6 @@ class SuratPanggilanResource extends Resource
                                 ->required()
                                 ->disabled($isGuru),
 
-                            // 🌟 4. FORM PENANDATANGAN DIFILTER HANYA KEPALA SEKOLAH
                             Forms\Components\Select::make('penandatangan_id')
                                 ->label('Penandatangan Surat')
                                 ->relationship('penandatangan', 'nama', fn (Builder $query) => $query->where('jenis_ptk', 'like', '%Kepala Sekolah%'))
@@ -209,7 +203,6 @@ class SuratPanggilanResource extends Resource
         if ($urut) {
             $indexStatis = '421.3'; 
             $tahun = date('Y');
-            // Hasil: 421.3/123/SMA.01-MLP/2026
             $set('nomor_surat', "{$indexStatis}/{$urut}/SMA.01-MLP/{$tahun}");
         }
     }

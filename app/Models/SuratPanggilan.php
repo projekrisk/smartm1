@@ -14,7 +14,7 @@ class SuratPanggilan extends Model
     protected $fillable = [
         'nomor_surat',
         'siswa_id',
-        'penandatangan_id', // 🌟 WAJIB DITAMBAHKAN DI SINI
+        'penandatangan_id',
         'tanggal_surat',
         'dibuat_oleh',
         'tanggal_panggilan',
@@ -24,13 +24,11 @@ class SuratPanggilan extends Model
         'status',
     ];
 
-    // Relasi ke Siswa
     public function siswa()
     {
         return $this->belongsTo(Siswa::class, 'siswa_id');
     }
 
-    // Relasi ke Penandatangan (Pegawai)
     public function penandatangan()
     {
         return $this->belongsTo(Pegawai::class, 'penandatangan_id');

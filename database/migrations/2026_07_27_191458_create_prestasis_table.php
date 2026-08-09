@@ -12,20 +12,17 @@ return new class extends Migration
             $table->id();
             $table->foreignId('siswa_id')->constrained('siswa')->cascadeOnDelete();
             
-            $table->string('nama_prestasi'); // Cth: Juara 1 Lomba Pidato
+            $table->string('nama_prestasi');
             $table->enum('kategori', ['Akademik', 'Non-Akademik']);
             $table->enum('tingkat', ['Sekolah', 'Kabupaten/Kota', 'Provinsi', 'Nasional', 'Internasional']);
             $table->date('tanggal_perolehan');
             $table->string('penyelenggara')->nullable();
             
-            // Bukti foto/pdf (Wajib untuk pengajuan siswa)
             $table->string('bukti_file')->nullable();
             
-            // Sistem Approval
             $table->enum('status', ['Menunggu', 'Disetujui', 'Ditolak'])->default('Menunggu');
-            $table->text('catatan_admin')->nullable(); // Alasan jika ditolak
+            $table->text('catatan_admin')->nullable();
             
-            // Tracking
             $table->enum('diajukan_oleh', ['Siswa', 'Admin/Staf'])->default('Siswa');
             $table->foreignId('validator_id')->nullable()->constrained('users')->nullOnDelete();
 

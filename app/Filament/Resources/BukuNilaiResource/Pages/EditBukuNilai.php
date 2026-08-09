@@ -17,7 +17,6 @@ class EditBukuNilai extends EditRecord
         ];
     }
 
-    // Mengarahkan ke halaman Daftar Penilaian (Tabel Index) setelah berhasil diedit
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');

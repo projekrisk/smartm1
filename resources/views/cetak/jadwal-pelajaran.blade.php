@@ -116,7 +116,6 @@
                                     @endphp
                                     <td class="border border-gray-800 p-1 align-middle {{ $kelasBerlangsung->isEmpty() ? 'bg-pattern' : '' }}">
                                         @foreach($kelasBerlangsung as $j)
-                                            <!-- PERBAIKAN: Menambahkan nama kelas di bawah kode mapel -->
                                             <div class="mb-1 last:mb-0">
                                                 <strong class="text-[12px] font-bold text-gray-900 uppercase block">
                                                     {{ $j->mataPelajaran->kode_pelajaran ?? '-' }}

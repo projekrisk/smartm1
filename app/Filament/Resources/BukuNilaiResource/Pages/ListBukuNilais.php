@@ -25,8 +25,6 @@ class ListBukuNilais extends ListRecords
                         ->options(function () {
                             $query = \App\Models\Kelas::query();
                             
-                            // Jika Guru, HANYA tampilkan kelas di mana dia adalah wali kelasnya.
-                            // (Mengecek kolom guru_id atau wali_kelas_id di tabel kelas)
                             if (auth()->user()->peran === 'guru') {
                                 if (Schema::hasColumn('kelas', 'wali_kelas_id')) {
                                     $query->where('wali_kelas_id', auth()->id());
@@ -44,7 +42,6 @@ class ListBukuNilais extends ListRecords
                         ->required(),
                 ])
                 ->action(function (array $data) {
-                    // PASTIKAN URL-NYA MENGARAH KE SINI
                     return redirect()->to('/rekap-buku-nilai/' . $data['kelas_id']);
                 })
                 ->modalHeading('Cetak Pantauan Nilai Kelas')

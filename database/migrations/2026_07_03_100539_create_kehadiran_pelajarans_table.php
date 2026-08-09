@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('kehadiran_pelajaran', function (Blueprint $table) {
             $table->id();
             $table->foreignId('siswa_id')->constrained('siswa')->cascadeOnDelete();
-            $table->foreignId('jurnal_guru_id')->constrained('jurnal_guru')->cascadeOnDelete(); // Terikat pada sesi mengajar
+            $table->foreignId('jurnal_guru_id')->constrained('jurnal_guru')->cascadeOnDelete();
             
             $table->enum('status', ['Hadir', 'Sakit', 'Izin', 'Alpa', 'Terlambat']);
             $table->text('keterangan')->nullable();

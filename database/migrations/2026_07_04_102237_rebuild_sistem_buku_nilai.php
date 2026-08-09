@@ -8,10 +8,8 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Hapus tabel lama yang strukturnya kurang tepat
         Schema::dropIfExists('buku_nilai');
 
-        // 1. Buat Tabel Master (Kegiatan Penilaian / Header)
         Schema::create('penilaian', function (Blueprint $table) {
             $table->id();
             $table->foreignId('mata_pelajaran_id')->constrained('mata_pelajaran')->cascadeOnDelete();
@@ -22,12 +20,11 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // 2. Buat Tabel Detail (Nilai Siswa per Penilaian / Line)
         Schema::create('buku_nilai', function (Blueprint $table) {
             $table->id();
             $table->foreignId('penilaian_id')->constrained('penilaian')->cascadeOnDelete();
             $table->foreignId('siswa_id')->constrained('siswa')->cascadeOnDelete();
-            $table->decimal('nilai', 5, 2)->nullable(); // Bisa kosong jika belum dinilai
+            $table->decimal('nilai', 5, 2)->nullable();
             $table->text('catatan_guru')->nullable();
             $table->timestamps();
         });

@@ -8,18 +8,16 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // 1. Tambahkan kolom filter kata kasar di pengaturan
         Schema::table('pengaturan', function (Blueprint $table) {
             if (!Schema::hasColumn('pengaturan', 'filter_kata_kasar')) {
                 $table->text('filter_kata_kasar')->nullable();
             }
         });
 
-        // 2. Buat tabel testimoni/rating
         Schema::create('testimoni', function (Blueprint $table) {
             $table->id();
             $table->foreignId('siswa_id')->constrained('siswa')->cascadeOnDelete();
-            $table->integer('rating'); // Bintang 1 - 5
+            $table->integer('rating');
             $table->text('pesan');
             $table->timestamps();
         });

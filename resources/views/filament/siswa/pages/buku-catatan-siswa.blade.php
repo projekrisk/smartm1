@@ -56,8 +56,7 @@
                 
                 @forelse($catatans as $index => $item)
                     @php
-                        // Menyesuaikan warna berdasarkan kategori catatan
-                        $bg = 'rgba(100,116,139,0.1)'; $tc = '#64748b'; $icon = 'heroicon-s-information-circle';
+                        $bg = 'rgba(3, 5, 8, 0.1)'; $tc = '#64748b'; $icon = 'heroicon-s-information-circle';
                         if ($item->jenis_catatan == 'Positif') { $bg = 'rgba(16,185,129,0.1)'; $tc = '#10b981'; $icon = 'heroicon-s-star'; }
                         if ($item->jenis_catatan == 'Negatif') { $bg = 'rgba(239,68,68,0.1)'; $tc = '#ef4444'; $icon = 'heroicon-s-exclamation-triangle'; }
                         if ($item->jenis_catatan == 'Bimbingan') { $bg = 'rgba(14,165,233,0.1)'; $tc = '#0ea5e9'; $icon = 'heroicon-s-chat-bubble-bottom-center-text'; }
@@ -104,7 +103,6 @@
                                         </div>
                                     </div>
                                     
-                                    <!-- Jika ada Tindak Lanjut -->
                                     @if($item->status_tindak_lanjut === 'Sudah')
                                         <div style="margin-top: 12px; border-top: 1px dashed rgba(0,0,0,0.1); padding-top: 12px;" class="dark:border-white/10">
                                             <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">

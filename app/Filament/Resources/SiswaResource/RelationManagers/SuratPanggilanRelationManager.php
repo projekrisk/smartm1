@@ -12,8 +12,8 @@ use Illuminate\Support\Facades\Auth;
 
 class SuratPanggilanRelationManager extends RelationManager
 {
-    protected static string $relationship = 'suratPanggilan'; // Pastikan relasi di model Siswa bernama suratPanggilan()
-    protected static ?string $title = 'Riwayat Surat Panggilan';
+    protected static string $relationship = 'suratPanggilan';
+    protected static ?string $title = 'Panggilan';
 
     public function form(Form $form): Form
     {
@@ -69,7 +69,7 @@ class SuratPanggilanRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                // Pembuatan surat tetap di menu utama kesiswaan, jadi tombol create di sini disembunyikan/opsional
+                //
             ])
             ->actions([
                 Tables\Actions\EditAction::make()->label('Ubah Status'),

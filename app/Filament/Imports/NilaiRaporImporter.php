@@ -40,30 +40,25 @@ class NilaiRaporImporter extends Importer
 
     public function resolveRecord(): ?NilaiRapor
     {
-        // 1. Ambil data dari Excel
         $nisn = $this->data['nisn'] ?? null;
         $kodePelajaran = $this->data['kode_pelajaran'] ?? null;
         
-        // 2. Ambil ID Tahun Ajaran dari Form Pilihan Admin di layar (dikirim via options)
         $tahunAjaranId = $this->options['tahun_ajaran_id'] ?? null;
 
         if (!$nisn || !$kodePelajaran || !$tahunAjaranId) {
             throw new \Exception('Data tidak lengkap. Pastikan NISN, Kode Mapel, dan Tahun Ajaran sudah diset.');
         }
 
-        // 3. Terjemahkan NISN menjadi siswa_id
         $siswa = Siswa::where('nisn', $nisn)->first();
         if (!$siswa) {
             throw new \Exception("Siswa dengan NISN $nisn tidak ditemukan di sistem.");
         }
 
-        // 4. Terjemahkan Kode Mapel menjadi mata_pelajaran_id
         $mapel = MataPelajaran::where('kode_pelajaran', $kodePelajaran)->first();
         if (!$mapel) {
             throw new \Exception("Mata Pelajaran dengan kode $kodePelajaran tidak ditemukan.");
         }
 
-        // 5. Update jika sudah ada nilainya, Create jika belum ada
         return NilaiRapor::firstOrNew([
             'siswa_id' => $siswa->id,
             'mata_pelajaran_id' => $mapel->id,

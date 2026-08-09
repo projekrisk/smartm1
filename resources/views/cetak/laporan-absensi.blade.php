@@ -58,11 +58,9 @@
                             <th rowspan="2" class="border border-gray-600 p-1 w-48">Nama Siswa</th>
                             
                             @foreach($months as $m)
-                                <!-- Ubah colspan menjadi 4 untuk memuat kolom Dispensasi -->
                                 <th colspan="4" class="border border-gray-600 p-1">{{ $m['label'] }}</th>
                             @endforeach
                             
-                            <!-- Ubah colspan TOTAL menjadi 4 -->
                             <th colspan="4" class="border border-gray-600 p-1 bg-yellow-100 font-bold">TOTAL</th>
                         </tr>
                         <tr class="bg-gray-100 text-center text-[10px]">

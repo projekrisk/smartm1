@@ -10,7 +10,6 @@
 
     <div class="max-w-md w-full bg-white shadow-xl rounded-2xl p-6 border-t-8 border-green-600 relative overflow-hidden">
         
-        <!-- Ikon Sukses -->
         <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-3 text-3xl font-bold">
             ✓
         </div>
@@ -20,7 +19,6 @@
             <p class="text-xs text-gray-500 mt-1">Sistem Penjaminan Keaslian Dokumen Elektronik</p>
         </div>
 
-        <!-- 🌟 LAYOUT BARU: Atas-Bawah -->
         <div class="mt-6 border-t border-gray-200 pt-5 space-y-4">
             
             <div class="bg-gray-50 p-3 rounded-lg border border-gray-100">
@@ -44,7 +42,6 @@
             </div>
         </div>
 
-        <!-- Daftar Siswa -->
         <div class="mt-5 border-t border-gray-200 pt-5">
             <span class="block text-[11px] text-gray-500 uppercase tracking-wider font-bold mb-2">Peserta Didik yang Diberi Dispensasi ({{ $surat->siswa->count() }} Orang):</span>
             <ul class="text-xs space-y-1.5 bg-gray-50 p-3 rounded-lg border border-gray-100 max-h-40 overflow-y-auto">
@@ -57,7 +54,6 @@
             </ul>
         </div>
 
-        <!-- 🌟 TOMBOL HOME -->
         <div class="mt-8 mb-2">
             <a href="{{ url('/') }}" class="w-full flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-900 text-white py-2.5 rounded-lg font-semibold text-sm transition-colors shadow-md">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">

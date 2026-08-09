@@ -8,17 +8,13 @@ return new class extends Migration
 {
     public function up()
     {
-        // 🌟 1. Matikan sementara aturan Foreign Key (Relasi)
         Schema::disableForeignKeyConstraints();
 
-        // 🌟 2. Hapus tabel dengan aman
         Schema::dropIfExists('jenis_surat');
         Schema::dropIfExists('kategori_surat');
 
-        // 🌟 3. Nyalakan kembali aturan Foreign Key
         Schema::enableForeignKeyConstraints();
 
-        // 4. Buat ulang tabel
         Schema::create('kategori_surat', function (Blueprint $table) {
             $table->id();
             $table->string('nama_kategori');

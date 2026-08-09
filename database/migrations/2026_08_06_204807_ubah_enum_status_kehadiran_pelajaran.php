@@ -7,8 +7,6 @@ return new class extends Migration
 {
     public function up()
     {
-        // Menambahkan 'Dispensasi' ke tabel kehadiran_pelajaran
-        // Catatan: Saya juga menyertakan 'Terlambat' karena Jurnal Guru memiliki opsi Terlambat
         DB::statement("ALTER TABLE kehadiran_pelajaran MODIFY COLUMN status ENUM('Hadir', 'Sakit', 'Izin', 'Alpa', 'Terlambat', 'Dispensasi') NOT NULL DEFAULT 'Hadir'");
     }
 

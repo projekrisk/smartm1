@@ -13,7 +13,7 @@ use App\Models\TahunAjaran;
 class CatatanRelationManager extends RelationManager
 {
     protected static string $relationship = 'catatan';
-    protected static ?string $title = 'Buku Kasus & Bimbingan';
+    protected static ?string $title = 'Catatan';
 
     public function form(Form $form): Form
     {

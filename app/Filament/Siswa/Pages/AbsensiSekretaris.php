@@ -59,9 +59,8 @@ class AbsensiSekretaris extends Page
         foreach ($siswas as $siswa) {
             $status = 'Hadir'; 
             $keterangan = '';
-            $isDispensasi = false; // Penanda khusus untuk mengunci pilihan
+            $isDispensasi = false;
 
-            // Cek Surat Dispensasi Hari Ini
             $adaDispensasi = $siswa->suratDispensasi()
                 ->where('tanggal_mulai', '<=', $today->format('Y-m-d'))
                 ->where('tanggal_selesai', '>=', $today->format('Y-m-d'))
@@ -70,14 +69,12 @@ class AbsensiSekretaris extends Page
             if ($adaDispensasi) {
                 $status = 'Dispensasi';
                 $keterangan = "Nomor Surat: " . $adaDispensasi->nomor_surat_lengkap; 
-                $isDispensasi = true; // Kunci statusnya!
+                $isDispensasi = true;
             }
 
-            // Jika rekap hari ini sudah pernah disimpan (Edit Mode)
             if ($rekap) {
                 $hadir = KehadiranHarian::where('rekap_kehadiran_id', $rekap->id)->where('siswa_id', $siswa->id)->first();
                 if ($hadir) {
-                    // PENTING: Jangan timpa status menjadi data lama database JIKA hari ini dia ada surat dispensasi aktif
                     if (!$isDispensasi) {
                         $status = $hadir->status;
                         $keterangan = $hadir->keterangan ?? '';
@@ -90,7 +87,7 @@ class AbsensiSekretaris extends Page
                 'nama' => $siswa->nama_lengkap,
                 'nisn' => $siswa->nisn,
                 'nis' => $siswa->nis,
-                'foto' => $siswa->foto, // 🌟 TAMBAHKAN BARIS INI
+                'foto' => $siswa->foto,
                 'status' => $status,
                 'keterangan' => $keterangan,
                 'is_dispensasi' => $isDispensasi,
@@ -115,9 +112,6 @@ class AbsensiSekretaris extends Page
 
         foreach ($this->absensi as $item) {
             
-            // =========================================================
-            // KEAMANAN BACKEND: Paksa statusnya jika is_dispensasi = true
-            // =========================================================
             $statusFinal = ($item['is_dispensasi'] ?? false) ? 'Dispensasi' : $item['status'];
 
             KehadiranHarian::updateOrCreate(

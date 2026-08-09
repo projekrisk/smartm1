@@ -5,8 +5,7 @@
 </head>
 <body>
     @php
-        // Hitung total kolom dinamis (setiap sumatif sekarang memakan 2 kolom: Nilai & Status)
-        $totalKolom = 3; // Nomor, NISN, Nama
+        $totalKolom = 3;
         foreach($grupMapel as $penilaians) {
             $totalKolom += (count($penilaians) * 2);
         }
@@ -14,7 +13,6 @@
 
     <table>
         <thead>
-            <!-- ===================== KOP JUDUL EXCEL ===================== -->
             <tr>
                 <th colspan="{{ $totalKolom }}" style="text-align: center; font-weight: bold; font-size: 16px;">
                     {{ strtoupper($namaSekolah ?? 'SEKOLAH') }}
@@ -31,17 +29,14 @@
                 </th>
             </tr>
             <tr>
-                <th colspan="{{ $totalKolom }}"></th> <!-- Baris Kosong -->
+                <th colspan="{{ $totalKolom }}"></th>
             </tr>
-            <!-- =========================================================== -->
 
-            <!-- HEADER TABEL INTI (3 TINGKAT) -->
             <tr>
                 <th rowspan="3" style="font-weight: bold; text-align: center; background-color: #f8fafc; border: 1px solid #000000; vertical-align: middle;">No</th>
                 <th rowspan="3" style="font-weight: bold; text-align: center; background-color: #f8fafc; border: 1px solid #000000; vertical-align: middle;">NISN</th>
                 <th rowspan="3" style="font-weight: bold; text-align: center; background-color: #f8fafc; width: 250px; border: 1px solid #000000; vertical-align: middle;">Nama Lengkap Siswa</th>
                 
-                <!-- TINGKAT 1: Nama Mata Pelajaran -->
                 @foreach($grupMapel as $namaMapel => $penilaians)
                     <th colspan="{{ count($penilaians) * 2 }}" style="font-weight: bold; text-align: center; background-color: #cbd5e1; border: 1px solid #000000;">
                         {{ $namaMapel }}
@@ -49,7 +44,6 @@
                 @endforeach
             </tr>
             <tr>
-                <!-- TINGKAT 2: Jenis Penilaian (S1, S2, dsb) -->
                 @foreach($grupMapel as $namaMapel => $penilaians)
                     @foreach($penilaians as $p)
                         <th colspan="2" style="font-weight: bold; text-align: center; background-color: #e2e8f0; border: 1px solid #000000;">
@@ -59,7 +53,6 @@
                 @endforeach
             </tr>
             <tr>
-                <!-- TINGKAT 3: Label Nilai & Status -->
                 @foreach($grupMapel as $namaMapel => $penilaians)
                     @foreach($penilaians as $p)
                         <th style="font-weight: bold; text-align: center; background-color: #f1f5f9; border: 1px solid #000000;">Nilai</th>
@@ -82,24 +75,21 @@
                                 $status = '-';
                                 $warnaStatus = '';
 
-                                // Logika penentuan R dan T (KKM = 75)
                                 if(!is_null($nilai) && is_numeric($nilai)){
                                     if($nilai < 75){
                                         $status = 'R';
-                                        $warnaStatus = 'color: #ff0000; font-weight: bold;'; // Merah
+                                        $warnaStatus = 'color: #ff0000; font-weight: bold;';
                                     } else {
                                         $status = 'T';
-                                        $warnaStatus = 'color: #16a34a; font-weight: bold;'; // Hijau
+                                        $warnaStatus = 'color: #16a34a; font-weight: bold;';
                                     }
                                 }
                             @endphp
                             
                             @if(is_null($nilai))
-                                <!-- Jika Kosong -->
                                 <td style="text-align: center; background-color: #ffcccc; color: #ff0000; font-weight: bold; border: 1px solid #000000;">X</td>
                                 <td style="text-align: center; background-color: #ffcccc; color: #ff0000; font-weight: bold; border: 1px solid #000000;">X</td>
                             @else
-                                <!-- Jika Ada Nilai -->
                                 <td style="text-align: center; border: 1px solid #000000;">{{ $nilai }}</td>
                                 <td style="text-align: center; border: 1px solid #000000; {{ $warnaStatus }}">{{ $status }}</td>
                             @endif
@@ -108,7 +98,6 @@
                 </tr>
             @endforeach
             
-            <!-- BARIS KOSONG PEMISAH -->
             <tr>
                 <td colspan="{{ $totalKolom }}"></td>
             </tr>
@@ -116,7 +105,6 @@
                 <td colspan="{{ $totalKolom }}"></td>
             </tr>
 
-            <!-- TABEL KETERANGAN DI BAWAH -->
             <tr>
                 <td colspan="2"></td>
                 <td style="font-weight: bold; text-decoration: underline;">KETERANGAN STATUS:</td>

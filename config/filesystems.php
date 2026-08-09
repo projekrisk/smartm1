@@ -49,7 +49,6 @@ return [
 
         'publik_upload' => [
             'driver' => 'local',
-            // Gunakan base_path('uploads') agar memaksa masuk ke public_html/uploads
             'root' => base_path('uploads'),
             'url' => env('APP_URL').'/uploads',
             'visibility' => 'public',

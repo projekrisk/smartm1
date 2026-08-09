@@ -22,7 +22,6 @@ class JurnalGuruExporter extends Exporter
             ExportColumn::make('materi_pembahasan')->label('Materi Pembahasan'),
             ExportColumn::make('catatan_kejadian')->label('Catatan Kejadian'),
             
-            // FUNGSI AJAIB: Menghitung otomatis rekap absensi per sesi ke dalam kolom Excel
             ExportColumn::make('hadir')
                 ->label('Jml Hadir')
                 ->state(fn (JurnalGuru $record) => $record->kehadiranPelajaran->where('status', 'Hadir')->count()),

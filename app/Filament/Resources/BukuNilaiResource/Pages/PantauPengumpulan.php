@@ -28,7 +28,6 @@ class PantauPengumpulan extends Page implements HasForms
     public ?int $tahun_ajaran_id = null;
     public ?string $jenis_nilai = 'UTS';
 
-    // PERBAIKAN: Akses dibuka untuk semua peranan (Guru, Admin, Staf)
     public static function canAccess(array $parameters = []): bool
     {
         return in_array(Auth::user()->peran, ['admin', 'staf', 'guru']);
@@ -69,7 +68,6 @@ class PantauPengumpulan extends Page implements HasForms
     {
         $actions = [];
 
-        // Hanya Admin / Staf yang boleh men-download rekap CSV
         if (in_array(Auth::user()->peran, ['admin', 'staf'])) {
             $actions[] = Action::make('download_rekap')
                 ->label('Download')
@@ -140,7 +138,6 @@ class PantauPengumpulan extends Page implements HasForms
             return ['groupedData' => [], 'stats' => ['total' => 0, 'sudah' => 0, 'belum' => 0]];
         }
 
-        // Ambil data siswa aktif per kelas menggunakan Query DB ke Siswa
         $kelasStats = Siswa::where(function ($query) {
                 $query->whereIn('status_siswa', ['Aktif', 'Mutasi Masuk'])
                       ->orWhereNull('status_siswa');
@@ -149,14 +146,12 @@ class PantauPengumpulan extends Page implements HasForms
             ->groupBy('kelas_id')
             ->pluck('siswa_count', 'kelas_id');
 
-        // Ambil jadwal mengajar unik (1 Baris = 1 Kelas = 1 Mapel)
         $jadwals = JadwalPelajaran::with(['kelas', 'mataPelajaran', 'guru'])
             ->where('tahun_ajaran_id', $this->tahun_ajaran_id)
             ->get()
             ->unique(fn ($item) => $item->kelas_id . '-' . $item->mata_pelajaran_id)
             ->values();
 
-        // Ambil penilaian untuk memantau siapa yang sudah mengumpulkan
         $penilaians = Penilaian::withCount(['bukuNilai' => function ($q) {
             $q->whereNotNull('nilai');
         }])
@@ -192,7 +187,6 @@ class PantauPengumpulan extends Page implements HasForms
                 $stats['belum']++;
             }
 
-            // MENGELOMPOKKAN DATA BERDASARKAN TINGKAT LALU KELAS
             $namaKelas = $jadwal->kelas->nama_kelas ?? 'Tanpa Kelas';
             $prefix = explode('-', str_replace(' ', '-', trim($namaKelas)))[0];
             $tingkat = match(strtoupper($prefix)) {
@@ -213,7 +207,6 @@ class PantauPengumpulan extends Page implements HasForms
             $groupedData[$tingkatLabel][$namaKelas][] = $jadwal;
         }
 
-        // Mengurutkan Tingkat dan Kelas agar tampil rapi dari atas ke bawah
         ksort($groupedData);
         foreach ($groupedData as &$kelasGroup) {
             ksort($kelasGroup);

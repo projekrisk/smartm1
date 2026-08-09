@@ -21,7 +21,6 @@ class CreateJurnalGuru extends CreateRecord
                 $q->whereIn('status_siswa', ['Aktif', 'Mutasi Masuk'])->orWhereNull('status_siswa');
             })->get();
         
-        // Ambil tanggal jurnal
         $tanggalJurnal = Carbon::parse($jurnal->tanggal)->format('Y-m-d');
         
         $dataInsert = [];
@@ -30,7 +29,6 @@ class CreateJurnalGuru extends CreateRecord
             $status = 'Hadir';
             $keterangan = null;
 
-            // 🌟 CEK SURAT DISPENSASI
             $adaDispensasi = $siswa->suratDispensasi()
                 ->where('tanggal_mulai', '<=', $tanggalJurnal)
                 ->where('tanggal_selesai', '>=', $tanggalJurnal)

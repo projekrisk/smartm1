@@ -81,7 +81,6 @@
                                     
                                     <div style="width: 36px; height: 36px; border-radius: 10px; background-color: rgba(236,72,153,0.1); color: #272adb; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; overflow: hidden;" class="dark:bg-pink-900/30 dark:text-pink-400 border border-pink-100 dark:border-pink-900/50">
                                         @if($testi->siswa->foto)
-                                            <!-- 🌟 PERBAIKAN 1: Tambahkan onerror untuk list ulasan -->
                                             <img src="{{ url('/uploads/' . $testi->siswa->foto) }}" alt="Foto" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.outerHTML='{{ substr($testi->siswa->nama_lengkap ?? 'S', 0, 1) }}'">
                                         @else
                                             {{ substr($testi->siswa->nama_lengkap ?? 'S', 0, 1) }}

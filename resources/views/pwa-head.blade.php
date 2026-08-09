@@ -1,4 +1,3 @@
-<!-- Konfigurasi Progressive Web App (PWA) -->
 <link rel="manifest" href="{{ asset('manifest.json') }}">
 <meta name="theme-color" content="#2563eb">
 <link rel="apple-touch-icon" href="{{ asset('icons/icon-192.png') }}">

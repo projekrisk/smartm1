@@ -1,10 +1,8 @@
 <x-filament-panels::page>
-    <!-- Memanggil tag Form dan menghubungkannya dengan fungsi simpan() -->
     <x-filament-panels::form wire:submit="simpan">
         
         {{ $this->form }}
 
-        <!-- Tombol Aksi di Bawah Form -->
         <div class="mt-6 flex justify-end gap-x-4">
             <x-filament::button 
                 type="button" 
@@ -15,7 +13,7 @@
             </x-filament::button>
 
             <x-filament::button type="submit" color="primary">
-                Simpan Semua Nilai
+                Simpan Semua
             </x-filament::button>
         </div>
         

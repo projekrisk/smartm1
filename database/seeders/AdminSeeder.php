@@ -11,12 +11,11 @@ class AdminSeeder extends Seeder
 {
     public function run(): void
     {
-        // Membuat 1 akun Admin Utama
         User::updateOrCreate(
-            ['email' => 'admin@smart-m1.com'], // Mencegah duplikasi jika dijalankan ulang
+            ['email' => 'admin@smart-m1.com'],
             [
                 'name' => 'Administrator',
-                'password' => Hash::make('password123'), // Passwordnya: password123
+                'password' => Hash::make('password123'),
                 'peran' => 'admin',
             ]
         );

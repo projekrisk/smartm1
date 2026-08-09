@@ -1,14 +1,12 @@
 <x-filament-panels::page>
     <div class="space-y-6">
         
-        <!-- Filter Card -->
         <div class="bg-white dark:bg-gray-900 shadow-sm rounded-xl p-6 ring-1 ring-gray-950/5 dark:ring-white/10">
             <form wire:submit.prevent="">
                 {{ $this->form }}
             </form>
         </div>
 
-        <!-- Statistics Widget -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm ring-1 ring-gray-950/5 dark:ring-white/10 text-center flex flex-col justify-center">
                 <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Target Pengumpulan</h3>
@@ -24,10 +22,8 @@
             </div>
         </div>
 
-        <!-- Tabs untuk Tingkat -->
         @if(count($groupedData) > 0)
             <div x-data="{ activeTab: '{{ array_key_first($groupedData) }}' }" class="space-y-6">
-                <!-- Tampilan Tab Header -->
                 <x-filament::tabs label="Tingkat Kelas">
                     @foreach($groupedData as $tingkat => $kelasGroups)
                         <x-filament::tabs.item 
@@ -39,7 +35,6 @@
                     @endforeach
                 </x-filament::tabs>
 
-                <!-- Isi dari masing-masing Tab -->
                 <div class="mt-6">
                     @foreach($groupedData as $tingkat => $kelasGroups)
                         <div x-show="activeTab === '{{ $tingkat }}'" x-cloak>
@@ -53,12 +48,10 @@
                                             $isSemuaSelesai = $totalMapelDiKelas > 0 && $selesaiMapelDiKelas === $totalMapelDiKelas;
                                         @endphp
                                         
-                                        <!-- Komponen Alpine.js untuk fitur buka-tutup (Accordion) Kelas -->
                                         <div x-data="{ open: false }" class="w-full">
                                             <button type="button" @click="open = !open" class="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-white/5 transition-colors focus:outline-none">
                                                 <div class="flex items-center gap-4">
                                                     <h4 class="text-md font-bold text-gray-900 dark:text-white">Kelas {{ $namaKelas }}</h4>
-                                                    <!-- Indikator Badge Kelas -->
                                                     @if($isSemuaSelesai)
                                                         <span class="inline-flex items-center gap-1 bg-green-100 text-green-800 text-xs font-bold px-2 py-0.5 rounded dark:bg-green-900/30 dark:text-green-400">
                                                             Tuntas ({{ $selesaiMapelDiKelas }}/{{ $totalMapelDiKelas }} Mapel)
@@ -75,7 +68,6 @@
                                                 </div>
                                             </button>
                                             
-                                            <!-- Isi Tabel (Tampil jika open = true) -->
                                             <div x-show="open" x-collapse x-cloak class="border-t border-gray-200 dark:border-white/10 dark:bg-gray-800/50">
                                                 <div class="overflow-x-auto w-full p-4">
                                                     <table class="w-full text-sm text-left">
@@ -99,10 +91,8 @@
                                                                         <div class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
                                                                             <strong class="text-gray-900 dark:text-white">{{ $jadwal->siswa_dinilai }}</strong> dari {{ $jadwal->total_siswa }} dinilai
                                                                         </div>
-                                                                        <!-- Visual Progress Bar -->
                                                                         @php
                                                                             $percent = $jadwal->total_siswa > 0 ? min(100, round(($jadwal->siswa_dinilai / $jadwal->total_siswa) * 100)) : 0;
-                                                                            // Pewarnaan dinamis: Hijau, Kuning, Merah
                                                                             $barColor = 'bg-red-500';
                                                                             if ($percent == 100) {
                                                                                 $barColor = 'bg-green-500';
@@ -112,7 +102,6 @@
                                                                         @endphp
                                                                         <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-1.5 mt-1.5 overflow-hidden flex">
                                                                             <div class="{{ $barColor }} h-1.5 transition-all duration-500" style="width: {{ $percent }}%"></div>
-                                                                            <!-- Sisa bar kosong -->
                                                                             @if($percent < 100)
                                                                             <div class="bg-gray-300 dark:bg-gray-500 h-1.5 transition-all duration-500" style="width: {{ 100 - $percent }}%"></div>
                                                                             @endif

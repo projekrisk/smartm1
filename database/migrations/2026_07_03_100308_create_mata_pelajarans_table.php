@@ -12,7 +12,6 @@ return new class extends Migration
             $table->id();
             $table->string('nama_pelajaran');
             
-            // Tambahkan baris ini:
             $table->foreignId('kelas_id')->constrained('kelas')->cascadeOnDelete();
             
             $table->foreignId('guru_id')->nullable()->constrained('users')->nullOnDelete();

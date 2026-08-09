@@ -31,7 +31,6 @@ class ViewSiswa extends ViewRecord
                 ->url(fn (Siswa $record): string => route('cetak.riwayat-catatan', $record->id))
                 ->openUrlInNewTab(),
 
-            // Tombol bawaan Edit Data
             Actions\EditAction::make(),
         ];
     }

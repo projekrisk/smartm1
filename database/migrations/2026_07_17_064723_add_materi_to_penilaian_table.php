@@ -8,7 +8,6 @@ return new class extends Migration {
     public function up(): void {
         Schema::table('penilaian', function (Blueprint $table) {
             if (!Schema::hasColumn('penilaian', 'materi')) {
-                // Menambahkan kolom materi setelah jenis_nilai
                 $table->string('materi')->nullable()->after('jenis_nilai');
             }
         });

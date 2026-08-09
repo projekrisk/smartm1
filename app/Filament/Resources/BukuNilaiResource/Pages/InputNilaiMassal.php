@@ -92,7 +92,7 @@ class InputNilaiMassal extends Page implements HasForms
 
                         Forms\Components\Repeater::make('daftar_siswa')
                             ->hiddenLabel()
-                            ->extraAttributes(['class' => 'tabel-repeater']) // Dipasangkan dengan CSS di atas
+                            ->extraAttributes(['class' => 'tabel-repeater'])
                             ->schema([
                                 Forms\Components\Hidden::make('siswa_id'),
                                 Forms\Components\TextInput::make('nama_lengkap')

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('tingkat', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_tingkat')->unique(); // Contoh isi: '7', '8', '9', '10'
+            $table->string('nama_tingkat')->unique();
             $table->timestamps();
         });
     }

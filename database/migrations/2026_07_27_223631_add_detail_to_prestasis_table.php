@@ -10,7 +10,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('prestasi', function (Blueprint $table) {
-            // Menambahkan kolom Juara dan Jenis
             if (!Schema::hasColumn('prestasi', 'juara')) {
                 $table->string('juara')->after('nama_prestasi')->default('Juara 1');
             }
@@ -19,7 +18,6 @@ return new class extends Migration
             }
         });
 
-        // Mengubah kolom tingkat menjadi VARCHAR agar bisa menerima input 'Kecamatan' tanpa error ENUM
         DB::statement("ALTER TABLE prestasi MODIFY tingkat VARCHAR(255)");
     }
 
