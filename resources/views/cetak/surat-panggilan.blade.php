@@ -45,23 +45,23 @@
         $pengaturan = null;
         try { if (\Illuminate\Support\Facades\Schema::hasTable('pengaturan')) $pengaturan = \App\Models\Pengaturan::first(); } catch (\Exception $e) {}
         
-        // 🌟 1. AMBIL NAMA KELAS DAN ID WALI KELAS DARI RELASI SISWA
         $namaKelas = $surat->siswa->kelas->nama_kelas ?? '-';
-        $waliKelasId = $surat->siswa->kelas->wali_kelas_id ?? null;
+        $waliKelasUserId = $surat->siswa->kelas->wali_kelas_id ?? null;
 
         $penandatanganAktif = null;
 
-        // 🌟 2. CARI DATA PEGAWAI BERDASARKAN ID WALI KELAS TERSEBUT
-        if ($waliKelasId) {
-            $penandatanganAktif = \App\Models\Pegawai::find($waliKelasId);
+        if ($waliKelasUserId) {
+            $penandatanganAktif = \App\Models\Pegawai::where('user_id', $waliKelasUserId)->first();
         }
 
-        // 🌟 3. JIKA MASIH KOSONG, GUNAKAN DATA DARI FORM (CADANGAN)
         if (!$penandatanganAktif && $surat->penandatangan_id) {
-            $penandatanganAktif = \App\Models\Pegawai::find($surat->penandatangan_id);
+            $penandatanganAktif = \App\Models\Pegawai::where('user_id', $surat->penandatangan_id)->first();
+            
+            if (!$penandatanganAktif) {
+                $penandatanganAktif = \App\Models\Pegawai::find($surat->penandatangan_id);
+            }
         }
 
-        // 🌟 4. TENTUKAN JABATAN (Kepala Sekolah / Wakasek / Wali Kelas)
         $isKepalaSekolah = false;
         $isWakasek = false;
         
@@ -85,7 +85,6 @@
     <div class="flex flex-col items-center py-10 print:py-0 print:block">
         <div class="cetak-kertas">
             
-            <!-- KOP SURAT -->
             <div class="border-b-4 border-gray-800 pb-6 mb-5 flex items-center justify-between">
                 <div class="w-24 h-24 flex-shrink-0 flex items-center justify-center">
                     @if(isset($pengaturan) && $pengaturan->logo_dinas)
@@ -107,7 +106,6 @@
                 </div>
             </div>
 
-            <!-- ISI SURAT -->
             <table style="font-size: 11pt; margin-bottom: 15px;">
                 <tr><td style="width: 80px; vertical-align: top;">Nomor</td><td style="width: 15px; vertical-align: top;">:</td><td>{{ $surat->nomor_surat }}</td></tr>
                 <tr><td style="vertical-align: top;">Lampiran</td><td style="vertical-align: top;">:</td><td>-</td></tr>
@@ -149,7 +147,6 @@
             </p>
             <p style="text-indent: 1cm; text-align: justify;">Demikian surat panggilan ini kami sampaikan. Atas perhatian dan kerja samanya, kami ucapkan terima kasih.</p>
 
-            <!-- TANDA TANGAN -->
             <div class="ttd-area">
                 Malingping, {{ \Carbon\Carbon::parse($surat->tanggal_surat)->isoFormat('D MMMM Y') }}<br>
                 
@@ -170,7 +167,6 @@
                     @endif
                 </div>
 
-                <!-- 🌟 CETAK NAMA DAN NIP WALI KELAS DENGAN AMAN -->
                 <b><u>{{ $penandatanganAktif ? $penandatanganAktif->nama : '........................................' }}</u></b><br>
                 NIP. {{ ($penandatanganAktif && $penandatanganAktif->nip) ? $penandatanganAktif->nip : '-' }}
             </div>
