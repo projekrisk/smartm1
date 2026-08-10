@@ -80,7 +80,7 @@
                 <tbody>
                     @php 
                         $no = 1; 
-\                        $daftarHadir = $jurnal->kehadiranPelajaran->sortBy('siswa.nama_lengkap');
+                        $daftarHadir = $jurnal->kehadiranPelajaran->sortBy('siswa.nama_lengkap');
                     @endphp
                     
                     @forelse($daftarHadir as $item)
