@@ -13,38 +13,22 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Filament\Navigation\NavigationItem;
 
 class SuratDispensasiResource extends Resource
 {
     protected static ?string $model = \App\Models\SuratDispensasi::class;
 
     protected static ?string $slug = 'surat-dispensasi';
+    
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static ?string $navigationLabel = 'Surat Dispensasi';
+    protected static ?string $pluralModelLabel = 'Surat Dispensasi';
+    protected static ?string $navigationGroup = 'Dispensasi';
+    protected static ?int $navigationSort = 1;
 
     public static function canViewAny(): bool
     {
         return in_array(auth()->user()->peran, ['admin', 'staf']);
-    }
-
-    public static function getNavigationItems(): array
-    {
-        return [
-            NavigationItem::make('Buat Surat Baru')
-                ->icon('heroicon-o-plus-circle')
-                ->group('Dispensasi')
-                ->sort(1)
-                ->url(static::getUrl('create'))
-                ->isActiveWhen(fn () => request()->routeIs(static::getRouteBaseName() . '.create'))
-                ->visible(fn() => in_array(auth()->user()->peran, ['admin', 'staf'])),
-
-            NavigationItem::make('Arsip Dispensasi')
-                ->icon('heroicon-o-archive-box')
-                ->group('Dispensasi')
-                ->sort(2)
-                ->url(static::getUrl('index'))
-                ->isActiveWhen(fn () => request()->routeIs(static::getRouteBaseName() . '.index'))
-                ->visible(fn() => in_array(auth()->user()->peran, ['admin', 'staf'])),
-        ];
     }
 
     public static function form(Form $form): Form
@@ -154,7 +138,8 @@ class SuratDispensasiResource extends Resource
                     ->url(fn ($record) => route('cetak.dispensasi', $record->id))
                     ->openUrlInNewTab(),
                 Tables\Actions\EditAction::make(),
-            ]);
+            ])
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array

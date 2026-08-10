@@ -811,7 +811,7 @@ Route::get('/verifikasi-surat/keterangan-aktif', function (\Illuminate\Http\Requ
     $surat = \App\Models\SuratKeteranganAktif::with(['siswa.kelas', 'penandatangan'])->where('nomor_surat', $nomor)->firstOrFail();
     $pengaturan = \Illuminate\Support\Facades\Schema::hasTable('pengaturan') ? \App\Models\Pengaturan::first() : null;
 
-    return view('verifikasi-keterangan-aktif', compact('surat', 'pengaturan'));
+    return view('cetak.verifikasi-keterangan-aktif', compact('surat', 'pengaturan'));
 })->name('verifikasi.keterangan-aktif.detail');
 
 
