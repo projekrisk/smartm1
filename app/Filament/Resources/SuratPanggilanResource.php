@@ -134,6 +134,7 @@ class SuratPanggilanResource extends Resource
                         ]),
 
                         Forms\Components\Grid::make(3)->schema([
+                            
                             Forms\Components\Select::make('siswa_id')
                                 ->label('Nama Siswa')
                                 ->relationship('siswa', 'nama_lengkap', fn (Builder $query) => $query->with('kelas'))
@@ -146,21 +147,17 @@ class SuratPanggilanResource extends Resource
                                 ->afterStateUpdated(function (Set $set, $state) {
                                     if ($state) {
                                         $siswa = Siswa::with('kelas')->find($state);
+                                        // Mengisi ID Penandatangan secara otomatis di balik layar
                                         if ($siswa && $siswa->kelas && $siswa->kelas->wali_kelas_id) {
                                             $set('penandatangan_id', $siswa->kelas->wali_kelas_id);
                                         } else {
                                             $set('penandatangan_id', null);
                                         }
                                     }
-                                }),
+                                })
+                                ->columnSpan(2),
 
-                            Forms\Components\Select::make('penandatangan_id')
-                                ->label('Penandatangan (Wali Kelas)')
-                                ->options(\App\Models\Pegawai::pluck('nama', 'id'))
-                                ->searchable()
-                                ->preload()
-                                ->required()
-                                ->disabled($isGuru),
+                            Forms\Components\Hidden::make('penandatangan_id'),
 
                             Forms\Components\Select::make('status')
                                 ->label('Status Surat')
@@ -170,7 +167,8 @@ class SuratPanggilanResource extends Resource
                                     'Dibatalkan' => 'Dibatalkan',
                                 ])
                                 ->default('Dibuat')
-                                ->required(),
+                                ->required()
+                                ->columnSpan(1),
                         ]),
 
                         Forms\Components\Hidden::make('dibuat_oleh')
@@ -271,7 +269,8 @@ class SuratPanggilanResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ])->visible(fn () => in_array(Auth::user()->peran, ['admin', 'staf'])),
-            ]);
+            ])
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getRelations(): array
