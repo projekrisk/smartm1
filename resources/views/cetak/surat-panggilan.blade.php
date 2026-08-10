@@ -63,11 +63,18 @@
         $pengaturan = null;
         try { if (\Illuminate\Support\Facades\Schema::hasTable('pengaturan')) $pengaturan = \App\Models\Pengaturan::first(); } catch (\Exception $e) {}
         
+        $penandatanganAktif = $surat->penandatangan;
+        
+        if (!$penandatanganAktif && $surat->siswa && $surat->siswa->kelas && $surat->siswa->kelas->wali_kelas_id) {
+            $penandatanganAktif = \App\Models\Pegawai::find($surat->siswa->kelas->wali_kelas_id);
+        }
+
         $isKepalaSekolah = false;
         $isWakasek = false;
-        if ($surat->penandatangan) {
-            $jenis = strtolower((string) $surat->penandatangan->jenis_ptk);
-            $tugas = strtolower(json_encode($surat->penandatangan->tugas_tambahan));
+        
+        if ($penandatanganAktif) {
+            $jenis = strtolower((string) $penandatanganAktif->jenis_ptk);
+            $tugas = strtolower(json_encode($penandatanganAktif->tugas_tambahan));
             
             if (str_contains($jenis, 'kepala sekolah') || str_contains($tugas, 'kepala sekolah')) { 
                 $isKepalaSekolah = true; 
@@ -167,8 +174,8 @@
                     @endif
                 </div>
 
-                <b><u>{{ $surat->penandatangan->nama ?? '........................................' }}</u></b><br>
-                NIP. {{ $surat->penandatangan->nip ?? '-' }}
+                <b><u>{{ $penandatanganAktif->nama ?? '........................................' }}</u></b><br>
+                NIP. {{ $penandatanganAktif->nip ?? '-' }}
             </div>
             
             <div style="clear: both;"></div>
