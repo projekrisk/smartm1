@@ -362,7 +362,6 @@ class PegawaiResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->recordAction('view')
             ->columns([
                 Tables\Columns\TextColumn::make('nama')
                     ->label('Nama Pegawai')
@@ -644,9 +643,6 @@ class PegawaiResource extends Resource
                     ->modalSubmitActionLabel('Mulai Impor'),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                
                 Tables\Actions\Action::make('reset_password')
                     ->label('Reset Password')
                     ->icon('heroicon-o-key')
