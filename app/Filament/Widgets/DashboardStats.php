@@ -19,18 +19,25 @@ class DashboardStats extends BaseWidget
         $peran = Auth::user()->peran;
         $stats = [];
 
+        $siswaAktifCount = Siswa::where(function ($q) {
+            $q->whereIn('status_siswa', ['Aktif', 'Mutasi Masuk'])
+              ->orWhereNull('status_siswa');
+        })->count();
+
         if ($peran === 'admin') {
             $stats = [
                 Stat::make('Total Pegawai', Pegawai::count())
                     ->description('Pendidik & Kependidikan')
                     ->descriptionIcon('heroicon-m-briefcase')
                     ->icon('heroicon-o-users')->color('primary'),
-                Stat::make('Total Siswa', Siswa::count())
-                    ->description('Terdaftar di sekolah')
+                    
+                Stat::make('Total Siswa', number_format($siswaAktifCount, 0, ',', '.'))
+                    ->description('Siswa berstatus aktif')
                     ->descriptionIcon('heroicon-m-academic-cap')
                     ->icon('heroicon-o-academic-cap')->color('success'),
-                Stat::make('Total Kelas', Siswa::distinct('kelas_id')->count('kelas_id'))
-                    ->description('Kelas aktif')
+                    
+                Stat::make('Total Kelas', Kelas::count())
+                    ->description('Rombongan belajar')
                     ->descriptionIcon('heroicon-m-building-office-2')
                     ->icon('heroicon-o-building-library')
                     ->color('info'),
@@ -38,16 +45,18 @@ class DashboardStats extends BaseWidget
         } 
         elseif ($peran === 'staf') {
             $stats = [
-                Stat::make('Total Siswa', Siswa::count())
-                    ->description('Terdaftar di sekolah')
+                Stat::make('Total Siswa', number_format($siswaAktifCount, 0, ',', '.'))
+                    ->description('Siswa berstatus aktif')
                     ->descriptionIcon('heroicon-m-academic-cap')
                     ->icon('heroicon-o-academic-cap')->color('success'),
+                    
                 Stat::make('Surat Panggilan Dibuat', \App\Models\SuratPanggilan::where('status', 'Dibuat')->count())
                     ->description('Surat baru belum diselesaikan')
                     ->descriptionIcon('heroicon-m-envelope')
                     ->icon('heroicon-o-envelope-open')->color('danger'),
-                Stat::make('Total Kelas', Siswa::distinct('kelas_id')->count('kelas_id'))
-                    ->description('Kelas aktif')
+                    
+                Stat::make('Total Kelas', Kelas::count())
+                    ->description('Rombongan belajar')
                     ->descriptionIcon('heroicon-m-building-office-2')
                     ->icon('heroicon-o-building-library')
                     ->color('info'),

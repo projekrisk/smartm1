@@ -5,7 +5,6 @@ namespace App\Filament\Resources\SiswaResource\Pages;
 use App\Filament\Resources\SiswaResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
-use Filament\Resources\Components\Tab;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\Siswa;
 use Illuminate\Support\Facades\Auth;
@@ -265,7 +264,13 @@ class ListSiswas extends ListRecords
                         $file = fopen('php://output', 'w');
                         fputcsv($file, $headers);
 
-                        $siswas = \App\Models\Siswa::with('kelas')->orderBy('kelas_id')->orderBy('nama_lengkap')->get();
+                        $siswas = \App\Models\Siswa::with('kelas')
+                            ->where(function ($q) {
+                                $q->whereIn('status_siswa', ['Aktif', 'Mutasi Masuk'])->orWhereNull('status_siswa');
+                            })
+                            ->orderBy('kelas_id')
+                            ->orderBy('nama_lengkap')
+                            ->get();
 
                         foreach ($siswas as $siswa) {
                             fputcsv($file, [
@@ -303,7 +308,7 @@ class ListSiswas extends ListRecords
                         fclose($file);
                     };
 
-                    $fileName = 'Ekspor_Siswa_' . date('Y-m-d_H-i') . '.csv';
+                    $fileName = 'Ekspor_Siswa_Aktif_' . date('Y-m-d_H-i') . '.csv';
 
                     return response()->stream($callback, 200, [
                         'Content-Type' => 'text/csv',
@@ -317,33 +322,11 @@ class ListSiswas extends ListRecords
         ];
     }
 
-    public function getTabs(): array
+    protected function getTableQuery(): Builder
     {
-        if (Auth::user()->peran === 'guru') {
-            return [];
-        }
-
-        return [
-            'Siswa Aktif' => Tab::make('Siswa Aktif')
-                ->modifyQueryUsing(fn (Builder $query) => $query->where(function ($q) {
-                    $q->whereIn('status_siswa', ['Aktif', 'Mutasi Masuk'])->orWhereNull('status_siswa');
-                }))
-                ->badge(Siswa::where(function ($q) {
-                    $q->whereIn('status_siswa', ['Aktif', 'Mutasi Masuk'])->orWhereNull('status_siswa');
-                })->count())
-                ->badgeColor('success'),
-                
-            'Alumni (Lulus)' => Tab::make('Alumni (Lulus)')
-                ->modifyQueryUsing(fn (Builder $query) => $query->where('status_siswa', 'Lulus'))
-                ->badge(Siswa::where('status_siswa', 'Lulus')->count())
-                ->badgeColor('info'),
-                
-            'Keluar / Mutasi' => Tab::make('Keluar / Mutasi')
-                ->modifyQueryUsing(fn (Builder $query) => $query->whereIn('status_siswa', ['Mutasi Keluar', 'Dikeluarkan', 'Wafat']))
-                ->badge(Siswa::whereIn('status_siswa', ['Mutasi Keluar', 'Dikeluarkan', 'Wafat'])->count())
-                ->badgeColor('danger'),
-                
-            'Semua Data' => Tab::make('Semua Data'),
-        ];
+        return parent::getTableQuery()->where(function ($query) {
+            $query->whereIn('status_siswa', ['Aktif', 'Mutasi Masuk'])
+                  ->orWhereNull('status_siswa');
+        });
     }
 }

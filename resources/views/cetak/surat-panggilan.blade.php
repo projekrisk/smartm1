@@ -35,20 +35,20 @@
         try { if (\Illuminate\Support\Facades\Schema::hasTable('pengaturan')) $pengaturan = \App\Models\Pengaturan::first(); } catch (\Exception $e) {}
         
         $isKepalaSekolah = false;
+        $isWakasek = false;
         if ($surat->penandatangan) {
             $jenis = strtolower((string) $surat->penandatangan->jenis_ptk);
             $tugas = strtolower(json_encode($surat->penandatangan->tugas_tambahan));
-            if (str_contains($jenis, 'kepala sekolah') || str_contains($tugas, 'kepala sekolah')) { $isKepalaSekolah = true; }
+            
+            if (str_contains($jenis, 'kepala sekolah') || str_contains($tugas, 'kepala sekolah')) { 
+                $isKepalaSekolah = true; 
+            } elseif (str_contains($tugas, 'kesiswaan')) {
+                $isWakasek = true;
+            }
         }
 
-        // 🌟 PERBAIKAN QR CODE (URL PENDEK + POLA LONGGAR)
-        // Buat 6 karakter Token acak jika di database kosong
         $token = $surat->token ?? strtoupper(substr(md5($surat->nomor_surat . config('app.key')), 0, 6));
-        
-        // URL format super pendek (Contoh: domain.com/v/AB12CD)
         $urlVerifikasi = url('/v/' . $token);
-        
-        // Error Correction 'Q' untuk menampung logo tengah namun titik QR tetap longgar
         $qrData = QrCode::format('png')->size(200)->margin(0)->errorCorrection('Q')->generate($urlVerifikasi);
         $qrCodeImage = 'data:image/png;base64,' . base64_encode($qrData);
     @endphp
@@ -120,10 +120,13 @@
 
             <div class="ttd-area">
                 Malingping, {{ \Carbon\Carbon::parse($surat->tanggal_surat)->isoFormat('D MMMM Y') }}<br>
+                
                 @if($isKepalaSekolah)
                     Kepala {{ $pengaturan->nama_sekolah ?? 'SMA Negeri 1 Malingping' }}<br>
-                @else
+                @elseif($isWakasek)
                     a.n. Kepala Sekolah<br>Wakil Kepala Sekolah Bidang Kesiswaan<br>
+                @else
+                    Wali Kelas {{ $surat->siswa->kelas->nama_kelas ?? '' }}<br>
                 @endif
 
                 <div style="position: relative; margin: auto; display: block; padding: 4px; width: 105px; height: 105px;">
@@ -134,11 +137,13 @@
                         </div>
                     @endif
                 </div>
-                <div style="font-size: 7.5pt; color: #666; margin-bottom: 5px;">Dokumen TTE Valid</div>
 
                 <b><u>{{ $surat->penandatangan->nama ?? '........................................' }}</u></b><br>
                 NIP. {{ $surat->penandatangan->nip ?? '-' }}
             </div>
+            <br>
+            <p style="text-align: justify;"><i>Dokumen ini diterbitkan melalui Smart-M1 dan dapat diverifikasi keasliannya melalui QR Code.</i></p>
+
             <div style="clear: both;"></div>
 
         </div>

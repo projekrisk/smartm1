@@ -141,11 +141,22 @@ class SuratPanggilanResource extends Resource
                                 ->searchable(['nama_lengkap', 'nis', 'nisn'])
                                 ->preload()
                                 ->required()
-                                ->disabled($isGuru),
+                                ->disabled($isGuru)
+                                ->live()
+                                ->afterStateUpdated(function (Set $set, $state) {
+                                    if ($state) {
+                                        $siswa = Siswa::with('kelas')->find($state);
+                                        if ($siswa && $siswa->kelas && $siswa->kelas->wali_kelas_id) {
+                                            $set('penandatangan_id', $siswa->kelas->wali_kelas_id);
+                                        } else {
+                                            $set('penandatangan_id', null);
+                                        }
+                                    }
+                                }),
 
                             Forms\Components\Select::make('penandatangan_id')
-                                ->label('Penandatangan Surat')
-                                ->relationship('penandatangan', 'nama', fn (Builder $query) => $query->where('jenis_ptk', 'like', '%Kepala Sekolah%'))
+                                ->label('Penandatangan (Wali Kelas)')
+                                ->relationship('penandatangan', 'nama')
                                 ->searchable()
                                 ->preload()
                                 ->required()

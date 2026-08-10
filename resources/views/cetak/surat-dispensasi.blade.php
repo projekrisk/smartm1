@@ -191,11 +191,12 @@
                         </div>
                     @endif
                 </div>
-                <div style="font-size: 7.5pt; color: #666; margin-bottom: 5px;">Dokumen TTE Valid</div>
 
                 <b><u>{{ $surat->penandatangan->nama ?? '........................................' }}</u></b><br>
                 NIP. {{ $surat->penandatangan->nip ?? '-' }}
             </div>
+            <br>
+            <p style="text-align: justify;"><i>Dokumen ini diterbitkan melalui Smart-M1 dan dapat diverifikasi keasliannya melalui QR Code.</i></p>            
             <div style="clear: both;"></div>
 
         </div>
