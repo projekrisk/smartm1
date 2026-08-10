@@ -157,6 +157,8 @@ class SuratPanggilanResource extends Resource
                             Forms\Components\Select::make('penandatangan_id')
                                 ->label('Penandatangan (Wali Kelas)')
                                 ->relationship('penandatangan', 'nama')
+                                // 🌟 SOLUSINYA DI SINI: Menerjemahkan angka ID menjadi Nama Pegawai
+                                ->getOptionLabelUsing(fn ($value): ?string => \App\Models\Pegawai::find($value)?->nama)
                                 ->searchable()
                                 ->preload()
                                 ->required()
