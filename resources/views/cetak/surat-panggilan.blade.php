@@ -63,10 +63,27 @@
         $pengaturan = null;
         try { if (\Illuminate\Support\Facades\Schema::hasTable('pengaturan')) $pengaturan = \App\Models\Pengaturan::first(); } catch (\Exception $e) {}
         
-        $penandatanganAktif = $surat->penandatangan;
+        $penandatanganAktif = null;
+        $namaKelas = '-';
         
-        if (!$penandatanganAktif && $surat->siswa && $surat->siswa->kelas && $surat->siswa->kelas->wali_kelas_id) {
-            $penandatanganAktif = \App\Models\Pegawai::find($surat->siswa->kelas->wali_kelas_id);
+        // 🌟 TARIK DATA WALI KELAS SECARA PAKSA & LANGSUNG DARI DATABASE
+        if ($surat->siswa_id) {
+            $siswaInfo = \App\Models\Siswa::find($surat->siswa_id);
+            if ($siswaInfo && $siswaInfo->kelas_id) {
+                $kelasInfo = \App\Models\Kelas::find($siswaInfo->kelas_id);
+                if ($kelasInfo) {
+                    $namaKelas = $kelasInfo->nama_kelas;
+                    
+                    if ($kelasInfo->wali_kelas_id) {
+                        $penandatanganAktif = \App\Models\Pegawai::find($kelasInfo->wali_kelas_id);
+                    }
+                }
+            }
+        }
+
+        // Jika masih gagal, jadikan kolom surat->penandatangan_id sebagai cadangan terakhir
+        if (!$penandatanganAktif && $surat->penandatangan_id) {
+            $penandatanganAktif = \App\Models\Pegawai::find($surat->penandatangan_id);
         }
 
         $isKepalaSekolah = false;
@@ -135,7 +152,7 @@
                 <tr><td>Nama</td><td>:</td><td class="font-bold uppercase">{{ $surat->siswa->nama_lengkap ?? '-' }}</td></tr>
                 <tr><td>Tempat, Tanggal Lahir</td><td>:</td><td class="font-bold uppercase">{{ $surat->siswa->tempat_lahir ?? '-' }}, {{ $surat->siswa->tanggal_lahir ? \Carbon\Carbon::parse($surat->siswa->tanggal_lahir)->isoFormat('D MMMM Y') : '-' }}</td></tr>
                 <tr><td>NIS / NISN</td><td>:</td><td class="font-bold">{{ $surat->siswa->nis ?? '-' }} / {{ $surat->siswa->nisn ?? '-' }}</td></tr>
-                <tr><td>Kelas</td><td>:</td><td class="font-bold">{{ $surat->siswa->kelas->nama_kelas ?? '-' }}</td></tr>
+                <tr><td>Kelas</td><td>:</td><td class="font-bold">{{ $namaKelas }}</td></tr>
             </table>
 
             <p style="text-indent: 1cm; text-align: justify; margin-bottom: 10px;">
@@ -162,7 +179,7 @@
                 @elseif($isWakasek)
                     a.n. Kepala Sekolah<br>Wakil Kepala Sekolah Bidang Kesiswaan<br>
                 @else
-                    Wali Kelas {{ $surat->siswa->kelas->nama_kelas ?? '' }}<br>
+                    Wali Kelas {{ $namaKelas }}<br>
                 @endif
 
                 <div style="position: relative; margin: auto; display: block; padding: 4px; width: 105px; height: 105px;">
