@@ -23,7 +23,7 @@ class SuratDispensasiResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static ?string $navigationLabel = 'Surat Dispensasi';
     protected static ?string $pluralModelLabel = 'Surat Dispensasi';
-    protected static ?string $navigationGroup = 'Dispensasi';
+    protected static ?string $navigationGroup = 'Persuratan';
     protected static ?int $navigationSort = 1;
 
     public static function canViewAny(): bool

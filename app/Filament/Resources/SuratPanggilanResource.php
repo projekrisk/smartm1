@@ -24,9 +24,9 @@ class SuratPanggilanResource extends Resource
     protected static ?string $slug = 'surat-panggilan';
     protected static ?string $navigationLabel = 'Surat Panggilan';
     protected static ?string $pluralModelLabel = 'Surat Panggilan';
-    protected static ?string $navigationGroup = 'Kesiswaan';    
     protected static ?string $modelLabel = 'Surat Panggilan';
-    protected static ?int $navigationSort = 14;
+    protected static ?string $navigationGroup = 'Persuratan';
+    protected static ?int $navigationSort = 2;
 
     public static function getNavigationBadge(): ?string
     {

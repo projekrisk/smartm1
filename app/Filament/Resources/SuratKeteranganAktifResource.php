@@ -23,8 +23,8 @@ class SuratKeteranganAktifResource extends Resource
     protected static ?string $slug = 'surat-keterangan-aktif';
     protected static ?string $navigationLabel = 'Keterangan Aktif';
     protected static ?string $pluralModelLabel = 'Surat Keterangan Aktif';
-    protected static ?string $navigationGroup = 'Kesiswaan';    
-    protected static ?int $navigationSort = 15;
+    protected static ?string $navigationGroup = 'Persuratan';
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {
