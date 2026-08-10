@@ -3,48 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verifikasi Surat Panggilan</title>
+    <title>Verifikasi Surat Panggilan - Smart-M1</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 text-gray-900 flex items-center justify-center min-h-screen p-4">
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
 
-    <div class="max-w-md w-full bg-white shadow-xl rounded-2xl p-6 border-t-8 border-blue-600 relative overflow-hidden">
-        <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3 text-3xl font-bold">
-            ✓
+    @php
+        // Berjaga-jaga jika variabel $pengaturan belum dikirim dari controller
+        if (!isset($pengaturan)) {
+            try { 
+                $pengaturan = \Illuminate\Support\Facades\Schema::hasTable('pengaturan') ? \App\Models\Pengaturan::first() : null; 
+            } catch (\Exception $e) { 
+                $pengaturan = null; 
+            }
+        }
+    @endphp
+
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
+        
+        <!-- Header / Status Valid -->
+        <div class="bg-green-600 px-6 py-8 text-center text-white">
+            <div class="inline-flex items-center justify-center w-20 h-20 bg-green-500 rounded-full mb-4 shadow-lg border-4 border-green-300">
+                <i class="fas fa-check text-4xl"></i>
+            </div>
+            <h1 class="text-2xl font-bold mb-1">DOKUMEN VALID</h1>
+            <p class="text-green-100 text-sm">Surat Panggilan Orang Tua / Wali Murid</p>
         </div>
 
-        <div class="text-center">
-            <h1 class="text-xl font-bold text-gray-900 uppercase">Dokumen Resmi & Valid</h1>
-            <p class="text-xs text-gray-500 mt-1">Sistem Penjaminan Keaslian Dokumen Elektronik</p>
-        </div>
+        <!-- Detail Data -->
+        <div class="p-6">
+            <div class="space-y-4 text-sm text-gray-700">
+                
+                <div class="pb-3 border-b border-gray-100">
+                    <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Nomor Surat</p>
+                    <p class="font-bold text-gray-900 text-base">{{ $surat->nomor_surat }}</p>
+                </div>
 
-        <div class="mt-6 border-t border-gray-200 pt-5 space-y-4">
-            <div class="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                <span class="block text-[11px] text-gray-500 uppercase tracking-wider font-bold mb-1">Nomor Surat</span>
-                <span class="block font-bold text-gray-900 text-sm">{{ $surat->nomor_surat }}</span>
+                <div class="pb-3 border-b border-gray-100">
+                    <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Tanggal Diterbitkan</p>
+                    <p class="font-bold text-gray-900">{{ \Carbon\Carbon::parse($surat->tanggal_surat)->isoFormat('D MMMM Y') }}</p>
+                </div>
+
+                <div class="pb-3 border-b border-gray-100">
+                    <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Wali Murid Dari (Siswa)</p>
+                    <p class="font-bold text-gray-900 uppercase">{{ $surat->siswa->nama_lengkap ?? '-' }}</p>
+                    <p>Kelas: {{ $surat->siswa->kelas->nama_kelas ?? '-' }}</p>
+                </div>
+
+                <div class="pb-3 border-b border-gray-100">
+                    <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Jadwal Kehadiran</p>
+                    <p class="font-bold text-gray-900">{{ \Carbon\Carbon::parse($surat->tanggal_panggilan)->isoFormat('dddd, D MMMM Y') }}</p>
+                    <p>Pukul: {{ date('H:i', strtotime($surat->waktu_panggilan)) }} WIB</p>
+                    <p>Tempat: {{ $surat->tempat_pertemuan }}</p>
+                </div>
+
+                <div>
+                    <p class="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Penandatangan Terverifikasi</p>
+                    <p class="font-bold text-gray-900">{{ $surat->penandatangan->nama ?? '-' }}</p>
+                    <p>NIP. {{ $surat->penandatangan->nip ?? '-' }}</p>
+                </div>
             </div>
 
-            <div class="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                <span class="block text-[11px] text-gray-500 uppercase tracking-wider font-bold mb-1">Ditujukan Kepada Wali Murid Dari:</span>
-                <span class="block font-bold text-gray-900 text-sm uppercase">{{ $surat->siswa->nama_lengkap ?? '-' }}</span>
-                <span class="block text-gray-500 text-xs mt-0.5">Kelas {{ $surat->siswa->kelas->nama_kelas ?? '-' }}</span>
-            </div>
-
-            <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
-                <span class="block text-[11px] text-blue-500 uppercase tracking-wider font-bold mb-1">Jadwal Kehadiran</span>
-                <span class="block font-bold text-blue-900 text-sm leading-snug">
-                    {{ \Carbon\Carbon::parse($surat->tanggal_panggilan)->isoFormat('dddd, D MMMM Y') }} <br> 
-                    Pukul {{ date('H:i', strtotime($surat->waktu_panggilan)) }} WIB
-                </span>
-                <span class="block text-blue-700 text-xs mt-1 font-semibold">Tempat: {{ $surat->tempat_pertemuan }}</span>
+            <div class="mt-8 mb-2">
+                <a href="{{ url('/') }}" class="w-full flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-900 text-white py-2.5 rounded-lg font-semibold text-sm transition-colors shadow-md">
+                    Kembali ke Beranda
+                </a>
             </div>
         </div>
 
-        <div class="mt-8 mb-2">
-            <a href="{{ url('/') }}" class="w-full flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-900 text-white py-2.5 rounded-lg font-semibold text-sm transition-colors shadow-md">
-                Kembali ke Beranda
-            </a>
+        <!-- Footer -->
+        <div class="bg-gray-50 px-6 py-4 text-center border-t border-gray-100">
+            <p class="text-xs text-gray-500">Sistem Informasi Manajemen<br><b>{{ $pengaturan->nama_sekolah ?? 'SMA Negeri 1 Malingping' }}</b></p>
         </div>
+
     </div>
+
 </body>
 </html>
