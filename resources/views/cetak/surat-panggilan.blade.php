@@ -8,6 +8,7 @@
         @page { size: A4 portrait; margin: 1.5cm; }
         * { box-sizing: border-box; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; font-family: Arial, Helvetica, sans-serif !important; }
         body { font-size: 11.5pt; line-height: 1.4 !important; margin: 0; padding: 0; color: black; background-color: #e5e7eb; }
+        
         .cetak-kertas { width: 21cm; min-height: 29.7cm; padding: 1.5cm; margin: 0 auto; background-color: white; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border-radius: 8px; display: flex; flex-direction: column; }
         
         .tabel-data { width: 100%; margin: 0 0 10px 1cm; }
@@ -16,10 +17,34 @@
 
         .ttd-area { width: 300px; float: right; text-align: center; margin-top: 20px; margin-left: 380px; }
         .ttd-area b { font-size: 11pt; }
+
+        .footer-layar {
+            margin-top: auto;
+            padding-top: 20px;
+            text-align: center;
+            font-size: 10pt;
+            font-style: italic;
+            color: #555;
+        }
+        .footer-cetak-global { display: none; }
+
         @media print {
             .no-print { display: none !important; }
             body { background-color: white !important; padding: 0 !important; margin: 0 !important; }
-            .cetak-kertas { width: 100% !important; max-width: 100% !important; min-height: auto !important; padding: 0 !important; margin: 0 !important; box-shadow: none !important; border-radius: 0 !important; }
+            .cetak-kertas { width: 100% !important; max-width: 100% !important; min-height: auto !important; padding: 0 !important; margin: 0 !important; box-shadow: none !important; border-radius: 0 !important; display: block !important;}
+            
+            .footer-layar { display: none !important; }
+            .footer-cetak-global {
+                display: block !important;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                text-align: center;
+                font-size: 10pt;
+                font-style: italic;
+                color: #555;
+            }
         }
     </style>
 </head>
@@ -28,6 +53,10 @@
     <div class="no-print fixed top-5 left-5 z-50 flex gap-2">
         <button onclick="window.close()" class="bg-gray-800 text-white px-4 py-2 rounded shadow hover:bg-gray-700 font-sans">&larr; Tutup Tab</button>
         <button onclick="window.print()" class="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-500 font-bold font-sans">Cetak PDF</button>
+    </div>
+
+    <div class="footer-cetak-global">
+        Dokumen ini diterbitkan melalui Smart-M1 dan dapat diverifikasi keasliannya melalui QR Code.
     </div>
 
     @php
@@ -141,10 +170,12 @@
                 <b><u>{{ $surat->penandatangan->nama ?? '........................................' }}</u></b><br>
                 NIP. {{ $surat->penandatangan->nip ?? '-' }}
             </div>
-            <br>
-            <p style="text-align: justify;"><i>Dokumen ini diterbitkan melalui Smart-M1 dan dapat diverifikasi keasliannya melalui QR Code.</i></p>
-
+            
             <div style="clear: both;"></div>
+
+            <div class="footer-layar">
+                Dokumen ini diterbitkan melalui Smart-M1 dan dapat diverifikasi keasliannya melalui QR Code.
+            </div>
 
         </div>
     </div>
