@@ -778,3 +778,8 @@ Route::get('/v/{token}', function ($token) {
     return abort(404, 'Dokumen Surat Tidak Ditemukan atau Token Verifikasi Tidak Valid.');
     
 })->name('verifikasi.short');
+
+Route::get('/cetak/keterangan-aktif/{id}', function ($id) {
+    $surat = \App\Models\SuratKeteranganAktif::with(['siswa.kelas', 'penandatangan'])->findOrFail($id);
+    return view('cetak.surat-keterangan-aktif', compact('surat'));
+})->name('cetak.keterangan-aktif');
