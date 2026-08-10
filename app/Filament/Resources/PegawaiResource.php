@@ -646,6 +646,35 @@ class PegawaiResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                
+                Tables\Actions\Action::make('reset_password')
+                    ->label('Reset Password')
+                    ->icon('heroicon-o-key')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->modalHeading('Reset Password Pegawai')
+                    ->modalDescription(fn (Pegawai $record) => "Apakah Anda yakin ingin mereset password {$record->nama}? Password baru akan disamakan dengan NIK: {$record->nik}")
+                    ->modalSubmitActionLabel('Ya, Reset Password')
+                    ->visible(fn () => auth()->user()->peran === 'admin')
+                    ->action(function (Pegawai $record) {
+                        if ($record->user) {
+                            $record->user->update([
+                                'password' => \Illuminate\Support\Facades\Hash::make($record->nik)
+                            ]);
+                            
+                            \Filament\Notifications\Notification::make()
+                                ->title('Berhasil')
+                                ->body('Password berhasil direset menjadi NIK pegawai tersebut.')
+                                ->success()
+                                ->send();
+                        } else {
+                            \Filament\Notifications\Notification::make()
+                                ->title('Gagal')
+                                ->body('Akun pengguna (User Login) tidak ditemukan untuk pegawai ini.')
+                                ->danger()
+                                ->send();
+                        }
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
