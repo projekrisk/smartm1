@@ -174,7 +174,7 @@
             <div style="clear: both;"></div>
 
             <div class="footer-layar">
-                Dokumen ini diterbitkan melalui Smart-M1 dan dapat diverifikasi keasliannya melalui QR Code.
+                Dokumen ini diterbitkan melalui Smart-M1 dan dapat diverifikasi keasliannya melalui QRCode.
             </div>
 
         </div>

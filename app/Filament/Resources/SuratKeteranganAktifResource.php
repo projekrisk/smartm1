@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Auth;
 class SuratKeteranganAktifResource extends Resource
 {
     protected static ?string $model = SuratKeteranganAktif::class;
-    protected static ?string $navigationIcon = 'heroicon-o-check-badge';    
+    protected static ?string $navigationIcon = 'heroicon-o-document';    
     protected static ?string $slug = 'surat-keterangan-aktif';
     protected static ?string $navigationLabel = 'Keterangan Aktif';
     protected static ?string $pluralModelLabel = 'Surat Keterangan Aktif';
@@ -95,7 +95,6 @@ class SuratKeteranganAktifResource extends Resource
                 Tables\Columns\TextColumn::make('siswa.nama_lengkap')->label('Siswa')->searchable(),
                 Tables\Columns\TextColumn::make('siswa.kelas.nama_kelas')->label('Kelas')->badge()->color('info'),
                 Tables\Columns\TextColumn::make('tanggal_surat')->label('Tanggal')->date('d M Y'),
-                Tables\Columns\TextColumn::make('tahun_ajaran')->label('TA'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

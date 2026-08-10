@@ -12,7 +12,7 @@
         .cetak-kertas { width: 21cm; min-height: 29.7cm; padding: 1.5cm; margin: 0 auto; background-color: white; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border-radius: 8px; display: flex; flex-direction: column; }
         
         .tabel-data { width: 100%; margin: 15px 0 20px 1cm; }
-        .tabel-data td { vertical-align: top; padding-bottom: 5px; }
+        .tabel-data td { vertical-align: top; }
         .tabel-data td:first-child { width: 200px; }
 
         .ttd-area { width: 300px; float: right; text-align: center; margin-top: 40px; margin-left: 380px; }
@@ -54,7 +54,6 @@
     <div class="flex flex-col items-center py-10 print:py-0 print:block">
         <div class="cetak-kertas">
             
-            <!-- KOP SURAT -->
             <div class="border-b-4 border-gray-800 pb-6 mb-8 flex items-center justify-between">
                 <div class="w-24 h-24 flex-shrink-0 flex items-center justify-center">
                     @if(isset($pengaturan) && $pengaturan->logo_dinas)
@@ -76,21 +75,19 @@
                 </div>
             </div>
 
-            <!-- JUDUL SURAT -->
             <div class="text-center mb-8">
                 <h2 class="text-[14pt] font-bold uppercase" style="text-decoration: underline; margin-bottom: 2px;">SURAT KETERANGAN AKTIF SEKOLAH</h2>
                 <p>Nomor: {{ $surat->nomor_surat }}</p>
             </div>
 
-            <!-- ISI SURAT -->
-            <p style="margin-bottom: 15px;">Yang bertanda tangan di bawah ini:</p>
+            <p>Yang bertanda tangan di bawah ini:</p>
             <table class="tabel-data">
                 <tr><td>Nama</td><td>:</td><td class="font-bold">{{ $surat->penandatangan->nama ?? '-' }}</td></tr>
                 <tr><td>NIP</td><td>:</td><td>{{ $surat->penandatangan->nip ?? '-' }}</td></tr>
                 <tr><td>Jabatan</td><td>:</td><td>Kepala {{ $pengaturan->nama_sekolah ?? 'SMA Negeri 1 Malingping' }}</td></tr>
             </table>
 
-            <p style="margin-bottom: 15px;">dengan ini menerangkan bahwa:</p>
+            <p>dengan ini menerangkan bahwa:</p>
             <table class="tabel-data">
                 <tr><td>Nama</td><td>:</td><td class="font-bold uppercase">{{ $surat->siswa->nama_lengkap ?? '-' }}</td></tr>
                 <tr><td>NIS</td><td>:</td><td>{{ $surat->siswa->nis ?? '-' }}</td></tr>
@@ -100,19 +97,18 @@
                 <tr><td>Tahun Ajaran</td><td>:</td><td>{{ $surat->tahun_ajaran }}</td></tr>
             </table>
 
-            <p style="text-align: justify; margin-bottom: 10px; line-height: 1.8 !important;">
+            <p style="text-align: justify; margin-bottom: 10px;">
                 adalah benar peserta didik yang terdaftar dan masih aktif bersekolah di {{ $pengaturan->nama_sekolah ?? 'SMA Negeri 1 Malingping' }} pada Tahun Ajaran {{ $surat->tahun_ajaran }}.
             </p>
             
-            <p style="text-align: justify; margin-bottom: 10px; line-height: 1.8 !important;">
+            <p style="text-align: justify; margin-bottom: 10px;">
                 Surat keterangan ini diterbitkan sebagai keterangan resmi mengenai status aktif peserta didik dan dapat dipergunakan sebagaimana mestinya.
             </p>
 
-            <p style="text-align: justify; line-height: 1.8 !important;">
+            <p style="text-align: justify; ">
                 Demikian surat keterangan ini dibuat dengan sebenar-benarnya untuk dapat dipergunakan sesuai dengan keperluan.
             </p>
 
-            <!-- TANDA TANGAN -->
             <div class="ttd-area">
                 Malingping, {{ \Carbon\Carbon::parse($surat->tanggal_surat)->isoFormat('D MMMM Y') }}<br>
                 Kepala {{ $pengaturan->nama_sekolah ?? 'SMA Negeri 1 Malingping' }}<br>
@@ -132,9 +128,8 @@
             
             <div style="clear: both;"></div>
 
-            <!-- FOOTER LAYAR -->
             <div class="footer-layar">
-                Dokumen ini diterbitkan melalui Smart-M1 dan dapat diverifikasi keasliannya melalui QR Code.
+                Dokumen ini diterbitkan melalui Smart-M1 dan dapat diverifikasi keasliannya melalui QRCode.
             </div>
 
         </div>

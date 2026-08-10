@@ -9,4 +9,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateSuratKeteranganAktif extends CreateRecord
 {
     protected static string $resource = SuratKeteranganAktifResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }
