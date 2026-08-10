@@ -3,12 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verifikasi Surat Panggilan - Smart-M1</title>
+    <title>Verifikasi Surat - Smart-M1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
 
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4 antialiased font-sans">
     @php
         // Berjaga-jaga jika variabel $pengaturan belum dikirim dari controller
         if (!isset($pengaturan)) {
@@ -72,7 +87,6 @@
             </div>
         </div>
 
-        <!-- Footer -->
         <div class="bg-gray-50 px-6 py-4 text-center border-t border-gray-100">
             <p class="text-xs text-gray-500">Sistem Informasi Manajemen<br><b>{{ $pengaturan->nama_sekolah ?? 'SMA Negeri 1 Malingping' }}</b></p>
         </div>

@@ -3,24 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verifikasi Dokumen Resmi - Smart-M1</title>
+    <title>Verifikasi Surat - Smart-M1</title>/
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4 antialiased font-sans">
 
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
         
-        <!-- Header / Status Valid -->
         <div class="bg-green-600 px-6 py-8 text-center text-white">
             <div class="inline-flex items-center justify-center w-20 h-20 bg-green-500 rounded-full mb-4 shadow-lg border-4 border-green-300">
                 <i class="fas fa-check text-4xl"></i>
             </div>
             <h1 class="text-2xl font-bold mb-1">DOKUMEN VALID</h1>
-            <p class="text-green-100 text-sm">Surat Keterangan Aktif Sekolah</p>
+            <p class="text-green-100">Surat Keterangan Aktif Sekolah</p>
         </div>
 
-        <!-- Detail Data -->
         <div class="p-6">
             <div class="space-y-4 text-sm text-gray-700">
                 
@@ -54,9 +68,8 @@
             </div>
         </div>
 
-        <!-- Footer -->
         <div class="bg-gray-50 px-6 py-4 text-center border-t border-gray-100">
-            <p class="text-xs text-gray-500">Sistem Informasi Manajemen<br><b>{{ $pengaturan->nama_sekolah ?? 'SMA Negeri 1 Malingping' }}</b></p>
+            <p class="text-xs text-gray-500">Smart-M1 - Sistem Informasi Manajemen<br><b>{{ $pengaturan->nama_sekolah ?? 'SMA Negeri 1 Malingping' }}</b></p>
         </div>
 
     </div>
