@@ -24,7 +24,7 @@ class SuratKeteranganAktifResource extends Resource
     protected static ?string $navigationLabel = 'Surat Keterangan Aktif';
     protected static ?string $pluralModelLabel = 'Surat Keterangan Aktif';
     protected static ?string $navigationGroup = 'Persuratan';
-    protected static ?int $navigationSort = 14;
+    protected static ?int $navigationSort = 15;
 
     public static function canViewAny(): bool
     {

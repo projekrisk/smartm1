@@ -18,9 +18,9 @@ class DokumenResource extends Resource
     protected static ?string $model = Dokumen::class;
     protected static ?string $slug = 'dokumen-arsip';
     protected static ?string $navigationIcon = 'heroicon-o-folder-open';
-    protected static ?string $navigationLabel = 'Dokumen & Arsip';
+    protected static ?string $navigationLabel = 'Dokumen';
     protected static ?int $navigationSort = 2;
-    protected static ?string $pluralModelLabel = 'Dokumen';
+    protected static ?string $pluralModelLabel = 'Dokumen & Arsip';
     
     public static function canViewAny(): bool { return true; }
     public static function canCreate(): bool { return Auth::user()->peran === 'admin'; }

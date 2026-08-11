@@ -24,7 +24,7 @@ class SuratDispensasiResource extends Resource
     protected static ?string $navigationLabel = 'Surat Dispensasi';
     protected static ?string $pluralModelLabel = 'Surat Dispensasi';
     protected static ?string $navigationGroup = 'Persuratan';
-    protected static ?int $navigationSort = 15;
+    protected static ?int $navigationSort = 13;
 
     public static function canViewAny(): bool
     {
