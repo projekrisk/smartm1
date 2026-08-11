@@ -29,9 +29,8 @@ class SiswaResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-users';
     protected static ?string $navigationLabel = 'Data Siswa';
     protected static ?string $pluralModelLabel = 'Data Siswa';
-    protected static ?string $navigationGroup = 'Data Master';    
     protected static ?string $modelLabel = 'Siswa';
-    protected static ?int $navigationSort = 6;
+    protected static ?int $navigationSort = 4;
 
     public static function getGloballySearchableAttributes(): array
     {

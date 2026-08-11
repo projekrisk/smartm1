@@ -17,7 +17,8 @@ class PengumumanResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-megaphone';
     protected static ?string $navigationLabel = 'Pengumuman';
     protected static ?string $slug = 'pengumuman';
-    protected static ?int $navigationSort = 3;
+    protected static ?string $navigationGroup = 'Admin';    
+    protected static ?int $navigationSort = 21;
     
     public static function canViewAny(): bool
     {

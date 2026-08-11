@@ -19,12 +19,12 @@ use Illuminate\Support\Facades\Auth;
 class SuratKeteranganAktifResource extends Resource
 {
     protected static ?string $model = SuratKeteranganAktif::class;
-    protected static ?string $navigationIcon = 'heroicon-o-document';    
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static ?string $slug = 'surat-keterangan-aktif';
-    protected static ?string $navigationLabel = 'Keterangan Aktif';
+    protected static ?string $navigationLabel = 'Surat Keterangan Aktif';
     protected static ?string $pluralModelLabel = 'Surat Keterangan Aktif';
     protected static ?string $navigationGroup = 'Persuratan';
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 14;
 
     public static function canViewAny(): bool
     {

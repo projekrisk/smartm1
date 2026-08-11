@@ -14,9 +14,9 @@ class JenisNilaiResource extends Resource
 {
     protected static ?string $model = JenisNilai::class;
     protected static ?string $navigationIcon = 'heroicon-o-tag';
-    protected static ?string $navigationGroup = 'Akademik';    
+    protected static ?string $navigationGroup = 'Admin';    
     protected static ?string $navigationLabel = 'Jenis Nilai';
-    protected static ?int $navigationSort = 9;    
+    protected static ?int $navigationSort = 16;    
     public static function canViewAny(): bool
     {
         return auth()->user()->peran === 'admin';

@@ -20,13 +20,13 @@ use Illuminate\Support\Facades\Auth;
 class SuratPanggilanResource extends Resource
 {
     protected static ?string $model = SuratPanggilan::class;
-    protected static ?string $navigationIcon = 'heroicon-o-document-duplicate';    
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static ?string $slug = 'surat-panggilan';
-    protected static ?string $navigationLabel = 'Surat Panggilan';
-    protected static ?string $pluralModelLabel = 'Surat Panggilan';
-    protected static ?string $modelLabel = 'Surat Panggilan';
+    protected static ?string $navigationLabel = 'Surat Panggilan Siswa';
+    protected static ?string $pluralModelLabel = 'Surat Panggilan Siswa';
+    protected static ?string $modelLabel = 'Surat Panggilan Siswa';
     protected static ?string $navigationGroup = 'Persuratan';
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 13;
 
     public static function getNavigationBadge(): ?string
     {
@@ -147,7 +147,6 @@ class SuratPanggilanResource extends Resource
                                 ->afterStateUpdated(function (Set $set, $state) {
                                     if ($state) {
                                         $siswa = Siswa::with('kelas')->find($state);
-                                        // Mengisi ID Penandatangan secara otomatis di balik layar
                                         if ($siswa && $siswa->kelas && $siswa->kelas->wali_kelas_id) {
                                             $set('penandatangan_id', $siswa->kelas->wali_kelas_id);
                                         } else {

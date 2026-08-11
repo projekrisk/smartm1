@@ -25,11 +25,10 @@ class CatatanSiswaResource extends Resource
 
     protected static ?string $slug = 'catatan-siswa';
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-check';
-    protected static ?string $navigationLabel = 'Catatan / Kasus';
+    protected static ?string $navigationLabel = 'Catatan Siswa';
     protected static ?string $pluralModelLabel = 'Catatan Siswa';
     protected static ?string $modelLabel = 'Catatan';
-    protected static ?string $navigationGroup = 'Kesiswaan';    
-    protected static ?int $navigationSort = 13;
+    protected static ?int $navigationSort = 6;
 
     public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
     {

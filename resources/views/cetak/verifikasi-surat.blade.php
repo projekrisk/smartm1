@@ -37,7 +37,6 @@
 
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
         
-        <!-- Header / Status Valid -->
         <div class="bg-green-600 px-6 py-8 text-center text-white">
             <div class="inline-flex items-center justify-center w-20 h-20 bg-green-500 rounded-full mb-4 shadow-lg border-4 border-green-300">
                 <i class="fas fa-check text-4xl"></i>

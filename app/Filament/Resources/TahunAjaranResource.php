@@ -17,9 +17,9 @@ class TahunAjaranResource extends Resource
     protected static ?string $navigationLabel = 'Tahun Ajaran';
     protected static ?string $pluralModelLabel = 'Tahun Ajaran';
     protected static ?string $slug = 'tahun-ajaran';
-    protected static ?string $navigationGroup = 'Data Master';    
+    protected static ?string $navigationGroup = 'Admin';    
     protected static ?string $modelLabel = 'Tahun Ajaran';
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 19;
 
     public static function canViewAny(): bool
     {

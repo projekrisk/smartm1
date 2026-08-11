@@ -25,7 +25,6 @@
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center p-4 antialiased font-sans">
     @php
-        // Berjaga-jaga jika variabel $pengaturan belum dikirim dari controller
         if (!isset($pengaturan)) {
             try { 
                 $pengaturan = \Illuminate\Support\Facades\Schema::hasTable('pengaturan') ? \App\Models\Pengaturan::first() : null; 
@@ -37,7 +36,6 @@
 
     <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden">
         
-        <!-- Header / Status Valid -->
         <div class="bg-green-600 px-6 py-8 text-center text-white">
             <div class="inline-flex items-center justify-center w-20 h-20 bg-green-500 rounded-full mb-4 shadow-lg border-4 border-green-300">
                 <i class="fas fa-check text-4xl"></i>
@@ -46,7 +44,6 @@
             <p class="text-green-100 text-sm">Surat Panggilan Orang Tua / Wali Murid</p>
         </div>
 
-        <!-- Detail Data -->
         <div class="p-6">
             <div class="space-y-4 text-sm text-gray-700">
                 

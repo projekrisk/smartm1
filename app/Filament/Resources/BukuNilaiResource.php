@@ -21,9 +21,9 @@ class BukuNilaiResource extends Resource
     protected static ?string $model = Penilaian::class;
     protected static ?string $slug = 'buku-nilai';
     protected static ?string $navigationIcon = 'heroicon-o-book-open';
-    protected static ?string $navigationLabel = 'Buku Nilai';
-    protected static ?string $navigationGroup = 'Akademik';    
-    protected static ?int $navigationSort = 10;
+    protected static ?string $navigationLabel = 'Buku Nilai Siswa';
+    protected static ?string $pluralModelLabel = 'Buku Nilai Siswa';
+    protected static ?int $navigationSort = 11;
 
     public static function canViewAny(): bool { return in_array(auth()->user()->peran, ['admin', 'guru']); }
 

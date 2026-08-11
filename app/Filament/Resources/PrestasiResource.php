@@ -21,9 +21,8 @@ class PrestasiResource extends Resource
     protected static ?string $slug = 'prestasi-siswa';
     protected static ?string $navigationIcon = 'heroicon-o-trophy';
     protected static ?string $navigationLabel = 'Prestasi Siswa';
-    protected static ?string $pluralModelLabel = 'Daftar Prestasi Siswa';
-    protected static ?string $navigationGroup = 'Kesiswaan';    
-    protected static ?int $navigationSort = 12;
+    protected static ?string $pluralModelLabel = 'Prestasi Siswa';
+    protected static ?int $navigationSort = 7;
 
     public static function isValidator(): bool
     {

@@ -15,11 +15,11 @@ class TingkatResource extends Resource
     protected static ?string $model = Tingkat::class;
     protected static ?string $slug = 'tingkat';
     protected static ?string $navigationIcon = 'heroicon-o-numbered-list';
-    protected static ?string $navigationLabel = 'Tingkat';
-    protected static ?string $pluralModelLabel = 'Tingkat';
-    protected static ?string $navigationGroup = 'Data Master';    
+    protected static ?string $navigationLabel = 'Tingkat Kelas';
+    protected static ?string $pluralModelLabel = 'Tingkat Kelas';
+    protected static ?string $navigationGroup = 'Admin';    
     protected static ?string $modelLabel = 'Tingkat';
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 20;
 
     public static function canViewAny(): bool
     {

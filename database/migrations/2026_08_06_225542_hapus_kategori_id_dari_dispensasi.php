@@ -23,7 +23,6 @@ return new class extends Migration
             });
         }
 
-        // 2. Cek juga jika tabelnya bernama 'surat_dispensasis' (Pakai S)
         if (Schema::hasTable('surat_dispensasis')) {
             Schema::table('surat_dispensasis', function (Blueprint $table) {
                 try {

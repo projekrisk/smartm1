@@ -16,9 +16,8 @@ class KelasResource extends Resource
     protected static ?string $model = Kelas::class;
     protected static ?string $slug = 'kelas';
     protected static ?string $navigationIcon = 'heroicon-o-folder-open';    
-    protected static ?string $navigationLabel = 'Kelas';
-    protected static ?string $pluralModelLabel = 'Kelas';
-    protected static ?string $navigationGroup = 'Data Master';    
+    protected static ?string $navigationLabel = 'Data Kelas';
+    protected static ?string $pluralModelLabel = 'Data Kelas';
     protected static ?string $modelLabel = 'Kelas';
     protected static ?int $navigationSort = 3;
 

@@ -25,10 +25,10 @@ class NilaiRaporResource extends Resource
     protected static ?string $slug = 'nilai-rapor';
     protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
     protected static ?string $navigationLabel = 'Nilai Rapor';
-    protected static ?string $pluralModelLabel = 'Data Nilai Rapor Akhir';
+    protected static ?string $pluralModelLabel = 'Data Nilai Rapor';
     protected static ?string $modelLabel = 'Nilai Rapor';
-    protected static ?string $navigationGroup = 'Akademik';    
-    protected static ?int $navigationSort = 11;
+    protected static ?string $navigationGroup = 'Admin';    
+    protected static ?int $navigationSort = 17;
 
     public static function canViewAny(): bool
     {

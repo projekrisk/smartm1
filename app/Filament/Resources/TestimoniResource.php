@@ -16,7 +16,8 @@ class TestimoniResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-star';
     protected static ?string $navigationLabel = 'Ulasan & Rating';
     protected static ?string $pluralModelLabel = 'Ulasan Siswa';
-    protected static ?int $navigationSort = 2;
+    protected static ?string $navigationGroup = 'Admin';    
+    protected static ?int $navigationSort = 23;
 
     public static function canViewAny(): bool
     {

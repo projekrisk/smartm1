@@ -752,10 +752,8 @@ Route::get('/verifikasi-surat/panggilan', function (Request $request) {
     return view('cetak.verifikasi-panggilan', compact('surat'));
 })->name('verifikasi.panggilan');
 
-// Short URL Verification Route
 Route::get('/v/{token}', function ($token) {
     
-    // 1. Cek Surat Dispensasi
     $suratDispensasi = \App\Models\SuratDispensasi::get()->first(function($s) use ($token) {
         $hash = strtoupper(substr(md5($s->nomor_surat_lengkap . config('app.key')), 0, 6));
         return $hash === $token || $s->token === $token;
@@ -766,7 +764,6 @@ Route::get('/v/{token}', function ($token) {
         return redirect('/verifikasi-surat/dispensasi?nomor=' . urlencode($suratDispensasi->nomor_surat_lengkap) . '&token=' . $tokenLama);
     }
 
-    // 2. Cek Surat Panggilan
     $suratPanggilan = \App\Models\SuratPanggilan::get()->first(function($s) use ($token) {
         $hash = strtoupper(substr(md5($s->nomor_surat . config('app.key')), 0, 6));
         return $hash === $token || $s->token === $token;
@@ -777,7 +774,6 @@ Route::get('/v/{token}', function ($token) {
         return redirect('/verifikasi-surat/panggilan?nomor=' . urlencode($suratPanggilan->nomor_surat) . '&token=' . $tokenLama);
     }
 
-    // 🌟 3. TAMBAHAN BARU: Cek Surat Keterangan Aktif
     $suratAktif = \App\Models\SuratKeteranganAktif::get()->first(function($s) use ($token) {
         $hash = strtoupper(substr(md5($s->nomor_surat . config('app.key')), 0, 6));
         return $hash === $token || $s->token === $token;
@@ -788,26 +784,19 @@ Route::get('/v/{token}', function ($token) {
         return redirect('/verifikasi-surat/keterangan-aktif?nomor=' . urlencode($suratAktif->nomor_surat) . '&token=' . $tokenLama);
     }
 
-    // Jika tidak ketemu di semua tabel
     return abort(404, 'Dokumen Surat Tidak Ditemukan atau Token Verifikasi Tidak Valid.');
     
 })->name('verifikasi.short');
 
-// ====================================================================
-// 🌟 ROUTE BARU UNTUK HALAMAN HASIL VERIFIKASI KETERANGAN AKTIF
-// Tambahkan di bawahnya
-// ====================================================================
 Route::get('/verifikasi-surat/keterangan-aktif', function (\Illuminate\Http\Request $request) {
     $nomor = $request->query('nomor');
     $token = $request->query('token');
 
     if (!$nomor || !$token) abort(404, 'Akses tidak sah.');
 
-    // Cek kecocokan token dengan nomor surat
     $validToken = substr(md5($nomor . config('app.key')), 0, 10);
     if ($token !== $validToken) abort(404, 'Token verifikasi tidak valid atau telah kedaluwarsa.');
 
-    // Ambil data surat
     $surat = \App\Models\SuratKeteranganAktif::with(['siswa.kelas', 'penandatangan'])->where('nomor_surat', $nomor)->firstOrFail();
     $pengaturan = \Illuminate\Support\Facades\Schema::hasTable('pengaturan') ? \App\Models\Pengaturan::first() : null;
 

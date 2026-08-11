@@ -21,8 +21,7 @@ class JurnalGuruResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-bookmark-square';
     protected static ?string $navigationLabel = 'Jurnal & Absensi';
     protected static ?string $pluralModelLabel = 'Jurnal Mengajar & Absensi';
-    protected static ?string $navigationGroup = 'Akademik';    
-    protected static ?int $navigationSort = 8;
+    protected static ?int $navigationSort = 10;
 
     public static function canViewAny(): bool 
     { 
