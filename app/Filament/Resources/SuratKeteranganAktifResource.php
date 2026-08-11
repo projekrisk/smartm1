@@ -66,27 +66,32 @@ class SuratKeteranganAktifResource extends Resource
                                 ->dehydrated(),
                         ]),
 
-                        Forms\Components\Grid::make(3)->schema([
-                            Forms\Components\Select::make('siswa_id')
-                                ->label('Nama Siswa')
-                                ->relationship('siswa', 'nama_lengkap', fn (Builder $query) => $query->whereIn('status_siswa', ['Aktif', 'Mutasi Masuk'])->orWhereNull('status_siswa')->with('kelas'))
-                                ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->nama_lengkap} (Kelas {$record->kelas?->nama_kelas})")
-                                ->searchable(['nama_lengkap', 'nis', 'nisn'])
-                                ->preload()
-                                ->required(),
+                        Forms\Components\Select::make('siswa_id')
+                            ->label('Nama Siswa')
+                            ->relationship(
+                                'siswa',
+                                'nama_lengkap',
+                                fn (Builder $query) => $query->where(function ($q) {
+                                    $q->whereIn('status_siswa', ['Aktif', 'Mutasi Masuk'])
+                                      ->orWhereNull('status_siswa');
+                                })->with('kelas')
+                            )
+                            ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->nama_lengkap} (Kelas " . ($record->kelas?->nama_kelas ?? 'Tanpa Kelas') . ")")
+                            ->searchable(['nama_lengkap', 'nis', 'nisn'])
+                            ->required()
+                            ->columnSpanFull(),
 
-                            Forms\Components\TextInput::make('tahun_ajaran')
-                                ->label('Tahun Ajaran')
-                                ->default(date('Y') . '/' . (date('Y') + 1))
-                                ->required(),
+                        Forms\Components\Hidden::make('tahun_ajaran')
+                            ->default(function () {
+                                $tahunAktif = \App\Models\TahunAjaran::where('is_active', true)->first();
+                                return $tahunAktif?->tahun_ajaran ?? (date('Y') . '/' . (date('Y') + 1));
+                            }),
 
-                            Forms\Components\Select::make('penandatangan_id')
-                                ->label('Penandatangan (Kepala Sekolah)')
-                                ->relationship('penandatangan', 'nama', fn (Builder $query) => $query->where('jenis_ptk', 'like', '%Kepala Sekolah%'))
-                                ->searchable()
-                                ->preload()
-                                ->required(),
-                        ]),
+                        Forms\Components\Hidden::make('penandatangan_id')
+                            ->default(function () {
+                                return Pegawai::where('jenis_ptk', 'like', '%Kepala Sekolah%')->first()?->id;
+                            }),
+
                         Forms\Components\Hidden::make('dibuat_oleh')->default(fn () => Auth::id()),
                     ]),
             ]);
