@@ -23,7 +23,7 @@
     <title>{{ $appTitle }}</title>
     <meta name="title" content="{{ $appTitle }}">
     <meta name="description" content="{{ $metaDescription }}">
-    <meta name="keywords" content="Smart-M1, SMAN 1 Malingping, SmartM1 SMAN 1 Malingping, aplikasi digitalisasi sekolah, sistem administrasi sekolah, akademik siswa, e-rapor, absensi siswa, portal siswa Malingping">
+    <meta name="keywords" content="Smart-M1, {{ $namaSekolah }}, sistem administrasi sekolah, akademik siswa, e-rapor, absensi siswa, portal siswa">
     <meta name="author" content="{{ $namaSekolah }}">
     
     @if($pengaturan && $pengaturan->logo_sekolah)
@@ -33,18 +33,26 @@
     @endif
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['"DM Sans"', 'sans-serif'],
                     },
                     colors: {
-                        brand: {
-                            50: '#f0f6ff', 100: '#e0edff', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8', 900: '#0f172a',
+                        // Custom refined palette
+                        base: {
+                            50: '#F9FAFB', // Off-white background
+                            900: '#111827', // Deep charcoal/black
+                        },
+                        accent: {
+                            500: '#D97706', // Muted Orange/Gold for sharp contrast
+                            600: '#B45309',
                         }
                     }
                 }
@@ -53,161 +61,197 @@
     </script>
     <style>
         body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: #f8fafc; 
-            color: #0f172a; 
+            font-family: 'DM Sans', sans-serif; 
+            background-color: #F9FAFB; 
+            color: #111827; 
             margin: 0;
             overflow-x: hidden;
         }
 
-        /* Profesional Grid Pattern Background */
-        .bg-grid-pattern {
-            background-size: 40px 40px;
+        /* Subtle, structural background instead of blobs */
+        .bg-structural {
             background-image: 
-                linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
-            background-position: center top;
+                linear-gradient(to right, rgba(17, 24, 39, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(17, 24, 39, 0.03) 1px, transparent 1px);
+            background-size: 64px 64px;
         }
 
-        /* Clean Modals */
         .modal-overlay {
-            opacity: 0; visibility: hidden; transition: all 0.2s ease-in-out;
+            opacity: 0; visibility: hidden; transition: all 0.3s ease-in-out;
+            backdrop-filter: blur(4px);
         }
         .modal-overlay.active {
             opacity: 1; visibility: visible;
         }
         .modal-content {
-            transform: translateY(15px) scale(0.98); opacity: 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(20px); opacity: 0; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .modal-overlay.active .modal-content {
-            transform: translateY(0) scale(1); opacity: 1;
+            transform: translateY(0); opacity: 1;
+        }
+
+        .hover-underline-animation {
+            display: inline-block;
+            position: relative;
+        }
+        .hover-underline-animation::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            transform: scaleX(0);
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: currentColor;
+            transform-origin: bottom right;
+            transition: transform 0.25s ease-out;
+        }
+        .hover-underline-animation:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
         }
     </style>
 </head>
-<body class="antialiased min-h-screen flex flex-col relative bg-grid-pattern selection:bg-brand-600 selection:text-white">
+<body class="antialiased min-h-screen flex flex-col relative bg-base-50 bg-structural selection:bg-base-900 selection:text-white">
 
-    <!-- Navbar -->
-    <nav class="w-full bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16 md:h-20">
-                <div class="flex items-center gap-3">
-                    @if($pengaturan && $pengaturan->logo_sekolah)
-                        <img src="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}" alt="Logo" class="w-10 h-10 md:w-12 md:h-12 object-contain">
-                    @else
-                        <div class="w-10 h-10 md:w-12 md:h-12 bg-brand-900 rounded-lg flex items-center justify-center text-white font-bold text-lg">M1</div>
-                    @endif
-                    <div class="flex flex-col justify-center">
-                        <span class="font-extrabold text-lg md:text-xl text-slate-900 leading-tight tracking-tight">SMART-M1</span>
-                        <span class="text-[10px] md:text-xs text-slate-500 font-semibold tracking-wide uppercase">{{ $namaSekolah }}</span>
-                    </div>
-                </div>
+    <!-- Minimalist Navbar -->
+    <nav class="w-full px-6 py-8 md:px-12 lg:px-16 flex justify-between items-start z-40">
+        <div class="flex items-center gap-4">
+            @if($pengaturan && $pengaturan->logo_sekolah)
+                <img src="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}" alt="Logo" class="w-12 h-12 md:w-14 md:h-14 object-contain">
+            @else
+                <div class="w-12 h-12 md:w-14 md:h-14 bg-base-900 flex items-center justify-center text-white font-bold text-xl">M1</div>
+            @endif
+            <div class="flex flex-col">
+                <span class="font-extrabold text-xl md:text-2xl tracking-tight leading-none text-base-900">Smart-M1</span>
+                <span class="text-xs md:text-sm font-medium text-gray-500 mt-1 uppercase tracking-widest">{{ $namaSekolah }}</span>
+            </div>
+        </div>
 
-                <div class="hidden md:flex items-center gap-4">
-                    <button onclick="openFeaturesModal()" class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors">
-                        Informasi Sistem
-                    </button>
-                    <a href="mailto:info@sman1malingping.sch.id" class="text-sm font-medium text-slate-600 hover:text-brand-600 transition-colors">
-                        Bantuan
+        <button onclick="openFeaturesModal()" class="hidden md:block text-sm font-bold uppercase tracking-wider text-base-900 hover-underline-animation">
+            Informasi Sistem
+        </button>
+    </nav>
+
+    <!-- Main Content: Asymmetrical Layout -->
+    <main class="flex-1 w-full max-w-[1600px] mx-auto px-6 md:px-12 lg:px-16 flex flex-col justify-center pb-20 z-10">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center mt-8 lg:mt-0">
+            
+            <!-- Left Column: Typography & CTAs -->
+            <div class="lg:col-span-7 flex flex-col justify-center pr-0 lg:pr-8">
+                
+                <h1 class="text-5xl md:text-6xl lg:text-7xl xl:text-[5rem] font-extrabold text-base-900 tracking-tight leading-[1.05] mb-8">
+                    Manajemen <br />
+                    Akademik <br />
+                    Terpadu.
+                </h1>
+
+                <p class="text-lg md:text-xl text-gray-600 max-w-2xl leading-relaxed mb-10">
+                    Platform inti untuk tata kelola administrasi dan pemantauan perkembangan peserta didik secara komprehensif di lingkungan institusi.
+                </p>
+
+                <!-- Solid, Structural Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                    <a href="{{ url('/siswa/login') }}" class="inline-flex items-center justify-center px-8 py-4 bg-base-900 text-white font-bold text-sm tracking-wider uppercase hover:bg-gray-800 transition-colors group">
+                        Portal Siswa
+                        <svg class="w-5 h-5 ml-3 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                    </a>
+                    
+                    <a href="{{ url('/admin/login') }}" class="inline-flex items-center justify-center px-8 py-4 bg-transparent border-2 border-base-900 text-base-900 font-bold text-sm tracking-wider uppercase hover:bg-base-900 hover:text-white transition-colors">
+                        Admin & Guru
                     </a>
                 </div>
             </div>
-        </div>
-    </nav>
 
-    <!-- Main Content -->
-    <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 lg:py-24 flex flex-col justify-center relative z-10">
-        
-        <div class="text-center max-w-4xl mx-auto">
-            
-            <!-- Badge Sistem Aktif -->
-            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 mb-8 shadow-sm">
-                <span class="relative flex h-2.5 w-2.5">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-                </span>
-                <span class="text-[11px] font-bold tracking-widest text-emerald-700 uppercase">SYSTEM AKTIF</span>
+            <!-- Right Column: Visual / Feature Highlights (Instead of a generic image) -->
+            <div class="lg:col-span-5 w-full mt-12 lg:mt-0">
+                <!-- A structural, card-based visual element -->
+                <div class="bg-white border-2 border-base-900 p-8 md:p-10 relative">
+                    <!-- Decorative accents -->
+                    <div class="absolute top-0 right-0 w-16 h-16 border-l-2 border-b-2 border-base-900 bg-base-50 transform translate-x-2 -translate-y-2"></div>
+                    <div class="absolute bottom-0 left-0 w-16 h-16 border-r-2 border-t-2 border-base-900 bg-base-50 transform -translate-x-2 translate-y-2"></div>
+                    
+                    <div class="relative z-10">
+                        <h3 class="text-xs font-bold uppercase tracking-widest text-accent-600 mb-6">Modul Inti</h3>
+                        
+                        <div class="space-y-8">
+                            <div class="flex gap-4">
+                                <div class="shrink-0 mt-1">
+                                    <svg class="w-6 h-6 text-base-900" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-bold text-base-900 mb-1">E-Rapor & Evaluasi</h4>
+                                    <p class="text-sm text-gray-600 leading-relaxed">Perekaman nilai secara berkala dengan sistem rekapitulasi otomatis.</p>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-4">
+                                <div class="shrink-0 mt-1">
+                                    <svg class="w-6 h-6 text-base-900" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-bold text-base-900 mb-1">Pusat Data Mutasi</h4>
+                                    <p class="text-sm text-gray-600 leading-relaxed">Pengelolaan riwayat status siswa, pendaftaran, dan mutasi keluar/masuk.</p>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-4">
+                                <div class="shrink-0 mt-1">
+                                    <svg class="w-6 h-6 text-base-900" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-bold text-base-900 mb-1">Verifikasi Dokumen</h4>
+                                    <p class="text-sm text-gray-600 leading-relaxed">Sistem penjaminan keaslian persuratan (dispensasi/panggilan) berbasis QRCode.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Headline -->
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.15] mb-6">
-                Portal Sistem Informasi Manajemen<br>
-                <span class="text-brand-600">{{ $namaSekolah }}</span>
-            </h1>
-
-            <p class="mt-4 text-base md:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-                Infrastruktur digital terintegrasi untuk pengelolaan administrasi sekolah, akademik, dan layanan peserta didik secara terpusat, aman, dan efisien.
-            </p>
-
-            <!-- CTA Buttons -->
-            <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <a href="{{ url('/siswa/login') }}" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 text-sm font-semibold text-white bg-brand-600 rounded-lg shadow-sm hover:bg-brand-700 hover:shadow transition-all border border-transparent">
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
-                    Portal Siswa
-                </a>
-                <a href="{{ url('/admin/login') }}" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 text-sm font-semibold text-slate-700 bg-white rounded-lg shadow-sm border border-slate-300 hover:bg-slate-50 hover:border-slate-400 transition-all">
-                    <svg class="w-5 h-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                    Admin & Guru
-                </a>
-            </div>
-
-            <!-- Fitur Cards (Professional look) -->
-            <div class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-                
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                    <div class="w-10 h-10 rounded-lg bg-brand-50 flex items-center justify-center border border-brand-100 mb-4">
-                        <svg class="w-5 h-5 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/></svg>
-                    </div>
-                    <h3 class="text-slate-900 font-bold mb-2">Basis Data Terpusat</h3>
-                    <p class="text-slate-500 text-sm leading-relaxed">Single source of truth untuk data siswa, mutasi, absensi, dan administrasi sekolah yang dikelola secara real-time.</p>
-                </div>
-
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                    <div class="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center border border-emerald-100 mb-4">
-                        <svg class="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                    </div>
-                    <h3 class="text-slate-900 font-bold mb-2">Keamanan Berlapis</h3>
-                    <p class="text-slate-500 text-sm leading-relaxed">Infrastruktur terlindungi dengan otorisasi ketat. Sistem penjaminan keaslian dokumen menggunakan teknologi QRCode.</p>
-                </div>
-
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                    <div class="w-10 h-10 rounded-lg bg-orange-50 flex items-center justify-center border border-orange-100 mb-4">
-                        <svg class="w-5 h-5 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                    </div>
-                    <h3 class="text-slate-900 font-bold mb-2">Akses Cepat E-Rapor</h3>
-                    <p class="text-slate-500 text-sm leading-relaxed">Kemudahan bagi wali murid dan siswa untuk memantau perkembangan akademik, nilai, dan rekapitulasi kehadiran.</p>
-                </div>
-
-            </div>
         </div>
     </main>
 
-    <footer class="w-full text-center py-6 text-sm text-slate-500 font-medium shrink-0 bg-white border-t border-slate-200 z-10 mt-auto">
-        &copy; {{ date('Y') }} Sistem Informasi Manajemen {{ $namaSekolah }}.
+    <!-- Minimalist Footer -->
+    <footer class="w-full px-6 py-6 md:px-12 lg:px-16 flex flex-col md:flex-row justify-between items-center border-t-2 border-gray-200 mt-auto bg-base-50 z-10 gap-4 text-xs md:text-sm font-bold text-gray-500 uppercase tracking-wider">
+        <div>&copy; {{ date('Y') }} {{ $namaSekolah }}.</div>
+        <button onclick="openFeaturesModal()" class="md:hidden hover:text-base-900 transition-colors">Informasi Sistem</button>
     </footer>
 
-    <!-- Modal Informasi -->
-    <div id="featuresModal" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeFeaturesModal()"></div>
-        <div class="modal-content relative w-full max-w-md bg-white rounded-2xl shadow-xl flex flex-col overflow-hidden border border-slate-200">
-            <div class="flex justify-between items-center p-5 border-b border-slate-100 bg-slate-50">
-                <h2 class="text-base font-bold text-slate-900">Tentang Smart-M1</h2>
-                <button onclick="closeFeaturesModal()" class="text-slate-400 hover:text-slate-700 transition-colors">
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    <!-- Structural Modal -->
+    <div id="featuresModal" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 bg-base-900/40">
+        <!-- Close area -->
+        <div class="absolute inset-0 cursor-pointer" onclick="closeFeaturesModal()"></div>
+        
+        <div class="modal-content relative w-full max-w-2xl bg-white border-2 border-base-900 p-0 flex flex-col shadow-2xl">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center p-6 md:p-8 border-b-2 border-base-900 bg-base-50">
+                <h2 class="text-xl md:text-2xl font-extrabold text-base-900 tracking-tight">Informasi Sistem</h2>
+                <button onclick="closeFeaturesModal()" class="text-base-900 hover:text-accent-600 transition-colors p-1">
+                    <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
-            <div class="p-6 text-slate-600 text-sm leading-relaxed">
-                <p class="mb-4">
-                    <b>Smart-M1</b> adalah sistem manajemen informasi khusus yang dikembangkan untuk memfasilitasi kebutuhan administrasi dan operasional <b>{{ $namaSekolah }}</b>.
+            
+            <!-- Modal Body -->
+            <div class="p-6 md:p-8 text-gray-700 leading-relaxed space-y-6">
+                <p class="text-base md:text-lg">
+                    <b>Smart-M1</b> dibangun secara spesifik untuk memfasilitasi kebutuhan administrasi dan operasional <b>{{ $namaSekolah }}</b>. Sistem memisahkan wewenang antara pengelola (Admin/Guru) dan pengguna akhir (Siswa/Wali Murid).
                 </p>
-                <p>
-                    Sistem ini terbagi menjadi dua portal utama:
-                </p>
-                <ul class="list-disc pl-5 mt-2 space-y-1 mb-4">
-                    <li><b>Portal Admin & Guru:</b> Mengelola data kepegawaian, siswa, pembuatan dokumen resmi, dan penginputan nilai.</li>
-                    <li><b>Portal Siswa:</b> Akses khusus peserta didik untuk melihat e-Rapor, riwayat absensi, dan jadwal akademik.</li>
-                </ul>
-                <div class="p-3 bg-brand-50 border border-brand-100 rounded-lg text-brand-800 text-xs">
-                    Jika Anda mengalami kendala saat login, silakan hubungi Staff Tata Usaha (TU) sekolah.
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-gray-200">
+                    <div>
+                        <h4 class="font-bold text-base-900 mb-2 uppercase tracking-wider text-sm">Akses Administrator</h4>
+                        <p class="text-sm">Diperuntukkan bagi staf Tata Usaha dan Tenaga Pendidik untuk manajemen data, input nilai, presensi, dan penerbitan dokumen resmi.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-base-900 mb-2 uppercase tracking-wider text-sm">Akses Siswa</h4>
+                        <p class="text-sm">Portal baca-saja (*read-only*) bagi peserta didik untuk memantau kemajuan belajar, riwayat mutasi, dan melihat E-Rapor.</p>
+                    </div>
+                </div>
+
+                <div class="bg-gray-100 p-4 border-l-4 border-accent-600 text-sm font-medium">
+                    Untuk bantuan teknis atau kendala login, silakan hubungi bagian Tata Usaha sekolah pada jam kerja.
                 </div>
             </div>
         </div>
@@ -215,8 +259,16 @@
 
     <script>
         const featuresModal = document.getElementById('featuresModal');
-        function openFeaturesModal() { featuresModal.classList.add('active'); }
-        function closeFeaturesModal() { featuresModal.classList.remove('active'); }
+        
+        function openFeaturesModal() { 
+            featuresModal.classList.add('active'); 
+            document.body.style.overflow = 'hidden'; // Prevent scrolling behind modal
+        }
+        
+        function closeFeaturesModal() { 
+            featuresModal.classList.remove('active'); 
+            document.body.style.overflow = '';
+        }
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && featuresModal.classList.contains('active')) {
