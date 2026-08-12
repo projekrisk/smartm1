@@ -304,7 +304,7 @@
                 @endphp
                 <a href="/siswa/pesan" class="nav-item">
                     <div style="position: relative;">
-                        <x-filament::icon icon="heroicon-s-chat-bubble-2-text" style="width: 26px; height: 26px; margin-bottom: 4px;" />
+                        <x-filament::icon icon="heroicon-s-chat-bubble-left-ellipsis" style="width: 26px; height: 26px; margin-bottom: 4px;" />
                         @if($unreadPesan > 0)
                             <span style="position: absolute; top: -2px; right: -4px; width: 10px; height: 10px; background-color: #FF3B30; border: 2px solid white; border-radius: 50%;"></span>
                         @endif
