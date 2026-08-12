@@ -1,94 +1,141 @@
 <x-filament-panels::page>
-    <style>
-        body { overflow: hidden !important; }
-        .fi-topbar, .fi-sidebar, .fi-header { display: none !important; }
-        .fi-main { padding: 0 !important; margin: 0 !important; max-width: 100% !important; background: transparent !important; }
-        
-        #security-overlay {
-            position: fixed; inset: 0; z-index: 99999;
-            background-color: #e2e8f0;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .dark #security-overlay { background-color: #020617; }
+    @php
+        $pengaturan = null;
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('pengaturan')) {
+                $pengaturan = \App\Models\Pengaturan::first();
+            }
+        } catch (\Exception $e) {}
+    @endphp
 
-        .android-app-container {
-            width: 100%; max-width: 414px; height: 100vh; height: 100dvh;
-            background-color: #f8fafc;
-            position: fixed; top: 0; bottom: 0; left: 0; right: 0;
-            height: 100% !important;             
-            display: flex; flex-direction: column; position: relative;
-            box-shadow: 0 0 40px rgba(0,0,0,0.15); overflow: hidden;
-            font-family: 'Inter', system-ui, sans-serif;
-        }
-        .dark .android-app-container { background-color: #0f172a; }
+    <div wire:ignore>
+        <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+        
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            sans: ['"Inter"', 'sans-serif'],
+                        },
+                        colors: {
+                            base: {
+                                50: '#F9FAFB',
+                                900: '#111827',
+                            }
+                        }
+                    }
+                }
+            }
+        </script>
+        <style>
+            body { 
+                font-family: 'Inter', sans-serif !important; 
+                background-color: #F9FAFB !important; 
+                color: #111827 !important; 
+                margin: 0; padding: 0;
+                overflow: hidden !important; 
+            }
+            
+            .bg-structural {
+                background-image: 
+                    linear-gradient(to right, rgba(17, 24, 39, 0.04) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(17, 24, 39, 0.04) 1px, transparent 1px);
+                background-size: 64px 64px;
+            }
 
-        .android-content { flex: 1; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; }
-        .android-content::-webkit-scrollbar { display: none; }
+            .fi-topbar, .fi-sidebar, .fi-simple-header, .fi-logo, .fi-simple-footer { display: none !important; }
+            .fi-layout, .fi-simple-layout, .fi-main, .fi-simple-main, .fi-page { 
+                padding: 0 !important; margin: 0 !important; max-width: 100% !important; 
+                background-color: transparent !important; box-shadow: none !important; border: none !important;
+            }
 
-        .android-app-container .fi-fo-field-wrp label span { color: #1e293b !important; font-weight: 800 !important; font-size: 11px !important; text-transform: uppercase; letter-spacing: 0.5px; }
-        .dark .android-app-container .fi-fo-field-wrp label span { color: #94a3b8 !important; }
-        
-        .android-app-container .fi-input-wrp { border-radius: 16px !important; background-color: #f1f5f9 !important; border: 2px solid transparent !important; box-shadow: none !important; transition: all 0.2s ease; overflow: hidden; }
-        .dark .android-app-container .fi-input-wrp { background-color: #1e293b !important; }
-        
-        .android-app-container .fi-input-wrp:focus-within { border-color: #f59e0b !important; background-color: #ffffff !important; box-shadow: 0 4px 20px rgba(245, 158, 11, 0.1) !important; }
-        .dark .android-app-container .fi-input-wrp:focus-within { background-color: #0f172a !important; border-color: #f59e0b !important; }
-        
-        .android-app-container .fi-input { padding: 16px 20px !important; font-weight: 700 !important; font-size: 14px !important; color: #0f172a !important; }
-        .dark .android-app-container .fi-input { color: #f8fafc !important; }
-        
-        .android-app-container .fi-fo-field-wrp p { color: #64748b !important; font-size: 11px !important; font-weight: 600; }
-    </style>
+            section.grid.auto-cols-fr.gap-y-6, .fi-simple-main-ctn, .fi-main-ctn { 
+                gap: 0 !important; 
+                padding: 0 !important; 
+                margin: 0 !important; 
+            }
 
-    <div id="security-overlay">
-        <div class="android-app-container">
-            <div class="android-content bg-white dark:bg-gray-800" style="display: flex; flex-direction: column;">
+            #security-overlay .fi-fo-field-wrp label span { color: #111827 !important; font-weight: 800 !important; font-size: 13px !important; text-transform: uppercase; letter-spacing: 0.05em; }
+            #security-overlay .fi-fo-field-wrp p { color: #4B5563 !important; font-size: 12px !important; font-weight: 600 !important; line-height: 1.4 !important; margin-top: 4px !important;}
+            #security-overlay .fi-fo-field-wrp-error-message { color: #DC2626 !important; font-size: 12px !important; font-weight: 700 !important; }
+            
+            #security-overlay .fi-input-wrp {
+                background-color: #ffffff !important;
+                border: 2px solid #111827 !important; 
+                border-radius: 0px !important; 
+                box-shadow: none !important;
+                transition: all 0.2s ease-out !important;
+            }
+            
+            #security-overlay .fi-input-wrp:focus-within {
+                box-shadow: 4px 4px 0px 0px #111827 !important; 
+                transform: translate(-2px, -2px) !important;
+            }
+            
+            #security-overlay .fi-input { 
+                color: #111827 !important; 
+                padding: 12px 14px !important; 
+                background: transparent !important;
+                font-size: 15px !important;
+                font-weight: 600 !important;
+            }
+        </style>
+    </div>
+
+    <div id="security-overlay" class="fixed inset-0 z-[99999] min-h-screen w-full flex flex-col items-center justify-center p-4 sm:p-8 bg-base-50 bg-structural selection:bg-base-900 selection:text-white">
+        
+        <div class="relative z-10 w-full max-w-[460px]">
+            
+            <div class="bg-white border-2 border-base-900 p-8 md:p-12 relative shadow-[8px_8px_0px_0px_#111827]">
                 
-                <div style="background: linear-gradient(135deg, #f59e0b, #ea580c); flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 24px 80px 24px; color: white; position: relative; z-index: 10; min-height: 45vh;">
+                <div class="absolute top-0 right-0 w-12 h-12 border-l-2 border-b-2 border-base-900 bg-base-50 transform translate-x-2 -translate-y-2"></div>
+                <div class="absolute bottom-0 left-0 w-12 h-12 border-r-2 border-t-2 border-base-900 bg-base-50 transform -translate-x-2 translate-y-2"></div>
+                
+                <div class="relative z-10">
                     
-                    <div style="display: flex; flex-direction: column; align-items: center; text-align: center;">
-                        <div style="width: 80px; height: 80px; border-radius: 24px; border: 3px solid rgba(255,255,255,0.4); background-color: rgba(255,255,255,0.2); backdrop-filter: blur(4px); overflow: hidden; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 25px rgba(0,0,0,0.2); padding: 8px;">
-                            <x-filament::icon icon="heroicon-s-shield-exclamation" style="width: 44px; height: 44px; color: white;" />
+                    <div class="flex flex-col items-start mb-8 border-b-2 border-base-900 pb-6">
+                        <div class="w-16 h-16 bg-base-900 flex items-center justify-center text-white mb-5 shadow-[4px_4px_0px_0px_#D97706]">
+                            <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
                         </div>
-
-                        <h1 style="font-size: 1.75rem; font-weight: 900; margin: 0 0 6px 0; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                            Keamanan Akun
-                        </h1>
-                        <div style="display: inline-flex; align-items: center; gap: 6px; background-color: rgba(0,0,0,0.25); padding: 4px 14px; border-radius: 999px; font-size: 11px; font-weight: bold; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(4px);">
-                            Sandi Default Terdeteksi
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white dark:bg-gray-800" style="border-radius: 2.5rem 2.5rem 0 0; padding: 32px 32px 48px 32px; margin-top: -40px; position: relative; z-index: 20; box-shadow: 0 -15px 40px rgba(0,0,0,0.15); display: flex; flex-direction: column;">
-                    
-                    <div style="width: 48px; height: 6px; border-radius: 999px; background-color: #cbd5e1; margin: 0 auto 24px auto;" class="dark:bg-gray-700"></div>
-
-                    <p style="text-align: center; font-size: 12px; font-weight: 600; color: #64748b; margin-bottom: 24px; line-height: 1.5;" class="dark:text-gray-400">
-                        Demi keamanan data nilai dan absensi Anda, silakan buat kata sandi rahasia baru.
-                    </p>
-
-                    <form wire:submit="simpan" style="display: flex; flex-direction: column; gap: 24px;">
                         
-                        {{ $this->form }}
+                        <h1 class="text-3xl font-black text-base-900 tracking-tight uppercase leading-[1.1]">
+                            Keamanan <br/> Akun
+                        </h1>
+                        <p class="text-sm text-gray-600 mt-3 font-semibold leading-relaxed">
+                            Sandi default terdeteksi. Demi keamanan data nilai dan absensi Anda, wajib mengatur kata sandi rahasia yang baru.
+                        </p>
+                    </div>
 
-                        <div style="margin-top: 8px;">
-                            <button type="submit" wire:loading.attr="disabled" style="width: 100%; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; border-radius: 16px; padding: 16px; font-size: 14px; font-weight: 800; border: none; box-shadow: 0 8px 20px rgba(37,99,235,0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.1s;">
-                                
-                                <span wire:loading.remove wire:target="simpan" class="flex items-center gap-2">
-                                    SIMPAN & MASUK
-                                </span>
-                                
-                                <span wire:loading wire:target="simpan" class="flex items-center gap-2">
-                                    <svg style="animation: spin 1s linear infinite; height: 20px; width: 20px; color: white;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle style="opacity: 0.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path style="opacity: 0.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                                </span>
-                                
-                            </button>
-                        </div>
-                    </form>
+                    <div>
+                        <form wire:submit="simpan" class="space-y-6">
+                            
+                            {{ $this->form }}
+
+                            <div class="pt-6">
+                                <button type="submit" wire:loading.attr="disabled" class="w-full flex justify-center items-center py-4 px-6 border-2 border-base-900 text-sm font-black text-white bg-base-900 uppercase tracking-widest hover:bg-white hover:text-base-900 focus:outline-none transition-colors duration-200 group relative">
+                                    
+                                    <span wire:loading.remove wire:target="simpan" class="flex items-center gap-3">
+                                        SIMPAN & MASUK
+                                        <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                                    </span>
+                                    
+                                    <span wire:loading wire:target="simpan" class="flex items-center gap-3">
+                                        <svg class="animate-spin h-5 w-5 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                        MEMPROSES...
+                                    </span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
                 </div>
-
             </div>
+
         </div>
+
     </div>
 </x-filament-panels::page>

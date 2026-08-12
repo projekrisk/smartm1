@@ -137,9 +137,8 @@
             <div class="lg:col-span-7 flex flex-col justify-center pr-0 lg:pr-8">
                 
                 <h1 class="text-5xl md:text-6xl lg:text-7xl xl:text-[5rem] font-extrabold text-base-900 tracking-tight leading-[1.05] mb-8">
-                    Manajemen <br />
-                    Akademik <br />
-                    Terpadu.
+                    Portal <br />
+                    Smart-M1.
                 </h1>
 
                 <p class="text-lg md:text-xl text-gray-700 max-w-2xl leading-relaxed mb-8 font-medium">
