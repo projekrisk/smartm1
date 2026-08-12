@@ -185,16 +185,16 @@
                 <thead>
                     <tr style="background-color: #f3f4f6;">
                         <th style="width: 5%; text-align: center;">No</th>
-                        <th style="width: 28%; text-align: center;">NIS / NISN</th>
+                        <th style="width: 20%; text-align: center;">NISN</th>
                         <th style="width: 55%; text-align: center;">Nama Peserta Didik</th>
-                        <th style="width: 15%; text-align: center;">Kelas</th>
+                        <th style="width: 20%; text-align: center;">Kelas</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($surat->siswa->sortBy('nama_lengkap') as $index => $s)
+                    @foreach($surat->siswa->sortBy(fn($s) => ($s->kelas->nama_kelas ?? 'ZZZ') . $s->nama_lengkap)->values() as $index => $s)
                     <tr class="avoid-break">
                         <td style="text-align: center;">{{ $index + 1 }}</td>
-                        <td style="text-align: center;">{{ $s->nis ?? '-' }} / {{ $s->nisn ?? '-' }}</td>
+                        <td style="text-align: center;">{{ $s->nisn ?? '-' }}</td>
                         <td style="text-align: left;" class="uppercase font-semibold">{{ $s->nama_lengkap }}</td>
                         <td style="text-align: center; font-weight: bold;">{{ $s->kelas->nama_kelas ?? '-' }}</td>
                     </tr>
