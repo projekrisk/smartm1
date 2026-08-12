@@ -53,6 +53,13 @@
                 background-color: transparent !important; box-shadow: none !important; border: none !important;
             }
 
+            /* Menghapus gap dan padding bawaan section Filament agar menempel ke atas */
+            section.grid.auto-cols-fr.gap-y-6, .fi-simple-main-ctn { 
+                gap: 0 !important; 
+                padding: 0 !important; 
+                margin: 0 !important; 
+            }
+
             #single-login .fi-fo-field-wrp label span { color: #111827 !important; font-weight: 800 !important; font-size: 13px !important; text-transform: uppercase; letter-spacing: 0.05em; }
             #single-login .fi-fo-field-wrp p { color: #4B5563 !important; font-size: 12px !important; font-weight: 500 !important;}
             #single-login .fi-fo-field-wrp-error-message { color: #DC2626 !important; font-size: 12px !important; font-weight: 700 !important; }
