@@ -191,7 +191,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($surat->siswa->sortBy(fn($s) => ($s->kelas->nama_kelas ?? 'ZZZ') . $s->nama_lengkap)->values() as $index => $s)
+                    @foreach($surat->siswa->sortBy(fn($s) => ($s->kelas->nama_kelas ?? 'ZZZ') . ' - ' . $s->nama_lengkap, SORT_NATURAL | SORT_FLAG_CASE)->values() as $index => $s)
                     <tr class="avoid-break">
                         <td style="text-align: center;">{{ $index + 1 }}</td>
                         <td style="text-align: center;">{{ $s->nisn ?? '-' }}</td>
