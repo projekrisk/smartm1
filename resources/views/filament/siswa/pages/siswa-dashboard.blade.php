@@ -2,14 +2,22 @@
     <div wire:ignore>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
         
         <style>
+            :root {
+                --ios-bg: #F2F2F7;
+                --ios-card: #FFFFFF;
+                --ios-text: #000000;
+                --ios-text-secondary: #8A8A8E;
+                --ios-blue: #007AFF;
+                --ios-border: rgba(60, 60, 67, 0.29);
+            }
+
             body { 
-                font-family: 'Inter', sans-serif !important; 
+                font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif !important; 
                 overflow: hidden !important; 
-                background-color: #f1f5f9 !important; /* Slate 100 */
-                color: #0f172a !important; /* Slate 900 */
+                background-color: #000000 !important; /* Latar luar layar */
                 -webkit-font-smoothing: antialiased;
             }
             .fi-topbar, .fi-sidebar, .fi-header, .fi-simple-header, .fi-logo, .fi-simple-footer { display: none !important; }
@@ -21,80 +29,76 @@
                 background-color: transparent !important; box-shadow: none !important; border: none !important;
             }
 
-            /* Container Responsif bergaya Modern App */
-            .android-app-container {
+            /* Container Responsif bergaya iOS App */
+            .ios-app-container {
                 width: 100%; height: 100% !important;
                 display: flex; flex-direction: column;
-                background-color: #f8fafc; /* Slate 50 */
+                background-color: var(--ios-bg);
                 position: fixed; inset: 0;
                 overflow: hidden;
             }
 
             @media (min-width: 640px) {
-                .android-app-container {
-                    max-width: 420px;
+                .ios-app-container {
+                    max-width: 414px; /* Ukuran standar iPhone Max */
                     left: 50%; right: auto;
                     transform: translateX(-50%);
-                    box-shadow: 0 0 40px rgba(15, 23, 42, 0.1);
-                    border-left: 1px solid #e2e8f0;
-                    border-right: 1px solid #e2e8f0;
+                    box-shadow: 0 0 40px rgba(0, 0, 0, 0.2);
                 }
             }
 
-            .android-content { 
+            .ios-content { 
                 flex: 1; overflow-y: auto; overflow-x: hidden; 
                 padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px)); 
                 scrollbar-width: none; 
             }
-            .android-content::-webkit-scrollbar { display: none; }
+            .ios-content::-webkit-scrollbar { display: none; }
 
-            /* Utility Classes Modern UI */
-            .modern-card { 
-                background-color: #ffffff; 
-                border-radius: 20px;
-                box-shadow: 0 4px 20px rgba(15, 23, 42, 0.03);
-                border: 1px solid #f1f5f9;
+            /* Utility Classes iOS UI */
+            .ios-squircle { 
+                border-radius: 22%; /* Simulasi bentuk squircle Apple */
             }
 
-            .menu-item { 
-                display: flex; flex-direction: column; align-items: center; 
-                text-decoration: none; color: #334155; 
-                font-weight: 600; font-size: 11px; gap: 10px; 
-                transition: transform 0.2s ease, color 0.2s ease;
+            .ios-list-group {
+                background: var(--ios-card);
+                border-radius: 12px;
+                overflow: hidden;
             }
-            
+
+            .ios-list-item {
+                display: flex; gap: 16px; padding: 12px 16px;
+                border-bottom: 0.5px solid rgba(60, 60, 67, 0.29); /* Hairline border */
+            }
+            .ios-list-item:last-child {
+                border-bottom: none;
+            }
+
             .menu-icon-wrap { 
-                width: 52px; height: 52px; 
+                width: 60px; height: 60px; 
                 display: flex; justify-content: center; align-items: center; 
-                border-radius: 16px;
-                background-color: #f8fafc; /* Sangat soft abu-abu */
-                color: #3b82f6; /* Aksen ikon biru profesional */
-                transition: all 0.2s ease;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                transition: transform 0.1s ease;
             }
             
-            .menu-item:active { transform: scale(0.95); }
-            .menu-item:active .menu-icon-wrap { background-color: #eff6ff; }
+            .ios-app-icon:active .menu-icon-wrap { filter: brightness(0.8); transform: scale(0.95); }
 
             .nav-item { 
                 display: flex; flex-direction: column; align-items: center; justify-content: center; 
-                width: 100%; height: 100%; color: #64748b; 
-                transition: all 0.2s ease; text-decoration: none; 
+                width: 100%; height: 100%; color: #999999; 
+                text-decoration: none; padding-top: 4px;
             }
-            .nav-item:active, .nav-item.active { color: #1e40af; }
-            .nav-item:active .nav-icon, .nav-item.active .nav-icon { transform: scale(1.1); color: #1e40af; }
-            .nav-icon { transition: all 0.2s ease; }
+            .nav-item.active { color: var(--ios-blue); }
             
             /* Animasi masuk */
-            .fade-in-up { animation: fadeInUp 0.5s ease-out forwards; opacity: 0; transform: translateY(10px); }
-            @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+            .fade-in { animation: fadeIn 0.4s ease-out forwards; opacity: 0; }
+            @keyframes fadeIn { to { opacity: 1; } }
             
             .delay-1 { animation-delay: 0.1s; }
             .delay-2 { animation-delay: 0.2s; }
-            .delay-3 { animation-delay: 0.3s; }
         </style>
     </div>
 
-    <div class="min-h-screen relative selection:bg-blue-900 selection:text-white" 
+    <div class="min-h-screen relative selection:bg-blue-200 selection:text-black" 
          x-data="{ 
             showLogoutSheet: false,
             showPwaPrompt: false,
@@ -119,176 +123,155 @@
          }"
          x-init="initPwa()">
          
-        <div class="android-app-container z-10">
+        <div class="ios-app-container z-10">
             
-            <div class="android-content">
+            <div class="ios-content">
                 
-                <div x-show="showPwaPrompt" style="display: none; background-color: #eff6ff; border-bottom: 1px solid #bfdbfe; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center;" x-transition>
+                <!-- PWA Banner: Satu baris, tombol di kanan -->
+                <div x-show="showPwaPrompt" style="display: none; background: rgba(255,255,255,0.85); backdrop-filter: blur(10px); border-bottom: 0.5px solid rgba(0,0,0,0.1); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;" x-transition>
                     <div style="display: flex; align-items: center; gap: 12px;">
-                        <div style="width: 36px; height: 36px; background-color: #3b82f6; color: #fff; display: flex; justify-content: center; align-items: center; border-radius: 10px; box-shadow: 0 2px 8px rgba(59,130,246,0.3);">
-                            <x-filament::icon icon="heroicon-s-arrow-down-tray" style="width: 18px; height: 18px;" />
+                        <div class="ios-squircle" style="width: 38px; height: 38px; background: #007AFF; color: #fff; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 16px;">
+                            M1
                         </div>
-                        <div>
-                            <h4 style="font-size: 13px; font-weight: 700; color: #1e3a8a; margin: 0;">Pasang Aplikasi</h4>
-                            <p style="font-size: 11px; font-weight: 500; color: #3b82f6; margin: 0;">Akses lebih cepat & ringan</p>
+                        <div style="display: flex; flex-direction: column;">
+                            <h4 style="font-size: 14px; font-weight: 600; color: #000; margin: 0; letter-spacing: -0.3px;">Smart-M1 App</h4>
+                            <p style="font-size: 12px; font-weight: 400; color: #8A8A8E; margin: 0;">Akses lebih cepat & ringan</p>
                         </div>
                     </div>
-                    <button @click="installPwa()" style="background-color: #1e40af; color: #ffffff; font-weight: 600; font-size: 12px; padding: 8px 16px; border-radius: 8px; cursor: pointer; border: none;">
+                    <!-- Tombol di sebelah kanan -->
+                    <button @click="installPwa()" style="background-color: #F2F2F7; color: #007AFF; font-weight: 600; font-size: 13px; padding: 6px 16px; border-radius: 16px; cursor: pointer; border: none;">
                         Pasang
                     </button>
                 </div>
 
-                <div style="background: linear-gradient(145deg, #0f172a 0%, #1e3a8a 100%); padding: 32px 24px 40px 24px; border-bottom-left-radius: 32px; border-bottom-right-radius: 32px; position: relative; box-shadow: 0 10px 25px rgba(30, 58, 138, 0.15);">
+                @php
+                    $hour = \Carbon\Carbon::now('Asia/Jakarta')->format('H');
+                    if ($hour >= 5 && $hour < 11) $greeting = 'Selamat Pagi';
+                    elseif ($hour >= 11 && $hour < 15) $greeting = 'Selamat Siang';
+                    elseif ($hour >= 15 && $hour < 18) $greeting = 'Selamat Sore';
+                    else $greeting = 'Selamat Malam';
+
+                    $rawName = $siswa->nama_lengkap ?? Auth::user()->name ?? 'Siswa';
+                    $properName = ucwords(strtolower($rawName));
+                @endphp
+
+                <div style="padding: 24px 20px 16px 20px;" class="fade-in">
+                    <p style="font-size: 13px; font-weight: 500; color: var(--ios-text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">{{ $greeting }}</p>
+                    <h1 style="font-size: 32px; font-weight: 700; color: var(--ios-text); letter-spacing: -1px; margin: 0 0 20px 0; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        {{ $properName }}
+                    </h1>
                     
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px;">
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <div style="background-color: rgba(255,255,255,0.1); padding: 6px 12px; border-radius: 20px; backdrop-filter: blur(8px);">
-                                <span style="font-size: 11px; font-weight: 600; color: #e2e8f0; letter-spacing: 0.5px;">SMART-M1 PORTAL</span>
-                            </div>
-                        </div>
-                        <x-filament::icon icon="heroicon-o-bell" style="width: 22px; height: 22px; color: rgba(255,255,255,0.7);" />
-                    </div>
-
-                    @php
-                        $hour = \Carbon\Carbon::now('Asia/Jakarta')->format('H');
-                        if ($hour >= 5 && $hour < 11) $greeting = 'Selamat pagi';
-                        elseif ($hour >= 11 && $hour < 15) $greeting = 'Selamat siang';
-                        elseif ($hour >= 15 && $hour < 18) $greeting = 'Selamat sore';
-                        else $greeting = 'Selamat malam';
-
-                        $rawName = $siswa->nama_lengkap ?? Auth::user()->name ?? 'Peserta Didik';
-                        $properName = ucwords(strtolower($rawName));
-                    @endphp
-
-                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px;">
-                        <div style="flex: 1; min-width: 0;">
-                            <p style="font-size: 13px; font-weight: 500; color: #94a3b8; margin-bottom: 4px;">{{ $greeting }},</p>
-                            <h1 style="font-size: 20px; font-weight: 700; color: #ffffff; margin: 0 0 10px 0; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                {{ $properName }}
-                            </h1>
-                            <div style="display: inline-flex; align-items: center; gap: 6px; background-color: rgba(255,255,255,0.15); padding: 4px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; color: #f8fafc;">
-                                <div style="width: 6px; height: 6px; border-radius: 50%; background-color: #34d399;"></div>
-                                Kelas {{ $siswa->kelas->nama_kelas ?? 'Belum ada data' }}
-                            </div>
-                        </div>
-
-                        <div style="width: 64px; height: 64px; background-color: #f1f5f9; border: 2px solid #ffffff; display: flex; justify-content: center; align-items: center; overflow: hidden; flex-shrink: 0; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <div style="background: var(--ios-card); border-radius: 16px; padding: 12px 16px; display: flex; align-items: center; gap: 16px;">
+                        <div style="width: 52px; height: 52px; border-radius: 50%; background-color: var(--ios-bg); display: flex; justify-content: center; align-items: center; overflow: hidden; flex-shrink: 0; border: 0.5px solid rgba(0,0,0,0.1);">
                             @if(isset($siswa->foto) && $siswa->foto && !str_ends_with($siswa->foto, '/'))
                                 <img src="{{ url('/uploads/' . $siswa->foto) }}" alt="Foto Profile" style="width: 100%; height: 100%; object-fit: cover;">
                             @else
-                                <span style="color: #1e3a8a; font-weight: 700; font-size: 1.5rem;">{{ substr($properName, 0, 1) }}</span>
+                                <span style="color: var(--ios-text-secondary); font-weight: 500; font-size: 1.2rem;">{{ substr($properName, 0, 1) }}</span>
                             @endif
+                        </div>
+                        <div style="flex: 1;">
+                            <h3 style="font-size: 16px; font-weight: 600; color: var(--ios-text); margin: 0 0 2px 0;">Kelas {{ $siswa->kelas->nama_kelas ?? 'Belum terdaftar' }}</h3>
+                            <p style="font-size: 13px; font-weight: 400; color: var(--ios-text-secondary); margin: 0;">Siswa Aktif</p>
                         </div>
                     </div>
                 </div>
 
-                <div style="padding: 0 20px; margin-top: -24px; position: relative; z-index: 20;" class="fade-in-up">
-                    <div class="modern-card" style="padding: 24px 20px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px 12px;">
+                <div style="padding: 12px 20px 24px 20px;" class="fade-in delay-1">
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px 12px;">
                         
-                        <a href="/siswa/jadwal" class="menu-item">
-                            <div class="menu-icon-wrap">
-                                <x-filament::icon icon="heroicon-s-calendar-days" style="width: 24px; height: 24px;" />
+                        <a href="/siswa/jadwal" class="ios-app-icon" style="text-decoration: none; display: flex; flex-direction: column; align-items: center;">
+                            <div class="menu-icon-wrap ios-squircle" style="background: linear-gradient(180deg, #FF5E3A 0%, #FF2A68 100%);">
+                                <x-filament::icon icon="heroicon-s-calendar-days" style="width: 32px; height: 32px; color: white;" />
                             </div>
-                            <span>Jadwal</span>
-                        </a>
-                        
-                        <a href="/siswa/rekap-absensi" class="menu-item">
-                            <div class="menu-icon-wrap">
-                                <x-filament::icon icon="heroicon-s-document-check" style="width: 24px; height: 24px;" />
-                            </div>
-                            <span>Absensi</span>
+                            <span style="font-size: 11px; font-weight: 500; color: var(--ios-text); margin-top: 6px;">Jadwal</span>
                         </a>
                         
-                        <a href="/siswa/nilai" class="menu-item">
-                            <div class="menu-icon-wrap">
-                                <x-filament::icon icon="heroicon-s-academic-cap" style="width: 24px; height: 24px;" />
+                        <a href="/siswa/rekap-absensi" class="ios-app-icon" style="text-decoration: none; display: flex; flex-direction: column; align-items: center;">
+                            <div class="menu-icon-wrap ios-squircle" style="background: linear-gradient(180deg, #87FC70 0%, #0BD318 100%);">
+                                <x-filament::icon icon="heroicon-s-document-check" style="width: 32px; height: 32px; color: white;" />
                             </div>
-                            <span>Nilai</span>
+                            <span style="font-size: 11px; font-weight: 500; color: var(--ios-text); margin-top: 6px;">Absensi</span>
                         </a>
                         
-                        <a href="/siswa/e-rapor" class="menu-item">
-                            <div class="menu-icon-wrap">
-                                <x-filament::icon icon="heroicon-s-folder-open" style="width: 24px; height: 24px;" />
+                        <a href="/siswa/nilai" class="ios-app-icon" style="text-decoration: none; display: flex; flex-direction: column; align-items: center;">
+                            <div class="menu-icon-wrap ios-squircle" style="background: linear-gradient(180deg, #FFCB00 0%, #FF9600 100%);">
+                                <x-filament::icon icon="heroicon-s-academic-cap" style="width: 32px; height: 32px; color: white;" />
                             </div>
-                            <span>E-Rapor</span>
+                            <span style="font-size: 11px; font-weight: 500; color: var(--ios-text); margin-top: 6px;">Nilai</span>
+                        </a>
+                        
+                        <a href="/siswa/e-rapor" class="ios-app-icon" style="text-decoration: none; display: flex; flex-direction: column; align-items: center;">
+                            <div class="menu-icon-wrap ios-squircle" style="background: linear-gradient(180deg, #5AC8FA 0%, #007AFF 100%);">
+                                <x-filament::icon icon="heroicon-s-folder-open" style="width: 32px; height: 32px; color: white;" />
+                            </div>
+                            <span style="font-size: 11px; font-weight: 500; color: var(--ios-text); margin-top: 6px;">E-Rapor</span>
                         </a>
 
-                        <a href="/siswa/prestasi" class="menu-item">
-                            <div class="menu-icon-wrap">
-                                <x-filament::icon icon="heroicon-s-trophy" style="width: 24px; height: 24px;" />
+                        <a href="/siswa/prestasi" class="ios-app-icon" style="text-decoration: none; display: flex; flex-direction: column; align-items: center;">
+                            <div class="menu-icon-wrap ios-squircle" style="background: linear-gradient(180deg, #FFD500 0%, #FFB200 100%);">
+                                <x-filament::icon icon="heroicon-s-trophy" style="width: 32px; height: 32px; color: white;" />
                             </div>
-                            <span>Prestasi</span>
+                            <span style="font-size: 11px; font-weight: 500; color: var(--ios-text); margin-top: 6px;">Prestasi</span>
                         </a>
 
-                        <a href="/siswa/catatan" class="menu-item">
-                            <div class="menu-icon-wrap">
-                                <x-filament::icon icon="heroicon-s-clipboard-document-check" style="width: 24px; height: 24px;" />
+                        <a href="/siswa/catatan" class="ios-app-icon" style="text-decoration: none; display: flex; flex-direction: column; align-items: center;">
+                            <div class="menu-icon-wrap ios-squircle" style="background: linear-gradient(180deg, #C644FC 0%, #5856D6 100%);">
+                                <x-filament::icon icon="heroicon-s-clipboard-document-check" style="width: 32px; height: 32px; color: white;" />
                             </div>
-                            <span>Catatan</span>
+                            <span style="font-size: 11px; font-weight: 500; color: var(--ios-text); margin-top: 6px;">Catatan</span>
                         </a>
 
-                        <a href="/siswa/dokumen" class="menu-item">
-                            <div class="menu-icon-wrap">
-                                <x-filament::icon icon="heroicon-s-document-text" style="width: 24px; height: 24px;" />
+                        <a href="/siswa/dokumen" class="ios-app-icon" style="text-decoration: none; display: flex; flex-direction: column; align-items: center;">
+                            <div class="menu-icon-wrap ios-squircle" style="background: linear-gradient(180deg, #8E8E93 0%, #4A4A4A 100%);">
+                                <x-filament::icon icon="heroicon-s-document-text" style="width: 32px; height: 32px; color: white;" />
                             </div>
-                            <span>Dokumen</span>
+                            <span style="font-size: 11px; font-weight: 500; color: var(--ios-text); margin-top: 6px;">Dokumen</span>
                         </a>
 
-                        <a href="/siswa/pegawai" class="menu-item">
-                            <div class="menu-icon-wrap">
-                                <x-filament::icon icon="heroicon-s-users" style="width: 24px; height: 24px;" />
+                        <a href="/siswa/pegawai" class="ios-app-icon" style="text-decoration: none; display: flex; flex-direction: column; align-items: center;">
+                            <div class="menu-icon-wrap ios-squircle" style="background: linear-gradient(180deg, #55EFEF 0%, #00B4DB 100%);">
+                                <x-filament::icon icon="heroicon-s-users" style="width: 32px; height: 32px; color: white;" />
                             </div>
-                            <span>Direktori</span>
+                            <span style="font-size: 11px; font-weight: 500; color: var(--ios-text); margin-top: 6px;">Direktori</span>
                         </a>
 
                     </div>
                 </div>
 
                 @if(isset($siswa) && $siswa->is_sekretaris)
-                    <div style="padding: 0 20px; margin-top: 20px;" class="fade-in-up delay-1">
-                        <a href="/siswa/absensi" style="text-decoration: none; display: flex; align-items: center; justify-content: space-between; background-color: #1e3a8a; padding: 16px 20px; border-radius: 20px; box-shadow: 0 8px 15px rgba(30, 58, 138, 0.15);">
-                            <div style="display: flex; align-items: center; gap: 14px;">
-                                <div style="background-color: rgba(255,255,255,0.15); padding: 10px; border-radius: 14px;">
-                                    <x-filament::icon icon="heroicon-s-clipboard-document-list" style="width: 24px; height: 24px; color: #ffffff;" />
+                    <div style="padding: 0 20px 24px 20px;" class="fade-in delay-2">
+                        <div class="ios-list-group">
+                            <a href="/siswa/absensi" class="ios-list-item" style="text-decoration: none; align-items: center;">
+                                <div class="ios-squircle" style="width: 32px; height: 32px; background: #007AFF; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                    <x-filament::icon icon="heroicon-s-clipboard-document-list" style="width: 18px; height: 18px; color: white;" />
                                 </div>
-                                <div>
-                                    <h4 style="font-weight: 700; font-size: 14px; margin: 0 0 2px 0; color: #ffffff;">Jurnal & Absensi Kelas</h4>
-                                    <p style="font-size: 11px; font-weight: 500; margin: 0; color: #93c5fd;">Tugas Khusus Sekretaris</p>
+                                <div style="flex: 1;">
+                                    <h4 style="font-weight: 500; font-size: 16px; margin: 0; color: var(--ios-text);">Jurnal & Absensi</h4>
                                 </div>
-                            </div>
-                            <div style="background-color: rgba(255,255,255,0.1); border-radius: 50%; padding: 6px;">
-                                <x-filament::icon icon="heroicon-m-chevron-right" style="width: 18px; height: 18px; color: #ffffff;" />
-                            </div>
-                        </a>
+                                <x-filament::icon icon="heroicon-m-chevron-right" style="width: 20px; height: 20px; color: #C7C7CC;" />
+                            </a>
+                        </div>
                     </div>
                 @endif
 
-                <div style="padding: 24px 20px;" class="fade-in-up delay-2">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                        <h3 style="font-size: 16px; font-weight: 700; margin: 0; color: #0f172a;">Papan Informasi</h3>
-                        <a href="#" style="font-size: 12px; color: #3b82f6; font-weight: 600; text-decoration: none;">Lihat Semua</a>
-                    </div>
+                <div style="padding: 0 20px 24px 20px;" class="fade-in delay-2">
+                    <h2 style="font-size: 22px; font-weight: 700; color: var(--ios-text); margin: 0 0 12px 10px; letter-spacing: -0.5px;">Informasi Terbaru</h2>
                     
-                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <div class="ios-list-group">
                         @forelse($pengumuman as $info)
-                            <div class="modern-card" style="padding: 16px; display: flex; gap: 16px; align-items: flex-start;">
-                                <div style="width: 44px; height: 44px; background-color: #f1f5f9; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #64748b;">
-                                    <x-filament::icon icon="heroicon-o-megaphone" style="width: 22px; height: 22px;" />
-                                </div>
-                                <div>
-                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
-                                        <h4 style="font-weight: 700; font-size: 14px; margin: 0; color: #1e293b;">{{ $info->judul }}</h4>
-                                    </div>
-                                    <div style="font-size: 13px; font-weight: 400; line-height: 1.5; color: #64748b; margin-bottom: 8px;">
+                            <div class="ios-list-item" style="align-items: flex-start; padding-top: 14px; padding-bottom: 14px;">
+                                <div style="width: 12px; height: 12px; border-radius: 50%; background-color: #007AFF; margin-top: 4px; flex-shrink: 0;"></div>
+                                <div style="flex: 1;">
+                                    <h4 style="font-weight: 600; font-size: 16px; margin: 0 0 4px 0; color: var(--ios-text); letter-spacing: -0.2px;">{{ $info->judul }}</h4>
+                                    <div style="font-size: 14px; font-weight: 400; line-height: 1.4; color: var(--ios-text-secondary); margin-bottom: 8px;">
                                         {!! strip_tags($info->isi, '<a><strong><b><i><em><br>') !!}
                                     </div>
-                                    <span style="font-size: 11px; font-weight: 500; color: #94a3b8;">{{ $info->created_at->isoFormat('D MMM YYYY') }}</span>
+                                    <span style="font-size: 12px; font-weight: 500; color: #C7C7CC;">{{ $info->created_at->isoFormat('D MMM YYYY') }}</span>
                                 </div>
                             </div>
                         @empty
-                            <div class="modern-card" style="padding: 32px 20px; text-align: center;">
-                                <x-filament::icon icon="heroicon-o-inbox" style="width: 40px; height: 40px; margin: 0 auto 12px auto; color: #cbd5e1;" />
-                                <p style="font-size: 13px; font-weight: 500; margin: 0; color: #64748b;">Belum ada informasi terbaru.</p>
+                            <div style="padding: 32px 20px; text-align: center;">
+                                <p style="font-size: 15px; font-weight: 400; margin: 0; color: var(--ios-text-secondary);">Tidak ada informasi baru.</p>
                             </div>
                         @endforelse
                     </div>
@@ -296,24 +279,22 @@
                 
             </div>
 
-            <div style="background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(12px); border-top: 1px solid #f1f5f9; position: absolute; bottom: 0; width: 100%; height: 75px; display: flex; justify-content: space-around; align-items: center; z-index: 50; padding-bottom: env(safe-area-inset-bottom, 0px); box-shadow: 0 -4px 20px rgba(0,0,0,0.03);">
+            <div style="background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 0.5px solid rgba(0,0,0,0.1); position: absolute; bottom: 0; width: 100%; height: 83px; display: flex; justify-content: space-around; padding-top: 10px; padding-bottom: env(safe-area-inset-bottom, 20px); z-index: 50;">
                 
                 <a href="/siswa" class="nav-item active">
-                    <x-filament::icon icon="heroicon-s-home" style="width: 24px; height: 24px; margin-bottom: 4px;" class="nav-icon" />
-                    <span style="font-size: 10px; font-weight: 600;">Beranda</span>
+                    <x-filament::icon icon="heroicon-s-home" style="width: 26px; height: 26px; margin-bottom: 4px;" />
+                    <span style="font-size: 10px; font-weight: 500;">Beranda</span>
                 </a>
                 
                 <a href="/siswa/riwayat" class="nav-item">
-                    <x-filament::icon icon="heroicon-o-clock" style="width: 24px; height: 24px; margin-bottom: 4px;" class="nav-icon" />
+                    <x-filament::icon icon="heroicon-s-clock" style="width: 26px; height: 26px; margin-bottom: 4px;" />
                     <span style="font-size: 10px; font-weight: 500;">Riwayat</span>
                 </a>
                 
-                <!-- Center Floating QR Button -->
-                <div style="position: relative; width: 60px; display: flex; justify-content: center;">
-                    <a href="/siswa/kartu-pelajar" style="position: absolute; top: -45px; background-color: #1e3a8a; width: 56px; height: 56px; border-radius: 20px; display: flex; align-items: center; justify-content: center; text-decoration: none; box-shadow: 0 8px 20px rgba(30, 58, 138, 0.3); border: 4px solid #ffffff; transition: transform 0.2s;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">
-                        <x-filament::icon icon="heroicon-s-qr-code" style="width: 24px; height: 24px; color: #ffffff;" />
-                    </a>
-                </div>
+                <a href="/siswa/kartu-pelajar" class="nav-item">
+                    <x-filament::icon icon="heroicon-s-qr-code" style="width: 26px; height: 26px; margin-bottom: 4px;" />
+                    <span style="font-size: 10px; font-weight: 500;">ID Card</span>
+                </a>
                 
                 @php
                     $unreadPesan = 0;
@@ -323,23 +304,23 @@
                 @endphp
                 <a href="/siswa/pesan" class="nav-item">
                     <div style="position: relative;">
-                        <x-filament::icon icon="heroicon-o-chat-bubble-left-ellipsis" style="width: 24px; height: 24px; margin-bottom: 4px;" class="nav-icon" />
+                        <x-filament::icon icon="heroicon-s-chat-bubble-2-text" style="width: 26px; height: 26px; margin-bottom: 4px;" />
                         @if($unreadPesan > 0)
-                            <span style="position: absolute; top: 0px; right: -2px; width: 8px; height: 8px; background-color: #ef4444; border: 2px solid white; border-radius: 50%;"></span>
+                            <span style="position: absolute; top: -2px; right: -4px; width: 10px; height: 10px; background-color: #FF3B30; border: 2px solid white; border-radius: 50%;"></span>
                         @endif
                     </div>
                     <span style="font-size: 10px; font-weight: 500;">Bantuan</span>
                 </a>
                 
                 <a @click="showLogoutSheet = true" class="nav-item" style="cursor: pointer;">
-                    <x-filament::icon icon="heroicon-o-arrow-right-start-on-rectangle" style="width: 24px; height: 24px; margin-bottom: 4px;" class="nav-icon" />
+                    <x-filament::icon icon="heroicon-s-arrow-right-start-on-rectangle" style="width: 26px; height: 26px; margin-bottom: 4px;" />
                     <span style="font-size: 10px; font-weight: 500;">Keluar</span>
                 </a>
             </div>
 
-            <div x-show="showLogoutSheet" style="display: none; position: absolute; inset: 0; background-color: rgba(15,23,42,0.4); backdrop-filter: blur(4px); z-index: 99;" x-transition.opacity @click="showLogoutSheet = false"></div>
+            <div x-show="showLogoutSheet" style="display: none; position: absolute; inset: 0; background-color: rgba(0,0,0,0.4); z-index: 99;" x-transition.opacity @click="showLogoutSheet = false"></div>
             
-            <div x-show="showLogoutSheet" style="display: none; position: absolute; bottom: 0; left: 0; right: 0; background-color: #ffffff; border-top-left-radius: 28px; border-top-right-radius: 28px; z-index: 100; padding: 32px 24px calc(24px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 -10px 40px rgba(0,0,0,0.1);"
+            <div x-show="showLogoutSheet" style="display: none; position: absolute; bottom: 0; left: 0; right: 0; z-index: 100; padding: 0 10px calc(10px + env(safe-area-inset-bottom, 0px));"
                  x-transition:enter="transition ease-out duration-300" 
                  x-transition:enter-start="transform translate-y-full" 
                  x-transition:enter-end="transform translate-y-0" 
@@ -347,21 +328,21 @@
                  x-transition:leave-start="transform translate-y-0" 
                  x-transition:leave-end="transform translate-y-full">
                 
-                <div style="width: 40px; height: 5px; background-color: #e2e8f0; border-radius: 10px; margin: 0 auto 24px auto;"></div>
-                
-                <h3 style="font-size: 20px; font-weight: 700; text-align: center; margin: 0 0 8px 0; color: #0f172a;">Akhiri Sesi</h3>
-                <p style="font-size: 14px; font-weight: 400; text-align: center; margin: 0 0 32px 0; color: #64748b; line-height: 1.5;">Apakah Anda yakin ingin keluar dari portal siswa?</p>
-                
-                <div style="display: flex; gap: 12px; flex-direction: column;">
-                    <button type="button" wire:click="keluarAplikasi" wire:loading.attr="disabled" style="width: 100%; padding: 14px; background-color: #ef4444; color: #fff; font-weight: 600; font-size: 14px; border-radius: 16px; border: none; cursor: pointer;">
-                        <span wire:loading.remove wire:target="keluarAplikasi">Ya, Keluar Sekarang</span>
+                <!-- Action Group -->
+                <div style="background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); border-radius: 14px; overflow: hidden; margin-bottom: 8px;">
+                    <div style="padding: 16px; border-bottom: 0.5px solid rgba(0,0,0,0.1); text-align: center;">
+                        <span style="font-size: 13px; color: #8A8A8E; font-weight: 500;">Apakah Anda yakin ingin keluar dari aplikasi?</span>
+                    </div>
+                    <button type="button" wire:click="keluarAplikasi" wire:loading.attr="disabled" style="width: 100%; padding: 18px; color: #FF3B30; font-size: 20px; font-weight: 400; border: none; background: transparent; cursor: pointer;">
+                        <span wire:loading.remove wire:target="keluarAplikasi">Keluar</span>
                         <span wire:loading wire:target="keluarAplikasi">Memproses...</span>
                     </button>
-                    
-                    <button @click="showLogoutSheet = false" style="width: 100%; padding: 14px; background-color: #f1f5f9; color: #334155; font-weight: 600; font-size: 14px; border-radius: 16px; border: none; cursor: pointer;">
-                        Batal
-                    </button>
                 </div>
+                
+                <!-- Cancel Button -->
+                <button @click="showLogoutSheet = false" style="width: 100%; padding: 18px; background: #fff; border-radius: 14px; color: #007AFF; font-size: 20px; font-weight: 600; border: none; cursor: pointer;">
+                    Batal
+                </button>
             </div>
 
         </div>
