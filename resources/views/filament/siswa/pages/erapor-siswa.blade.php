@@ -1,143 +1,178 @@
 <x-filament-panels::page.simple>
     <div wire:ignore>
+        <script>
+            // Memaksa warna status bar di mobile agar senada dengan background aplikasi
+            const metaThemeColor = document.createElement('meta');
+            metaThemeColor.name = 'theme-color';
+            metaThemeColor.content = '#F5F5F7';
+            document.head.appendChild(metaThemeColor);
+        </script>
+        
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900&display=swap" rel="stylesheet">
+        
         <style>
+            :root {
+                --ui-bg: #F5F5F7;
+                --ui-surface: #FFFFFF;
+                --ui-black: #18181B;
+                --ui-text: #27272A;
+                --ui-muted: #71717A;
+                --ui-border: #E4E4E7;
+            }
+
+            body { 
+                font-family: 'DM Sans', sans-serif !important; 
+                overflow: hidden !important; 
+                background-color: var(--ui-bg) !important; 
+                color: var(--ui-text) !important;
+                -webkit-font-smoothing: antialiased;
+                margin: 0; padding: 0;
+            }
+
             .fi-topbar, .fi-sidebar, .fi-header, .fi-simple-header, .fi-logo, .fi-simple-footer { display: none !important; }
             html, body, .fi-layout, .fi-simple-layout, .fi-main, .fi-simple-main, .fi-page, section { 
-                padding: 0 !important; margin: 0 !important; gap: 0 !important; height: 100vh !important; height: 100dvh !important; 
-                max-width: 100% !important; width: 100% !important; overflow: hidden !important; 
-                background-color: #e2e8f0 !important; box-shadow: none !important; border: none !important;
+                padding: 0 !important; margin: 0 !important; gap: 0 !important;
+                height: 100vh !important; height: 100dvh !important; 
+                max-width: 100% !important; width: 100% !important; 
+                background-color: transparent !important; box-shadow: none !important; border: none !important;
             }
-            .dark body, .dark .fi-layout, .dark .fi-simple-layout, .dark .fi-simple-main { background-color: #020617 !important; }
-            
-            .android-app-container {
-                width: 100%; max-width: 414px; margin: 0 auto; height: 100vh; height: 100dvh; position: relative; 
+
+            .workspace-container {
+                width: 100%; max-width: 414px; margin: 0 auto;
                 position: fixed; top: 0; bottom: 0; left: 0; right: 0;
-                height: 100% !important; 
-                display: flex; flex-direction: column; box-shadow: 0 0 40px rgba(0,0,0,0.15); overflow: hidden; 
-                font-family: 'Inter', system-ui, sans-serif; transition: background-color 0.3s ease;
+                display: flex; flex-direction: column;
+                background-color: var(--ui-bg);
+                overflow: hidden;
             }
 
-            .theme-bg { background-color: #f8fafc; }
-            .theme-card { background-color: #ffffff; border: 1px solid #f1f5f9; box-shadow: 0 8px 30px rgba(0,0,0,0.04); border: 1px solid #e2e8f0}
-            .theme-text { color: #0f172a; }
-            .theme-text-muted { color: #64748b; }
-            .dark .theme-bg { background-color: #0f172a; }
-            .dark .theme-card { background-color: #1e293b; border: 1px solid #334155; box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
-            .dark .theme-text { color: #f8fafc; }
-            .dark .theme-text-muted { color: #94a3b8; }
+            @media (min-width: 640px) {
+                .workspace-container {
+                    left: 50%; right: auto; transform: translateX(-50%);
+                    border-left: 1px solid var(--ui-border);
+                    border-right: 1px solid var(--ui-border);
+                    box-shadow: 0 0 50px rgba(0,0,0,0.05);
+                }
+            }
 
-            .theme-bg-smt { background-color: #fafafa; }
-            .dark .theme-bg-smt { background-color: #253145; }
-            .theme-bg-mpl { background-color: #ffffff; }
-            .dark .theme-bg-mpl { background-color: #1e293b; }
+            .workspace-content { 
+                flex: 1; overflow-y: auto; overflow-x: hidden; 
+                padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px)); 
+                scrollbar-width: none; 
+            }
+            .workspace-content::-webkit-scrollbar { display: none; }
+
+            .touch-scale { transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
+            .touch-scale:active { transform: scale(0.96); }
+
+            .ambient-shadow { box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04); }
             
-            .android-content { flex: 1; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; -ms-overflow-style: none; -webkit-overflow-scrolling: touch; }
-            .android-content::-webkit-scrollbar { display: none; }
             [x-cloak] { display: none !important; }
         </style>
     </div>
 
-    <div class="android-app-container theme-bg">
+    <div class="workspace-container selection:bg-zinc-900 selection:text-white">
         
-        <div style="flex-shrink: 0; background: linear-gradient(135deg, #2563eb, #3730a3); padding: 40px 24px 60px 24px; color: white; position: relative; z-index: 10;">
-            <a href="/siswa" style="position: absolute; top: 32px; left: 20px; background-color: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); transition: transform 0.2s;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">
+        <!-- Minimalist Header (Fixed/Sticky) -->
+        <div style="padding: 24px 20px 16px 20px; display: flex; align-items: center; gap: 16px; margin-top: env(safe-area-inset-top, 0px); background: var(--ui-bg); flex-shrink: 0; z-index: 10; border-bottom: 1px solid rgba(0,0,0,0.02);">
+            <a href="/siswa" class="touch-scale" style="width: 44px; height: 44px; border-radius: 50%; background: var(--ui-surface); border: 1px solid var(--ui-border); display: flex; align-items: center; justify-content: center; color: var(--ui-black); box-shadow: 0 2px 8px rgba(0,0,0,0.04); flex-shrink: 0; text-decoration: none;">
                 <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
             </a>
             
-            <div style="text-align: center; margin-top: 4px;">
-                <p style="font-size: 10px; font-weight: 800; letter-spacing: 1px; color: #bfdbfe; text-transform: uppercase; margin-bottom: 8px;">Akademik</p>
-                <h1 style="font-size: 1.5rem; font-weight: 900; margin: 0; line-height: 1.2; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">E-Rapor Siswa</h1>
-                <div style="display: inline-flex; align-items: center; gap: 6px; background-color: rgba(0,0,0,0.25); padding: 4px 14px; border-radius: 999px; font-size: 10px; font-weight: bold; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(4px); margin-top: 10px; text-transform: uppercase; letter-spacing: 0.5px;">
-                    Nilai Akhir Semester
+            <div>
+                <h1 style="font-size: 20px; font-weight: 900; color: var(--ui-black); margin: 0; letter-spacing: -0.5px; line-height: 1.2;">E-Rapor Siswa</h1>
+                <div style="display: flex; align-items: center; gap: 6px; margin-top: 4px;">
+                    <div style="width: 6px; height: 6px; border-radius: 50%; background-color: var(--ui-black);"></div>
+                    <p style="font-size: 12px; font-weight: 600; color: var(--ui-muted); margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">Nilai Akhir Semester</p>
                 </div>
             </div>
         </div>
 
-        <div class="android-content theme-bg" 
-             style="border-top-left-radius: 2.5rem; border-top-right-radius: 2.5rem; margin-top: -30px; padding: 24px 20px 40px 20px; position: relative; z-index: 20; box-shadow: 0 -10px 25px rgba(0,0,0,0.1);">
-            
-            @if($raporGrouped->isEmpty())
-                <div style="text-align: center; padding: 40px 20px;">
-                    <div style="width: 64px; height: 64px; border-radius: 20px; background-color: rgba(147,51,234,0.1); color: #9333ea; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;" class="dark:bg-slate-800">
-                        <x-filament::icon icon="heroicon-o-folder-open" style="width: 32px; height: 32px;" />
-                    </div>
-                    <h3 class="theme-text" style="font-weight: 900; font-size: 16px; margin: 0 0 8px 0;">Belum Ada Rapor</h3>
-                    <p class="theme-text-muted" style="font-size: 12px; font-weight: 600; line-height: 1.5; margin: 0;">Nilai akhir semester Anda belum diterbitkan atau direkap oleh Admin.</p>
-                </div>
-            @else
+        <div class="workspace-content">
+            <div style="padding: 12px 20px 20px 20px;">
                 
-                <div style="margin-bottom: 24px;">
-                    <a href="{{ url('/cetak/buku-rapor/' . $siswa->id) }}" target="_blank" style="text-decoration: none; display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #0f172a, #334155); padding: 14px 20px; border-radius: 20px; color: white; box-shadow: 0 8px 20px rgba(15, 23, 42, 0.2); transition: transform 0.2s;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
-                        <div style="display: flex; align-items: center; gap: 14px;">
-                            <div style="background-color: rgba(255,255,255,0.1); padding: 10px; border-radius: 12px; backdrop-filter: blur(4px);">
-                                <x-filament::icon icon="heroicon-s-document-arrow-down" style="width: 22px; height: 22px; color: white;" />
-                            </div>
-                            <div>
-                                <h4 style="font-weight: 900; font-size: 13px; margin: 0 0 2px 0;">Unduh Buku Rapor</h4>
-                                <p style="font-size: 10px; font-weight: 600; opacity: 0.8; margin: 0;">Cetak PDF Resmi</p>
-                            </div>
+                @if($raporGrouped->isEmpty())
+                    <div class="ambient-shadow" style="text-align: center; padding: 48px 20px; background: var(--ui-surface); border-radius: 24px; border: 1px solid rgba(0,0,0,0.02);">
+                        <div style="width: 56px; height: 56px; border-radius: 16px; background-color: var(--ui-bg); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
+                            <x-filament::icon icon="heroicon-o-folder-open" style="width: 28px; height: 28px; color: var(--ui-muted);" />
                         </div>
-                        <div style="background-color: rgba(255,255,255,0.1); border-radius: 50%; padding: 4px; display: flex; align-items: center; justify-content: center;">
-                            <x-filament::icon icon="heroicon-m-chevron-right" style="width: 16px; height: 16px; color: white;" />
-                        </div>
-                    </a>
-                </div>
-
-                @php
-                    $semesterTerbaru = $raporGrouped->keys()->first();
-                @endphp
-
-                <div x-data="{ activeSmt: '{{ Str::slug($semesterTerbaru) }}' }" style="display: flex; flex-direction: column; gap: 16px;">
+                        <h3 style="font-weight: 800; font-size: 15px; color: var(--ui-black); margin: 0 0 6px 0;">Belum Ada Rapor</h3>
+                        <p style="font-size: 12px; font-weight: 500; color: var(--ui-muted); line-height: 1.5; margin: 0;">Nilai akhir semester Anda belum diterbitkan atau direkap oleh Tata Usaha.</p>
+                    </div>
+                @else
                     
-                    @foreach($raporGrouped as $semester => $nilais)
-                        @php
-                            $totalNilai = $nilais->sum('nilai_akhir');
-                            $rataRata = $nilais->count() > 0 ? round($totalNilai / $nilais->count(), 1) : 0;
-                            $rataColor = $rataRata >= 75 ? 'text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-900/30 border-green-200 dark:border-green-800' : 'text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-900/30 border-red-200 dark:border-red-800';
-                        @endphp
-                        
-                        <div class="theme-card" style="border-radius: 20px; overflow: hidden;" class="dark:border-slate-800">
-                            
-                            <button @click="activeSmt = activeSmt === '{{ Str::slug($semester) }}' ? null : '{{ Str::slug($semester) }}'" 
-                                    style="width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 16px; background-color: transparent; border: none; cursor: pointer;"
-                                    class="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                                
-                                <div style="display: flex; flex-direction: column; align-items: flex-start; text-align: left; gap: 4px;">
-                                    <h3 style="font-size: 13px; font-weight: 900; line-height: 1.2; text-transform: uppercase;" class="theme-text pr-2">
-                                        {{ $semester }}
-                                    </h3>
-                                    <span style="font-size: 10px; font-weight: 700;" class="theme-text-muted">
-                                        Rata-rata: <span class="font-bold {{ $rataRata >= 75 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}">{{ $rataRata }}</span>
-                                    </span>
+                    <div style="margin-bottom: 24px;">
+                        <a href="{{ url('/cetak/buku-rapor/' . $siswa->id) }}" target="_blank" class="touch-scale ambient-shadow" style="text-decoration: none; display: flex; align-items: center; justify-content: space-between; background: var(--ui-black); padding: 14px 20px; border-radius: 20px; color: white;">
+                            <div style="display: flex; align-items: center; gap: 14px;">
+                                <div style="background-color: rgba(255,255,255,0.15); padding: 10px; border-radius: 12px;">
+                                    <x-filament::icon icon="heroicon-s-document-arrow-down" style="width: 20px; height: 20px; color: white;" />
                                 </div>
-                                
-                                <div class="text-gray-400" :class="{'rotate-180 text-blue-500': activeSmt === '{{ Str::slug($semester) }}', 'transition-transform duration-200': true}">
-                                    <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                                <div>
+                                    <h4 style="font-weight: 800; font-size: 14px; margin: 0 0 2px 0;">Unduh Buku Rapor</h4>
+                                    <p style="font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.7); margin: 0;">Cetak Format PDF Resmi</p>
                                 </div>
-                            </button>
+                            </div>
+                            <x-filament::icon icon="heroicon-m-chevron-right" style="width: 18px; height: 18px; color: rgba(255,255,255,0.5);" />
+                        </a>
+                    </div>
 
-                            <div x-show="activeSmt === '{{ Str::slug($semester) }}'" x-collapse x-cloak>
-                                <div style="padding: 10px 16px 16px 16px;" class="theme-bg-smt">
-                                    <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 4px;">
+                    @php
+                        $semesterTerbaru = $raporGrouped->keys()->first();
+                    @endphp
+
+                    <div x-data="{ activeSmt: '{{ Str::slug($semesterTerbaru) }}' }" style="display: flex; flex-direction: column; gap: 12px;">
+                        
+                        @foreach($raporGrouped as $semester => $nilais)
+                            @php
+                                $totalNilai = $nilais->sum('nilai_akhir');
+                                $rataRata = $nilais->count() > 0 ? round($totalNilai / $nilais->count(), 1) : 0;
+                            @endphp
+                            
+                            <div class="ambient-shadow" style="background: var(--ui-surface); border-radius: 20px; border: 1px solid rgba(0,0,0,0.02); overflow: hidden;">
+                                
+                                <button @click="activeSmt = activeSmt === '{{ Str::slug($semester) }}' ? null : '{{ Str::slug($semester) }}'" 
+                                        style="width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: transparent; border: none; cursor: pointer;">
+                                    
+                                    <div style="display: flex; flex-direction: column; align-items: flex-start; text-align: left; gap: 6px;">
+                                        <h3 style="font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--ui-black); margin: 0;">
+                                            {{ $semester }}
+                                        </h3>
+                                        
+                                        <div style="display: flex; align-items: center; gap: 6px;">
+                                            <span style="font-size: 11px; font-weight: 600; color: var(--ui-muted);">Rata-rata:</span>
+                                            <span style="font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 6px; {{ $rataRata >= 75 ? 'background-color: #D1FAE5; color: #047857;' : 'background-color: #FEE2E2; color: #B91C1C;' }}">
+                                                {{ $rataRata }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div :class="{'rotate-180': activeSmt === '{{ Str::slug($semester) }}', 'transition-transform duration-300': true}" style="color: var(--ui-muted);">
+                                        <svg style="width: 18px; height: 18px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                                    </div>
+                                </button>
+
+                                <div x-show="activeSmt === '{{ Str::slug($semester) }}'" x-collapse x-cloak>
+                                    <div style="padding: 0 16px 16px 16px; display: flex; flex-direction: column; gap: 8px;">
                                         
                                         @foreach($nilais->sortBy('mataPelajaran.nama_pelajaran') as $n)
-                                            <div style="border-radius: 12px; padding: 12px; display: flex; align-items: stretch; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);" class="theme-bg-mpl">
+                                            <div style="background-color: var(--ui-bg); border-radius: 16px; padding: 14px; display: flex; align-items: stretch; gap: 14px;">
                                                 
-                                                <div style="flex-shrink: 0; width: 46px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border-right: 1px dashed #e2e8f0; padding-right: 12px;" class="dark:border-slate-700">
-                                                    <span style="font-size: 18px; font-weight: 900; line-height: 1;" class="{{ $n->nilai_akhir >= 75 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}">
+                                                <div style="flex-shrink: 0; width: 44px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border-right: 1px solid var(--ui-border); padding-right: 14px;">
+                                                    <span style="font-size: 18px; font-weight: 900; line-height: 1; {{ $n->nilai_akhir >= 75 ? 'color: #059669;' : 'color: #DC2626;' }}">
                                                         {{ $n->nilai_akhir }}
                                                     </span>
-                                                    <span style="font-size: 10px; font-weight: 800; background-color: #f1f5f9; color: #475569; padding: 2px 8px; border-radius: 4px; border: 1px solid #e2e8f0;" class="dark:bg-slate-700 dark:text-gray-300 dark:border-slate-600">
+                                                    <span style="font-size: 9px; font-weight: 800; background-color: var(--ui-surface); color: var(--ui-muted); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--ui-border);">
                                                         {{ $n->predikat ?? '-' }}
                                                     </span>
                                                 </div>
                                                 
-                                                <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-                                                    <h4 style="font-size: 13px; font-weight: 800; margin: 0 0 4px 0; line-height: 1.2;" class="theme-text">
+                                                <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; min-width: 0;">
+                                                    <h4 style="font-size: 13px; font-weight: 800; color: var(--ui-black); margin: 0 0 4px 0; line-height: 1.3;">
                                                         {{ $n->mataPelajaran->nama_pelajaran ?? '-' }}
                                                     </h4>
-                                                    <p style="font-size: 10px; font-weight: 600; color: #64748b; margin: 0; line-height: 1.4;" class="dark:text-gray-400">
-                                                        {{ $n->deskripsi ?: 'Tidak ada deskripsi kompetensi.' }}
+                                                    <p style="font-size: 11px; font-weight: 500; color: var(--ui-muted); margin: 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                                        {{ $n->deskripsi ?: 'Tidak ada deskripsi.' }}
                                                     </p>
                                                 </div>
                                             </div>
@@ -147,13 +182,12 @@
                                 </div>
                             </div>
 
-                        </div>
-
-                    @endforeach
-                </div>
-                
-                <div style="height: 30px;"></div>
-            @endif
+                        @endforeach
+                    </div>
+                    
+                @endif
+            </div>
+            
         </div>
     </div>
 </x-filament-panels::page.simple>

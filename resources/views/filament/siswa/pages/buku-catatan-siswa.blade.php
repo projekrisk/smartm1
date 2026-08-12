@@ -1,137 +1,185 @@
 <x-filament-panels::page.simple>
+    @php
+        $pengaturan = null;
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('pengaturan')) {
+                $pengaturan = \App\Models\Pengaturan::first();
+            }
+        } catch (\Exception $e) {}
+    @endphp
+
+    @if($pengaturan && $pengaturan->logo_sekolah)
+        <link rel="icon" href="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}" type="image/x-icon"/>
+    @endif
+
     <div wire:ignore>
+        <script>
+            // Memaksa warna status bar di mobile agar senada dengan background aplikasi
+            const metaThemeColor = document.createElement('meta');
+            metaThemeColor.name = 'theme-color';
+            metaThemeColor.content = '#F5F5F7';
+            document.head.appendChild(metaThemeColor);
+        </script>
+        
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900&display=swap" rel="stylesheet">
+        
         <style>
+            :root {
+                --ui-bg: #F5F5F7; /* Apple light gray */
+                --ui-surface: #FFFFFF;
+                --ui-black: #18181B; /* Zinc 900 */
+                --ui-text: #27272A; /* Zinc 800 */
+                --ui-muted: #71717A; /* Zinc 500 */
+                --ui-border: #E4E4E7; /* Zinc 200 */
+            }
+
+            body { 
+                font-family: 'DM Sans', sans-serif !important; 
+                overflow: hidden !important; 
+                background-color: var(--ui-bg) !important; 
+                color: var(--ui-text) !important;
+                -webkit-font-smoothing: antialiased;
+                margin: 0; padding: 0;
+            }
+
+            /* Hide Filament default UI elements completely */
             .fi-topbar, .fi-sidebar, .fi-header, .fi-simple-header, .fi-logo, .fi-simple-footer { display: none !important; }
             html, body, .fi-layout, .fi-simple-layout, .fi-main, .fi-simple-main, .fi-page, section { 
-                padding: 0 !important; margin: 0 !important; gap: 0 !important; height: 100vh !important; height: 100dvh !important; 
-                max-width: 100% !important; width: 100% !important; overflow: hidden !important; background-color: #e2e8f0 !important; box-shadow: none !important; border: none !important;
+                padding: 0 !important; margin: 0 !important; gap: 0 !important;
+                height: 100vh !important; height: 100dvh !important; 
+                max-width: 100% !important; width: 100% !important; 
+                background-color: transparent !important; box-shadow: none !important; border: none !important;
             }
-            .dark body, .dark .fi-layout, .dark .fi-simple-layout, .dark .fi-simple-main { background-color: #020617 !important; }
-            .android-app-container {
-                width: 100%; max-width: 414px; margin: 0 auto; height: 100vh; height: 100dvh; position: relative; 
-                position: fixed; top: 0; bottom: 0; left: 0; right: 0;
-                height: 100% !important;
-                display: flex; flex-direction: column; box-shadow: 0 0 40px rgba(0,0,0,0.15); overflow: hidden; font-family: 'Inter', system-ui, sans-serif; transition: background-color 0.3s ease;
-            }
-            .theme-bg { background-color: #f8fafc; }
-            .theme-card { background-color: #ffffff; border: 1px solid #f1f5f9; box-shadow: 0 8px 30px rgba(0,0,0,0.04); border: 1px solid #e2e8f0}
-            .theme-text { color: #0f172a; }
-            .theme-text-muted { color: #64748b; }
-            .dark .theme-bg { background-color: #0f172a; }
-            .dark .theme-card { background-color: #1e293b; border: 1px solid #334155; box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
-            .dark .theme-text { color: #f8fafc; }
-            .dark .theme-text-muted { color: #94a3b8; }
-            .android-content { flex: 1; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; }
-            .android-content::-webkit-scrollbar { display: none; }
 
-            .theme-bg-smt { background-color: #fafafa; }
-            .dark .theme-bg-smt { background-color: #253145; }
-            .theme-bg-mpl { background-color: #ffffff; }
-            .dark .theme-bg-mpl { background-color: #1e293b; }
+            /* Main Mobile Workspace */
+            .workspace-container {
+                width: 100%; max-width: 414px; margin: 0 auto;
+                position: fixed; top: 0; bottom: 0; left: 0; right: 0;
+                display: flex; flex-direction: column;
+                background-color: var(--ui-bg);
+                overflow: hidden;
+            }
+
+            @media (min-width: 640px) {
+                .workspace-container {
+                    left: 50%; right: auto; transform: translateX(-50%);
+                    border-left: 1px solid var(--ui-border);
+                    border-right: 1px solid var(--ui-border);
+                    box-shadow: 0 0 50px rgba(0,0,0,0.05);
+                }
+            }
+
+            .workspace-content { 
+                flex: 1; overflow-y: auto; overflow-x: hidden; 
+                padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px)); 
+                scrollbar-width: none; 
+            }
+            .workspace-content::-webkit-scrollbar { display: none; }
+
+            /* Interactive Elements */
+            .touch-scale { transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
+            .touch-scale:active { transform: scale(0.96); }
+
+            /* Custom Shadows */
+            .ambient-shadow { box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04); }
+
+            /* Badges for Categories */
+            .badge-cat { 
+                padding: 4px 10px; border-radius: 6px; font-size: 9px; font-weight: 800; 
+                text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid transparent;
+            }
+            .badge-pelanggaran { background-color: #FEF2F2; color: #DC2626; border-color: #FEE2E2; }
+            .badge-peringatan { background-color: #FFFBEB; color: #D97706; border-color: #FEF3C7; }
+            .badge-prestasi { background-color: #EEF2FF; color: #4F46E5; border-color: #E0E7FF; }
+            .badge-pembinaan { background-color: #F0FDF4; color: #059669; border-color: #D1FAE5; }
+            .badge-default { background-color: var(--ui-surface); color: var(--ui-text); border-color: var(--ui-border); }
             
-            /* CSS UNTUK BARIS KIRI-KANAN */
-            .data-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 6px 0; border-bottom: 1px dashed rgba(0,0,0,0.05); }
-            .dark .data-row { border-bottom: 1px dashed rgba(255,255,255,0.05); }
-            .data-row:last-child { border-bottom: none; }
-            .data-label { font-size: 11px; font-weight: 600; width: 35%; flex-shrink: 0; }
-            .data-val { font-size: 11px; font-weight: 800; text-align: right; width: 65%; line-height: 1.4; word-break: break-word; }
+            [x-cloak] { display: none !important; }
         </style>
     </div>
 
-    <div class="android-app-container theme-bg">
-        <div style="flex-shrink: 0; background: linear-gradient(135deg, #2563eb, #3730a3); padding: 40px 24px 60px 24px; color: white; position: relative; z-index: 10;">
-            <a href="/siswa" style="position: absolute; top: 32px; left: 20px; background-color: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+    <div class="workspace-container selection:bg-zinc-900 selection:text-white">
+        
+        <!-- Minimalist Header -->
+        <div style="padding: 24px 20px 16px 20px; display: flex; align-items: center; gap: 16px; margin-top: env(safe-area-inset-top, 0px); background: var(--ui-bg); flex-shrink: 0; z-index: 10; border-bottom: 1px solid rgba(0,0,0,0.02);">
+            <a href="/siswa" class="touch-scale" style="width: 44px; height: 44px; border-radius: 50%; background: var(--ui-surface); border: 1px solid var(--ui-border); display: flex; align-items: center; justify-content: center; color: var(--ui-black); box-shadow: 0 2px 8px rgba(0,0,0,0.04); flex-shrink: 0; text-decoration: none;">
                 <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
             </a>
-            <div style="text-align: center; margin-top: 4px;">
-                <p style="font-size: 10px; font-weight: 800; letter-spacing: 1px; color: #e0e7ff; text-transform: uppercase; margin-bottom: 8px;">Kesiswaan</p>
-                <h1 style="font-size: 1.5rem; font-weight: 900; margin: 0; line-height: 1.2;">Buku Catatan</h1>
-                <div style="display: inline-flex; align-items: center; gap: 6px; background-color: rgba(0,0,0,0.25); padding: 4px 14px; border-radius: 999px; font-size: 10px; font-weight: bold; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(4px); margin-top: 10px; text-transform: uppercase;">{{ $catatans->count() }} Data Terekam</div>
+            
+            <div>
+                <h1 style="font-size: 20px; font-weight: 900; color: var(--ui-black); margin: 0; letter-spacing: -0.5px; line-height: 1.2;">Catatan Siswa</h1>
+                <div style="display: flex; align-items: center; gap: 6px; margin-top: 4px;">
+                    <div style="width: 6px; height: 6px; border-radius: 50%; background-color: var(--ui-black);"></div>
+                    <p style="font-size: 12px; font-weight: 600; color: var(--ui-muted); margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">{{ $catatans->count() }} Riwayat Tercatat</p>
+                </div>
             </div>
         </div>
 
-        <div class="android-content theme-bg" style="border-top-left-radius: 2.5rem; border-top-right-radius: 2.5rem; margin-top: -30px; padding: 24px 20px 100px 20px; position: relative; z-index: 20; box-shadow: 0 -10px 25px rgba(0,0,0,0.1);">
-            
-            <div x-data="{ activeAccordion: null }" style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="workspace-content">
+            <div style="padding: 12px 20px 20px 20px;">
                 
-                @forelse($catatans as $index => $item)
-                    @php
-                        $bg = 'rgba(3, 5, 8, 0.1)'; $tc = '#64748b'; $icon = 'heroicon-s-information-circle';
-                        if ($item->jenis_catatan == 'Positif') { $bg = 'rgba(16,185,129,0.1)'; $tc = '#10b981'; $icon = 'heroicon-s-star'; }
-                        if ($item->jenis_catatan == 'Negatif') { $bg = 'rgba(239,68,68,0.1)'; $tc = '#ef4444'; $icon = 'heroicon-s-exclamation-triangle'; }
-                        if ($item->jenis_catatan == 'Bimbingan') { $bg = 'rgba(14,165,233,0.1)'; $tc = '#0ea5e9'; $icon = 'heroicon-s-chat-bubble-bottom-center-text'; }
-                        if ($item->jenis_catatan == 'Panggilan Ortu') { $bg = 'rgba(245,158,11,0.1)'; $tc = '#f59e0b'; $icon = 'heroicon-s-bell-alert'; }
-                    @endphp
+                @if($catatans->isEmpty())
+                    <div class="ambient-shadow" style="text-align: center; padding: 48px 20px; background: var(--ui-surface); border-radius: 24px; border: 1px solid rgba(0,0,0,0.02);">
+                        <div style="width: 56px; height: 56px; border-radius: 16px; background-color: var(--ui-bg); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;">
+                            <x-filament::icon icon="heroicon-o-bookmark" style="width: 28px; height: 28px; color: var(--ui-muted);" />
+                        </div>
+                        <h3 style="font-weight: 800; font-size: 15px; color: var(--ui-black); margin: 0 0 6px 0;">Belum Ada Catatan</h3>
+                        <p style="font-size: 12px; font-weight: 500; color: var(--ui-muted); line-height: 1.5; margin: 0;">Tidak ada catatan khusus, pelanggaran, atau pembinaan yang direkam untuk Anda saat ini.</p>
+                    </div>
+                @else
                     
-                    <div class="theme-card" style="border-radius: 20px; overflow: hidden;" class="dark:border-slate-800">
-                        
-                        <button @click="activeAccordion = activeAccordion === {{ $index }} ? null : {{ $index }}" type="button" style="width: 100%; text-align: left; padding: 16px; background: transparent; border: none; cursor: pointer; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; outline: none;">
-                            
-                            <div style="flex-shrink: 0; width: 40px; height: 40px; border-radius: 12px; background-color: {{ $bg }}; color: {{ $tc }}; display: flex; items: center; justify-content: center; margin-top: 2px;">
-                                <x-filament::icon icon="{{ $icon }}" style="width: 22px; height: 22px; margin: auto;" />
-                            </div>
-
-                            <div style="flex: 1; min-width: 0;">
-                                <h4 class="theme-text" style="font-size: 14px; font-weight: 900; margin: 0 0 4px 0; line-height: 1.3;">{{ $item->judul_catatan }}</h4>
-                                <span style="font-size: 11px; font-weight: 600; color: #64748b; display: block;" class="dark:text-slate-400">
-                                    {{ \Carbon\Carbon::parse($item->tanggal)->isoFormat('D MMMM Y') }}
-                                </span>
-                            </div>
-
-                            <div style="color: #94a3b8; transition: transform 0.3s; margin-top: 8px;" :style="activeAccordion === {{ $index }} ? 'transform: rotate(180deg);' : ''">
-                                <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path></svg>
-                            </div>
-                        </button>
-                        
-                        <div x-show="activeAccordion === {{ $index }}" x-collapse x-cloak>
-                            <div style="padding: 0 16px 16px 16px;">
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        @foreach($catatans as $catatan)
+                            @php
+                                $kategori = strtolower($catatan->kategori ?? '');
+                                $badgeClass = 'badge-default';
                                 
-                                <div style="border-top: 1px dashed rgba(0,0,0,0.1); padding-top: 12px;" class="dark:border-white/10">
-                                    
-                                    <div style="border-radius: 12px; padding: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.02);" class="theme-bg-mpl">
-                                        <p class="theme-text" style="font-size: 12px; line-height: 1.5; margin: 0; font-weight: 600;">{{ $item->isi_catatan }}</p>
-                                    </div>
+                                if(str_contains($kategori, 'pelanggaran')) {
+                                    $badgeClass = 'badge-pelanggaran';
+                                } elseif(str_contains($kategori, 'peringatan')) {
+                                    $badgeClass = 'badge-peringatan';
+                                } elseif(str_contains($kategori, 'prestasi')) {
+                                    $badgeClass = 'badge-prestasi';
+                                } elseif(str_contains($kategori, 'pembinaan')) {
+                                    $badgeClass = 'badge-pembinaan';
+                                }
+                            @endphp
 
-                                    <div style="display: flex; flex-direction: column;">
-                                        <div class="data-row">
-                                            <span class="theme-text-muted data-label">Kategori</span>
-                                            <span class="theme-text data-val" style="color: {{ $tc }};">{{ $item->jenis_catatan }}</span>
-                                        </div>
-                                        <div class="data-row">
-                                            <span class="theme-text-muted data-label">Dilaporkan Oleh</span>
-                                            <span class="theme-text data-val">{{ $item->pencatat->name ?? '-' }}</span>
-                                        </div>
-                                    </div>
-                                    
-                                    @if($item->status_tindak_lanjut === 'Sudah')
-                                        <div style="margin-top: 12px; border-top: 1px dashed rgba(0,0,0,0.1); padding-top: 12px;" class="dark:border-white/10">
-                                            <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                                                <x-filament::icon icon="heroicon-s-check-circle" style="width: 14px; height: 14px; color: #10b981;" />
-                                                <span style="font-size: 10px; font-weight: 800; color: #10b981; text-transform: uppercase;">Sudah Ditindaklanjuti</span>
-                                            </div>
-                                            <p class="theme-text" style="font-size: 12px; line-height: 1.5; margin: 0; font-weight: 600;">{{ $item->tindak_lanjut }}</p>
-                                            <div class="data-row" style="border: none; margin-top: 4px;">
-                                                <span class="theme-text-muted data-label">Oleh</span>
-                                                <span class="theme-text data-val">{{ $item->penindaklanjut->name ?? '-' }} ({{ \Carbon\Carbon::parse($item->tanggal_tindak_lanjut)->format('d/m/Y') }})</span>
-                                            </div>
-                                        </div>
-                                    @endif
-
+                            <div class="ambient-shadow" style="background: var(--ui-surface); border-radius: 20px; padding: 16px; border: 1px solid rgba(0,0,0,0.02);">
+                                
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                                    <span class="badge-cat {{ $badgeClass }}">
+                                        {{ $catatan->kategori ?? 'Umum' }}
+                                    </span>
+                                    <span style="font-size: 10px; font-weight: 700; color: var(--ui-muted);">
+                                        {{ \Carbon\Carbon::parse($catatan->tanggal)->format('d/m/Y') }}
+                                    </span>
                                 </div>
+                                
+                                <p style="font-size: 13px; font-weight: 600; color: var(--ui-black); margin: 0 0 16px 0; line-height: 1.5;">
+                                    {{ $catatan->catatan }}
+                                </p>
+                                
+                                <div style="display: flex; align-items: center; gap: 8px; border-top: 1px solid var(--ui-border); padding-top: 12px;">
+                                    <div style="width: 24px; height: 24px; border-radius: 50%; background-color: var(--ui-bg); display: flex; align-items: center; justify-content: center;">
+                                        <x-filament::icon icon="heroicon-s-user" style="width: 12px; height: 12px; color: var(--ui-muted);" />
+                                    </div>
+                                    <div style="display: flex; flex-direction: column;">
+                                        <span style="font-size: 9px; font-weight: 800; color: var(--ui-muted); text-transform: uppercase; letter-spacing: 0.5px;">Dicatat Oleh</span>
+                                        <span style="font-size: 11px; font-weight: 700; color: var(--ui-black);">{{ $catatan->guru->name ?? 'Administrator' }}</span>
+                                    </div>
+                                </div>
+                                
                             </div>
-                        </div>
+                        @endforeach
                     </div>
-                @empty
-                    <div style="text-align: center; padding: 40px 20px;">
-                        <div style="width: 64px; height: 64px; border-radius: 20px; background-color: rgba(99,102,241,0.1); color: #6366f1; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto;" class="dark:bg-slate-800">
-                            <x-filament::icon icon="heroicon-s-shield-check" style="width: 32px; height: 32px;" />
-                        </div>
-                        <h3 class="theme-text" style="font-weight: 900; font-size: 16px; margin: 0 0 8px 0;">Catatan Bersih</h3>
-                        <p class="theme-text-muted" style="font-size: 12px; font-weight: 600; line-height: 1.5; margin: 0;">Anda belum memiliki riwayat catatan kasus maupun bimbingan di sistem.</p>
-                    </div>
-                @endforelse
+                    
+                @endif
+                
             </div>
-            
         </div>
+
     </div>
 </x-filament-panels::page.simple>
