@@ -8,103 +8,184 @@
         } catch (\Exception $e) {}
     @endphp
 
-    <style>
-        body { overflow: hidden !important; }
+    <div wire:ignore>
+        <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
         
-        #login-overlay {
-            position: fixed; inset: 0; z-index: 99999;
-            background-color: #e2e8f0;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .dark #login-overlay { background-color: #020617; }
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            sans: ['"Inter"', 'sans-serif'],
+                        },
+                        colors: {
+                            base: {
+                                50: '#F9FAFB',
+                                900: '#111827',
+                            }
+                        }
+                    }
+                }
+            }
+        </script>
+        <style>
+            body { 
+                font-family: 'Inter', sans-serif !important; 
+                background-color: #F9FAFB !important; 
+                color: #111827 !important; 
+                margin: 0; padding: 0;
+                overflow: hidden !important; 
+            }
+            
+            .bg-structural {
+                background-image: 
+                    linear-gradient(to right, rgba(17, 24, 39, 0.04) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(17, 24, 39, 0.04) 1px, transparent 1px);
+                background-size: 64px 64px;
+            }
 
-        .android-app-container {
-            width: 100%; max-width: 414px; height: 100vh; height: 100dvh;
-            background-color: #f8fafc;
-            position: fixed; top: 0; bottom: 0; left: 0; right: 0;
-            height: 100% !important;
-            display: flex; flex-direction: column; position: relative;
-            box-shadow: 0 0 40px rgba(0,0,0,0.15); overflow: hidden;
-            font-family: 'Inter', system-ui, sans-serif;
-        }
-        .dark .android-app-container { background-color: #0f172a; }
+            .fi-topbar, .fi-sidebar, .fi-simple-header, .fi-logo, .fi-simple-footer { display: none !important; }
+            .fi-layout, .fi-simple-layout, .fi-main, .fi-simple-main, .fi-page { 
+                padding: 0 !important; margin: 0 !important; max-width: 100% !important; 
+                background-color: transparent !important; box-shadow: none !important; border: none !important;
+            }
 
-        .android-content { flex: 1; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; }
-        .android-content::-webkit-scrollbar { display: none; }
+            #single-login .fi-fo-field-wrp label span { color: #111827 !important; font-weight: 800 !important; font-size: 13px !important; text-transform: uppercase; letter-spacing: 0.05em; }
+            #single-login .fi-fo-field-wrp p { color: #4B5563 !important; font-size: 12px !important; font-weight: 500 !important;}
+            #single-login .fi-fo-field-wrp-error-message { color: #DC2626 !important; font-size: 12px !important; font-weight: 700 !important; }
+            
+            #single-login .fi-input-wrp {
+                background-color: #ffffff !important;
+                border: 2px solid #111827 !important; 
+                border-radius: 0px !important; 
+                box-shadow: none !important;
+                transition: all 0.2s ease-out !important;
+            }
+            
+            #single-login .fi-input-wrp:focus-within {
+                box-shadow: 4px 4px 0px 0px #111827 !important; 
+                transform: translate(-2px, -2px) !important;
+            }
+            
+            #single-login .fi-input { 
+                color: #111827 !important; 
+                padding: 12px 14px !important; 
+                background: transparent !important;
+                font-size: 15px !important;
+                font-weight: 500 !important;
+            }
+            
+            #single-login input[type="checkbox"],
+            #single-login .fi-checkbox-input { 
+                appearance: none !important;
+                -webkit-appearance: none !important;
+                width: 1.25rem !important;
+                height: 1.25rem !important;
+                border: 2px solid #111827 !important; 
+                border-radius: 0px !important; 
+                background-color: #ffffff !important;
+                cursor: pointer !important;
+                display: inline-block !important;
+                position: relative !important;
+                outline: none !important;
+                box-shadow: none !important;
+            }
+            
+            #single-login .fi-checkbox-input:checked {
+                background-color: #111827 !important;
+                background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e") !important;
+            }
+        </style>
+    </div>
 
-        .android-app-container .fi-fo-field-wrp label span { color: #1e293b !important; font-weight: 800 !important; font-size: 11px !important; text-transform: uppercase; letter-spacing: 0.5px; }
-        .dark .android-app-container .fi-fo-field-wrp label span { color: #94a3b8 !important; }
+    <div id="single-login" class="min-h-screen w-full flex flex-col items-center justify-center p-4 sm:p-8 relative bg-base-50 bg-structural selection:bg-base-900 selection:text-white">
         
-        .android-app-container .fi-input-wrp { border-radius: 16px !important; background-color: #f1f5f9 !important; border: 2px solid transparent !important; box-shadow: none !important; transition: all 0.2s ease; overflow: hidden; }
-        .dark .android-app-container .fi-input-wrp { background-color: #1e293b !important; }
-        
-        .android-app-container .fi-input-wrp:focus-within { border-color: #2563eb !important; background-color: #ffffff !important; box-shadow: 0 4px 20px rgba(37, 99, 235, 0.1) !important; }
-        .dark .android-app-container .fi-input-wrp:focus-within { background-color: #0f172a !important; border-color: #2563eb !important; }
-        
-        .android-app-container .fi-input { padding: 16px 20px !important; font-weight: 700 !important; font-size: 14px !important; color: #0f172a !important; }
-        .dark .android-app-container .fi-input { color: #f8fafc !important; }
-    </style>
+        @if($errors->any())
+            <div x-data="{ show: true }"
+                 x-show="show"
+                 x-transition:enter="transform ease-out duration-300 transition"
+                 x-transition:enter-start="-translate-y-5 opacity-0"
+                 x-transition:enter-end="translate-y-0 opacity-100"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 x-init="setTimeout(() => show = false, 5000)"
+                 class="fixed top-6 left-1/2 -translate-x-1/2 z-[999999] flex w-full max-w-sm mx-auto overflow-hidden bg-white border-2 border-base-900 shadow-[4px_4px_0px_0px_#111827] pointer-events-auto">
+                <div class="flex items-center justify-center w-12 bg-base-900 shrink-0 text-white font-bold">
+                    !
+                </div>
+                <div class="px-4 py-3 flex-1 min-w-0">
+                    <span class="text-[12px] font-extrabold text-base-900 uppercase tracking-widest">Akses Ditolak</span>
+                    <p class="text-sm text-gray-700 mt-0.5 font-bold leading-tight truncate">{{ $errors->first() }}</p>
+                </div>
+                <button @click="show = false" class="absolute top-3 right-3 text-base-900 hover:text-red-600 transition-colors font-bold p-1">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        @endif
 
-    <div id="login-overlay">
-        <div class="android-app-container">
-            <div class="android-content bg-white dark:bg-gray-800" style="display: flex; flex-direction: column;">
+        <div class="relative z-10 w-full max-w-[460px]">
+            
+            <div class="bg-white border-2 border-base-900 p-8 md:p-12 relative shadow-[8px_8px_0px_0px_#111827]">
                 
-                <div style="background: linear-gradient(135deg, #2563eb, #3730a3); flex: 1; display: flex; flex-direction: column; align-items: center;text-align: center; justify-content: center; padding: 40px 24px 80px 24px; color: white; position: relative; z-index: 10; min-height: 45vh;">
+                <div class="absolute top-0 right-0 w-12 h-12 border-l-2 border-b-2 border-base-900 bg-base-50 transform translate-x-2 -translate-y-2"></div>
+                <div class="absolute bottom-0 left-0 w-12 h-12 border-r-2 border-t-2 border-base-900 bg-base-50 transform -translate-x-2 translate-y-2"></div>
+                
+                <div class="relative z-10">
                     
-                    <div style="display: flex; justify-content: center; align-items: center; margin-bottom: 24px;">
-                        <p style="font-size: 11px; font-weight: 800; letter-spacing: 1px; margin: 0; color: #bfdbfe; text-transform: uppercase;">
-                            SMART-M1<br>
-                            {{ $pengaturan->nama_sekolah ?? 'SMAN 1 MALINGPING' }}
+                    <div class="flex flex-col items-start mb-8 border-b-2 border-base-900 pb-6">
+                        @if($pengaturan && $pengaturan->logo_sekolah)
+                            <img src="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}" alt="Logo" class="w-16 h-16 object-contain mb-5">
+                        @else
+                            <div class="w-14 h-14 bg-base-900 flex items-center justify-center text-white font-black text-2xl mb-5">M1</div>
+                        @endif
+                        
+                        <h1 class="text-3xl font-black text-base-900 tracking-tight uppercase leading-[1.1]">
+                            Portal <br/> Siswa
+                        </h1>
+                        <p class="text-sm text-gray-600 mt-3 font-semibold">
+                            Masuk ke Akun Anda.
                         </p>
                     </div>
 
-                    <div style="display: flex; flex-direction: column; align-items: center; text-align: center;">
-                        <div style="width: 80px; height: 80px; border-radius: 24px; border: 3px solid rgba(255,255,255,0.4); background-color: #ffffff; overflow: hidden; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 25px rgba(0,0,0,0.2); padding: 8px;">
-                            @if($pengaturan && $pengaturan->logo_sekolah)
-                                <img src="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
-                            @else
-                                <x-filament::icon icon="heroicon-s-academic-cap" style="width: 40px; height: 40px; color: #2563eb;" />
-                            @endif
-                        </div>
+                    <div>
+                        <x-filament-panels::form wire:submit="authenticate" class="space-y-6">
+                            
+                            {{ $this->form }}
 
-                        <h1 style="font-size: 1.75rem; font-weight: 900; margin: 0 0 6px 0; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                            Portal Siswa
-                        </h1>
-                        <div style="display: inline-flex; align-items: center; gap: 6px; background-color: rgba(0,0,0,0.25); padding: 4px 14px; border-radius: 999px; font-size: 11px; font-weight: bold; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(4px);">
-                            Masuk ke Akun Anda
-                        </div>
+                            <div class="pt-4">
+                                <button type="submit" wire:loading.attr="disabled" class="w-full flex justify-center items-center py-4 px-6 border-2 border-base-900 text-sm font-black text-white bg-base-900 uppercase tracking-widest hover:bg-white hover:text-base-900 focus:outline-none transition-colors duration-200 group">
+                                    
+                                    <span wire:loading.remove wire:target="authenticate" class="flex items-center gap-3">
+                                        MASUK SEKARANG
+                                        <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                                    </span>
+                                    
+                                    <span wire:loading wire:target="authenticate" class="flex items-center gap-3">
+                                        <svg class="animate-spin h-5 w-5 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                        MEMVERIFIKASI...
+                                    </span>
+                                </button>
+                            </div>
+                        </x-filament-panels::form>
                     </div>
-                </div>
-
-                <div class="bg-white dark:bg-gray-800" style="border-radius: 2.5rem 2.5rem 0 0; padding: 32px 32px 48px 32px; margin-top: -40px; position: relative; z-index: 20; box-shadow: 0 -15px 40px rgba(0,0,0,0.15); display: flex; flex-direction: column;">
                     
-                    <div style="width: 48px; height: 6px; border-radius: 999px; background-color: #cbd5e1; margin: 0 auto 32px auto;" class="dark:bg-gray-700"></div>
-
-                    <form wire:submit="authenticate" style="display: flex; flex-direction: column; gap: 24px;">
-                        
-                        {{ $this->form }}
-
-                        <div style="margin-top: 8px;">
-                            <button type="submit" wire:loading.attr="disabled" style="width: 100%; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; border-radius: 16px; padding: 16px; font-size: 14px; font-weight: 800; border: none; box-shadow: 0 8px 20px rgba(37,99,235,0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.1s;">
-                                
-                                <span wire:loading.remove wire:target="authenticate" class="flex items-center gap-2">
-                                    MASUK SEKARANG
-                                </span>
-                                
-                                <span wire:loading wire:target="authenticate" class="flex items-center gap-2">
-                                    <svg style="animation: spin 1s linear infinite; height: 20px; width: 20px; color: white;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle style="opacity: 0.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path style="opacity: 0.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                                </span>
-                                
-                            </button>
+                     <div class="mt-8 pt-6 border-t-2 border-dashed border-gray-300">
+                        <div class="text-center text-[11px] text-gray-500 font-bold mb-4 uppercase tracking-wider">
+                            Sandi awal Anda adalah <strong class="text-base-900">NISN</strong>
                         </div>
-                    </form>
-                    
-                    <div style="margin-top: 32px; text-align: center; font-size: 11px; color: #64748b; font-weight: 600;">
-                        Sandi awal Anda adalah <strong style="color: #2563eb; font-weight: 800;">NISN</strong>
+                        <a href="{{ url('/') }}" class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-base-900 hover:text-accent-600 transition-colors hover:underline decoration-2 underline-offset-4">
+                            &larr; Kembali ke Beranda
+                        </a>
                     </div>
-                </div>
 
+                </div>
             </div>
+
         </div>
+
     </div>
 </x-filament-panels::page.simple>

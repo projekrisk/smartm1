@@ -45,13 +45,12 @@
                         sans: ['"DM Sans"', 'sans-serif'],
                     },
                     colors: {
-                        // Custom refined palette
                         base: {
-                            50: '#F9FAFB', // Off-white background
-                            900: '#111827', // Deep charcoal/black
+                            50: '#F9FAFB',
+                            900: '#111827',
                         },
                         accent: {
-                            500: '#D97706', // Muted Orange/Gold for sharp contrast
+                            500: '#D97706',
                             600: '#B45309',
                         }
                     }
@@ -68,7 +67,6 @@
             overflow-x: hidden;
         }
 
-        /* Subtle, structural background instead of blobs */
         .bg-structural {
             background-image: 
                 linear-gradient(to right, rgba(17, 24, 39, 0.03) 1px, transparent 1px),
@@ -114,7 +112,6 @@
 </head>
 <body class="antialiased min-h-screen flex flex-col relative bg-base-50 bg-structural selection:bg-base-900 selection:text-white">
 
-    <!-- Minimalist Navbar -->
     <nav class="w-full px-6 py-8 md:px-12 lg:px-16 flex justify-between items-start z-40">
         <div class="flex items-center gap-4">
             @if($pengaturan && $pengaturan->logo_sekolah)
@@ -133,12 +130,10 @@
         </button>
     </nav>
 
-    <!-- Main Content: Asymmetrical Layout -->
     <main class="flex-1 w-full max-w-[1600px] mx-auto px-6 md:px-12 lg:px-16 flex flex-col justify-center pb-20 z-10">
         
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center mt-8 lg:mt-0">
             
-            <!-- Left Column: Typography & CTAs -->
             <div class="lg:col-span-7 flex flex-col justify-center pr-0 lg:pr-8">
                 
                 <h1 class="text-5xl md:text-6xl lg:text-7xl xl:text-[5rem] font-extrabold text-base-900 tracking-tight leading-[1.05] mb-8">
@@ -147,28 +142,47 @@
                     Terpadu.
                 </h1>
 
-                <p class="text-lg md:text-xl text-gray-600 max-w-2xl leading-relaxed mb-10">
-                    Platform inti untuk tata kelola administrasi dan pemantauan perkembangan peserta didik secara komprehensif di lingkungan institusi.
+                <p class="text-lg md:text-xl text-gray-700 max-w-2xl leading-relaxed mb-8 font-medium">
+                    Platform digital terintegrasi yang memfasilitasi pengelolaan administrasi serta layanan akademik dan non-akademik peserta didik secara <span class="text-base-900 font-extrabold border-b-4 border-accent-500">aman, efisien, dan real-time.</span>
                 </p>
 
-                <!-- Solid, Structural Buttons -->
-                <div class="flex flex-col sm:flex-row gap-4 sm:gap-6">
-                    <a href="{{ url('/siswa/login') }}" class="inline-flex items-center justify-center px-8 py-4 bg-base-900 text-white font-bold text-sm tracking-wider uppercase hover:bg-gray-800 transition-colors group">
+                <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-10">
+                    <a href="{{ url('/siswa/login') }}" class="inline-flex items-center justify-center px-8 py-4 bg-base-900 text-white font-bold text-sm tracking-wider uppercase hover:bg-gray-800 transition-all group shadow-[4px_4px_0px_0px_#D97706] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_#D97706]">
                         Portal Siswa
-                        <svg class="w-5 h-5 ml-3 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                        <svg class="w-5 h-5 ml-3 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                     </a>
                     
-                    <a href="{{ url('/admin/login') }}" class="inline-flex items-center justify-center px-8 py-4 bg-transparent border-2 border-base-900 text-base-900 font-bold text-sm tracking-wider uppercase hover:bg-base-900 hover:text-white transition-colors">
+                    <a href="{{ url('/admin/login') }}" class="inline-flex items-center justify-center px-8 py-4 bg-white border-2 border-base-900 text-base-900 font-bold text-sm tracking-wider uppercase transition-all hover:bg-base-50 shadow-[4px_4px_0px_0px_#111827] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_#111827]">
                         Admin & Guru
                     </a>
                 </div>
+
+                <div class="flex flex-col gap-3">
+                    <span class="text-xs font-extrabold tracking-widest text-gray-500 uppercase">Aksesibilitas Multi-Platform:</span>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-white border-2 border-base-900 text-xs font-bold uppercase tracking-wider text-base-900">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                            Desktop
+                        </div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-white border-2 border-base-900 text-xs font-bold uppercase tracking-wider text-base-900">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                            Android
+                        </div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-white border-2 border-base-900 text-xs font-bold uppercase tracking-wider text-base-900">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                            iOS
+                        </div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-white border-2 border-base-900 text-xs font-bold uppercase tracking-wider text-base-900">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+                            Web
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-gray-500 font-bold mt-1">Aplikasi dapat diakses via browser atau diinstal langsung (PWA) di perangkat Anda.</p>
+                </div>
             </div>
 
-            <!-- Right Column: Visual / Feature Highlights (Instead of a generic image) -->
             <div class="lg:col-span-5 w-full mt-12 lg:mt-0">
-                <!-- A structural, card-based visual element -->
                 <div class="bg-white border-2 border-base-900 p-8 md:p-10 relative">
-                    <!-- Decorative accents -->
                     <div class="absolute top-0 right-0 w-16 h-16 border-l-2 border-b-2 border-base-900 bg-base-50 transform translate-x-2 -translate-y-2"></div>
                     <div class="absolute bottom-0 left-0 w-16 h-16 border-r-2 border-t-2 border-base-900 bg-base-50 transform -translate-x-2 translate-y-2"></div>
                     
@@ -182,7 +196,7 @@
                                 </div>
                                 <div>
                                     <h4 class="text-lg font-bold text-base-900 mb-1">E-Rapor & Evaluasi</h4>
-                                    <p class="text-sm text-gray-600 leading-relaxed">Perekaman nilai secara berkala dengan sistem rekapitulasi otomatis.</p>
+                                    <p class="text-sm text-gray-600 leading-relaxed">Perekaman nilai secara berkala dengan sistem rekapitulasi. Data absensi dan prestasi siswa.</p>
                                 </div>
                             </div>
 
@@ -202,7 +216,7 @@
                                 </div>
                                 <div>
                                     <h4 class="text-lg font-bold text-base-900 mb-1">Verifikasi Dokumen</h4>
-                                    <p class="text-sm text-gray-600 leading-relaxed">Sistem penjaminan keaslian persuratan (dispensasi/panggilan) berbasis QRCode.</p>
+                                    <p class="text-sm text-gray-600 leading-relaxed">Sistem penjaminan keaslian persuratan (dispensasi/panggilan) berbasis digital.</p>
                                 </div>
                             </div>
                         </div>
@@ -213,45 +227,40 @@
         </div>
     </main>
 
-    <!-- Minimalist Footer -->
     <footer class="w-full px-6 py-6 md:px-12 lg:px-16 flex flex-col md:flex-row justify-between items-center border-t-2 border-gray-200 mt-auto bg-base-50 z-10 gap-4 text-xs md:text-sm font-bold text-gray-500 uppercase tracking-wider">
         <div>&copy; {{ date('Y') }} {{ $namaSekolah }}.</div>
         <button onclick="openFeaturesModal()" class="md:hidden hover:text-base-900 transition-colors">Informasi Sistem</button>
     </footer>
 
-    <!-- Structural Modal -->
     <div id="featuresModal" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 bg-base-900/40">
-        <!-- Close area -->
         <div class="absolute inset-0 cursor-pointer" onclick="closeFeaturesModal()"></div>
         
         <div class="modal-content relative w-full max-w-2xl bg-white border-2 border-base-900 p-0 flex flex-col shadow-2xl">
-            <!-- Modal Header -->
             <div class="flex justify-between items-center p-6 md:p-8 border-b-2 border-base-900 bg-base-50">
                 <h2 class="text-xl md:text-2xl font-extrabold text-base-900 tracking-tight">Informasi Sistem</h2>
                 <button onclick="closeFeaturesModal()" class="text-base-900 hover:text-accent-600 transition-colors p-1">
-                    <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
             
-            <!-- Modal Body -->
             <div class="p-6 md:p-8 text-gray-700 leading-relaxed space-y-6">
-                <p class="text-base md:text-lg">
-                    <b>Smart-M1</b> dibangun secara spesifik untuk memfasilitasi kebutuhan administrasi dan operasional <b>{{ $namaSekolah }}</b>. Sistem memisahkan wewenang antara pengelola (Admin/Guru) dan pengguna akhir (Siswa/Wali Murid).
+                <p class="text-base md:text-lg font-medium">
+                    <b>Smart-M1</b> dirancang secara khusus untuk memfasilitasi kebutuhan administrasi akademik dan operasional secara terpadu di lingkungan <b>{{ $namaSekolah }}</b>.
                 </p>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-gray-200">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t-2 border-dashed border-gray-300">
                     <div>
-                        <h4 class="font-bold text-base-900 mb-2 uppercase tracking-wider text-sm">Akses Administrator</h4>
-                        <p class="text-sm">Diperuntukkan bagi staf Tata Usaha dan Tenaga Pendidik untuk manajemen data, input nilai, presensi, dan penerbitan dokumen resmi.</p>
+                        <h4 class="font-black text-base-900 mb-2 uppercase tracking-wider text-sm">Akses Administrator</h4>
+                        <p class="text-sm font-medium">Ditujukan bagi staf Tata Usaha dan Tenaga Pendidik guna mengelola basis data, evaluasi akademik, presensi, serta penerbitan dokumen resmi.</p>
                     </div>
                     <div>
-                        <h4 class="font-bold text-base-900 mb-2 uppercase tracking-wider text-sm">Akses Siswa</h4>
-                        <p class="text-sm">Portal baca-saja (*read-only*) bagi peserta didik untuk memantau kemajuan belajar, riwayat mutasi, dan melihat E-Rapor.</p>
+                        <h4 class="font-black text-base-900 mb-2 uppercase tracking-wider text-sm">Akses Siswa</h4>
+                        <p class="text-sm font-medium">Portal khusus bagi peserta didik untuk memantau perkembangan belajar, riwayat mutasi, rekapitulasi absensi, dan E-Rapor.</p>
                     </div>
                 </div>
 
-                <div class="bg-gray-100 p-4 border-l-4 border-accent-600 text-sm font-medium">
-                    Untuk bantuan teknis atau kendala login, silakan hubungi bagian Tata Usaha sekolah pada jam kerja.
+                <div class="bg-base-50 p-4 border-l-4 border-base-900 text-sm font-bold text-base-900">
+                    Untuk bantuan teknis atau kendala akses sistem, silakan hubungi bagian Tata Usaha sekolah pada jam kerja.
                 </div>
             </div>
         </div>
@@ -262,7 +271,7 @@
         
         function openFeaturesModal() { 
             featuresModal.classList.add('active'); 
-            document.body.style.overflow = 'hidden'; // Prevent scrolling behind modal
+            document.body.style.overflow = 'hidden';
         }
         
         function closeFeaturesModal() { 

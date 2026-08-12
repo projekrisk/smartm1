@@ -32,7 +32,6 @@
             }
         </script>
         <style>
-            /* Reset & Typography */
             body { 
                 font-family: 'Inter', sans-serif !important; 
                 background-color: #F9FAFB !important; 
@@ -41,7 +40,6 @@
                 overflow: hidden !important; 
             }
             
-            /* Structural Grid Background Identik dengan Homepage */
             .bg-structural {
                 background-image: 
                     linear-gradient(to right, rgba(17, 24, 39, 0.04) 1px, transparent 1px),
@@ -49,19 +47,16 @@
                 background-size: 64px 64px;
             }
 
-            /* Hide Default Filament Elements */
             .fi-topbar, .fi-sidebar, .fi-simple-header, .fi-logo, .fi-simple-footer { display: none !important; }
             .fi-layout, .fi-simple-layout, .fi-main, .fi-simple-main, .fi-page { 
                 padding: 0 !important; margin: 0 !important; max-width: 100% !important; 
                 background-color: transparent !important; box-shadow: none !important; border: none !important;
             }
 
-            /* Neo-Brutalist Form Customizations */
             #single-login .fi-fo-field-wrp label span { color: #111827 !important; font-weight: 800 !important; font-size: 13px !important; text-transform: uppercase; letter-spacing: 0.05em; }
             #single-login .fi-fo-field-wrp p { color: #4B5563 !important; font-size: 12px !important; font-weight: 500 !important;}
             #single-login .fi-fo-field-wrp-error-message { color: #DC2626 !important; font-size: 12px !important; font-weight: 700 !important; }
             
-            /* Sharp, solid inputs */
             #single-login .fi-input-wrp {
                 background-color: #ffffff !important;
                 border: 2px solid #111827 !important; 
@@ -70,7 +65,6 @@
                 transition: all 0.2s ease-out !important;
             }
             
-            /* Brutalist focus effect */
             #single-login .fi-input-wrp:focus-within {
                 box-shadow: 4px 4px 0px 0px #111827 !important; 
                 transform: translate(-2px, -2px) !important;
@@ -110,7 +104,6 @@
 
     <div id="single-login" class="min-h-screen w-full flex flex-col items-center justify-center p-4 sm:p-8 relative bg-base-50 bg-structural selection:bg-base-900 selection:text-white">
         
-        <!-- Error Alert Neo-Brutalist -->
         @if($errors->any())
             <div x-data="{ show: true }"
                  x-show="show"
@@ -135,13 +128,10 @@
             </div>
         @endif
 
-        <!-- Wrapper Tanpa Container Lebar -->
         <div class="relative z-10 w-full max-w-[460px]">
             
-            <!-- Neo-Brutalist Card -->
             <div class="bg-white border-2 border-base-900 p-8 md:p-12 relative shadow-[8px_8px_0px_0px_#111827]">
                 
-                <!-- Ornamen Pojok Identik Homepage -->
                 <div class="absolute top-0 right-0 w-12 h-12 border-l-2 border-b-2 border-base-900 bg-base-50 transform translate-x-2 -translate-y-2"></div>
                 <div class="absolute bottom-0 left-0 w-12 h-12 border-r-2 border-t-2 border-base-900 bg-base-50 transform -translate-x-2 translate-y-2"></div>
                 
@@ -155,10 +145,10 @@
                         @endif
                         
                         <h1 class="text-3xl font-black text-base-900 tracking-tight uppercase leading-[1.1]">
-                            Otorisasi <br/> Sistem
+                            Masuk
                         </h1>
                         <p class="text-sm text-gray-600 mt-3 font-semibold">
-                            Sistem Manajemen Instansi. Masukkan kredensial staf Anda.
+                            Masuk sebagai Guru atau Staf.
                         </p>
                     </div>
 
@@ -168,16 +158,14 @@
                             {{ $this->form }}
 
                             <div class="pt-4">
-                                <!-- Solid, sharp button matching the homepage styling -->
                                 <button type="submit" wire:loading.attr="disabled" class="w-full flex justify-center items-center py-4 px-6 border-2 border-base-900 text-sm font-black text-white bg-base-900 uppercase tracking-widest hover:bg-white hover:text-base-900 focus:outline-none transition-colors duration-200 group">
                                     
                                     <span wire:loading.remove wire:target="authenticate" class="flex items-center gap-3">
-                                        Autentikasi Masuk
+                                        Masuk Sekarang
                                         <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                                     </span>
                                     
                                     <span wire:loading wire:target="authenticate" class="flex items-center gap-3">
-                                        <svg class="animate-spin h-5 w-5 text-current" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                                         MEMVERIFIKASI...
                                     </span>
                                 </button>
@@ -187,7 +175,7 @@
                     
                     <div class="mt-8 pt-6 border-t-2 border-dashed border-gray-300">
                         <a href="{{ url('/') }}" class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-base-900 hover:text-accent-600 transition-colors hover:underline decoration-2 underline-offset-4">
-                            &larr; Kembali ke Beranda
+                            &larr; Beranda
                         </a>
                     </div>
 
