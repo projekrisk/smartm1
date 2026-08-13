@@ -89,10 +89,9 @@
                 <div class="w-11 h-11 md:w-12 md:h-12 bg-uiblack rounded-full flex items-center justify-center text-white font-black text-xl shadow-md">M1</div>
             @endif
             <div class="flex flex-col">
-                <span class="font-black text-[20px] tracking-tight leading-tight text-uiblack">Smart-M1</span>
+                <span class="font-black text-[20px] tracking-tight leading-tight text-uiblack">SMART-M1</span>
                 <div class="flex items-center gap-1.5 mt-0.5">
-                    <div class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
-                    <span class="text-[11px] font-bold text-uimuted uppercase tracking-wider">{{ $namaSekolah }}</span>
+                    <span class="text-[14px] font-bold text-uimuted uppercase tracking-wider">{{ $namaSekolah }}</span>
                 </div>
             </div>
         </div>
@@ -110,8 +109,8 @@
             <div class="lg:col-span-7 flex flex-col justify-center">
 
                 <h1 class="text-[40px] md:text-[56px] lg:text-[72px] font-black text-uiblack tracking-tight leading-[1.05] mb-6">
-                    Portal Smart-M1 <br class="hidden md:block" />
-                    {{ $namaSekolah }}
+                    Portal <br class="hidden md:block" />
+                    Smart-M1
                 </h1>
 
                 <p class="text-[16px] md:text-[18px] text-uimuted max-w-2xl leading-relaxed mb-10 font-medium">
