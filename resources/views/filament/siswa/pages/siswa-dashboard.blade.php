@@ -229,6 +229,13 @@
                             <x-filament::icon icon="heroicon-o-users" style="width: 26px; height: 26px; color: var(--ui-black); stroke-width: 1.5;" />
                             <span style="font-size: 11px; font-weight: 700; color: var(--ui-text);">Direktori</span>
                         </a>
+
+                        <a href="/siswa/tentang" class="touch-scale ambient-shadow" style="background: var(--ui-surface); border-radius: 20px; padding: 14px 8px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-decoration: none; border: 1px solid rgba(0,0,0,0.02); grid-column: span 4;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <x-filament::icon icon="heroicon-o-information-circle" style="width: 20px; height: 20px; color: var(--ui-black);" />
+                                <span style="font-size: 11px; font-weight: 800; color: var(--ui-text); text-transform: uppercase; letter-spacing: 0.5px;">Tentang Aplikasi & Ulasan</span>
+                            </div>
+                        </a>
                         
                     </div>
                 </div>
