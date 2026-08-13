@@ -163,7 +163,6 @@
                             <button type="submit" wire:loading.attr="disabled" wire:target="simpan" class="touch-scale w-full flex justify-center items-center py-4 px-6 rounded-[100px] text-[14px] font-bold text-white bg-uiblack uppercase tracking-wide transition-all shadow-[0_8px_25px_rgba(24,24,27,0.2)] disabled:opacity-70 disabled:cursor-not-allowed group hover:bg-black">
                                 <span wire:loading.remove wire:target="simpan" class="flex items-center gap-2">
                                     Simpan & Masuk
-                                    <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                                 </span>
                                 
                                 <span wire:loading wire:target="simpan" class="flex items-center gap-3" x-cloak>

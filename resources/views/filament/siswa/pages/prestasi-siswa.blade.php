@@ -18,6 +18,14 @@
             metaThemeColor.name = 'theme-color';
             metaThemeColor.content = '#F5F5F7';
             document.head.appendChild(metaThemeColor);
+
+            document.documentElement.classList.remove('dark');
+            const observerDarkMode = new MutationObserver(() => {
+                if(document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                }
+            });
+            observerDarkMode.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
         </script>
         
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,6 +34,7 @@
         
         <style>
             :root {
+                color-scheme: light !important;
                 --ui-bg: #F5F5F7;
                 --ui-surface: #FFFFFF;
                 --ui-black: #18181B;
@@ -89,7 +98,17 @@
             .workspace-container .fi-fo-field-wrp label span { color: var(--ui-black) !important; font-weight: 800 !important; font-size: 12px !important; text-transform: uppercase; letter-spacing: 0.5px; }
             .workspace-container .fi-input-wrp { border-radius: 16px !important; background-color: var(--ui-surface) !important; border: 1px solid var(--ui-border) !important; box-shadow: none !important; transition: all 0.2s ease; overflow: hidden; }
             .workspace-container .fi-input-wrp:focus-within { border-color: var(--ui-black) !important; box-shadow: 0 4px 12px rgba(24,24,27,0.08) !important; }
-            .workspace-container .fi-input { color: var(--ui-black) !important; padding: 14px 16px !important; font-weight: 600 !important; }
+            .workspace-container .fi-input, .workspace-container select, .workspace-container textarea { color: var(--ui-black) !important; padding: 14px 16px !important; font-weight: 600 !important; background-color: transparent !important; }
+
+            select option { background-color: #FFFFFF !important; color: #18181B !important; }
+            .fi-select-popover, .fi-popover, .fi-popover-content, .fi-dropdown-panel, .fi-select-list, div[role="listbox"], ul[role="listbox"] {
+                background-color: #FFFFFF !important; border: 1px solid #E4E4E7 !important; box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important; border-radius: 12px !important;
+            }
+            .fi-select-option, .fi-dropdown-list-item, [role="option"] {
+                background-color: #FFFFFF !important; color: #18181B !important; border-radius: 8px !important; margin: 2px !important;
+            }
+            .fi-select-option-label, .fi-dropdown-list-item-label, [role="option"] span { color: #18181B !important; font-weight: 700 !important; }
+            .fi-select-option:hover, [role="option"]:hover, [role="option"][aria-selected="true"] { background-color: #F5F5F7 !important; color: #18181B !important; }
             
             .workspace-container form .grid, 
             .workspace-container form .grid-cols-2,
@@ -256,13 +275,14 @@
                         <div style="margin-top: 8px;">
                             <button type="submit" wire:loading.attr="disabled" class="touch-scale" style="width: 100%; background: var(--ui-black); color: white; border-radius: 100px; padding: 16px; font-weight: 800; font-size: 13px; border: none; box-shadow: 0 4px 20px rgba(24,24,27,0.25); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
                                 
-                                <div wire:loading.remove wire:target="kirimPengajuan">
+                                <span wire:loading.remove wire:target="kirimPengajuan">
                                     Kirim Pengajuan
-                                </div>
+                                </span>
                                 
-                                <div wire:loading.flex wire:target="kirimPengajuan" style="align-items: center; gap: 8px;" x-cloak>
+                                <span wire:loading.flex wire:target="kirimPengajuan" style="align-items: center; gap: 8px;" x-cloak>
+                                    <svg style="animation: spin 1s linear infinite; height: 16px; width: 16px; color: white;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle style="opacity: 0.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path style="opacity: 0.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                                     Mengunggah File...
-                                </div>
+                                </span>
                                 
                             </button>
                             <style>@keyframes spin { 100% { transform: rotate(360deg); } }</style>
