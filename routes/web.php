@@ -754,6 +754,17 @@ Route::get('/verifikasi-surat/panggilan', function (Request $request) {
 
 Route::get('/v/{token}', function ($token) {
     
+    // --- TAMBAHAN UNTUK VALIDASI KARTU PELAJAR (DATABASE QUERY O(1)) ---
+    // Karena Kartu Pelajar sudah menggunakan database, kita letakkan paling atas agar sangat cepat
+    $siswa = \App\Models\Siswa::where('token_validasi', $token)->first();
+
+    if ($siswa) {
+        // Langsung lempar ke rute validasi dengan membawa token dari database
+        return redirect('/validasi/kartu-pelajar/' . $siswa->id . '?token=' . $token);
+    }
+    // -------------------------------------------------------------------
+
+    // Cek Surat Dispensasi
     $suratDispensasi = \App\Models\SuratDispensasi::get()->first(function($s) use ($token) {
         $hash = strtoupper(substr(md5($s->nomor_surat_lengkap . config('app.key')), 0, 6));
         return $hash === $token || $s->token === $token;
@@ -764,6 +775,7 @@ Route::get('/v/{token}', function ($token) {
         return redirect('/verifikasi-surat/dispensasi?nomor=' . urlencode($suratDispensasi->nomor_surat_lengkap) . '&token=' . $tokenLama);
     }
 
+    // Cek Surat Panggilan
     $suratPanggilan = \App\Models\SuratPanggilan::get()->first(function($s) use ($token) {
         $hash = strtoupper(substr(md5($s->nomor_surat . config('app.key')), 0, 6));
         return $hash === $token || $s->token === $token;
@@ -774,6 +786,7 @@ Route::get('/v/{token}', function ($token) {
         return redirect('/verifikasi-surat/panggilan?nomor=' . urlencode($suratPanggilan->nomor_surat) . '&token=' . $tokenLama);
     }
 
+    // Cek Surat Keterangan Aktif
     $suratAktif = \App\Models\SuratKeteranganAktif::get()->first(function($s) use ($token) {
         $hash = strtoupper(substr(md5($s->nomor_surat . config('app.key')), 0, 6));
         return $hash === $token || $s->token === $token;
@@ -808,3 +821,20 @@ Route::get('/cetak/keterangan-aktif/{id}', function ($id) {
     $surat = \App\Models\SuratKeteranganAktif::with(['siswa.kelas', 'penandatangan'])->findOrFail($id);
     return view('cetak.surat-keterangan-aktif', compact('surat'));
 })->name('cetak.keterangan-aktif');
+
+Route::get('/validasi/kartu-pelajar/{id}', function ($id, \Illuminate\Http\Request $request) {
+    $token = $request->query('token');
+    
+    if (!$token) abort(404, 'Akses verifikasi tidak sah.');
+
+    $siswa = \App\Models\Siswa::with('kelas')->findOrFail($id);
+    
+    // Validasi kecocokan token dengan kolom di database
+    if ($siswa->token_validasi !== $token) {
+        abort(403, 'AKSES DITOLAK: Token verifikasi kartu pelajar tidak valid atau telah usang.');
+    }
+
+    $pengaturan = \Illuminate\Support\Facades\Schema::hasTable('pengaturan') ? \App\Models\Pengaturan::first() : null;
+
+    return view('cetak.verifikasi-kartu-pelajar', compact('siswa', 'pengaturan'));
+})->name('verifikasi.kartu-pelajar');

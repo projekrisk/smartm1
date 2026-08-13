@@ -360,6 +360,15 @@ class SiswaResource extends Resource
                                         'Wafat' => 'gray',
                                         default => 'primary',
                                     }),
+                                Infolists\Components\TextEntry::make('token_validasi')
+                                    ->label('Token QR Kartu')
+                                    ->badge()
+                                    ->color('info')
+                                    ->icon('heroicon-m-qr-code')
+                                    ->copyable()
+                                    ->copyMessage('Token disalin ke clipboard')
+                                    ->copyMessageDuration(1500)
+                                    ->default('Belum Di-generate'),
                             ]),
                         ])->from('md'),
                     ]),

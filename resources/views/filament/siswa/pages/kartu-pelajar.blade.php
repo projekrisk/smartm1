@@ -1,24 +1,85 @@
 <x-filament-panels::page.simple>
+    @php
+        $pengaturan = null;
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('pengaturan')) {
+                $pengaturan = \App\Models\Pengaturan::first();
+            }
+        } catch (\Exception $e) {}
+    @endphp
+
+    @if($pengaturan && $pengaturan->logo_sekolah)
+        <link rel="icon" href="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}" type="image/x-icon"/>
+    @endif
+
     <div wire:ignore>
+        <script>
+            // Memaksa warna status bar di mobile agar senada dengan background aplikasi
+            const metaThemeColor = document.createElement('meta');
+            metaThemeColor.name = 'theme-color';
+            metaThemeColor.content = '#F5F5F7';
+            document.head.appendChild(metaThemeColor);
+        </script>
+        
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900&display=swap" rel="stylesheet">
+        
         <style>
+            :root {
+                --ui-bg: #F5F5F7;
+                --ui-surface: #FFFFFF;
+                --ui-black: #18181B;
+                --ui-text: #27272A;
+                --ui-muted: #71717A;
+                --ui-border: #E4E4E7;
+            }
+
+            body { 
+                font-family: 'DM Sans', sans-serif !important; 
+                overflow: hidden !important; 
+                background-color: var(--ui-bg) !important; 
+                color: var(--ui-text) !important;
+                -webkit-font-smoothing: antialiased;
+                margin: 0; padding: 0;
+            }
+
             .fi-topbar, .fi-sidebar, .fi-header, .fi-simple-header, .fi-logo, .fi-simple-footer { display: none !important; }
             html, body, .fi-layout, .fi-simple-layout, .fi-main, .fi-simple-main, .fi-page, section { 
-                padding: 0 !important; margin: 0 !important; gap: 0 !important; height: 100vh !important; height: 100dvh !important; 
-                max-width: 100% !important; width: 100% !important; overflow: hidden !important; 
-                background-color: #e2e8f0 !important; box-shadow: none !important; border: none !important;
+                padding: 0 !important; margin: 0 !important; gap: 0 !important;
+                height: 100vh !important; height: 100dvh !important; 
+                max-width: 100% !important; width: 100% !important; 
+                background-color: transparent !important; box-shadow: none !important; border: none !important;
             }
-            .dark body, .dark .fi-layout, .dark .fi-simple-layout, .dark .fi-simple-main { background-color: #020617 !important; }
-            .android-app-container {
-                width: 100%; max-width: 414px; margin: 0 auto; height: 100vh; height: 100dvh; position: relative; 
+
+            .workspace-container {
+                width: 100%; max-width: 414px; margin: 0 auto;
                 position: fixed; top: 0; bottom: 0; left: 0; right: 0;
-                height: 100% !important; 
-                display: flex; flex-direction: column; box-shadow: 0 0 40px rgba(0,0,0,0.15); overflow: hidden; 
-                font-family: 'Inter', system-ui, sans-serif; transition: background-color 0.3s ease;
+                display: flex; flex-direction: column;
+                background-color: var(--ui-bg);
+                overflow: hidden;
             }
-            .theme-bg { background-color: #f8fafc; }
-            .dark .theme-bg { background-color: #0f172a; }
-            .android-content { flex: 1; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; -ms-overflow-style: none; display: flex; flex-direction: column; }
-            .android-content::-webkit-scrollbar { display: none; }
+
+            @media (min-width: 640px) {
+                .workspace-container {
+                    left: 50%; right: auto; transform: translateX(-50%);
+                    border-left: 1px solid var(--ui-border);
+                    border-right: 1px solid var(--ui-border);
+                    box-shadow: 0 0 50px rgba(0,0,0,0.05);
+                }
+            }
+
+            .workspace-content { 
+                flex: 1; overflow-y: auto; overflow-x: hidden; 
+                padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px)); 
+                scrollbar-width: none; 
+                display: flex; flex-direction: column; align-items: center;
+            }
+            .workspace-content::-webkit-scrollbar { display: none; }
+
+            .touch-scale { transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
+            .touch-scale:active { transform: scale(0.96); }
+
             * { box-sizing: border-box; }
             
             #print-card-wrapper {
@@ -41,118 +102,171 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     </div>
 
-    <div class="android-app-container theme-bg">
+    <div class="workspace-container selection:bg-zinc-900 selection:text-white">
         
-        <div style="flex-shrink: 0; background: linear-gradient(135deg, #2563eb, #3730a3); padding: 40px 24px 60px 24px; color: white; position: relative; z-index: 10; font-family: 'Inter', sans-serif;">
-            <a href="/siswa" style="position: absolute; top: 32px; left: 20px; background-color: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px); transition: transform 0.2s;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">
-                <svg style="width: 20px; height: 20px; color: white;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
+        <!-- Header -->
+        <div style="padding: 24px 20px 16px 20px; display: flex; align-items: center; gap: 16px; margin-top: env(safe-area-inset-top, 0px); background: var(--ui-bg); flex-shrink: 0; z-index: 10; border-bottom: 1px solid rgba(0,0,0,0.02); width: 100%;">
+            <a href="/siswa" class="touch-scale" style="width: 44px; height: 44px; border-radius: 50%; background: var(--ui-surface); border: 1px solid var(--ui-border); display: flex; align-items: center; justify-content: center; color: var(--ui-black); box-shadow: 0 2px 8px rgba(0,0,0,0.04); flex-shrink: 0; text-decoration: none;">
+                <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
             </a>
             
-            <div style="text-align: center; margin-top: 4px;">
-                <p style="font-size: 10px; font-weight: 800; letter-spacing: 1px; color: #bfdbfe; text-transform: uppercase; margin-bottom: 8px;">Identitas Digital</p>
-                <h1 style="font-size: 1.5rem; font-weight: 900; margin: 0; line-height: 1.2; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">Kartu Pelajar</h1>
+            <div>
+                <h1 style="font-size: 20px; font-weight: 900; color: var(--ui-black); margin: 0; letter-spacing: -0.5px; line-height: 1.2;">Kartu Pelajar</h1>
+                <div style="display: flex; align-items: center; gap: 6px; margin-top: 4px;">
+                    <div style="width: 6px; height: 6px; border-radius: 50%; background-color: var(--ui-black);"></div>
+                    <p style="font-size: 12px; font-weight: 600; color: var(--ui-muted); margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">Identitas Digital</p>
+                </div>
             </div>
         </div>
 
-        <div class="android-content theme-bg" style="border-top-left-radius: 2.5rem; border-top-right-radius: 2.5rem; margin-top: -30px; padding: 32px 20px 40px 20px; position: relative; z-index: 20; box-shadow: 0 -10px 25px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center;">
+        <div class="workspace-content">
+            <div style="width: 100%; padding: 24px 20px; display: flex; flex-direction: column; align-items: center;">
     
-
-            @php
-                $qrRawData = ($siswa->nisn ?? $siswa->nis) . ", " . $siswa->nama_lengkap . ", " . ($siswa->kelas->nama_kelas ?? '-');
-                $qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" . urlencode($qrRawData);
-                $tanggalLahir = $siswa->tanggal_lahir ? \Carbon\Carbon::parse($siswa->tanggal_lahir)->format('d-m-Y') : '-';
-                $namaSekolah = $pengaturan->nama_sekolah ?? 'SMAN 1 MALINGPING';
-                $namaKepsek = $pengaturan->nama_kepala_sekolah ?? 'NAMA KEPALA SEKOLAH';
-                $nipKepsek = $pengaturan->nip_kepala_sekolah ?? '-';
-            @endphp
-
-            <div id="loading-preview" class="animate-pulse-card" style="width: 100%; max-width: 324px; aspect-ratio: 324/514; background-color: #cbd5e1; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.05);">
-                <svg style="width: 32px; height: 32px; color: #94a3b8; animation: spin 1s linear infinite;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle style="opacity: 0.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path style="opacity: 0.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                <span style="font-size: 11px; font-weight: 800; color: #64748b; margin-top: 12px; font-family: 'Inter', sans-serif;">MEMUAT KARTU...</span>
-            </div>
-            
-            <img id="card-preview-image" src="" alt="Preview Kartu" style="display: none; width: 100%; max-width: 324px; height: auto; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); margin-bottom: 24px;">
-
-            <button id="download-btn" style="width: 100%; max-width: 324px; background: linear-gradient(135deg, #10b981, #059669); color: white; border-radius: 16px; padding: 16px; font-weight: 900; font-size: 14px; border: none; box-shadow: 0 8px 25px rgba(16,185,129,0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.1s, opacity 0.3s; opacity: 0.5; font-family: 'Inter', sans-serif;" disabled>
-                <x-filament::icon icon="heroicon-s-arrow-down-tray" style="width: 20px; height: 20px;" />
-                SIMPAN KARTU (JPG)
-            </button>
-
-            <div id="print-card-wrapper">
-                <div id="canvas-target" style="width: 324px; height: 514px; background-color: #ffffff; border-radius: 20px; overflow: hidden; position: relative; border: 1px solid #cbd5e1; font-family: Arial, Helvetica, sans-serif;">
+                @php
+                    // --- AUTO-GENERATE TOKEN UNTUK SISWA LAMA ---
+                    // Jika siswa belum punya token (karena data lama), buatkan sekarang!
+                    if (empty($siswa->token_validasi)) {
+                        do {
+                            $newToken = strtoupper(substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 8));
+                        } while (\App\Models\Siswa::where('token_validasi', $newToken)->exists());
+                        
+                        // Gunakan metode DB::table() agar TIDAK men-trigger event 'updated' di Model.
+                        // Ini 100% aman dan tidak akan membuat data riwayat/surat baru.
+                        \Illuminate\Support\Facades\DB::table('siswa')
+                            ->where('id', $siswa->id)
+                            ->update(['token_validasi' => $newToken]);
+                            
+                        $siswa->token_validasi = $newToken; // Update data di memori saat ini
+                    }
+                    // ---------------------------------------------
                     
-                    <div style="position: absolute; top: 160px; left: 52px; width: 220px; height: 220px; opacity: 0.04; z-index: 0;">
+                    // Tautan URL Pendek untuk Validasi (mengambil langsung dari database)
+                    $qrRawData = url('/v/' . $siswa->token_validasi);
+                    $qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" . urlencode($qrRawData);
+                    
+                    $tanggalLahir = $siswa->tanggal_lahir ? \Carbon\Carbon::parse($siswa->tanggal_lahir)->format('d-m-Y') : '-';
+                    $namaSekolah = $pengaturan->nama_sekolah ?? 'SMAN 1 MALINGPING';
+                    $namaKepsek = $pengaturan->nama_kepala_sekolah ?? 'NAMA KEPALA SEKOLAH';
+                    $nipKepsek = $pengaturan->nip_kepala_sekolah ?? '-';
+                @endphp
+
+                <!-- Loading State Preview -->
+                <div id="loading-preview" class="animate-pulse-card" style="width: 100%; max-width: 324px; aspect-ratio: 324/514; background-color: #E4E4E7; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05);">
+                    <svg style="width: 32px; height: 32px; color: var(--ui-muted); animation: spin 1s linear infinite;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle style="opacity: 0.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path style="opacity: 0.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                    <span style="font-size: 11px; font-weight: 800; color: var(--ui-muted); margin-top: 12px; font-family: 'DM Sans', sans-serif; text-transform: uppercase; letter-spacing: 1px;">Merender Kartu...</span>
+                </div>
+                
+                <!-- Hasil Render Gambar Kartu -->
+                <img id="card-preview-image" src="" alt="Preview Kartu" style="display: none; width: 100%; max-width: 324px; height: auto; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.15); margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.05);">
+
+                <!-- Tombol Unduh -->
+                <button id="download-btn" class="touch-scale" style="width: 100%; max-width: 324px; background: var(--ui-black); color: white; border-radius: 100px; padding: 16px; font-weight: 800; font-size: 13px; border: none; box-shadow: 0 4px 20px rgba(24,24,27,0.25); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: opacity 0.3s; opacity: 0.5; font-family: 'DM Sans', sans-serif; text-transform: uppercase; letter-spacing: 0.5px;" disabled>
+                    <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"></path></svg>
+                    Simpan Ke Galeri
+                </button>
+
+            </div>
+
+            <!-- KANVAS RENDER KARTU (Disembunyikan dari layar, hanya untuk di-capture) -->
+            <div id="print-card-wrapper">
+                <!-- Target Capture 324x514 -->
+                <div id="canvas-target" style="width: 324px; height: 514px; background-color: #FFFFFF; border-radius: 20px; overflow: hidden; position: relative; font-family: Arial, Helvetica, sans-serif;">
+                    
+                    <!-- Latar Belakang Kartu (Hitam Premium) -->
+                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(145deg, #18181B 0%, #27272A 100%); z-index: 1;"></div>
+                    
+                    <!-- Watermark Logo -->
+                    <div style="position: absolute; top: 150px; right: -50px; width: 280px; height: 280px; opacity: 0.03; z-index: 2; pointer-events: none;">
                         @if($pengaturan && $pengaturan->logo_sekolah)
-                            <img src="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}" crossorigin="anonymous" style="width: 100%; height: 100%; object-fit: contain; filter: grayscale(100%);">
+                            <img src="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}" crossorigin="anonymous" style="width: 100%; height: 100%; object-fit: contain; filter: grayscale(100%) contrast(200%);">
                         @endif
                     </div>
 
-                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 120px; background: linear-gradient(135deg, #2563eb, #3730a3); border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; z-index: 10;">
-                        <div style="position: absolute; top: 16px; left: 20px; width: 46px; height: 46px; background: white; border-radius: 50%; padding: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                    <!-- Dekorasi Lingkaran Abstrak -->
+                    <div style="position: absolute; top: -50px; right: -30px; width: 150px; height: 150px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%); z-index: 3;"></div>
+
+                    <!-- Header Kartu -->
+                    <div style="position: absolute; top: 0; left: 0; width: 100%; padding: 24px 20px; display: flex; align-items: center; z-index: 10;">
+                        <div style="width: 42px; height: 42px; background: rgba(255,255,255,0.1); border-radius: 12px; padding: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
                             @if($pengaturan && $pengaturan->logo_sekolah)
                                 <img src="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}" crossorigin="anonymous" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
-                            @else
-                                <div style="width:100%; height:100%; background-color:#2563eb; border-radius:50%;"></div>
                             @endif
                         </div>
-                        <div style="position: absolute; top: 10px; left: 76px; right: 20px; text-align: left; color: white;">
-                            <div style="font-size: 14px; font-weight: bold; letter-spacing: 2px; margin-bottom: 2px;">KARTU PELAJAR</div>
-                            <div style="font-size: 16px; font-weight: bold; line-height: 1.2; text-transform: uppercase;">{{ $namaSekolah }}</div>
+                        <div style="margin-left: 14px; color: white;">
+                            <div style="font-size: 10px; font-weight: bold; letter-spacing: 2px; color: rgba(255,255,255,0.6); margin-bottom: 2px;">IDENTITAS SISWA</div>
+                            <div style="font-size: 13px; font-weight: 900; line-height: 1.2; text-transform: uppercase;">{{ $namaSekolah }}</div>
                         </div>
                     </div>
 
-                    <div style="position: absolute; top: 75px; left: 117px; width: 90px; height: 90px; border-radius: 50%; border: 4px solid #ffffff; background-color: #f1f5f9; z-index: 20; overflow: hidden; display: flex; justify-content: center; align-items: center;">
-                        @if($siswa->foto)
-                            <img src="{{ url('/uploads/' . $siswa->foto) }}" crossorigin="anonymous" alt="Foto" style="width: 100%; height: 100%; object-fit: cover;">
-                        @else
-                            <div style="font-size: 12px; font-weight: bold; color: #94a3b8;">FOTO</div>
-                        @endif
-                    </div>
-
-                   <div style="position: absolute; top: 160px; left: 0; width: 100%; text-align: center; z-index: 10;">
-                        <div style="font-size: 16px; font-weight: 900; color: #0f172a; text-transform: uppercase; line-height: 1.1; padding: 0 10px; margin-bottom: 10px;">{{ $siswa->nama_lengkap }}</div>
-                            
-                        <div style="width: 100%; text-align: center; margin-top: 6px;">
-                            <span style="display: inline-block; height: 24px; line-height: 10px; padding: 0 14px; font-size: 11px; font-weight: 800; color: #2563eb; background-color: #eff6ff; border-radius: 12px; border: 1px solid #bfdbfe; vertical-align: middle;">
-                                KELAS {{ $siswa->kelas->nama_kelas ?? '-' }}
-                            </span>
+                    <!-- Profil, Nama, NIS & NISN -->
+                    <div style="position: absolute; top: 90px; left: 24px; display: flex; align-items: center; gap: 14px; z-index: 10;">
+                        <div style="width: 72px; height: 72px; border-radius: 16px; background-color: #3F3F46; border: 2px solid rgba(255,255,255,0.2); overflow: hidden; display: flex; justify-content: center; align-items: center; flex-shrink: 0;">
+                            @if($siswa->foto)
+                                <img src="{{ url('/uploads/' . $siswa->foto) }}" crossorigin="anonymous" alt="Foto" style="width: 100%; height: 100%; object-fit: cover;">
+                            @else
+                                <div style="font-size: 10px; font-weight: bold; color: rgba(255,255,255,0.5);">NO FOTO</div>
+                            @endif
                         </div>
-                    </div>
-
-                    <div style="position: absolute; top: 245px; left: 24px; right: 24px; z-index: 10;">
-                        <div style="margin-bottom: 8px;">
-                            <div style="font-size: 9px; font-weight: bold; color: #64748b; text-transform: uppercase;">Tempat, Tgl Lahir</div>
-                            <div style="font-size: 12px; font-weight: bold; color: #000000; margin-top: 1px;">{{ $siswa->tempat_lahir ?? '-' }}, {{ $tanggalLahir }}</div>
-                        </div>
-                        <div style="display: flex; gap: 16px; margin-bottom: 8px;">
-                            <div style="flex: 1;">
-                                <div style="font-size: 9px; font-weight: bold; color: #64748b; text-transform: uppercase;">NIS</div>
-                                <div style="font-size: 12px; font-weight: bold; color: #000000; margin-top: 1px;">{{ $siswa->nis }}</div>
-                            </div>
-                            <div style="flex: 1;">
-                                <div style="font-size: 9px; font-weight: bold; color: #64748b; text-transform: uppercase;">NISN</div>
-                                <div style="font-size: 12px; font-weight: bold; color: #000000; margin-top: 1px;">{{ $siswa->nisn ?? '-' }}</div>
+                        <div style="color: white; flex: 1;">
+                            <div style="font-size: 16px; font-weight: 900; line-height: 1.2; margin-bottom: 4px;">{{ ucwords(strtolower($siswa->nama_lengkap)) }}</div>
+                            <div style="font-size: 10px; font-weight: 600; letter-spacing: 0.5px; color: rgba(255,255,255,0.8);">
+                                {{ $siswa->nis ?? '-' }} / {{ $siswa->nisn ?? '-' }}
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Informasi Detail Biodata -->
+                    <div style="position: absolute; top: 190px; left: 24px; right: 24px; z-index: 10; display: flex; flex-direction: column; gap: 12px;">
+                        
                         <div>
-                            <div style="font-size: 9px; font-weight: bold; color: #64748b; text-transform: uppercase;">Alamat Lengkap</div>
-                            <div style="font-size: 11px; font-weight: bold; color: #000000; line-height: 1.3; margin-top: 1px;">{{ $siswa->alamat ?? '-' }} RT {{ $siswa->rt ?? '-' }}/RW {{ $siswa->rw ?? '-' }}, {{ $siswa->kecamatan ?? '-' }}</div>
+                            <div style="font-size: 9px; font-weight: bold; color: rgba(255,255,255,0.5); text-transform: uppercase; margin-bottom: 2px;">Tempat, Tgl Lahir</div>
+                            <div style="font-size: 12px; font-weight: bold; color: #FFFFFF;">{{ $siswa->tempat_lahir ?? '-' }}, {{ $tanggalLahir }}</div>
                         </div>
+                        
+                        <div style="display: flex; gap: 12px;">
+                            <div style="flex: 1;">
+                                <div style="font-size: 9px; font-weight: bold; color: rgba(255,255,255,0.5); text-transform: uppercase; margin-bottom: 2px;">Kelas</div>
+                                <div style="font-size: 12px; font-weight: bold; color: #FFFFFF;">{{ $siswa->kelas->nama_kelas ?? '-' }}</div>
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="font-size: 9px; font-weight: bold; color: rgba(255,255,255,0.5); text-transform: uppercase; margin-bottom: 2px;">Jenis Kelamin</div>
+                                <div style="font-size: 12px; font-weight: bold; color: #FFFFFF;">{{ $siswa->jenis_kelamin === 'Laki-laki' ? 'Laki-laki' : ($siswa->jenis_kelamin === 'Perempuan' ? 'Perempuan' : '-') }}</div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div style="font-size: 9px; font-weight: bold; color: rgba(255,255,255,0.5); text-transform: uppercase; margin-bottom: 2px;">Alamat Lengkap</div>
+                            <div style="font-size: 11px; font-weight: bold; color: rgba(255,255,255,0.9); line-height: 1.4;">
+                                {{ $siswa->alamat ?? '-' }}<br>
+                                RT {{ $siswa->rt ?? '-' }}/RW {{ $siswa->rw ?? '-' }}, {{ $siswa->kecamatan ?? '-' }}
+                            </div>
+                        </div>
+
                     </div>
 
-                    <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 110px; padding: 14px 24px; display: flex; justify-content: space-between; align-items: flex-end; z-index: 10; background-color: #ffffff;">
-                        <div style="width: 95px; background: white; padding: 3px; border: 1px solid #cbd5e1; border-radius: 6px; flex-shrink: 0;">
-                            <img src="{{ $qrCodeUrl }}" crossorigin="anonymous" alt="QR" style="width: 100%; height: 100%;">
+                    <!-- Footer Kartu (Putih Area - Area Tanda Tangan & QR) -->
+                    <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 110px; background-color: #FFFFFF; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; z-index: 10;">
+                        
+                        <!-- QR Code Validasi -->
+                        <div style="width: 76px; height: 76px; background: white; padding: 4px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                            <!-- Menampilkan Gambar QR hasil generate Server -->
+                            <img src="{{ $qrCodeUrl }}" crossorigin="anonymous" alt="QR Validasi" style="width: 100%; height: 100%;">
                         </div>
-                        <div style="text-align: center; padding-bottom: 2px;">
-                            <div style="font-size: 9px; font-weight: bold; color: #475569; margin-bottom: 26px;">Mengetahui,<br>Kepala Sekolah</div>
-                            <div style="font-size: 11px; font-weight: bold; color: #000000; border-b: 1px solid #000000; padding-bottom: 2px; display: inline-block; text-transform: uppercase;">{{ $namaKepsek }}</div>
-                            <div style="font-size: 9px; font-weight: bold; color: #475569; margin-top: 3px;">NIP. {{ $nipKepsek }}</div>
+                        
+                        <!-- Tanda Tangan Kepala Sekolah -->
+                        <div style="text-align: right; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; padding-bottom: 16px;">
+                            <div style="font-size: 9px; font-weight: bold; color: #71717A; margin-bottom: 24px;">Kepala Sekolah</div>
+                            <div>
+                                <div style="font-size: 11px; font-weight: 900; color: #18181B; text-transform: uppercase; border-bottom: 1px solid #18181B; padding-bottom: 2px; display: inline-block;">{{ $namaKepsek }}</div>
+                            </div>
+                            <div style="font-size: 9px; font-weight: bold; color: #71717A; margin-top: 4px;">NIP. {{ $nipKepsek }}</div>
                         </div>
+
                     </div>
+
                 </div>
             </div>
-
+            
         </div>
     </div>
 
@@ -162,35 +276,38 @@
         window.onload = function() {
             const cardTarget = document.getElementById('canvas-target');
             
-            html2canvas(cardTarget, { 
-                scale: 3, 
-                useCORS: true,
-                allowTaint: true,
-                backgroundColor: '#ffffff' 
-            }).then(canvas => {
-                generatedCardDataUrl = canvas.toDataURL('image/jpeg', 1.0);
-                
-                const imgPreview = document.getElementById('card-preview-image');
-                imgPreview.src = generatedCardDataUrl;
-                
-                document.getElementById('loading-preview').style.display = 'none';
-                imgPreview.style.display = 'block';
+            // Beri sedikit waktu agar font dan gambar (khususnya QR dari eksternal) termuat
+            setTimeout(() => {
+                html2canvas(cardTarget, { 
+                    scale: 3, 
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: null // Transparan agar sudut melengkung kartu tidak tertutup warna solid
+                }).then(canvas => {
+                    generatedCardDataUrl = canvas.toDataURL('image/png', 1.0);
+                    
+                    const imgPreview = document.getElementById('card-preview-image');
+                    imgPreview.src = generatedCardDataUrl;
+                    
+                    document.getElementById('loading-preview').style.display = 'none';
+                    imgPreview.style.display = 'block';
 
-                const downloadBtn = document.getElementById('download-btn');
-                downloadBtn.disabled = false;
-                downloadBtn.style.opacity = '1';
-                
-                downloadBtn.onclick = function() {
-                    let link = document.createElement('a');
-                    link.download = 'Kartu_Pelajar_{{ $siswa->nisn ?? $siswa->nis }}.jpg';
-                    link.href = generatedCardDataUrl;
-                    link.click();
-                };
-            }).catch(err => {
-                alert('Gagal merender kartu. Pastikan koneksi internet stabil.');
-                document.getElementById('loading-preview').innerHTML = '<span style="color:red; font-size:12px;">Gagal Memuat</span>';
-                console.error(err);
-            });
+                    const downloadBtn = document.getElementById('download-btn');
+                    downloadBtn.disabled = false;
+                    downloadBtn.style.opacity = '1';
+                    
+                    downloadBtn.onclick = function() {
+                        let link = document.createElement('a');
+                        link.download = 'Kartu_Pelajar_{{ $siswa->nisn ?? $siswa->nis }}.png';
+                        link.href = generatedCardDataUrl;
+                        link.click();
+                    };
+                }).catch(err => {
+                    alert('Gagal merender kartu. Pastikan koneksi internet stabil.');
+                    document.getElementById('loading-preview').innerHTML = '<span style="color:red; font-size:12px; font-weight:bold; font-family:sans-serif;">GAGAL MEMUAT GAMBAR</span>';
+                    console.error(err);
+                });
+            }, 1000); // 1 detik delay untuk memastikan QR ter-render sempurna sebelum di-capture
         };
     </script>
 </x-filament-panels::page.simple>
