@@ -36,6 +36,7 @@ class UbahPasswordSiswa extends Page implements HasForms
                 TextInput::make('new_password')
                     ->label('Masukkan Password Baru')
                     ->password()
+                    ->revealable()
                     ->required()
                     ->minLength(6)
                     ->same('new_password_confirmation')
@@ -43,6 +44,7 @@ class UbahPasswordSiswa extends Page implements HasForms
                 TextInput::make('new_password_confirmation')
                     ->label('Ulangi Password Baru')
                     ->password()
+                    ->revealable()
                     ->required(),
             ])
             ->statePath('data');
@@ -70,5 +72,14 @@ class UbahPasswordSiswa extends Page implements HasForms
             ->send();
 
         $this->redirect('/siswa');
+    }
+
+    public function lewati()
+    {
+        // Beri tanda (session flag) bahwa siswa memilih untuk mengabaikan ubah password sementara
+        session()->put('skip_password_change', true);
+        
+        // Arahkan kembali ke dasbor
+        return redirect()->to('/siswa');
     }
 }
