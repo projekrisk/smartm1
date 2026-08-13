@@ -233,7 +233,7 @@
 
                 <div class="bg-gray-50/80 p-5 rounded-2xl border border-gray-100 text-[13px] font-bold text-uimuted flex items-start gap-3 mt-4">
                     <svg class="w-5 h-5 text-gray-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    <p>Sistem dilindungi dengan enkripsi berlapis. Untuk kendala lupa kata sandi atau permasalahan akses sistem, silakan menghubungi Administrator Sekolah.</p>
+                    <p>Untuk kendala lupa kata sandi atau permasalahan akses sistem, silakan menghubungi Administrator Sekolah.</p>
                 </div>
             </div>
         </div>
