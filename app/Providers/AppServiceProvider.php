@@ -26,9 +26,9 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
 
-        FilamentView::registerRenderHook(
-            PanelsRenderHook::BODY_END,
-            fn (): \Illuminate\Contracts\View\View => view('components.pwa-prompt'),
-        );
+//        FilamentView::registerRenderHook(
+//            PanelsRenderHook::BODY_END,
+//           fn (): \Illuminate\Contracts\View\View => view('components.pwa-prompt'),
+//        );
     }
 }
