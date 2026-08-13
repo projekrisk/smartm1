@@ -8,7 +8,7 @@
         } catch (\Exception $e) {}
     @endphp
 
-    @if($pengaturan &&$pengaturan->logo_sekolah)
+    @if($pengaturan && $pengaturan->logo_sekolah)
         <link rel="icon" href="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}" type="image/x-icon"/>
     @endif
 
@@ -105,37 +105,7 @@
         <div class="workspace-content">
             <div style="padding: 12px 20px 24px 20px; display: flex; flex-direction: column; gap: 12px;">
                 
-                @forelse($dokumens as$dokumen)
-                    <div class="ambient-shadow" style="background: var(--ui-surface); border-radius: 20px; padding: 16px; border: 1px solid rgba(0,0,0,0.02);">
-                        <div style="display: flex; gap: 14px;">
-                            <div style="width: 40px; height: 40px; border-radius: 12px; background-color: var(--ui-bg); color: var(--ui-black); display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid var(--ui-border);">
-                                @if($dokumen->jenis_sumber === 'File')
-                                    <x-filament::icon icon="heroicon-s-document-arrow-down" style="width: 20px; height: 20px;" />
-                                @else
-                                    <x-filament::icon icon="heroicon-s-link" style="width: 20px; height: 20px;" />
-                                @endif
-                            </div>
-                            
-                            <div style="flex: 1; min-width: 0;">
-                                <h4 style="font-weight: 800; font-size: 14px; color: var(--ui-black); margin: 0 0 4px 0; line-height: 1.3;">{{ $dokumen->judul }}</h4>
-                                <p style="font-size: 12px; color: var(--ui-muted); margin: 0; line-height: 1.5; font-weight: 500;">{{ $dokumen->keterangan ?? 'Tidak ada keterangan.' }}</p>
-                            </div>
-                        </div>
-
-                        <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--ui-border); display: flex; align-items: center; justify-content: space-between;">
-                            <span style="font-size: 10px; font-weight: 700; color: var(--ui-muted);">{{ $dokumen->created_at->isoFormat('D MMMM Y') }}</span>
-                            
-                            <a href="{{ $dokumen->jenis_sumber === 'File' ? url('/uploads/' . $dokumen->file_path) :$dokumen->url_link }}" target="_blank" class="touch-scale" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background-color: var(--ui-black); color: white; border-radius: 100px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; text-decoration: none;">
-                                @if($dokumen->jenis_sumber === 'File')
-                                    Unduh File
-                                @else
-                                    Buka Tautan
-                                @endif
-                                <svg style="width: 12px; height: 12px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"></path></svg>
-                            </a>
-                        </div>
-                    </div>
-                @empty
+                @if($dokumens->isEmpty())
                     <div style="text-align: center; padding: 48px 20px; border: 1px dashed var(--ui-border); border-radius: 24px; margin-top: 12px;">
                         <div style="width: 56px; height: 56px; border-radius: 50%; background-color: var(--ui-surface); color: var(--ui-muted); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
                             <svg style="width: 24px; height: 24px;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
@@ -143,7 +113,39 @@
                         <h4 style="color: var(--ui-black); font-size: 14px; font-weight: 800; margin: 0 0 4px 0;">Belum Ada Arsip</h4>
                         <p style="color: var(--ui-muted); font-size: 12px; font-weight: 500; margin: 0;">Sekolah belum mengunggah dokumen atau surat edaran.</p>
                     </div>
-                @endforelse
+                @else
+                    @foreach($dokumens as $dokumen)
+                        <div class="ambient-shadow" style="background: var(--ui-surface); border-radius: 20px; padding: 16px; border: 1px solid rgba(0,0,0,0.02);">
+                            <div style="display: flex; gap: 14px;">
+                                <div style="width: 40px; height: 40px; border-radius: 12px; background-color: var(--ui-bg); color: var(--ui-black); display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid var(--ui-border);">
+                                    @if($dokumen->jenis_sumber === 'File')
+                                        <x-filament::icon icon="heroicon-s-document-arrow-down" style="width: 20px; height: 20px;" />
+                                    @else
+                                        <x-filament::icon icon="heroicon-s-link" style="width: 20px; height: 20px;" />
+                                    @endif
+                                </div>
+                                
+                                <div style="flex: 1; min-width: 0;">
+                                    <h4 style="font-weight: 800; font-size: 14px; color: var(--ui-black); margin: 0 0 4px 0; line-height: 1.3;">{{ $dokumen->judul }}</h4>
+                                    <p style="font-size: 12px; color: var(--ui-muted); margin: 0; line-height: 1.5; font-weight: 500;">{{ $dokumen->keterangan ?? 'Tidak ada keterangan.' }}</p>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--ui-border); display: flex; align-items: center; justify-content: space-between;">
+                                <span style="font-size: 10px; font-weight: 700; color: var(--ui-muted);">{{ $dokumen->created_at->isoFormat('D MMMM Y') }}</span>
+                                
+                                <a href="{{ $dokumen->jenis_sumber === 'File' ? url('/uploads/' . $dokumen->file_path) : $dokumen->url_link }}" target="_blank" class="touch-scale" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; background-color: var(--ui-black); color: white; border-radius: 100px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; text-decoration: none;">
+                                    @if($dokumen->jenis_sumber === 'File')
+                                        Unduh File
+                                    @else
+                                        Buka Tautan
+                                    @endif
+                                    <svg style="width: 12px; height: 12px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"></path></svg>
+                                </a>
+                            </div>
+                        </div>
+                    @endforeach
+                @endif
             </div>
             
         </div>

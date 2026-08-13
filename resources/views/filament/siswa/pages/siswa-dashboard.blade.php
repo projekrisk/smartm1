@@ -180,7 +180,7 @@
                             
                             <a href="/siswa/kartu-pelajar" class="touch-scale" style="background: white; color: var(--ui-black); padding: 8px 12px; border-radius: 100px; font-size: 11px; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
                                 <x-filament::icon icon="heroicon-s-qr-code" style="width: 14px; height: 14px;" />
-                                QR Akses
+                                Kartu
                             </a>
                         </div>
                     </div>
