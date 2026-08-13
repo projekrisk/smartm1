@@ -19,7 +19,6 @@ class ForceStudentPasswordChange
         }
 
         if ($user && $user->peran === 'siswa') {
-            // Cek apakah password masih default (sama dengan username) DAN belum menekan tombol Lewati
             if (Hash::check($user->username, $user->password) && !session()->has('skip_password_change')) {
                 
                 if ($request->is('siswa/ubah-password') || $request->is('siswa/logout')) {

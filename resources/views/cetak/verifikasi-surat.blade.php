@@ -50,10 +50,8 @@
         }
     @endphp
 
-    <!-- Container Lebar Desktop (max-w-3xl) -->
     <div class="w-full max-w-3xl bg-uisurface rounded-[32px] shadow-[0_20px_60px_rgba(0,0,0,0.05)] border border-uiborder overflow-hidden flex flex-col">
         
-        <!-- Top Bar Klasik -->
         <div class="px-6 sm:px-8 py-5 sm:py-6 border-b border-uiborder bg-gray-50/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div class="flex items-center gap-4">
                 <div class="w-12 h-12 rounded-full flex items-center justify-center shrink-0 bg-emerald-100 text-emerald-600">
@@ -72,20 +70,17 @@
                 </div>
             </div>
             
-            <!-- Logo / Nama Sekolah -->
+             Logo / Nama Sekolah -->
             <div class="text-left sm:text-right w-full sm:w-auto">
                 <p class="text-[11px] font-bold text-uimuted uppercase tracking-wider">Pangkalan Data</p>
                 <p class="text-[14px] font-black text-uiblack">{{ $pengaturan->nama_sekolah ?? 'SMA Negeri 1 Malingping' }}</p>
             </div>
         </div>
 
-        <!-- Area Konten (Dibagi Kolom) -->
         <div class="p-6 sm:p-10 flex flex-col gap-8">
             
-            <!-- Headline Nama Kegiatan -->
             <div class="pb-6 border-b border-uiborder">
                 <p class="text-[12px] font-bold text-uimuted uppercase tracking-wider mb-2">Kegiatan / Perihal Dispensasi:</p>
-                <!-- NAMA KEGIATAN DENGAN PROPER CASE & FONT 22pt -->
                 <h2 class="text-[22px] sm:text-[22pt] font-black text-uiblack tracking-tight leading-tight break-words">
                     {{ ucwords(strtolower($surat->nama_kegiatan)) }}
                 </h2>
@@ -100,7 +95,6 @@
                 </div>
             </div>
 
-            <!-- Grid Detail Data Surat (2 Kolom) -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
                 
                 <div class="flex flex-col">
@@ -129,7 +123,6 @@
                     </span>
                 </div>
 
-                <!-- Box Daftar Siswa -->
                 <div class="flex flex-col md:col-span-2 mt-2 pt-6 border-t border-uiborder">
                     <span class="text-[12px] font-bold text-uimuted uppercase tracking-wider mb-3">Peserta Didik Terlampir ({{ $surat->siswa->count() }} Siswa)</span>
                     <div class="bg-gray-50/70 border border-uiborder rounded-[16px] p-4 max-h-48 overflow-y-auto custom-scrollbar">
@@ -156,7 +149,6 @@
 
         </div>
 
-        <!-- Area Bawah / Tombol -->
         <div class="px-6 pb-6 sm:px-10 sm:pb-8 pt-0 flex justify-center sm:justify-start">
             <a href="{{ url('/') }}" class="w-full sm:w-auto bg-uiblack hover:bg-black transition-colors text-white rounded-[100px] py-3.5 px-8 font-bold text-[14px] uppercase tracking-wide shadow-[0_8px_25px_rgba(24,24,27,0.2)] text-center">
                 Kembali ke Beranda

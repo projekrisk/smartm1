@@ -22,7 +22,6 @@ class Siswa extends Model implements HasAvatar
     
     protected static function booted()
     {
-        // 1. AUTO-GENERATE TOKEN VALIDASI (8 Karakter Acak)
         static::creating(function ($siswa) {
             if (empty($siswa->token_validasi)) {
                 do {
@@ -33,7 +32,6 @@ class Siswa extends Model implements HasAvatar
             }
         });
 
-        // 2. RIWAYAT KELAS KETIKA SISWA BARU DIBUAT
         static::created(function ($siswa) {
             if ($siswa->kelas_id) {
                 if (self::$tahunAktifCache === null) {
@@ -51,7 +49,6 @@ class Siswa extends Model implements HasAvatar
             }
         });
 
-        // 3. RIWAYAT KELAS KETIKA KELAS SISWA DIUBAH
         static::updated(function ($siswa) {
             if ($siswa->isDirty('kelas_id') && $siswa->kelas_id !== null) {
                 

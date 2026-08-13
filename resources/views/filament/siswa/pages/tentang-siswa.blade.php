@@ -10,7 +10,6 @@
 
     <div wire:ignore>
         <script>
-            // Memaksa warna status bar di mobile agar senada dengan background aplikasi
             const metaThemeColor = document.createElement('meta');
             metaThemeColor.name = 'theme-color';
             metaThemeColor.content = '#F5F5F7';
@@ -43,7 +42,6 @@
         </script>
         <style>
             :root {
-                /* Memaksa elemen native HP (Dropdown, Keyboard) menggunakan Light Mode */
                 color-scheme: light !important; 
                 --ui-bg: #F5F5F7;
                 --ui-surface: #FFFFFF;
@@ -62,7 +60,6 @@
                 margin: 0; padding: 0;
             }
 
-            /* Hide Filament default UI elements */
             .fi-topbar, .fi-sidebar, .fi-header, .fi-simple-header, .fi-logo, .fi-simple-footer { display: none !important; }
             html, body, .fi-layout, .fi-simple-layout, .fi-main, .fi-simple-main, .fi-page, section { 
                 padding: 0 !important; margin: 0 !important; gap: 0 !important;
@@ -71,12 +68,10 @@
                 background-color: transparent !important; box-shadow: none !important; border: none !important;
             }
 
-            /* Menghapus gap bawaan section form */
             section.grid.auto-cols-fr.gap-y-6, .fi-simple-main-ctn, .fi-main-ctn { 
                 gap: 0 !important; padding: 0 !important; margin: 0 !important; 
             }
 
-            /* Main Mobile Workspace */
             .workspace-container {
                 width: 100%; max-width: 414px; margin: 0 auto;
                 position: fixed; top: 0; bottom: 0; left: 0; right: 0;
@@ -85,7 +80,6 @@
                 overflow: hidden;
             }
 
-            /* Desktop boundaries */
             @media (min-width: 640px) {
                 .workspace-container {
                     left: 50%; right: auto; transform: translateX(-50%);
@@ -95,7 +89,6 @@
                 }
             }
 
-            /* Scrollable Area */
             .workspace-content { 
                 flex: 1; overflow-y: auto; overflow-x: hidden; 
                 scrollbar-width: none; 
@@ -103,17 +96,14 @@
             }
             .workspace-content::-webkit-scrollbar { display: none; }
 
-            /* Touch Interactions */
             .touch-scale { transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
             .touch-scale:active { transform: scale(0.96); }
 
-            /* Override Form Filament agar Text Terlihat (Warna Hitam) */
             .review-form-wrapper .fi-fo-field-wrp label span,
             .review-form-wrapper fieldset legend span { color: var(--ui-black) !important; font-weight: 800 !important; font-size: 13px !important; letter-spacing: 0.02em; text-transform: uppercase; }
             .review-form-wrapper .fi-fo-field-wrp p { color: var(--ui-muted) !important; font-size: 12px !important; font-weight: 500 !important; margin-top: 4px !important;}
             .review-form-wrapper .fi-fo-field-wrp-error-message { color: #EF4444 !important; font-size: 12px !important; font-weight: 700 !important; }
             
-            /* Warna Teks pada Opsi Radio / Select / Bintang (Dalam Wrapper) */
             .review-form-wrapper .fi-fo-radio-option-label span,
             .review-form-wrapper .fi-fo-radio-option-label { color: var(--ui-black) !important; font-weight: 600 !important; }
             
@@ -142,15 +132,12 @@
                 font-weight: 600 !important;
             }
 
-            /* --- MENCEGAH BACKGROUND HITAM PADA DROPDOWN & SELECT --- */
             
-            /* 1. Paksa Native Select Option Putih */
             select option {
                 background-color: #FFFFFF !important;
                 color: #18181B !important;
             }
 
-            /* 2. Paksa Filament Custom Dropdown Putih */
             .fi-select-popover, 
             .fi-popover,
             .fi-popover-content,
@@ -207,7 +194,6 @@
 
     <div class="workspace-container selection:bg-zinc-900 selection:text-white" x-data="{ reviewModal: false, formBottomSheet: false, reviewNama: '', reviewKelas: '', reviewPesan: '', reviewRating: 5, reviewWaktu: '', reviewFoto: '' }">
         
-        <!-- Header -->
         <div style="padding: 24px 20px 16px 20px; display: flex; align-items: center; gap: 16px; margin-top: env(safe-area-inset-top, 0px); background: var(--ui-bg); flex-shrink: 0; z-index: 10; border-bottom: 1px solid rgba(0,0,0,0.02);">
             <a href="/siswa" class="touch-scale" style="width: 44px; height: 44px; border-radius: 50%; background: var(--ui-surface); border: 1px solid var(--ui-border); display: flex; align-items: center; justify-content: center; color: var(--ui-black); box-shadow: 0 2px 8px rgba(0,0,0,0.04); flex-shrink: 0; text-decoration: none;">
                 <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
@@ -225,7 +211,6 @@
         <div class="workspace-content">
             <div style="padding: 24px 20px;">
                 
-                <!-- Info Aplikasi Card -->
                 <div style="text-align: center; margin-bottom: 32px; background: var(--ui-surface); border-radius: 32px; padding: 32px 20px; border: 1px solid var(--ui-border); box-shadow: 0 10px 40px rgba(0,0,0,0.03);">
                     @if($pengaturan && $pengaturan->logo_sekolah)
                         <div style="width: 80px; height: 80px; border-radius: 24px; background: var(--ui-bg); padding: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; border: 1px solid var(--ui-border); box-shadow: 0 8px 20px rgba(0,0,0,0.05);">
@@ -241,7 +226,6 @@
                     <p style="font-size: 12px; margin-top: 16px; line-height: 1.6; color: var(--ui-text); font-weight: 500;">Platform manajemen edukasi terpadu untuk mendukung transparansi nilai, absensi, dan prestasi peserta didik.</p>
                 </div>
 
-                <!-- Testimoni Section -->
                 <div>
                     <h3 style="font-size: 14px; font-weight: 900; color: var(--ui-black); margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px;">
                         <x-filament::icon icon="heroicon-s-chat-bubble-left-right" style="width: 18px; height: 18px; color: var(--ui-muted);" />
@@ -319,14 +303,12 @@
             </div>
         </div>
         
-        <!-- FAB Add Review -->
         <button class="touch-scale" @click="formBottomSheet = true" style="position: absolute; bottom: 32px; right: 24px; width: 60px; height: 60px; background: var(--ui-black); color: white; border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(24,24,27,0.3); border: 2px solid var(--ui-surface); cursor: pointer; z-index: 50;">
             <svg style="width: 24px; height: 24px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
             </svg>
         </button>
 
-        <!-- Bottom Sheet Formulir Ulasan -->
         <div x-show="formBottomSheet" x-cloak 
              style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; z-index: 99999; background-color: rgba(0,0,0,0.4); backdrop-filter: blur(4px);"
              x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
@@ -383,7 +365,6 @@
             </div>
         </div>
 
-        <!-- Modal Detail Review -->
         <div x-show="reviewModal" x-cloak 
              style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; z-index: 99999; display: flex; align-items: center; justify-content: center; padding: 20px; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(4px);"
              x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"

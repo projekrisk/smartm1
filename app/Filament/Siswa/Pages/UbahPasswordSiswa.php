@@ -76,10 +76,8 @@ class UbahPasswordSiswa extends Page implements HasForms
 
     public function lewati()
     {
-        // Beri tanda (session flag) bahwa siswa memilih untuk mengabaikan ubah password sementara
         session()->put('skip_password_change', true);
         
-        // Arahkan kembali ke dasbor
         return redirect()->to('/siswa');
     }
 }

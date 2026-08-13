@@ -14,7 +14,6 @@
 
     <div wire:ignore>
         <script>
-            // Memaksa warna status bar di mobile agar senada dengan background aplikasi
             const metaThemeColor = document.createElement('meta');
             metaThemeColor.name = 'theme-color';
             metaThemeColor.content = '#F5F5F7';
@@ -87,7 +86,6 @@
 
     <div class="workspace-container selection:bg-zinc-900 selection:text-white" x-data="{ showLogoutSheet: false }">
         
-        <!-- Header -->
         <div style="padding: 24px 20px 16px 20px; display: flex; align-items: center; gap: 16px; margin-top: env(safe-area-inset-top, 0px); background: var(--ui-bg); flex-shrink: 0; z-index: 10; border-bottom: 1px solid rgba(0,0,0,0.02);">
             
             <div style="flex: 1;">
@@ -150,7 +148,6 @@
 
         </div>
 
-        <!-- Bottom Navbar -->
         <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-top: 1px solid rgba(0,0,0,0.05); display: flex; justify-content: space-around; padding: 12px 8px calc(12px + env(safe-area-inset-bottom, 0px)) 8px; z-index: 50;">
             <a href="/siswa" style="display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none; color: var(--ui-muted); flex: 1; transition: color 0.2s;">
                 <x-filament::icon icon="heroicon-o-home" style="width: 24px; height: 24px;" />
@@ -189,7 +186,6 @@
             </button>
         </div>
 
-        <!-- Logout Modal -->
         <div x-show="showLogoutSheet" x-cloak style="position: absolute; inset: 0; background-color: rgba(0,0,0,0.4); z-index: 99; backdrop-filter: blur(4px);" x-transition.opacity @click="showLogoutSheet = false"></div>
         
         <div x-show="showLogoutSheet" x-cloak style="position: absolute; bottom: 0; left: 0; right: 0; background-color: var(--ui-surface); border-top-left-radius: 28px; border-top-right-radius: 28px; z-index: 100; padding: 24px; padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 -20px 40px rgba(0,0,0,0.1);"

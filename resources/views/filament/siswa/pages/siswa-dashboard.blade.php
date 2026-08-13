@@ -1,7 +1,6 @@
 <x-filament-panels::page.simple>
     <div wire:ignore>
         <script>
-            // Memaksa warna status bar (baterai/sinyal) di mobile agar senada dengan background aplikasi
             const metaThemeColor = document.createElement('meta');
             metaThemeColor.name = 'theme-color';
             metaThemeColor.content = '#F5F5F7';
@@ -14,12 +13,12 @@
         
         <style>
             :root {
-                --ui-bg: #F5F5F7; /* Apple light gray */
+                --ui-bg: #F5F5F7;
                 --ui-surface: #FFFFFF;
-                --ui-black: #18181B; /* Zinc 900 */
-                --ui-text: #27272A; /* Zinc 800 */
-                --ui-muted: #71717A; /* Zinc 500 */
-                --ui-border: #E4E4E7; /* Zinc 200 */
+                --ui-black: #18181B;   
+                --ui-text: #27272A;
+                --ui-muted: #71717A; 
+                --ui-border: #E4E4E7; 
             }
 
             body { 
@@ -31,7 +30,6 @@
                 margin: 0; padding: 0;
             }
 
-            /* Hide Filament default UI elements completely */
             .fi-topbar, .fi-sidebar, .fi-header, .fi-simple-header, .fi-logo, .fi-simple-footer { display: none !important; }
             html, body, .fi-layout, .fi-simple-layout, .fi-main, .fi-simple-main, .fi-page, section { 
                 padding: 0 !important; margin: 0 !important; gap: 0 !important;
@@ -40,7 +38,6 @@
                 background-color: transparent !important; box-shadow: none !important; border: none !important;
             }
 
-            /* Main Mobile Workspace */
             .workspace-container {
                 width: 100%; max-width: 414px; margin: 0 auto;
                 position: fixed; top: 0; bottom: 0; left: 0; right: 0;
@@ -49,7 +46,6 @@
                 overflow: hidden;
             }
 
-            /* Desktop boundaries */
             @media (min-width: 640px) {
                 .workspace-container {
                     left: 50%; right: auto; transform: translateX(-50%);
@@ -59,7 +55,6 @@
                 }
             }
 
-            /* Scrollable Area */
             .workspace-content { 
                 flex: 1; overflow-y: auto; overflow-x: hidden; 
                 padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px)); 
@@ -67,7 +62,6 @@
             }
             .workspace-content::-webkit-scrollbar { display: none; }
 
-            /* Digital Pass Element */
             .digital-pass {
                 background: linear-gradient(135deg, #18181B 0%, #27272A 100%);
                 border-radius: 24px;
@@ -84,11 +78,9 @@
                 pointer-events: none;
             }
 
-            /* Touch Interactions */
             .touch-scale { transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
             .touch-scale:active { transform: scale(0.92); }
 
-            /* Custom Shadows */
             .ambient-shadow { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); }
         </style>
     </div>
@@ -120,7 +112,6 @@
          
         <div class="workspace-container">
             
-            <!-- iOS-style PWA Prompt -->
             <div x-show="showPwaPrompt" style="display: none; position: absolute; top: 16px; left: 16px; right: 16px; z-index: 100;" x-transition>
                 <div style="background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-radius: 100px; padding: 8px 8px 8px 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 24px rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.05);">
                     <div style="display: flex; align-items: center; gap: 10px;">
@@ -147,7 +138,6 @@
 
                 <div style="padding: 24px 20px 16px 20px; display: flex; flex-direction: column; gap: 20px;">
                     
-                    <!-- Clean Header -->
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: env(safe-area-inset-top, 0px);">
                         <div>
                             <p style="font-size: 13px; font-weight: 600; color: var(--ui-muted); margin: 0 0 2px 0;">{{ $greeting }}</p>
@@ -162,7 +152,6 @@
                         </a>
                     </div>
 
-                    <!-- Digital Identity Pass (Highly Efficient UX) -->
                     <div class="digital-pass">
                         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px;">
                             <div style="display: flex; flex-direction: column; gap: 4px;">
@@ -186,7 +175,6 @@
                     </div>
                 </div>
 
-                <!-- The Individual Bento Cards Grid -->
                 <div style="padding: 0 20px;">
                     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
                         
@@ -257,7 +245,6 @@
                     </div>
                 @endif
 
-                <!-- Clean Announcements -->
                 <div style="padding: 24px 20px;">
                     <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 16px;">
                         <h3 style="font-size: 15px; font-weight: 800; color: var(--ui-black); margin: 0;">Informasi Terbaru</h3>
@@ -286,7 +273,6 @@
                 
             </div>
 
-            <!-- Glassmorphism Bottom Nav (Efficient UX) -->
             <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-top: 1px solid rgba(0,0,0,0.05); display: flex; justify-content: space-around; padding: 12px 8px calc(12px + env(safe-area-inset-bottom, 0px)) 8px; z-index: 50;">
                 
                 <a href="/siswa" style="display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none; color: var(--ui-black); flex: 1;">
@@ -327,7 +313,6 @@
                 
             </div>
 
-            <!-- Sleek Logout Sheet -->
             <div x-show="showLogoutSheet" style="display: none; position: absolute; inset: 0; background-color: rgba(0,0,0,0.4); z-index: 99; backdrop-filter: blur(4px);" x-transition.opacity @click="showLogoutSheet = false"></div>
             
             <div x-show="showLogoutSheet" style="display: none; position: absolute; bottom: 0; left: 0; right: 0; background-color: var(--ui-surface); border-top-left-radius: 28px; border-top-right-radius: 28px; z-index: 100; padding: 24px; padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 -20px 40px rgba(0,0,0,0.1);"

@@ -10,7 +10,6 @@
 
     <div wire:ignore>
         <script>
-            // Memaksa warna status bar (baterai/sinyal) di mobile agar senada dengan background aplikasi
             const metaThemeColor = document.createElement('meta');
             metaThemeColor.name = 'theme-color';
             metaThemeColor.content = '#F5F5F7';
@@ -60,7 +59,6 @@
                 margin: 0; padding: 0;
             }
 
-            /* Hide Filament default UI elements */
             .fi-topbar, .fi-sidebar, .fi-header, .fi-simple-header, .fi-logo, .fi-simple-footer { display: none !important; }
             html, body, .fi-layout, .fi-simple-layout, .fi-main, .fi-simple-main, .fi-page, section { 
                 padding: 0 !important; margin: 0 !important; gap: 0 !important;
@@ -69,7 +67,6 @@
                 background-color: transparent !important; box-shadow: none !important; border: none !important;
             }
 
-            /* Main Mobile Workspace */
             .workspace-container {
                 width: 100%; max-width: 414px; margin: 0 auto;
                 position: fixed; top: 0; bottom: 0; left: 0; right: 0;
@@ -78,7 +75,6 @@
                 overflow: hidden;
             }
 
-            /* Desktop boundaries */
             @media (min-width: 640px) {
                 .workspace-container {
                     left: 50%; right: auto; transform: translateX(-50%);
@@ -88,16 +84,13 @@
                 }
             }
 
-            /* Touch Interactions */
             .touch-scale { transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
             .touch-scale:active { transform: scale(0.96); }
 
-            /* Override Label & Text Filament */
             #student-login .fi-fo-field-wrp label span { color: var(--ui-black) !important; font-weight: 800 !important; font-size: 13px !important; letter-spacing: 0.02em; text-transform: uppercase; }
             #student-login .fi-fo-field-wrp p { color: var(--ui-muted) !important; font-size: 12px !important; font-weight: 500 !important; margin-top: 4px !important;}
             #student-login .fi-fo-field-wrp-error-message { color: #EF4444 !important; font-size: 12px !important; font-weight: 700 !important; }
             
-            /* Override Input Form Filament */
             #student-login .fi-input-wrp {
                 background-color: var(--ui-bg) !important;
                 border: 1px solid var(--ui-border) !important; 
@@ -121,7 +114,6 @@
                 font-weight: 700 !important;
             }
             
-            /* Override Checkbox Filament */
             #student-login input[type="checkbox"],
             #student-login .fi-checkbox-input { 
                 appearance: none !important;
@@ -155,7 +147,6 @@
 
     <div class="workspace-container selection:bg-zinc-900 selection:text-white" id="student-login">
         
-        <!-- Notifikasi Error (Toast Mobile Style) -->
         @if($errors->any())
             <div x-data="{ show: true }"
                  x-show="show"
@@ -180,9 +171,7 @@
             </div>
         @endif
 
-        <!-- Area Atas (Branding) -->
         <div class="flex-1 flex flex-col items-center justify-center p-6 relative">
-            <!-- Hiasan Glow Belakang Logo -->
             <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-white rounded-full blur-3xl opacity-50 pointer-events-none"></div>
             
             <div class="relative z-10 flex flex-col items-center text-center">
@@ -203,8 +192,6 @@
             </div>
         </div>
 
-        <!-- Area Bawah (Bottom Sheet) yang berisi Form -->
-        <!-- Menambahkan x-data dan x-transition agar sheet meluncur dari bawah saat pertama dimuat -->
         <div x-data="{ showSheet: false }" 
              x-init="setTimeout(() => showSheet = true, 100)"
              class="bg-uisurface rounded-t-[40px] px-6 pt-6 pb-8 border-t border-uiborder shadow-[0_-20px_60px_rgba(0,0,0,0.05)] relative flex-shrink-0"
@@ -214,7 +201,6 @@
              x-transition:enter-end="transform translate-y-0"
              x-cloak>
             
-            <!-- Handle Indicator (Visual Only) -->
             <div class="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-8"></div>
 
             <div class="text-center mb-6">
@@ -222,7 +208,6 @@
                 <p class="text-[12px] font-bold text-uimuted mt-1">Masukkan kredensial Anda untuk melanjutkan.</p>
             </div>
 
-            <!-- Form Login Filament -->
             <div>
                 <x-filament-panels::form wire:submit="authenticate" class="space-y-5">
                     
@@ -243,10 +228,9 @@
                 </x-filament-panels::form>
             </div>
             
-            <!-- Link Kembali -->
             <div class="mt-6 flex justify-center">
                 <a href="{{ url('/') }}" class="inline-flex items-center gap-2 text-[12px] font-bold uppercase tracking-wider text-uimuted hover:text-uiblack transition-colors py-2">
-                    &larr; Kembali ke Beranda
+                    Beranda
                 </a>
             </div>
 

@@ -14,7 +14,6 @@
 
     <div wire:ignore>
         <script>
-            // Memaksa warna status bar di mobile agar senada dengan background aplikasi
             const metaThemeColor = document.createElement('meta');
             metaThemeColor.name = 'theme-color';
             metaThemeColor.content = '#F5F5F7';
@@ -104,7 +103,6 @@
 
     <div class="workspace-container selection:bg-zinc-900 selection:text-white">
         
-        <!-- Header -->
         <div style="padding: 24px 20px 16px 20px; display: flex; align-items: center; gap: 16px; margin-top: env(safe-area-inset-top, 0px); background: var(--ui-bg); flex-shrink: 0; z-index: 10; border-bottom: 1px solid rgba(0,0,0,0.02); width: 100%;">
             <a href="/siswa" class="touch-scale" style="width: 44px; height: 44px; border-radius: 50%; background: var(--ui-surface); border: 1px solid var(--ui-border); display: flex; align-items: center; justify-content: center; color: var(--ui-black); box-shadow: 0 2px 8px rgba(0,0,0,0.04); flex-shrink: 0; text-decoration: none;">
                 <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
@@ -123,24 +121,18 @@
             <div style="width: 100%; padding: 24px 20px; display: flex; flex-direction: column; align-items: center;">
     
                 @php
-                    // --- AUTO-GENERATE TOKEN UNTUK SISWA LAMA ---
-                    // Jika siswa belum punya token (karena data lama), buatkan sekarang!
                     if (empty($siswa->token_validasi)) {
                         do {
                             $newToken = strtoupper(substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 8));
                         } while (\App\Models\Siswa::where('token_validasi', $newToken)->exists());
                         
-                        // Gunakan metode DB::table() agar TIDAK men-trigger event 'updated' di Model.
-                        // Ini 100% aman dan tidak akan membuat data riwayat/surat baru.
                         \Illuminate\Support\Facades\DB::table('siswa')
                             ->where('id', $siswa->id)
                             ->update(['token_validasi' => $newToken]);
                             
-                        $siswa->token_validasi = $newToken; // Update data di memori saat ini
+                        $siswa->token_validasi = $newToken;
                     }
-                    // ---------------------------------------------
                     
-                    // Tautan URL Pendek untuk Validasi (mengambil langsung dari database)
                     $qrRawData = url('/v/' . $siswa->token_validasi);
                     $qrCodeUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" . urlencode($qrRawData);
                     
@@ -150,16 +142,13 @@
                     $nipKepsek = $pengaturan->nip_kepala_sekolah ?? '-';
                 @endphp
 
-                <!-- Loading State Preview -->
                 <div id="loading-preview" class="animate-pulse-card" style="width: 100%; max-width: 324px; aspect-ratio: 324/514; background-color: #E4E4E7; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05);">
                     <svg style="width: 32px; height: 32px; color: var(--ui-muted); animation: spin 1s linear infinite;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle style="opacity: 0.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path style="opacity: 0.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                     <span style="font-size: 11px; font-weight: 800; color: var(--ui-muted); margin-top: 12px; font-family: 'DM Sans', sans-serif; text-transform: uppercase; letter-spacing: 1px;">Merender Kartu...</span>
                 </div>
                 
-                <!-- Hasil Render Gambar Kartu -->
                 <img id="card-preview-image" src="" alt="Preview Kartu" style="display: none; width: 100%; max-width: 324px; height: auto; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.15); margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.05);">
 
-                <!-- Tombol Unduh -->
                 <button id="download-btn" class="touch-scale" style="width: 100%; max-width: 324px; background: var(--ui-black); color: white; border-radius: 100px; padding: 16px; font-weight: 800; font-size: 13px; border: none; box-shadow: 0 4px 20px rgba(24,24,27,0.25); cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: opacity 0.3s; opacity: 0.5; font-family: 'DM Sans', sans-serif; text-transform: uppercase; letter-spacing: 0.5px;" disabled>
                     <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"></path></svg>
                     Simpan Ke Galeri
@@ -167,25 +156,19 @@
 
             </div>
 
-            <!-- KANVAS RENDER KARTU (Disembunyikan dari layar, hanya untuk di-capture) -->
             <div id="print-card-wrapper">
-                <!-- Target Capture 324x514 -->
                 <div id="canvas-target" style="width: 324px; height: 514px; background-color: #FFFFFF; border-radius: 20px; overflow: hidden; position: relative; font-family: Arial, Helvetica, sans-serif;">
                     
-                    <!-- Latar Belakang Kartu (Hitam Premium) -->
                     <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(145deg, #18181B 0%, #27272A 100%); z-index: 1;"></div>
                     
-                    <!-- Watermark Logo -->
                     <div style="position: absolute; top: 150px; right: -50px; width: 280px; height: 280px; opacity: 0.03; z-index: 2; pointer-events: none;">
                         @if($pengaturan && $pengaturan->logo_sekolah)
                             <img src="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}" crossorigin="anonymous" style="width: 100%; height: 100%; object-fit: contain; filter: grayscale(100%) contrast(200%);">
                         @endif
                     </div>
 
-                    <!-- Dekorasi Lingkaran Abstrak -->
                     <div style="position: absolute; top: -50px; right: -30px; width: 150px; height: 150px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%); z-index: 3;"></div>
 
-                    <!-- Header Kartu -->
                     <div style="position: absolute; top: 0; left: 0; width: 100%; padding: 24px 20px; display: flex; align-items: center; z-index: 10;">
                         <div style="width: 42px; height: 42px; background: rgba(255,255,255,0.1); border-radius: 12px; padding: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
                             @if($pengaturan && $pengaturan->logo_sekolah)
@@ -198,7 +181,6 @@
                         </div>
                     </div>
 
-                    <!-- Profil, Nama, NIS & NISN -->
                     <div style="position: absolute; top: 90px; left: 24px; display: flex; align-items: center; gap: 14px; z-index: 10;">
                         <div style="width: 72px; height: 72px; border-radius: 16px; background-color: #3F3F46; border: 2px solid rgba(255,255,255,0.2); overflow: hidden; display: flex; justify-content: center; align-items: center; flex-shrink: 0;">
                             @if($siswa->foto)
@@ -215,7 +197,6 @@
                         </div>
                     </div>
 
-                    <!-- Informasi Detail Biodata -->
                     <div style="position: absolute; top: 190px; left: 24px; right: 24px; z-index: 10; display: flex; flex-direction: column; gap: 12px;">
                         
                         <div>
@@ -244,16 +225,12 @@
 
                     </div>
 
-                    <!-- Footer Kartu (Putih Area - Area Tanda Tangan & QR) -->
                     <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 110px; background-color: #FFFFFF; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; z-index: 10;">
                         
-                        <!-- QR Code Validasi -->
                         <div style="width: 76px; height: 76px; background: white; padding: 4px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-                            <!-- Menampilkan Gambar QR hasil generate Server -->
                             <img src="{{ $qrCodeUrl }}" crossorigin="anonymous" alt="QR Validasi" style="width: 100%; height: 100%;">
                         </div>
                         
-                        <!-- Tanda Tangan Kepala Sekolah -->
                         <div style="text-align: right; display: flex; flex-direction: column; justify-content: flex-end; height: 100%; padding-bottom: 16px;">
                             <div style="font-size: 9px; font-weight: bold; color: #71717A; margin-bottom: 24px;">Kepala Sekolah</div>
                             <div>
@@ -276,13 +253,12 @@
         window.onload = function() {
             const cardTarget = document.getElementById('canvas-target');
             
-            // Beri sedikit waktu agar font dan gambar (khususnya QR dari eksternal) termuat
             setTimeout(() => {
                 html2canvas(cardTarget, { 
                     scale: 3, 
                     useCORS: true,
                     allowTaint: true,
-                    backgroundColor: null // Transparan agar sudut melengkung kartu tidak tertutup warna solid
+                    backgroundColor: null
                 }).then(canvas => {
                     generatedCardDataUrl = canvas.toDataURL('image/png', 1.0);
                     
@@ -307,7 +283,7 @@
                     document.getElementById('loading-preview').innerHTML = '<span style="color:red; font-size:12px; font-weight:bold; font-family:sans-serif;">GAGAL MEMUAT GAMBAR</span>';
                     console.error(err);
                 });
-            }, 1000); // 1 detik delay untuk memastikan QR ter-render sempurna sebelum di-capture
+            }, 1000);
         };
     </script>
 </x-filament-panels::page.simple>

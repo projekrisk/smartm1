@@ -10,7 +10,6 @@
 
     <div wire:ignore>
         <script>
-            // Memaksa warna status bar di mobile agar senada dengan background aplikasi
             const metaThemeColor = document.createElement('meta');
             metaThemeColor.name = 'theme-color';
             metaThemeColor.content = '#F5F5F7';
@@ -60,21 +59,18 @@
                 -webkit-font-smoothing: antialiased;
             }
 
-            /* Hide Filament default UI elements */
             .fi-topbar, .fi-sidebar, .fi-simple-header, .fi-logo, .fi-simple-footer { display: none !important; }
             .fi-layout, .fi-simple-layout, .fi-main, .fi-simple-main, .fi-page { 
                 padding: 0 !important; margin: 0 !important; max-width: 100% !important; 
                 background-color: transparent !important; box-shadow: none !important; border: none !important;
             }
 
-            /* Menghapus gap dan padding bawaan section Filament */
             section.grid.auto-cols-fr.gap-y-6, .fi-simple-main-ctn, .fi-main-ctn { 
                 gap: 0 !important; 
                 padding: 0 !important; 
                 margin: 0 !important; 
             }
 
-            /* Main Mobile Workspace */
             .workspace-container {
                 width: 100%; max-width: 414px; margin: 0 auto;
                 position: fixed; top: 0; bottom: 0; left: 0; right: 0;
@@ -90,16 +86,13 @@
                 }
             }
 
-            /* Touch Interactions */
             .touch-scale { transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
             .touch-scale:active { transform: scale(0.96); }
 
-            /* Override Label & Text Filament (SAMA PERSIS DENGAN LOGIN SISWA) */
             #security-overlay .fi-fo-field-wrp label span { color: var(--ui-black) !important; font-weight: 800 !important; font-size: 13px !important; letter-spacing: 0.02em; text-transform: uppercase; }
             #security-overlay .fi-fo-field-wrp p { color: var(--ui-muted) !important; font-size: 12px !important; font-weight: 500 !important; margin-top: 4px !important;}
             #security-overlay .fi-fo-field-wrp-error-message { color: #EF4444 !important; font-size: 12px !important; font-weight: 700 !important; }
             
-            /* Override Input Form Filament (SAMA PERSIS DENGAN LOGIN SISWA) */
             #security-overlay .fi-input-wrp {
                 background-color: var(--ui-bg) !important;
                 border: 1px solid var(--ui-border) !important; 
@@ -123,7 +116,6 @@
                 font-weight: 700 !important;
             }
 
-            /* Custom Scrollbar untuk Bottom Sheet agar bisa digulir kalau konten panjang */
             .sheet-scroll { overflow-y: auto; scrollbar-width: none; }
             .sheet-scroll::-webkit-scrollbar { display: none; }
             
@@ -131,15 +123,11 @@
         </style>
     </div>
 
-    <!-- Gunakan div utama yang fixed dan mengambil seluruh layar -->
     <div id="security-overlay" class="fixed inset-0 z-[99999] min-h-screen w-full flex flex-col selection:bg-zinc-900 selection:text-white bg-uibg">
         
         <div class="workspace-container">
             
-            <!-- Area Atas (Branding/Ikon) -->
-            <!-- Flex-1 agar dia mendorong area bawah turun ke dasar -->
             <div class="flex-1 flex flex-col items-center justify-center p-6 relative">
-                <!-- Hiasan Glow Belakang Ikon -->
                 <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-white rounded-full blur-3xl opacity-50 pointer-events-none"></div>
                 
                 <div class="relative z-10 flex flex-col items-center text-center">
@@ -156,11 +144,8 @@
                 </div>
             </div>
 
-            <!-- Area Bawah (Bottom Sheet) -->
-            <!-- Flex-shrink-0 agar sheet tidak menyusut, melainkan menempel padat di bawah -->
             <div class="sheet-scroll bg-uisurface rounded-t-[40px] px-6 pt-6 pb-8 border-t border-uiborder shadow-[0_-20px_60px_rgba(0,0,0,0.05)] relative flex-shrink-0">
                 
-                <!-- Handle Indicator -->
                 <div class="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-8"></div>
 
                 <div class="text-center mb-6">
@@ -169,14 +154,12 @@
                 </div>
 
                 <div>
-                    <!-- Form Utama -->
                     <form wire:submit="simpan" class="space-y-5">
                         
                         {{ $this->form }}
 
                         <div class="pt-4 flex flex-col gap-3">
                             
-                            <!-- Tombol Simpan -->
                             <button type="submit" wire:loading.attr="disabled" wire:target="simpan" class="touch-scale w-full flex justify-center items-center py-4 px-6 rounded-[100px] text-[14px] font-bold text-white bg-uiblack uppercase tracking-wide transition-all shadow-[0_8px_25px_rgba(24,24,27,0.2)] disabled:opacity-70 disabled:cursor-not-allowed group hover:bg-black">
                                 <span wire:loading.remove wire:target="simpan" class="flex items-center gap-2">
                                     Simpan & Masuk
@@ -188,7 +171,6 @@
                                 </span>
                             </button>
 
-                            <!-- Tombol Lewati -->
                             <button type="button" wire:click="lewati" wire:loading.attr="disabled" wire:target="lewati" class="touch-scale w-full flex justify-center items-center py-3.5 px-6 rounded-[100px] text-[13px] font-bold text-uiblack bg-gray-100 uppercase tracking-wide transition-colors hover:bg-gray-200 disabled:opacity-70">
                                 <span wire:loading.remove wire:target="lewati">
                                     Lewati Untuk Saat Ini
@@ -202,7 +184,6 @@
                     </form>
                 </div>
                 
-                <!-- Link Batal & Kembali -->
                 <div class="mt-6 flex justify-center">
                     <a href="{{ url('/siswa/profil') }}" class="inline-flex items-center gap-2 text-[12px] font-bold uppercase tracking-wider text-uimuted hover:text-uiblack transition-colors py-2">
                         Batal & Kembali

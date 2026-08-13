@@ -1,7 +1,6 @@
 <x-filament-panels::page.simple>
     <div wire:ignore>
         <script>
-            // Memaksa warna status bar di mobile agar senada dengan background aplikasi
             const metaThemeColor = document.createElement('meta');
             metaThemeColor.name = 'theme-color';
             metaThemeColor.content = '#F5F5F7';
@@ -14,13 +13,13 @@
         
         <style>
             :root {
-                --ui-bg: #F5F5F7; /* Apple light gray */
+                --ui-bg: #F5F5F7;
                 --ui-surface: #FFFFFF;
-                --ui-black: #18181B; /* Zinc 900 */
-                --ui-text: #27272A; /* Zinc 800 */
-                --ui-muted: #71717A; /* Zinc 500 */
-                --ui-border: #E4E4E7; /* Zinc 200 */
-                --ui-accent: #0F172A; /* Slate 900 */
+                --ui-black: #18181B;
+                --ui-text: #27272A;
+                --ui-muted: #71717A;
+                --ui-border: #E4E4E7;
+                --ui-accent: #0F172A;
             }
 
             body { 
@@ -32,7 +31,6 @@
                 margin: 0; padding: 0;
             }
 
-            /* Hide Filament default UI elements completely */
             .fi-topbar, .fi-sidebar, .fi-header, .fi-simple-header, .fi-logo, .fi-simple-footer { display: none !important; }
             html, body, .fi-layout, .fi-simple-layout, .fi-main, .fi-simple-main, .fi-page, section { 
                 padding: 0 !important; margin: 0 !important; gap: 0 !important;
@@ -41,7 +39,6 @@
                 background-color: transparent !important; box-shadow: none !important; border: none !important;
             }
 
-            /* Main Mobile Workspace */
             .workspace-container {
                 width: 100%; max-width: 414px; margin: 0 auto;
                 position: fixed; top: 0; bottom: 0; left: 0; right: 0;
@@ -50,7 +47,6 @@
                 overflow: hidden;
             }
 
-            /* Desktop boundaries */
             @media (min-width: 640px) {
                 .workspace-container {
                     left: 50%; right: auto; transform: translateX(-50%);
@@ -60,7 +56,6 @@
                 }
             }
 
-            /* Scrollable Area */
             .workspace-content { 
                 flex: 1; overflow-y: auto; overflow-x: hidden; 
                 padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px)); 
@@ -68,11 +63,9 @@
             }
             .workspace-content::-webkit-scrollbar { display: none; }
 
-            /* Interactive Elements */
             .touch-scale { transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
             .touch-scale:active { transform: scale(0.96); }
 
-            /* iOS style lists */
             .data-row { 
                 display: flex; justify-content: space-between; align-items: flex-start; 
                 padding: 14px 0; border-bottom: 1px solid var(--ui-border); 
@@ -81,7 +74,6 @@
             .data-label { font-size: 13px; font-weight: 500; color: var(--ui-muted); width: 40%; flex-shrink: 0; }
             .data-val { font-size: 13px; font-weight: 700; color: var(--ui-black); text-align: right; width: 60%; line-height: 1.4; word-break: break-word; }
 
-            /* Custom Shadows */
             .ambient-shadow { box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04); }
             
             [x-cloak] { display: none !important; }
@@ -118,7 +110,6 @@
                             </div>
                         @endif
                         
-                        <!-- Mini Edit Badge -->
                         <div @click="showFotoModal = true" class="touch-scale" style="position: absolute; bottom: 0; right: 0; width: 28px; height: 28px; background: var(--ui-black); border-radius: 50%; border: 2px solid var(--ui-surface); display: flex; align-items: center; justify-content: center; cursor: pointer;">
                             <x-filament::icon icon="heroicon-s-camera" style="width: 14px; height: 14px; color: white;" />
                         </div>

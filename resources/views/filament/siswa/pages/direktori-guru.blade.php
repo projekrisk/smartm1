@@ -1,7 +1,6 @@
 <x-filament-panels::page.simple>
     <div wire:ignore>
         <script>
-            // Memaksa warna status bar di mobile agar senada dengan background aplikasi
             const metaThemeColor = document.createElement('meta');
             metaThemeColor.name = 'theme-color';
             metaThemeColor.content = '#F5F5F7';
@@ -87,7 +86,6 @@
 
     <div class="workspace-container selection:bg-zinc-900 selection:text-white">
         
-        <!-- Header & Search Area (Fixed/Sticky behavior visually) -->
         <div style="padding: 24px 20px 16px 20px; display: flex; flex-direction: column; gap: 16px; margin-top: env(safe-area-inset-top, 0px); background: var(--ui-bg); flex-shrink: 0; z-index: 10;">
             
             <div style="display: flex; align-items: center; gap: 16px;">
@@ -112,7 +110,6 @@
                        style="width: 100%; background-color: var(--ui-surface); border: 1px solid var(--ui-border); color: var(--ui-black); font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 13px; border-radius: 16px; padding: 14px 16px 14px 44px; transition: all 0.2s;">
             </div>
 
-            <!-- Filter Pills -->
             <div class="nav-scroll hide-scroll" style="margin-top: 4px;">
                 @php
                     $tabs = ['Semua' => 'Semua', 'Kepala Sekolah' => 'Kepsek', 'Guru' => 'Guru', 'Tenaga Kependidikan' => 'Staf / TU'];

@@ -111,10 +111,8 @@
         </style>
     </div>
 
-    <!-- Halaman Login Container -->
     <div id="single-login" class="min-h-screen w-full flex flex-col items-center justify-center p-4 sm:p-8 relative bg-uibg selection:bg-zinc-900 selection:text-white">
         
-        <!-- Notifikasi Error (Toast) -->
         @if($errors->any())
             <div x-data="{ show: true }"
                  x-show="show"
@@ -144,15 +142,12 @@
 
         <div class="relative z-10 w-full max-w-[440px]">
             
-            <!-- Card Login Utama -->
             <div class="bg-uisurface border border-uiborder rounded-[32px] p-8 md:p-10 shadow-[0_20px_60px_rgba(0,0,0,0.05)] overflow-hidden">
                 
-                <!-- Lingkaran Hiasan (Gaya Baru) -->
                 <div class="absolute -top-24 -right-24 w-48 h-48 bg-gray-50 rounded-full blur-2xl opacity-60"></div>
                 
                 <div class="relative z-10">
                     
-                    <!-- Header -->
                     <div class="flex flex-col items-center sm:items-start text-center sm:text-left mb-8 pb-6 border-b border-uiborder">
                         @if($pengaturan && $pengaturan->logo_sekolah)
                             <img src="{{ url('/uploads/' . $pengaturan->logo_sekolah) }}" alt="Logo" class="w-14 h-14 object-contain mb-5 drop-shadow-sm">
@@ -168,7 +163,6 @@
                         </p>
                     </div>
 
-                    <!-- Form Login Filament -->
                     <div>
                         <x-filament-panels::form wire:submit="authenticate" class="space-y-6">
                             
@@ -190,7 +184,6 @@
                         </x-filament-panels::form>
                     </div>
                     
-                    <!-- Link Kembali -->
                     <div class="mt-8 pt-6 flex justify-center border-t border-uiborder/60">
                         <a href="{{ url('/') }}" class="inline-flex items-center gap-2 text-[12px] font-bold uppercase tracking-wider text-uimuted hover:text-uiblack transition-colors">
                             Beranda

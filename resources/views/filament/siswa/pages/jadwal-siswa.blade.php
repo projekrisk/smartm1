@@ -1,7 +1,6 @@
 <x-filament-panels::page.simple>
     <div wire:ignore>
         <script>
-            // Memaksa warna status bar di mobile agar senada dengan background aplikasi
             const metaThemeColor = document.createElement('meta');
             metaThemeColor.name = 'theme-color';
             metaThemeColor.content = '#F5F5F7';
@@ -14,12 +13,12 @@
         
         <style>
             :root {
-                --ui-bg: #F5F5F7; /* Apple light gray */
+                --ui-bg: #F5F5F7;
                 --ui-surface: #FFFFFF;
-                --ui-black: #18181B; /* Zinc 900 */
-                --ui-text: #27272A; /* Zinc 800 */
-                --ui-muted: #71717A; /* Zinc 500 */
-                --ui-border: #E4E4E7; /* Zinc 200 */
+                --ui-black: #18181B;
+                --ui-text: #27272A;
+                --ui-muted: #71717A;
+                --ui-border: #E4E4E7;
             }
 
             body { 
@@ -31,7 +30,6 @@
                 margin: 0; padding: 0;
             }
 
-            /* Hide Filament default UI elements completely */
             .fi-topbar, .fi-sidebar, .fi-header, .fi-simple-header, .fi-logo, .fi-simple-footer { display: none !important; }
             html, body, .fi-layout, .fi-simple-layout, .fi-main, .fi-simple-main, .fi-page, section { 
                 padding: 0 !important; margin: 0 !important; gap: 0 !important;
@@ -49,7 +47,6 @@
                 overflow: hidden;
             }
 
-            /* Desktop boundaries */
             @media (min-width: 640px) {
                 .workspace-container {
                     left: 50%; right: auto; transform: translateX(-50%);
@@ -59,7 +56,6 @@
                 }
             }
 
-            /* Scrollable Area */
             .workspace-content { 
                 flex: 1; overflow-y: auto; overflow-x: hidden; 
                 padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px)); 
@@ -67,11 +63,9 @@
             }
             .workspace-content::-webkit-scrollbar { display: none; }
 
-            /* Interactive Elements */
             .touch-scale { transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
             .touch-scale:active { transform: scale(0.94); }
 
-            /* Custom Shadows */
             .ambient-shadow { box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04); }
             
             [x-cloak] { display: none !important; }
@@ -82,7 +76,6 @@
         
         <div class="workspace-content">
             
-            <!-- Minimalist Header -->
             <div style="padding: 24px 20px 24px 20px; display: flex; align-items: center; gap: 16px; margin-top: env(safe-area-inset-top, 0px);">
                 <a href="/siswa" class="touch-scale" style="width: 44px; height: 44px; border-radius: 50%; background: var(--ui-surface); border: 1px solid var(--ui-border); display: flex; align-items: center; justify-content: center; color: var(--ui-black); box-shadow: 0 2px 8px rgba(0,0,0,0.04); flex-shrink: 0; text-decoration: none;">
                     <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
@@ -97,7 +90,6 @@
                 </div>
             </div>
 
-            <!-- Main Content Area -->
             <div style="padding: 0 20px;">
                 
                 @if($jadwalGrouped->isEmpty())

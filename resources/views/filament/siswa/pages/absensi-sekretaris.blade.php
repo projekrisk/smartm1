@@ -14,7 +14,6 @@
 
     <div wire:ignore>
         <script>
-            // Memaksa warna status bar di mobile agar senada dengan background aplikasi
             const metaThemeColor = document.createElement('meta');
             metaThemeColor.name = 'theme-color';
             metaThemeColor.content = '#F5F5F7';
@@ -27,12 +26,12 @@
         
         <style>
             :root {
-                --ui-bg: #F5F5F7; /* Apple light gray */
+                --ui-bg: #F5F5F7;
                 --ui-surface: #FFFFFF;
-                --ui-black: #18181B; /* Zinc 900 */
-                --ui-text: #27272A; /* Zinc 800 */
-                --ui-muted: #71717A; /* Zinc 500 */
-                --ui-border: #E4E4E7; /* Zinc 200 */
+                --ui-black: #18181B;
+                --ui-text: #27272A;
+                --ui-muted: #71717A;
+                --ui-border: #E4E4E7;
             }
 
             body { 
@@ -44,7 +43,6 @@
                 margin: 0; padding: 0;
             }
 
-            /* Hide Filament default UI elements completely */
             .fi-topbar, .fi-sidebar, .fi-header, .fi-simple-header, .fi-logo, .fi-simple-footer { display: none !important; }
             html, body, .fi-layout, .fi-simple-layout, .fi-main, .fi-simple-main, .fi-page, section { 
                 padding: 0 !important; margin: 0 !important; gap: 0 !important;
@@ -77,13 +75,11 @@
             }
             .workspace-content::-webkit-scrollbar { display: none; }
 
-            /* Interactive Elements */
             .touch-scale { transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
             .touch-scale:active { transform: scale(0.96); }
 
             .ambient-shadow { box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04); }
 
-            /* Action Sheet Status Buttons */
             .status-btn { 
                 padding: 14px; text-align: center; border-radius: 16px; border: 2px solid transparent; 
                 font-weight: 800; font-size: 13px; transition: all 0.2s; 
@@ -94,7 +90,6 @@
             .status-btn.active-izin { background-color: #E0E7FF !important; border-color: #6366F1 !important; color: #4338CA !important; }
             .status-btn.active-alpa { background-color: #FEE2E2 !important; border-color: #EF4444 !important; color: #B91C1C !important; }
 
-            /* Tiny Badges */
             .badge-status { 
                 min-width: 65px; text-align: center; padding: 4px 10px; border-radius: 8px; 
                 font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; 
@@ -113,7 +108,6 @@
         
         <form wire:submit="simpan" style="display: flex; flex-direction: column; height: 100%; width: 100%; position: relative;">
             
-            <!-- Minimalist Header -->
             <div style="padding: 24px 20px 16px 20px; display: flex; align-items: center; gap: 16px; margin-top: env(safe-area-inset-top, 0px); background: var(--ui-bg); flex-shrink: 0; z-index: 10;">
                 <a href="/siswa" class="touch-scale" style="width: 44px; height: 44px; border-radius: 50%; background: var(--ui-surface); border: 1px solid var(--ui-border); display: flex; align-items: center; justify-content: center; color: var(--ui-black); box-shadow: 0 2px 8px rgba(0,0,0,0.04); flex-shrink: 0; text-decoration: none;">
                     <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
@@ -271,7 +265,6 @@
                         </div>
                         
                         <div wire:loading.flex wire:target="simpan" style="align-items: center; justify-content: center; gap: 8px; width: 100%;" x-cloak>
-                            <svg style="animation: spin 1s linear infinite; height: 18px; width: 18px; color: white;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle style="opacity: 0.25;" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path style="opacity: 0.75;" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                             MENYIMPAN...
                         </div>
                     </button>

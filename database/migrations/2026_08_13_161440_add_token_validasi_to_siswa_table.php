@@ -9,7 +9,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('siswa', function (Blueprint $table) {
-            // Menambahkan kolom token_validasi setelah kolom nisn
             $table->string('token_validasi', 8)->unique()->nullable()->after('nisn');
         });
     }

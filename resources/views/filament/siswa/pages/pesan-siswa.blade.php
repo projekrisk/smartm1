@@ -14,7 +14,6 @@
 
     <div wire:ignore>
         <script>
-            // Memaksa warna status bar di mobile agar senada dengan background aplikasi
             const metaThemeColor = document.createElement('meta');
             metaThemeColor.name = 'theme-color';
             metaThemeColor.content = '#F5F5F7';
@@ -81,7 +80,6 @@
 
             .ambient-shadow { box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04); }
             
-            /* Customizing Filament textarea/inputs for chat */
             .workspace-container .fi-fo-field-wrp label { display: none !important; }
             .workspace-container .fi-input-wrp { border-radius: 20px !important; background-color: var(--ui-bg) !important; border: 1px solid var(--ui-border) !important; box-shadow: none !important; transition: all 0.2s ease; overflow: hidden; }
             .workspace-container .fi-input-wrp:focus-within { border-color: var(--ui-black) !important; background-color: var(--ui-surface) !important; box-shadow: 0 4px 12px rgba(24,24,27,0.08) !important; }
@@ -93,7 +91,6 @@
 
     <div class="workspace-container selection:bg-zinc-900 selection:text-white" x-data="{ showLogoutSheet: false }">
         
-        <!-- Header -->
         <div style="padding: 24px 20px 16px 20px; display: flex; align-items: center; gap: 16px; margin-top: env(safe-area-inset-top, 0px); background: var(--ui-bg); flex-shrink: 0; z-index: 10; border-bottom: 1px solid rgba(0,0,0,0.02);">
             @if($activeSesiId === null && !$isCreatingNew)
                 <div style="flex: 1;">
@@ -119,7 +116,6 @@
         </div>
 
         @if($activeSesiId === null && !$isCreatingNew)
-            <!-- LIST PESAN -->
             <div class="workspace-content">
                 <div style="padding: 12px 20px 120px 20px; display: flex; flex-direction: column; gap: 12px;">
                     
@@ -163,13 +159,11 @@
                     @endif
                 </div>
 
-                <!-- Floating Create Button -->
                 <button wire:click="buatPesanBaru" class="touch-scale" style="position: absolute; bottom: calc(90px + env(safe-area-inset-bottom, 0px)); right: 24px; width: 60px; height: 60px; background: var(--ui-black); color: white; border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(24,24,27,0.3); border: none; cursor: pointer; z-index: 40;">
                     <svg style="width: 28px; height: 28px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
                 </button>
             </div>
             
-            <!-- Bottom Navbar -->
             <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-top: 1px solid rgba(0,0,0,0.05); display: flex; justify-content: space-around; padding: 12px 8px calc(12px + env(safe-area-inset-bottom, 0px)) 8px; z-index: 50;">
                 <a href="/siswa" style="display: flex; flex-direction: column; align-items: center; gap: 4px; text-decoration: none; color: var(--ui-muted); flex: 1; transition: color 0.2s;">
                     <x-filament::icon icon="heroicon-o-home" style="width: 24px; height: 24px;" />
@@ -208,7 +202,6 @@
                 </button>
             </div>
 
-            <!-- Logout Modal -->
             <div x-show="showLogoutSheet" x-cloak style="position: absolute; inset: 0; background-color: rgba(0,0,0,0.4); z-index: 99; backdrop-filter: blur(4px);" x-transition.opacity @click="showLogoutSheet = false"></div>
             
             <div x-show="showLogoutSheet" x-cloak style="position: absolute; bottom: 0; left: 0; right: 0; background-color: var(--ui-surface); border-top-left-radius: 28px; border-top-right-radius: 28px; z-index: 100; padding: 24px; padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 -20px 40px rgba(0,0,0,0.1);"
@@ -230,7 +223,6 @@
             </div>
             
         @else
-            <!-- RUANG OBROLAN -->
             <div class="workspace-content" 
                  x-data="{ scrollToBottom() { this.$el.scrollTop = this.$el.scrollHeight; } }"
                  x-init="scrollToBottom()"
@@ -274,7 +266,6 @@
                 </div>
             </div>
 
-            <!-- CHAT INPUT / FOOTER -->
             @if(isset($sesiAktif) && $sesiAktif->status === 'Selesai')
                 <div style="flex-shrink: 0; padding: 16px 20px calc(16px + env(safe-area-inset-bottom, 0px)) 20px; background: rgba(245,245,247,0.9); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-top: 1px solid rgba(0,0,0,0.05); z-index: 30; text-align: center;">
                     <p style="font-size: 12px; font-weight: 700; color: var(--ui-muted); margin-bottom: 12px;">Sesi obrolan ini sudah diarsipkan.</p>

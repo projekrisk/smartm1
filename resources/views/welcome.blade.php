@@ -7,7 +7,7 @@
     } catch (\Exception $e) {}
     
     $namaSekolah = $pengaturan->nama_sekolah ?? 'SMAN 1 Malingping';
-    $appTitle = "Smart-M1 - " . $namaSekolah . " | Sistem Informasi Manajemen";
+    $appTitle = "SMART-M1 - " . $namaSekolah . " | Sistem Informasi Manajemen";
     $metaDescription = "Smart-M1 " . $namaSekolah . " adalah platform terpadu digitalisasi sistem administrasi dan akademik siswa. Akses nilai, e-rapor, absensi harian, dan portofolio prestasi sekolah secara real-time.";
     
     $ogImageUrl = url('images/og-image.jpg');
@@ -81,7 +81,6 @@
 </head>
 <body class="bg-uibg text-uitext font-sans min-h-screen flex flex-col selection:bg-zinc-900 selection:text-white">
 
-    <!-- Navbar -->
     <nav class="w-full px-6 py-6 md:px-12 lg:px-16 flex justify-between items-center z-40 bg-uibg/80 backdrop-blur-md sticky top-0 border-b border-uiborder/50">
         <div class="flex items-center gap-4">
             @if($pengaturan && $pengaturan->logo_sekolah)
@@ -104,12 +103,10 @@
         </button>
     </nav>
 
-    <!-- Main Content -->
     <main class="flex-1 w-full max-w-[1440px] mx-auto px-6 md:px-12 lg:px-16 flex flex-col justify-center py-12 lg:py-0 z-10">
         
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             
-            <!-- Hero Text (Kiri) -->
             <div class="lg:col-span-7 flex flex-col justify-center">
 
                 <h1 class="text-[40px] md:text-[56px] lg:text-[72px] font-black text-uiblack tracking-tight leading-[1.05] mb-6">
@@ -121,7 +118,6 @@
                     Platform digital yang memfasilitasi manajemen administrasi akademik dan non-akademik peserta didik secara <span class="text-uiblack font-bold">aman, efisien, dan real-time.</span>
                 </p>
 
-                <!-- Tombol Akses -->
                 <div class="flex flex-col sm:flex-row gap-4 mb-10">
                     <a href="{{ url('/siswa/login') }}" class="touch-scale flex items-center justify-center px-8 py-4 bg-uiblack text-white rounded-[100px] font-bold text-[14px] uppercase tracking-wide transition-all hover:bg-black shadow-[0_8px_25px_rgba(24,24,27,0.25)]">
                         Portal Siswa
@@ -133,7 +129,6 @@
                     </a>
                 </div>
 
-                <!-- Platform Support -->
                 <div class="flex flex-col gap-3">
                     <span class="text-[11px] font-bold tracking-widest text-uimuted uppercase">Aksesibilitas Perangkat:</span>
                     <div class="flex flex-wrap items-center gap-2">
@@ -150,7 +145,6 @@
                 </div>
             </div>
 
-            <!-- Features Card (Kanan) -->
             <div class="lg:col-span-5 w-full mt-8 lg:mt-0">
                 <div class="bg-uisurface rounded-[32px] p-8 md:p-10 border border-uiborder shadow-[0_20px_60px_rgba(0,0,0,0.05)] relative overflow-hidden">
                     
@@ -198,19 +192,16 @@
         </div>
     </main>
 
-    <!-- Footer -->
     <footer class="w-full px-6 py-8 md:px-12 lg:px-16 flex flex-col sm:flex-row justify-between items-center bg-uibg z-10 gap-4 text-[12px] font-bold text-uimuted uppercase tracking-wider">
         <div>&copy; {{ date('Y') }} {{ $namaSekolah }}. All Rights Reserved.</div>
         <button onclick="openFeaturesModal()" class="md:hidden text-uiblack hover:text-black transition-colors underline decoration-2 underline-offset-4">Informasi Sistem</button>
     </footer>
 
-    <!-- Modal Informasi Sistem -->
     <div id="featuresModal" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 bg-uiblack/40">
         <div class="absolute inset-0 cursor-pointer" onclick="closeFeaturesModal()"></div>
         
         <div class="modal-content relative w-full max-w-2xl bg-uisurface rounded-[32px] p-0 flex flex-col shadow-2xl border border-uiborder overflow-hidden">
             
-            <!-- Modal Header -->
             <div class="flex justify-between items-center p-6 md:p-8 border-b border-uiborder bg-gray-50/50">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-uiblack text-white flex items-center justify-center font-black text-sm">M1</div>
@@ -221,7 +212,6 @@
                 </button>
             </div>
             
-            <!-- Modal Body -->
             <div class="p-6 md:p-8 text-uitext leading-relaxed space-y-8">
                 <p class="text-[15px] font-medium text-uimuted leading-relaxed">
                     <b class="text-uiblack">Smart-M1</b> dirancang khusus untuk memfasilitasi kebutuhan administrasi akademik dan operasional secara terpadu di lingkungan <b class="text-uiblack">{{ $namaSekolah }}</b>.
@@ -244,7 +234,7 @@
 
                 <div class="bg-gray-50/80 p-5 rounded-2xl border border-gray-100 text-[13px] font-bold text-uimuted flex items-start gap-3 mt-4">
                     <svg class="w-5 h-5 text-gray-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    <p>Sistem dilindungi dengan enkripsi berlapis. Untuk kendala lupa kata sandi atau permasalahan akses sistem, silakan menghubungi bagian Tata Usaha sekolah.</p>
+                    <p>Sistem dilindungi dengan enkripsi berlapis. Untuk kendala lupa kata sandi atau permasalahan akses sistem, silakan menghubungi Administrator Sekolah.</p>
                 </div>
             </div>
         </div>
