@@ -766,7 +766,7 @@ Route::get('/v/{token}', function ($token) {
 
     // Cek Surat Dispensasi
     $suratDispensasi = \App\Models\SuratDispensasi::get()->first(function($s) use ($token) {
-        $hash = strtoupper(substr(md5($s->nomor_surat_lengkap . config('app.key')), 0, 6));
+        $hash = strtoupper(substr(md5($s->nomor_surat_lengkap . config('app.key')), 0, 8));
         return $hash === $token || $s->token === $token;
     });
 
@@ -777,7 +777,7 @@ Route::get('/v/{token}', function ($token) {
 
     // Cek Surat Panggilan
     $suratPanggilan = \App\Models\SuratPanggilan::get()->first(function($s) use ($token) {
-        $hash = strtoupper(substr(md5($s->nomor_surat . config('app.key')), 0, 6));
+        $hash = strtoupper(substr(md5($s->nomor_surat . config('app.key')), 0, 8));
         return $hash === $token || $s->token === $token;
     });
 
@@ -788,7 +788,7 @@ Route::get('/v/{token}', function ($token) {
 
     // Cek Surat Keterangan Aktif
     $suratAktif = \App\Models\SuratKeteranganAktif::get()->first(function($s) use ($token) {
-        $hash = strtoupper(substr(md5($s->nomor_surat . config('app.key')), 0, 6));
+        $hash = strtoupper(substr(md5($s->nomor_surat . config('app.key')), 0, 8));
         return $hash === $token || $s->token === $token;
     });
 
